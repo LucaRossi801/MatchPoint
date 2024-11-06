@@ -89,7 +89,6 @@
     </eAnnotations>
     <ownedEnd xmi:type="uml:Property" xmi:id="_ghipA5xHEe-HN_wxpUcLVw" name="centro sportivo" type="_Zj_BAJxHEe-HN_wxpUcLVw" association="_ghiB8JxHEe-HN_wxpUcLVw"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_wtCKwJxIEe-HN_wxpUcLVw" name="Prenotazione"/>
   <packagedElement xmi:type="uml:Enumeration" xmi:id="_TcnIMJxJEe-HN_wxpUcLVw" name="TipologiaCampo">
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_bdkG4JxJEe-HN_wxpUcLVw" name="CalcioA5"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_cuBpMJxJEe-HN_wxpUcLVw" name="CalcioA7"/>
@@ -101,5 +100,21 @@
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_nFWCUJxJEe-HN_wxpUcLVw" name="Pallavolo"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_oqGZoJxJEe-HN_wxpUcLVw" name="Golf"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_xJscIJxJEe-HN_wxpUcLVw" name="Badminton"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:AssociationClass" xmi:id="_SCBKwJxPEe-J2Oj9-afTGQ" name="Prenotazione" memberEnd="_SCN_EJxPEe-J2Oj9-afTGQ _SCRCYJxPEe-J2Oj9-afTGQ">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_SCMJ4JxPEe-J2Oj9-afTGQ" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_SCMw8JxPEe-J2Oj9-afTGQ" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_x2Bu8JxPEe-J2Oj9-afTGQ" name="ID">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_BfxrAJxQEe-J2Oj9-afTGQ" name="OraInizio">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_H3aigJxQEe-J2Oj9-afTGQ" name="OraFine">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
+    </ownedAttribute>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_SCN_EJxPEe-J2Oj9-afTGQ" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ"/>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_SCRCYJxPEe-J2Oj9-afTGQ" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ"/>
   </packagedElement>
 </uml:Model>
