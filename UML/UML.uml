@@ -13,6 +13,12 @@
     <ownedAttribute xmi:type="uml:Property" xmi:id="_4g0CYJxDEe-NMMM5isvduA" name="Cognome" isUnique="false">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_yIvPkJxPEe-HN_wxpUcLVw" name="DataDiNascita" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="__ZIuoJxPEe-HN_wxpUcLVw" name="Età" isUnique="false" isDerived="true">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_XJligJxEEe-NMMM5isvduA" name="Registrazione"/>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_eFP3oJxFEe-NMMM5isvduA" name="Login"/>
   </packagedElement>

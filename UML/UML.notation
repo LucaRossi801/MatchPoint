@@ -18,6 +18,14 @@
         <element xmi:type="uml:Property" href="UML.uml#_4g0CYJxDEe-NMMM5isvduA"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_5ULZAJxDEe-NMMM5isvduA"/>
       </children>
+      <children xmi:type="notation:Shape" xmi:id="_zBmxQJxPEe-HN_wxpUcLVw" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="UML.uml#_yIvPkJxPEe-HN_wxpUcLVw"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_zBmxQZxPEe-HN_wxpUcLVw"/>
+      </children>
+      <children xmi:type="notation:Shape" xmi:id="_ADQCoJxQEe-HN_wxpUcLVw" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="UML.uml#__ZIuoJxPEe-HN_wxpUcLVw"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_ADQCoZxQEe-HN_wxpUcLVw"/>
+      </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_mmh5AJxBEe-NMMM5isvduA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_mmh5AZxBEe-NMMM5isvduA"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_mmh5ApxBEe-NMMM5isvduA"/>
@@ -44,7 +52,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmh5DZxBEe-NMMM5isvduA"/>
     </children>
     <element xmi:type="uml:Class" href="UML.uml#_ml_tgJxBEe-NMMM5isvduA"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmL6wZxBEe-NMMM5isvduA" x="480" width="201" height="201"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmL6wZxBEe-NMMM5isvduA" x="480" y="-20" width="201" height="221"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_YEMesJxGEe-HN_wxpUcLVw" type="Class_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_YEQwIJxGEe-HN_wxpUcLVw" type="Class_NameLabel"/>
