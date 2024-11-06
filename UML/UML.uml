@@ -14,5 +14,6 @@
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_XJligJxEEe-NMMM5isvduA" name="Registrazione"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_eFP3oJxFEe-NMMM5isvduA" name="Login"/>
   </packagedElement>
 </uml:Model>
