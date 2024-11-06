@@ -27,12 +27,12 @@
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_qucXUJxGEe-HN_wxpUcLVw" name="Giocatore">
     <generalization xmi:type="uml:Generalization" xmi:id="_Uny-YJxIEe-HN_wxpUcLVw" general="_ml_tgJxBEe-NMMM5isvduA"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_SCN_EJxPEe-J2Oj9-afTGQ" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_YDD1QJxREe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_YDnO4JxREe-HN_wxpUcLVw" value="*"/>
+    </ownedAttribute>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_NXnKwJxHEe-HN_wxpUcLVw" name="Campo">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_f04-YJxHEe-HN_wxpUcLVw" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_f04XUJxHEe-HN_wxpUcLVw">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_f04-YZxHEe-HN_wxpUcLVw"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_f04-YpxHEe-HN_wxpUcLVw" value="*"/>
-    </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_fimNIJxKEe-HN_wxpUcLVw" name="ID">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
     </ownedAttribute>
@@ -51,6 +51,10 @@
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_DsyAAJxOEe-HN_wxpUcLVw" name="Coperto">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_SCRCYJxPEe-J2Oj9-afTGQ" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Zmk2cJxREe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ZnHpAJxREe-HN_wxpUcLVw" value="*"/>
     </ownedAttribute>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_Zj_BAJxHEe-HN_wxpUcLVw" name="Centro Sportivo">
@@ -74,15 +78,6 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_EczrkJxKEe-HN_wxpUcLVw" value="*"/>
     </ownedEnd>
   </packagedElement>
-  <packagedElement xmi:type="uml:Association" xmi:id="_f04XUJxHEe-HN_wxpUcLVw" memberEnd="_f04-YJxHEe-HN_wxpUcLVw _f04-Y5xHEe-HN_wxpUcLVw" navigableOwnedEnd="_f04-Y5xHEe-HN_wxpUcLVw">
-    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_f04XUZxHEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_f04XUpxHEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
-    </eAnnotations>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_f04-Y5xHEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_f04XUJxHEe-HN_wxpUcLVw">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QDFyMJxKEe-HN_wxpUcLVw"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_QDnWoJxKEe-HN_wxpUcLVw" value="*"/>
-    </ownedEnd>
-  </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="_ghiB8JxHEe-HN_wxpUcLVw" memberEnd="_ghipAJxHEe-HN_wxpUcLVw _ghipA5xHEe-HN_wxpUcLVw" navigableOwnedEnd="_ghipA5xHEe-HN_wxpUcLVw">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ghiB8ZxHEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ghiB8pxHEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
@@ -101,7 +96,7 @@
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_oqGZoJxJEe-HN_wxpUcLVw" name="Golf"/>
     <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_xJscIJxJEe-HN_wxpUcLVw" name="Badminton"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:AssociationClass" xmi:id="_SCBKwJxPEe-J2Oj9-afTGQ" name="Prenotazione" memberEnd="_SCN_EJxPEe-J2Oj9-afTGQ _SCRCYJxPEe-J2Oj9-afTGQ">
+  <packagedElement xmi:type="uml:AssociationClass" xmi:id="_SCBKwJxPEe-J2Oj9-afTGQ" name="Prenotazione" visibility="package" memberEnd="_SCN_EJxPEe-J2Oj9-afTGQ _SCRCYJxPEe-J2Oj9-afTGQ">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_SCMJ4JxPEe-J2Oj9-afTGQ" source="org.eclipse.papyrus">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_SCMw8JxPEe-J2Oj9-afTGQ" key="nature" value="UML_Nature"/>
     </eAnnotations>
@@ -114,7 +109,5 @@
     <ownedAttribute xmi:type="uml:Port" xmi:id="_H3aigJxQEe-J2Oj9-afTGQ" name="OraFine">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
     </ownedAttribute>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_SCN_EJxPEe-J2Oj9-afTGQ" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ"/>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_SCRCYJxPEe-J2Oj9-afTGQ" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_SCBKwJxPEe-J2Oj9-afTGQ"/>
   </packagedElement>
 </uml:Model>
