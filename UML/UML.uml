@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_VIvzgJxBEe-NMMM5isvduA" name="UML">
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_VIvzgJxBEe-NMMM5isvduA" name="UML">
   <packageImport xmi:type="uml:PackageImport" xmi:id="_VLtA4JxBEe-NMMM5isvduA">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
@@ -15,5 +15,85 @@
     </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_XJligJxEEe-NMMM5isvduA" name="Registrazione"/>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_eFP3oJxFEe-NMMM5isvduA" name="Login"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_YEDUwJxGEe-HN_wxpUcLVw" name="Gestore">
+    <generalization xmi:type="uml:Generalization" xmi:id="_V1jK8JxIEe-HN_wxpUcLVw" general="_ml_tgJxBEe-NMMM5isvduA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_qucXUJxGEe-HN_wxpUcLVw" name="Giocatore">
+    <generalization xmi:type="uml:Generalization" xmi:id="_Uny-YJxIEe-HN_wxpUcLVw" general="_ml_tgJxBEe-NMMM5isvduA"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_NXnKwJxHEe-HN_wxpUcLVw" name="Campo">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_f04-YJxHEe-HN_wxpUcLVw" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_f04XUJxHEe-HN_wxpUcLVw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_f04-YZxHEe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_f04-YpxHEe-HN_wxpUcLVw" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_fimNIJxKEe-HN_wxpUcLVw" name="ID">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_f2pDIJxNEe-HN_wxpUcLVw" name="TipologiaCampo" type="_TcnIMJxJEe-HN_wxpUcLVw" isUnique="false"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_qv-kMJxNEe-HN_wxpUcLVw" name="CostoOraNotturna" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_wf8XsJxNEe-HN_wxpUcLVw" name="CostoOraDiurna" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_3ZrPoJxNEe-HN_wxpUcLVw" name="Lunghezza" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_7yJEsJxNEe-HN_wxpUcLVw" name="Larghezza" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_DsyAAJxOEe-HN_wxpUcLVw" name="Coperto">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Zj_BAJxHEe-HN_wxpUcLVw" name="Centro Sportivo">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_ewrIUJxHEe-HN_wxpUcLVw" name="gestore" type="_YEDUwJxGEe-HN_wxpUcLVw" association="_ewkaoJxHEe-HN_wxpUcLVw"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_ghipAJxHEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" aggregation="composite" association="_ghiB8JxHEe-HN_wxpUcLVw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_5gs1QJxHEe-HN_wxpUcLVw" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_QfI4MJxOEe-HN_wxpUcLVw" name="ID">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_TlPGcJxOEe-HN_wxpUcLVw" name="Nome" isUnique="false">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_iMLhsJxOEe-HN_wxpUcLVw" name="Provincia" isUnique="false"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_ewkaoJxHEe-HN_wxpUcLVw" memberEnd="_ewrIUJxHEe-HN_wxpUcLVw _ewzEIJxHEe-HN_wxpUcLVw" navigableOwnedEnd="_ewzEIJxHEe-HN_wxpUcLVw">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ewqhQJxHEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ewqhQZxHEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_ewzEIJxHEe-HN_wxpUcLVw" name="centro sportivo" type="_Zj_BAJxHEe-HN_wxpUcLVw" association="_ewkaoJxHEe-HN_wxpUcLVw">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_EczrkJxKEe-HN_wxpUcLVw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_f04XUJxHEe-HN_wxpUcLVw" memberEnd="_f04-YJxHEe-HN_wxpUcLVw _f04-Y5xHEe-HN_wxpUcLVw" navigableOwnedEnd="_f04-Y5xHEe-HN_wxpUcLVw">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_f04XUZxHEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_f04XUpxHEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_f04-Y5xHEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_f04XUJxHEe-HN_wxpUcLVw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_QDFyMJxKEe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_QDnWoJxKEe-HN_wxpUcLVw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_ghiB8JxHEe-HN_wxpUcLVw" memberEnd="_ghipAJxHEe-HN_wxpUcLVw _ghipA5xHEe-HN_wxpUcLVw" navigableOwnedEnd="_ghipA5xHEe-HN_wxpUcLVw">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ghiB8ZxHEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ghiB8pxHEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_ghipA5xHEe-HN_wxpUcLVw" name="centro sportivo" type="_Zj_BAJxHEe-HN_wxpUcLVw" association="_ghiB8JxHEe-HN_wxpUcLVw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_wtCKwJxIEe-HN_wxpUcLVw" name="Prenotazione"/>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_TcnIMJxJEe-HN_wxpUcLVw" name="TipologiaCampo">
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_bdkG4JxJEe-HN_wxpUcLVw" name="CalcioA5"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_cuBpMJxJEe-HN_wxpUcLVw" name="CalcioA7"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_fxn9EJxJEe-HN_wxpUcLVw" name="CalcioA9"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_g13oUJxJEe-HN_wxpUcLVw" name="CalcioA11"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_hw0NoJxJEe-HN_wxpUcLVw" name="Basket"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_i5vkkJxJEe-HN_wxpUcLVw" name="Tennis"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_j5YcoJxJEe-HN_wxpUcLVw" name="Padel"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_nFWCUJxJEe-HN_wxpUcLVw" name="Pallavolo"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_oqGZoJxJEe-HN_wxpUcLVw" name="Golf"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_xJscIJxJEe-HN_wxpUcLVw" name="Badminton"/>
   </packagedElement>
 </uml:Model>
