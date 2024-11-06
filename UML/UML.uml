@@ -110,4 +110,19 @@
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
     </ownedAttribute>
   </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_5tvxwJxSEe-HN_wxpUcLVw" name="Servizi">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_DcfH85xTEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_DcfH8JxTEe-HN_wxpUcLVw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DcgWEJxTEe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DchkMJxTEe-HN_wxpUcLVw" value="*"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_DcfH8JxTEe-HN_wxpUcLVw" memberEnd="_DcfH85xTEe-HN_wxpUcLVw _DciLQJxTEe-HN_wxpUcLVw" navigableOwnedEnd="_DciLQJxTEe-HN_wxpUcLVw">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DcfH8ZxTEe-HN_wxpUcLVw" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DcfH8pxTEe-HN_wxpUcLVw" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_DciLQJxTEe-HN_wxpUcLVw" name="servizi" type="_5tvxwJxSEe-HN_wxpUcLVw" association="_DcfH8JxTEe-HN_wxpUcLVw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_KIWtkJxUEe-HN_wxpUcLVw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_KIc0MJxUEe-HN_wxpUcLVw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
 </uml:Model>
