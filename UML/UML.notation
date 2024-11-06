@@ -24,6 +24,10 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmh5A5xBEe-NMMM5isvduA"/>
     </children>
     <children xmi:type="notation:BasicCompartment" xmi:id="_mmh5BJxBEe-NMMM5isvduA" type="Class_OperationCompartment">
+      <children xmi:type="notation:Shape" xmi:id="_YEz0oJxEEe-NMMM5isvduA" type="Operation_ClassOperationLabel">
+        <element xmi:type="uml:Operation" href="UML.uml#_XJligJxEEe-NMMM5isvduA"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YEz0oZxEEe-NMMM5isvduA"/>
+      </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_mmh5BZxBEe-NMMM5isvduA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_mmh5BpxBEe-NMMM5isvduA"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_mmh5B5xBEe-NMMM5isvduA"/>
