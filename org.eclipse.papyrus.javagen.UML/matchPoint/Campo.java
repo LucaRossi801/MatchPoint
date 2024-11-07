@@ -4,6 +4,8 @@
 
 package matchPoint;
 
+import java.util.Date;
+
 /************************************************************/
 /**
  * 
@@ -47,6 +49,6 @@ class Campo {
 	 * @param inizio 
 	 * @param fine 
 	 */
-	public void libero(EDate inizio, EDate fine) {
+	public void libero(Date inizio, Date fine) {
 	}
 }

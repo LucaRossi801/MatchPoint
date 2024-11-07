@@ -4,6 +4,8 @@
 
 package matchPoint;
 
+import java.util.Date;
+
 /************************************************************/
 /**
  * 
@@ -24,7 +26,7 @@ public abstract class Utente {
 	/**
 	 * 
 	 */
-	public EDate dataNascita;
+	public Date dataNascita;
 	/**
 	 * 
 	 */
