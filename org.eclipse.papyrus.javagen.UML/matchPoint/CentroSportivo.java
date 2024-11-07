@@ -30,8 +30,6 @@ public class CentroSportivo
 	 * 
 	 */
 	public String[] provincia;
-	/**
-	 * 
-	 */
+	
 	public String comune;
 }

@@ -16,4 +16,16 @@ public class Gestore extends Utente {
 		super(nome, cognome, dataNascita);
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public void registrazione() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void login() {
+		// TODO Auto-generated method stub
+		
+	}
 }

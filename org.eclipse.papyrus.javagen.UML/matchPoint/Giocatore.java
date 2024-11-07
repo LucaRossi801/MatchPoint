@@ -20,4 +20,16 @@ public class Giocatore extends Utente {
 	 * 
 	 */
 	public Campo[] campo;
+
+	@Override
+	public void registrazione() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void login() {
+		// TODO Auto-generated method stub
+		
+	}
 }
