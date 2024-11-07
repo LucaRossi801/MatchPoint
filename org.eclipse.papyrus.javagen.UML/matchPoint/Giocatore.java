@@ -4,11 +4,18 @@
 
 package matchPoint;
 
+import java.util.Date;
+
 /************************************************************/
 /**
  * 
  */
 public class Giocatore extends Utente {
+	public Giocatore(String nome, String cognome, Date dataNascita) {
+		super(nome, cognome, dataNascita);
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * 
 	 */

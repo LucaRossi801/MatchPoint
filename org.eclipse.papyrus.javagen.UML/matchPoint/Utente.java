@@ -11,7 +11,16 @@ public abstract class Utente {
 	public Date dataNascita;
 	public int eta;
 	
-public Utente() {
+
+
+	public Utente(String nome, String cognome, Date dataNascita) {
+		super();
+		this.nome = nome;
+		this.cognome = cognome;
+		this.dataNascita = dataNascita;
+	}
+	
+	public Utente() {
 		
 	}
 

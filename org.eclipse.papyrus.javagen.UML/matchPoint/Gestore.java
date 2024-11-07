@@ -4,9 +4,16 @@
 
 package matchPoint;
 
+import java.util.Date;
+
 /************************************************************/
 /**
  * 
  */
 public class Gestore extends Utente {
+
+	public Gestore(String nome, String cognome, Date dataNascita) {
+		super(nome, cognome, dataNascita);
+		// TODO Auto-generated constructor stub
+	}
 }
