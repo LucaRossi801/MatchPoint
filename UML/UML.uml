@@ -125,10 +125,13 @@
     </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_1KPbQJxbEe-QpPwKq_s4mw" name="calcolaCosto" concurrency="concurrent"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_5tvxwJxSEe-HN_wxpUcLVw" name="Servizi">
+  <packagedElement xmi:type="uml:Class" xmi:id="_5tvxwJxSEe-HN_wxpUcLVw" name="Servizi" visibility="private">
     <ownedAttribute xmi:type="uml:Property" xmi:id="_DcfH85xTEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_DcfH8JxTEe-HN_wxpUcLVw">
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DcgWEJxTEe-HN_wxpUcLVw"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DchkMJxTEe-HN_wxpUcLVw" value="*"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Port" xmi:id="_c8mAsJz5Ee-5ANdKuVt3_w" name="nome">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
     </ownedAttribute>
   </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="_DcfH8JxTEe-HN_wxpUcLVw" memberEnd="_DcfH85xTEe-HN_wxpUcLVw _DciLQJxTEe-HN_wxpUcLVw" navigableOwnedEnd="_DciLQJxTEe-HN_wxpUcLVw">
