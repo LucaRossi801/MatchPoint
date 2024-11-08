@@ -181,10 +181,11 @@
       </eAnnotations>
       <ownedEnd xmi:type="uml:Property" xmi:id="_ECG8Mp3BEe-Kue6wJ9OEIw" name="gestore" type="_YEDUwJxGEe-HN_wxpUcLVw" association="_ECBcoJ3BEe-Kue6wJ9OEIw"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_hBtBwJ3yEe-Kue6wJ9OEIw" name="matchPoint" useCase="_nINQgJ3zEe-Kue6wJ9OEIw _za6YQJ3zEe-Kue6wJ9OEIw _B7o2wJ30Ee-Kue6wJ9OEIw _KwzgoJ30Ee-Kue6wJ9OEIw _PxvD4J30Ee-Kue6wJ9OEIw">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_hBtBwJ3yEe-Kue6wJ9OEIw" name="matchPoint" useCase="_nINQgJ3zEe-Kue6wJ9OEIw _za6YQJ3zEe-Kue6wJ9OEIw _B7o2wJ30Ee-Kue6wJ9OEIw _KwzgoJ30Ee-Kue6wJ9OEIw _PxvD4J30Ee-Kue6wJ9OEIw _oDyLIJ33Ee-Kue6wJ9OEIw">
       <ownedUseCase xmi:type="uml:UseCase" xmi:id="_nINQgJ3zEe-Kue6wJ9OEIw" name="Registrazione" subject="_hBtBwJ3yEe-Kue6wJ9OEIw"/>
       <ownedUseCase xmi:type="uml:UseCase" xmi:id="_za6YQJ3zEe-Kue6wJ9OEIw" name="Login" subject="_hBtBwJ3yEe-Kue6wJ9OEIw"/>
       <ownedUseCase xmi:type="uml:UseCase" xmi:id="_B7o2wJ30Ee-Kue6wJ9OEIw" name="Prenota" subject="_hBtBwJ3yEe-Kue6wJ9OEIw">
+        <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_q7btsJ33Ee-Kue6wJ9OEIw" name="ExtensionPoint2"/>
         <include xmi:type="uml:Include" xmi:id="_jnoa0J31Ee-Kue6wJ9OEIw" addition="_za6YQJ3zEe-Kue6wJ9OEIw"/>
       </ownedUseCase>
       <ownedUseCase xmi:type="uml:UseCase" xmi:id="_KwzgoJ30Ee-Kue6wJ9OEIw" name="Inserisci Centro" subject="_hBtBwJ3yEe-Kue6wJ9OEIw">
@@ -196,6 +197,7 @@
         <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_TILbQJ30Ee-Kue6wJ9OEIw" name="ExtensionPoint1"/>
         <include xmi:type="uml:Include" xmi:id="_pD_V0J31Ee-Kue6wJ9OEIw" addition="_za6YQJ3zEe-Kue6wJ9OEIw"/>
       </ownedUseCase>
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_oDyLIJ33Ee-Kue6wJ9OEIw" name="Annulla Prenotazione" subject="_hBtBwJ3yEe-Kue6wJ9OEIw"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Actor" xmi:id="_m1Y3oJ3yEe-Kue6wJ9OEIw" name="Utente" isAbstract="true"/>
     <packagedElement xmi:type="uml:Actor" xmi:id="_1DLzEJ3yEe-Kue6wJ9OEIw" name="Giocatore">
