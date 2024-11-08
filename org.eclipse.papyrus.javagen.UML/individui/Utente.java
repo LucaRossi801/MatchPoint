@@ -12,20 +12,24 @@ public abstract class Utente {
 	public String cognome;
 	public Date dataNascita;
 	public int eta;
+	public String username;
+	public String password;
 
-	public Utente(String nome, String cognome, Date dataNascita) {
+	public Utente(String nome, String cognome, Date dataNascita, String username, String password) {
 		super();
 		this.nome = nome;
 		this.cognome = cognome;
 		this.dataNascita = dataNascita;
+		this.username=username;
+		this.password=password;
 	}
 
 	public Utente() {
 
 	}
 
-	public abstract void registrazione();
+	public abstract boolean registrazione(String username, String password);
 
-	public abstract void login();
+	public abstract boolean login(String username, String password);
 
 }
