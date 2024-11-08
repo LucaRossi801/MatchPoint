@@ -4,6 +4,8 @@
 
 package components;
 
+import individui.Gestore;
+
 /************************************************************/
 /**
  * 

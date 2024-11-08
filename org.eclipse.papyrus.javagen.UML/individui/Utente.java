@@ -1,4 +1,4 @@
-package components;
+package individui;
 
 import java.util.Date;
 

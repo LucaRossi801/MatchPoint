@@ -6,11 +6,13 @@ package components;
 
 import java.util.Date;
 
+import individui.Giocatore;
+
 /************************************************************/
 /**
  * 
  */
-class Campo {
+public class Campo {
 	/**
 	 * 
 	 */

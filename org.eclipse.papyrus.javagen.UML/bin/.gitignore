@@ -1,1 +1,9 @@
+/.classpath
+/.project
+/.settings/
 /UML/
+/components/
+/org.eclipse.papyrus.javagen.UML.di
+/org.eclipse.papyrus.javagen.UML.notation
+/org.eclipse.papyrus.javagen.UML.uml
+/individui/
