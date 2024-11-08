@@ -181,6 +181,57 @@
       </eAnnotations>
       <ownedEnd xmi:type="uml:Property" xmi:id="_ECG8Mp3BEe-Kue6wJ9OEIw" name="gestore" type="_YEDUwJxGEe-HN_wxpUcLVw" association="_ECBcoJ3BEe-Kue6wJ9OEIw"/>
     </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_hBtBwJ3yEe-Kue6wJ9OEIw" name="matchPoint" useCase="_nINQgJ3zEe-Kue6wJ9OEIw _za6YQJ3zEe-Kue6wJ9OEIw _B7o2wJ30Ee-Kue6wJ9OEIw _KwzgoJ30Ee-Kue6wJ9OEIw _PxvD4J30Ee-Kue6wJ9OEIw">
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_nINQgJ3zEe-Kue6wJ9OEIw" name="Registrazione" subject="_hBtBwJ3yEe-Kue6wJ9OEIw"/>
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_za6YQJ3zEe-Kue6wJ9OEIw" name="Login" subject="_hBtBwJ3yEe-Kue6wJ9OEIw"/>
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_B7o2wJ30Ee-Kue6wJ9OEIw" name="Prenota" subject="_hBtBwJ3yEe-Kue6wJ9OEIw">
+        <include xmi:type="uml:Include" xmi:id="_jnoa0J31Ee-Kue6wJ9OEIw" addition="_za6YQJ3zEe-Kue6wJ9OEIw"/>
+      </ownedUseCase>
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_KwzgoJ30Ee-Kue6wJ9OEIw" name="Inserisci Centro" subject="_hBtBwJ3yEe-Kue6wJ9OEIw">
+        <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_TGWZ0J31Ee-Kue6wJ9OEIw" name="ExtensionPoint1"/>
+        <include xmi:type="uml:Include" xmi:id="_ljr30J31Ee-Kue6wJ9OEIw" addition="_za6YQJ3zEe-Kue6wJ9OEIw"/>
+      </ownedUseCase>
+      <ownedUseCase xmi:type="uml:UseCase" xmi:id="_PxvD4J30Ee-Kue6wJ9OEIw" name="Inserisci Campo" subject="_hBtBwJ3yEe-Kue6wJ9OEIw">
+        <extend xmi:type="uml:Extend" xmi:id="_TGVywJ31Ee-Kue6wJ9OEIw" extendedCase="_KwzgoJ30Ee-Kue6wJ9OEIw" extensionLocation="_TGWZ0J31Ee-Kue6wJ9OEIw"/>
+        <extensionPoint xmi:type="uml:ExtensionPoint" xmi:id="_TILbQJ30Ee-Kue6wJ9OEIw" name="ExtensionPoint1"/>
+        <include xmi:type="uml:Include" xmi:id="_pD_V0J31Ee-Kue6wJ9OEIw" addition="_za6YQJ3zEe-Kue6wJ9OEIw"/>
+      </ownedUseCase>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_m1Y3oJ3yEe-Kue6wJ9OEIw" name="Utente" isAbstract="true"/>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_1DLzEJ3yEe-Kue6wJ9OEIw" name="Giocatore">
+      <generalization xmi:type="uml:Generalization" xmi:id="_cIRYMJ3zEe-Kue6wJ9OEIw" general="_m1Y3oJ3yEe-Kue6wJ9OEIw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_2xFfUJ3yEe-Kue6wJ9OEIw" name="Gestore">
+      <generalization xmi:type="uml:Generalization" xmi:id="_geB3gJ3zEe-Kue6wJ9OEIw" general="_m1Y3oJ3yEe-Kue6wJ9OEIw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_vP0Q0J3zEe-Kue6wJ9OEIw" memberEnd="_vP2tEJ3zEe-Kue6wJ9OEIw _vP3UIJ3zEe-Kue6wJ9OEIw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_vP2GAJ3zEe-Kue6wJ9OEIw" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_vP2GAZ3zEe-Kue6wJ9OEIw" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_vP2tEJ3zEe-Kue6wJ9OEIw" name="registrazione" type="_nINQgJ3zEe-Kue6wJ9OEIw" association="_vP0Q0J3zEe-Kue6wJ9OEIw"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_vP3UIJ3zEe-Kue6wJ9OEIw" name="utente" type="_m1Y3oJ3yEe-Kue6wJ9OEIw" association="_vP0Q0J3zEe-Kue6wJ9OEIw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_6DBUsJ3zEe-Kue6wJ9OEIw" memberEnd="_6DB7wp3zEe-Kue6wJ9OEIw _6DB7w53zEe-Kue6wJ9OEIw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_6DB7wJ3zEe-Kue6wJ9OEIw" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_6DB7wZ3zEe-Kue6wJ9OEIw" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_6DB7wp3zEe-Kue6wJ9OEIw" name="login" type="_za6YQJ3zEe-Kue6wJ9OEIw" association="_6DBUsJ3zEe-Kue6wJ9OEIw"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_6DB7w53zEe-Kue6wJ9OEIw" name="utente" type="_m1Y3oJ3yEe-Kue6wJ9OEIw" association="_6DBUsJ3zEe-Kue6wJ9OEIw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_Iv4xwJ30Ee-Kue6wJ9OEIw" memberEnd="_Iv5Y0p30Ee-Kue6wJ9OEIw _Iv5Y0530Ee-Kue6wJ9OEIw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_Iv5Y0J30Ee-Kue6wJ9OEIw" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Iv5Y0Z30Ee-Kue6wJ9OEIw" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_Iv5Y0p30Ee-Kue6wJ9OEIw" name="prenota" type="_B7o2wJ30Ee-Kue6wJ9OEIw" association="_Iv4xwJ30Ee-Kue6wJ9OEIw"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_Iv5Y0530Ee-Kue6wJ9OEIw" name="giocatore" type="_1DLzEJ3yEe-Kue6wJ9OEIw" association="_Iv4xwJ30Ee-Kue6wJ9OEIw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_OyplcJ30Ee-Kue6wJ9OEIw" memberEnd="_OyqMgp30Ee-Kue6wJ9OEIw _OyqMg530Ee-Kue6wJ9OEIw">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_OyqMgJ30Ee-Kue6wJ9OEIw" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_OyqMgZ30Ee-Kue6wJ9OEIw" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_OyqMgp30Ee-Kue6wJ9OEIw" name="inserisci centro" type="_KwzgoJ30Ee-Kue6wJ9OEIw" association="_OyplcJ30Ee-Kue6wJ9OEIw"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_OyqMg530Ee-Kue6wJ9OEIw" name="gestore" type="_2xFfUJ3yEe-Kue6wJ9OEIw" association="_OyplcJ30Ee-Kue6wJ9OEIw"/>
+    </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/Codegen/1#/"/>
