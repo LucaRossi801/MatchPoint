@@ -8,30 +8,19 @@ import java.util.Date;
 
 import components.Campo;
 
-/************************************************************/
-/**
- * 
- */
 public class Giocatore extends Utente {
 	public Giocatore(String nome, String cognome, Date dataNascita) {
 		super(nome, cognome, dataNascita);
-		// TODO Auto-generated constructor stub
 	}
-
-	/**
-	 * 
-	 */
 	public Campo[] campo;
 
 	@Override
 	public void registrazione() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void login() {
-		// TODO Auto-generated method stub
 		
 	}
 }

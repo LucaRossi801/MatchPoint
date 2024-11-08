@@ -6,32 +6,12 @@ package components;
 
 import individui.Gestore;
 
-/************************************************************/
-/**
- * 
- */
 public class CentroSportivo
 {
-	/**
-	 * 
-	 */
 	public Gestore gestore;
-	/**
-	 * 
-	 */
 	public Campo[] campo;
-	/**
-	 * 
-	 */
 	public int ID;
-	/**
-	 * 
-	 */
 	public String nome;
-	/**
-	 * 
-	 */
-	public String[] provincia;
-	
+	public String[] provincia;	
 	public String comune;
 }
