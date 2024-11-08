@@ -4,17 +4,7 @@
 
 package components;
 
-/************************************************************/
-/**
- * 
- */
 class Servizi {
-	/**
-	 * 
-	 */
 	public Campo[] campo;
-	/**
-	 * 
-	 */
 	public String nome;
 }

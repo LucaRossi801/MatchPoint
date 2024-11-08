@@ -6,26 +6,19 @@ package individui;
 
 import java.util.Date;
 
-/************************************************************/
-/**
- * 
- */
 public class Gestore extends Utente {
 
 	public Gestore(String nome, String cognome, Date dataNascita) {
 		super(nome, cognome, dataNascita);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void registrazione() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void login() {
-		// TODO Auto-generated method stub
 		
 	}
 }
