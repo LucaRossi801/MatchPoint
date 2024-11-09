@@ -246,6 +246,5 @@
     </profileApplication>
   </uml:Model>
   <Codegen:GeneratorHint xmi:id="_0BKvkJz5Ee-Nxo7GTrOCtw" base_Element="_VIvzgJxBEe-NMMM5isvduA" generatorID="Standard Java">
-    <language xmi:type="Codegen:Language" href="pathmap://Codegen_PROFILES/languages.uml#_2Zt6YCjREeayco6FJ_OtTQ"/>
-  </Codegen:GeneratorHint>
+    <language xmi:type="Codegen:Language" href="pathmap://Codegen_PROFILES/languages.uml#_2Zt6YCjREeayco6FJ_OtTQ"/></Codegen:GeneratorHint>
 </xmi:XMI>
