@@ -28,8 +28,22 @@ public abstract class Utente {
 
 	}
 
+	public Utente(String nome2, String cognome2, Date dataNascita2, Object username2, Object password2) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public abstract boolean registrazione(String username, String password);
 
 	public abstract boolean login(String username, String password);
+
+	public void registrazione() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void login() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
