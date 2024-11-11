@@ -236,7 +236,29 @@
     </packagedElement>
     <packagedElement xmi:type="uml:StateMachine" xmi:id="_cyj6AJ6xEe-r59MbHVogfw" name="Inizializzazione"/>
     <packagedElement xmi:type="uml:Interaction" xmi:id="_goBIoJ6xEe-r59MbHVogfw" name="Interaction23">
-      <lifeline xmi:type="uml:Lifeline" xmi:id="_GXCIAKA5Ee-BJ-tEgSM6xw" name="Lifeline1"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_GXCIAKA5Ee-BJ-tEgSM6xw" name="Utente" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q _CAIbkKBtEe-eWtu8I04d7Q"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_7vicsKBrEe-eWtu8I04d7Q" name="Utente: Gestore" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_9nHCUKBrEe-eWtu8I04d7Q" name="Utente: Giocatore" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="__6y8MKBrEe-eWtu8I04d7Q" name="Database" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q _B-3QQKBtEe-eWtu8I04d7Q _CAH0gKBtEe-eWtu8I04d7Q _B_5LAKBtEe-eWtu8I04d7Q"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_DI6eAKBsEe-eWtu8I04d7Q" name="Centro Sportivo" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_H87moKBsEe-eWtu8I04d7Q" name="Campo"/>
+      <fragment xmi:type="uml:CombinedFragment" xmi:id="_L67MkKB0Ee-eWtu8I04d7Q" name="Loop Log In" covered="_GXCIAKA5Ee-BJ-tEgSM6xw _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q __6y8MKBrEe-eWtu8I04d7Q" interactionOperator="loop">
+        <operand xmi:type="uml:InteractionOperand" xmi:id="_L69BwKB0Ee-eWtu8I04d7Q" name="InteractionOperand0" covered="_GXCIAKA5Ee-BJ-tEgSM6xw _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q __6y8MKBrEe-eWtu8I04d7Q">
+          <guard xmi:type="uml:InteractionConstraint" xmi:id="_L69BwaB0Ee-eWtu8I04d7Q" name="Guard Log In">
+            <specification xmi:type="uml:StringExpression" xmi:id="_SYXKEKB0Ee-eWtu8I04d7Q" name="Password errata">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+            </specification>
+            <maxint xmi:type="uml:LiteralInteger" xmi:id="_bzhc8KB0Ee-eWtu8I04d7Q" value="3"/>
+            <minint xmi:type="uml:LiteralInteger" xmi:id="_avHZoKB0Ee-eWtu8I04d7Q" value="1"/>
+          </guard>
+        </operand>
+      </fragment>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_B-3QQKBtEe-eWtu8I04d7Q" name="Message7ReceiveEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_B-sRIKBtEe-eWtu8I04d7Q"/>
+      <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_B_5LAKBtEe-eWtu8I04d7Q" name="BehaviorExecutionSpecification10" covered="__6y8MKBrEe-eWtu8I04d7Q" finish="_CAH0gKBtEe-eWtu8I04d7Q" start="_B-3QQKBtEe-eWtu8I04d7Q"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAH0gKBtEe-eWtu8I04d7Q" name="Message12SendEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
+      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAIbkKBtEe-eWtu8I04d7Q" name="Message12ReceiveEvent" covered="_GXCIAKA5Ee-BJ-tEgSM6xw" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
+      <message xmi:type="uml:Message" xmi:id="_B-sRIKBtEe-eWtu8I04d7Q" name="1: login" receiveEvent="_B-3QQKBtEe-eWtu8I04d7Q"/>
+      <message xmi:type="uml:Message" xmi:id="_CAHNcKBtEe-eWtu8I04d7Q" name="Ricezione login" messageSort="reply" receiveEvent="_CAIbkKBtEe-eWtu8I04d7Q" sendEvent="_CAH0gKBtEe-eWtu8I04d7Q"/>
     </packagedElement>
     <packagedElement xmi:type="uml:StateMachine" xmi:id="_P1CTgKA5Ee-BJ-tEgSM6xw" name="StateMachine">
       <region xmi:type="uml:Region" xmi:id="_Qnj8oKA5Ee-BJ-tEgSM6xw" name="Region1">
