@@ -438,7 +438,7 @@
     <styles xmi:type="style:PapyrusDiagramStyle" xmi:id="_kPcF05xBEe-NMMM5isvduA" diagramKindId="org.eclipse.papyrus.uml.diagram.class">
       <owner xmi:type="uml:Model" href="UML.uml#_VIvzgJxBEe-NMMM5isvduA"/>
     </styles>
-    <styles xmi:type="notation:CanonicalStyle" xmi:id="_Iex3wJ6xEe-r59MbHVogfw"/>
+    <styles xmi:type="notation:CanonicalStyle" xmi:id="_Iex3wJ6xEe-r59MbHVogfw" canonical="false"/>
     <element xmi:type="uml:Model" href="UML.uml#_VIvzgJxBEe-NMMM5isvduA"/>
     <edges xmi:type="notation:Connector" xmi:id="_ghqk0JxHEe-HN_wxpUcLVw" type="Association_Edge" source="_ZkAPIJxHEe-HN_wxpUcLVw" target="_NXoY4JxHEe-HN_wxpUcLVw">
       <children xmi:type="notation:DecorationNode" xmi:id="_ghqk05xHEe-HN_wxpUcLVw" type="Association_StereotypeLabel">
@@ -873,7 +873,7 @@
     <styles xmi:type="style:PapyrusDiagramStyle" xmi:id="_dehoL56xEe-r59MbHVogfw" diagramKindId="org.eclipse.papyrus.uml.diagram.stateMachine">
       <owner xmi:type="uml:Model" href="UML.uml#_VIvzgJxBEe-NMMM5isvduA"/>
     </styles>
-    <styles xmi:type="notation:CanonicalStyle" xmi:id="_eGXrQJ6xEe-r59MbHVogfw"/>
+    <styles xmi:type="notation:CanonicalStyle" xmi:id="_eGXrQJ6xEe-r59MbHVogfw" canonical="false"/>
     <element xmi:type="uml:StateMachine" href="UML.uml#_cyj6AJ6xEe-r59MbHVogfw"/>
   </notation:Diagram>
   <notation:Diagram xmi:id="_hRvbEJ6xEe-r59MbHVogfw" type="PapyrusUMLSequenceDiagram" name="SequenceDiagram" measurementUnit="Pixel">
@@ -893,7 +893,7 @@
     <styles xmi:type="style:PapyrusDiagramStyle" xmi:id="_hRvbGJ6xEe-r59MbHVogfw" diagramKindId="org.eclipse.papyrus.uml.diagram.sequence">
       <owner xmi:type="uml:Model" href="UML.uml#_VIvzgJxBEe-NMMM5isvduA"/>
     </styles>
-    <styles xmi:type="notation:CanonicalStyle" xmi:id="_hyeJkJ6xEe-r59MbHVogfw"/>
+    <styles xmi:type="notation:CanonicalStyle" xmi:id="_hyeJkJ6xEe-r59MbHVogfw" canonical="false"/>
     <element xmi:type="uml:Interaction" href="UML.uml#_goBIoJ6xEe-r59MbHVogfw"/>
   </notation:Diagram>
 </xmi:XMI>
