@@ -234,10 +234,88 @@
       <ownedEnd xmi:type="uml:Property" xmi:id="_OyqMgp30Ee-Kue6wJ9OEIw" name="inserisci centro" type="_KwzgoJ30Ee-Kue6wJ9OEIw" association="_OyplcJ30Ee-Kue6wJ9OEIw"/>
       <ownedEnd xmi:type="uml:Property" xmi:id="_OyqMg530Ee-Kue6wJ9OEIw" name="gestore" type="_2xFfUJ3yEe-Kue6wJ9OEIw" association="_OyplcJ30Ee-Kue6wJ9OEIw"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:StateMachine" xmi:id="_cyj6AJ6xEe-r59MbHVogfw" name="StateMachine22">
-      <region xmi:type="uml:Region" xmi:id="_degaAJ6xEe-r59MbHVogfw" name="Region1"/>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_cyj6AJ6xEe-r59MbHVogfw" name="Inizializzazione"/>
+    <packagedElement xmi:type="uml:Interaction" xmi:id="_goBIoJ6xEe-r59MbHVogfw" name="Interaction23">
+      <lifeline xmi:type="uml:Lifeline" xmi:id="_GXCIAKA5Ee-BJ-tEgSM6xw" name="Lifeline1"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Interaction" xmi:id="_goBIoJ6xEe-r59MbHVogfw" name="Interaction23"/>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_P1CTgKA5Ee-BJ-tEgSM6xw" name="StateMachine">
+      <region xmi:type="uml:Region" xmi:id="_Qnj8oKA5Ee-BJ-tEgSM6xw" name="Region1">
+        <transition xmi:type="uml:Transition" xmi:id="_jxas8KA6Ee-BJ-tEgSM6xw" source="_s7CZUKA5Ee-BJ-tEgSM6xw" target="_vA2PQKA5Ee-BJ-tEgSM6xw"/>
+        <transition xmi:type="uml:Transition" xmi:id="_J3j9kKA7Ee-BJ-tEgSM6xw" source="_vA2PQKA5Ee-BJ-tEgSM6xw" target="_r3rpcKA6Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_OlynQKA7Ee-BJ-tEgSM6xw" name="avvio prenotazione" event="_aLQ1kKA7Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_aDingKA8Ee-BJ-tEgSM6xw" source="_r3rpcKA6Ee-BJ-tEgSM6xw" target="_RcYkcKA8Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_9xVgsKA8Ee-BJ-tEgSM6xw" name="InfoInserite" event="_9jeD0KA8Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_e742gKA8Ee-BJ-tEgSM6xw" source="_RcYkcKA8Ee-BJ-tEgSM6xw" target="_N4YnUKA-Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_1K7rkKA8Ee-BJ-tEgSM6xw" name="CampoLibero" event="_1DJBgKA8Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_lOSBoKA8Ee-BJ-tEgSM6xw" source="_cOIPwKA8Ee-BJ-tEgSM6xw" target="_iQsPIKA8Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_Oca98KA9Ee-BJ-tEgSM6xw" name="UtenteChiedeModifica" event="_OVeocKA9Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_WwBy4KA9Ee-BJ-tEgSM6xw" source="_iQsPIKA8Ee-BJ-tEgSM6xw" target="_cOIPwKA8Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_bgyMIKA9Ee-BJ-tEgSM6xw" name="ModificheConfermate" event="_bXOngKA9Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_2V1jAKA9Ee-BJ-tEgSM6xw" source="_RcYkcKA8Ee-BJ-tEgSM6xw" target="_r3rpcKA6Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_8jDTMKA9Ee-BJ-tEgSM6xw" name="CampoOccupato" event="_8b7XgKA9Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_XI_QAKA-Ee-BJ-tEgSM6xw" source="_N4YnUKA-Ee-BJ-tEgSM6xw" target="_cOIPwKA8Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_dVcyQKA-Ee-BJ-tEgSM6xw" name="PagamentoConfermato" event="_dNAn8KA-Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_mllg4KA-Ee-BJ-tEgSM6xw" source="_N4YnUKA-Ee-BJ-tEgSM6xw" target="_N4YnUKA-Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_r0qN0KA-Ee-BJ-tEgSM6xw" name="PagamentoRifiutato" event="_rmAGwKA-Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_2OfIYKA-Ee-BJ-tEgSM6xw" source="_N4YnUKA-Ee-BJ-tEgSM6xw" target="_h8lK4KA9Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_7Kl2AKA-Ee-BJ-tEgSM6xw" name=">3 ErroriPagamento" event="_7CqCAKA-Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_BOXWUKA_Ee-BJ-tEgSM6xw" source="_h8lK4KA9Ee-BJ-tEgSM6xw" target="_-L65AKA-Ee-BJ-tEgSM6xw"/>
+        <transition xmi:type="uml:Transition" xmi:id="_EWeWwKA_Ee-BJ-tEgSM6xw" source="_iQsPIKA8Ee-BJ-tEgSM6xw" target="_h8lK4KA9Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_I4-4oKA_Ee-BJ-tEgSM6xw" name="UtenteCancella" event="_InpRAKA_Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_RGZmAKA_Ee-BJ-tEgSM6xw" source="_N4YnUKA-Ee-BJ-tEgSM6xw" target="_h8lK4KA9Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_m8VXgKA_Ee-BJ-tEgSM6xw" name="Timeout" event="_mlp84KA_Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_MFATQKBAEe-BJ-tEgSM6xw" source="_cOIPwKA8Ee-BJ-tEgSM6xw" target="_H6bJMKBAEe-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_anynQKBAEe-BJ-tEgSM6xw" name="FineOrario" event="_afltgKBAEe-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_hBvy8KBAEe-BJ-tEgSM6xw" source="_H6bJMKBAEe-BJ-tEgSM6xw" target="_eRsGIKBAEe-BJ-tEgSM6xw"/>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_s7CZUKA5Ee-BJ-tEgSM6xw" name=""/>
+        <subvertex xmi:type="uml:State" xmi:id="_vA2PQKA5Ee-BJ-tEgSM6xw" name="Inizializzazione"/>
+        <subvertex xmi:type="uml:State" xmi:id="_r3rpcKA6Ee-BJ-tEgSM6xw" name="Creazione">
+          <doActivity xmi:type="uml:Activity" xmi:id="_-InNsKA7Ee-BJ-tEgSM6xw" name="RiceviNomeCampo" isReentrant="false"/>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_RcYkcKA8Ee-BJ-tEgSM6xw" name="InAttesaDiConferma"/>
+        <subvertex xmi:type="uml:State" xmi:id="_cOIPwKA8Ee-BJ-tEgSM6xw" name="Confermata"/>
+        <subvertex xmi:type="uml:State" xmi:id="_iQsPIKA8Ee-BJ-tEgSM6xw" name="InModifica"/>
+        <subvertex xmi:type="uml:State" xmi:id="_h8lK4KA9Ee-BJ-tEgSM6xw" name="Cancellata"/>
+        <subvertex xmi:type="uml:State" xmi:id="_N4YnUKA-Ee-BJ-tEgSM6xw" name="Pagamento"/>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_-L65AKA-Ee-BJ-tEgSM6xw" name="" kind="terminate"/>
+        <subvertex xmi:type="uml:State" xmi:id="_H6bJMKBAEe-BJ-tEgSM6xw" name="Completata"/>
+        <subvertex xmi:type="uml:FinalState" xmi:id="_eRsGIKBAEe-BJ-tEgSM6xw" name=""/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_aLQ1kKA7Ee-BJ-tEgSM6xw" name="avvio prenotazione"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_1DJBgKA8Ee-BJ-tEgSM6xw" name="CampoLibero"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_9jeD0KA8Ee-BJ-tEgSM6xw" name="InfoInserite"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_OVeocKA9Ee-BJ-tEgSM6xw" name="UtenteChiedeModifica"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_bXOngKA9Ee-BJ-tEgSM6xw" name="ModificheConfermate"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_8b7XgKA9Ee-BJ-tEgSM6xw" name="CampoOccupato"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_dNAn8KA-Ee-BJ-tEgSM6xw" name="PagamentoConfermato"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_rmAGwKA-Ee-BJ-tEgSM6xw" name="PagamentoRifiutato"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_7CqCAKA-Ee-BJ-tEgSM6xw" name=">3 ErroriPagamento"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_InpRAKA_Ee-BJ-tEgSM6xw" name="UtenteCancella"/>
+    <packagedElement xmi:type="uml:EnumerationLiteral" xmi:id="_cmlrsKA_Ee-BJ-tEgSM6xw" name="30s"/>
+    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_mlp84KA_Ee-BJ-tEgSM6xw" name="Timeout">
+      <when xmi:type="uml:TimeExpression" xmi:id="_mlp84aA_Ee-BJ-tEgSM6xw" name="Time">
+        <expr xmi:type="uml:Expression" xmi:id="_DRufwKBAEe-BJ-tEgSM6xw" name="Time > 30s"/>
+      </when>
+    </packagedElement>
+    <packagedElement xmi:type="uml:EnumerationLiteral" xmi:id="_aDb9AKBAEe-BJ-tEgSM6xw" name="OraFine"/>
+    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_afltgKBAEe-BJ-tEgSM6xw" name="OraFine">
+      <when xmi:type="uml:TimeExpression" xmi:id="_afltgaBAEe-BJ-tEgSM6xw" name="OraFine">
+        <expr xmi:type="uml:InstanceValue" xmi:id="_afltgqBAEe-BJ-tEgSM6xw" name="OraFine" instance="_aDb9AKBAEe-BJ-tEgSM6xw"/>
+      </when>
+    </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/Codegen/1#/"/>
@@ -246,5 +324,6 @@
     </profileApplication>
   </uml:Model>
   <Codegen:GeneratorHint xmi:id="_0BKvkJz5Ee-Nxo7GTrOCtw" base_Element="_VIvzgJxBEe-NMMM5isvduA" generatorID="Standard Java">
-    <language xmi:type="Codegen:Language" href="pathmap://Codegen_PROFILES/languages.uml#_2Zt6YCjREeayco6FJ_OtTQ"/></Codegen:GeneratorHint>
+    <language xmi:type="Codegen:Language" href="pathmap://Codegen_PROFILES/languages.uml#_2Zt6YCjREeayco6FJ_OtTQ"/>
+  </Codegen:GeneratorHint>
 </xmi:XMI>
