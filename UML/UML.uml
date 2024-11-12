@@ -235,15 +235,19 @@
       <ownedEnd xmi:type="uml:Property" xmi:id="_OyqMg530Ee-Kue6wJ9OEIw" name="gestore" type="_2xFfUJ3yEe-Kue6wJ9OEIw" association="_OyplcJ30Ee-Kue6wJ9OEIw"/>
     </packagedElement>
     <packagedElement xmi:type="uml:StateMachine" xmi:id="_cyj6AJ6xEe-r59MbHVogfw" name="Inizializzazione"/>
-    <packagedElement xmi:type="uml:Interaction" xmi:id="_goBIoJ6xEe-r59MbHVogfw" name="Interaction23">
+    <packagedElement xmi:type="uml:Interaction" xmi:id="_goBIoJ6xEe-r59MbHVogfw" name="SequenceDiagram">
       <lifeline xmi:type="uml:Lifeline" xmi:id="_GXCIAKA5Ee-BJ-tEgSM6xw" name="Utente" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q _CAIbkKBtEe-eWtu8I04d7Q"/>
       <lifeline xmi:type="uml:Lifeline" xmi:id="_7vicsKBrEe-eWtu8I04d7Q" name="Utente: Gestore" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
       <lifeline xmi:type="uml:Lifeline" xmi:id="_9nHCUKBrEe-eWtu8I04d7Q" name="Utente: Giocatore" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
       <lifeline xmi:type="uml:Lifeline" xmi:id="__6y8MKBrEe-eWtu8I04d7Q" name="Database" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q _B-3QQKBtEe-eWtu8I04d7Q _CAH0gKBtEe-eWtu8I04d7Q _B_5LAKBtEe-eWtu8I04d7Q"/>
       <lifeline xmi:type="uml:Lifeline" xmi:id="_DI6eAKBsEe-eWtu8I04d7Q" name="Centro Sportivo" coveredBy="_L67MkKB0Ee-eWtu8I04d7Q _L69BwKB0Ee-eWtu8I04d7Q"/>
       <lifeline xmi:type="uml:Lifeline" xmi:id="_H87moKBsEe-eWtu8I04d7Q" name="Campo"/>
-      <fragment xmi:type="uml:CombinedFragment" xmi:id="_L67MkKB0Ee-eWtu8I04d7Q" name="Loop Log In" covered="_GXCIAKA5Ee-BJ-tEgSM6xw _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q __6y8MKBrEe-eWtu8I04d7Q" interactionOperator="loop">
-        <operand xmi:type="uml:InteractionOperand" xmi:id="_L69BwKB0Ee-eWtu8I04d7Q" name="InteractionOperand0" covered="_GXCIAKA5Ee-BJ-tEgSM6xw _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q __6y8MKBrEe-eWtu8I04d7Q">
+      <fragment xmi:type="uml:CombinedFragment" xmi:id="_L67MkKB0Ee-eWtu8I04d7Q" name="Loop Log In" covered="_GXCIAKA5Ee-BJ-tEgSM6xw __6y8MKBrEe-eWtu8I04d7Q _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q" interactionOperator="loop">
+        <operand xmi:type="uml:InteractionOperand" xmi:id="_L69BwKB0Ee-eWtu8I04d7Q" name="InteractionOperand0" covered="_GXCIAKA5Ee-BJ-tEgSM6xw __6y8MKBrEe-eWtu8I04d7Q _DI6eAKBsEe-eWtu8I04d7Q _9nHCUKBrEe-eWtu8I04d7Q _7vicsKBrEe-eWtu8I04d7Q">
+          <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_B-3QQKBtEe-eWtu8I04d7Q" name="Message7ReceiveEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_B-sRIKBtEe-eWtu8I04d7Q"/>
+          <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_B_5LAKBtEe-eWtu8I04d7Q" name="BehaviorExecutionSpecification10" covered="__6y8MKBrEe-eWtu8I04d7Q" finish="_CAH0gKBtEe-eWtu8I04d7Q" start="_B-3QQKBtEe-eWtu8I04d7Q"/>
+          <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAH0gKBtEe-eWtu8I04d7Q" name="Message12SendEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
+          <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAIbkKBtEe-eWtu8I04d7Q" name="Message12ReceiveEvent" covered="_GXCIAKA5Ee-BJ-tEgSM6xw" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
           <guard xmi:type="uml:InteractionConstraint" xmi:id="_L69BwaB0Ee-eWtu8I04d7Q" name="Guard Log In">
             <specification xmi:type="uml:StringExpression" xmi:id="_SYXKEKB0Ee-eWtu8I04d7Q" name="Password errata">
               <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
@@ -253,10 +257,6 @@
           </guard>
         </operand>
       </fragment>
-      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_B-3QQKBtEe-eWtu8I04d7Q" name="Message7ReceiveEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_B-sRIKBtEe-eWtu8I04d7Q"/>
-      <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_B_5LAKBtEe-eWtu8I04d7Q" name="BehaviorExecutionSpecification10" covered="__6y8MKBrEe-eWtu8I04d7Q" finish="_CAH0gKBtEe-eWtu8I04d7Q" start="_B-3QQKBtEe-eWtu8I04d7Q"/>
-      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAH0gKBtEe-eWtu8I04d7Q" name="Message12SendEvent" covered="__6y8MKBrEe-eWtu8I04d7Q" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
-      <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_CAIbkKBtEe-eWtu8I04d7Q" name="Message12ReceiveEvent" covered="_GXCIAKA5Ee-BJ-tEgSM6xw" message="_CAHNcKBtEe-eWtu8I04d7Q"/>
       <message xmi:type="uml:Message" xmi:id="_B-sRIKBtEe-eWtu8I04d7Q" name="1: login" receiveEvent="_B-3QQKBtEe-eWtu8I04d7Q"/>
       <message xmi:type="uml:Message" xmi:id="_CAHNcKBtEe-eWtu8I04d7Q" name="Ricezione login" messageSort="reply" receiveEvent="_CAIbkKBtEe-eWtu8I04d7Q" sendEvent="_CAH0gKBtEe-eWtu8I04d7Q"/>
     </packagedElement>
@@ -272,11 +272,15 @@
         <transition xmi:type="uml:Transition" xmi:id="_e742gKA8Ee-BJ-tEgSM6xw" source="_RcYkcKA8Ee-BJ-tEgSM6xw" target="_N4YnUKA-Ee-BJ-tEgSM6xw">
           <trigger xmi:type="uml:Trigger" xmi:id="_1K7rkKA8Ee-BJ-tEgSM6xw" name="CampoLibero" event="_1DJBgKA8Ee-BJ-tEgSM6xw"/>
         </transition>
-        <transition xmi:type="uml:Transition" xmi:id="_lOSBoKA8Ee-BJ-tEgSM6xw" source="_cOIPwKA8Ee-BJ-tEgSM6xw" target="_iQsPIKA8Ee-BJ-tEgSM6xw">
+        <transition xmi:type="uml:Transition" xmi:id="_lOSBoKA8Ee-BJ-tEgSM6xw" guard="_LmDfcKDaEe-VCZ2duhbeYQ" source="_cOIPwKA8Ee-BJ-tEgSM6xw" target="_iQsPIKA8Ee-BJ-tEgSM6xw">
+          <ownedRule xmi:type="uml:Constraint" xmi:id="_CiX4cKDaEe-VCZ2duhbeYQ" name=">24hAOraInizio">
+            <specification xmi:type="uml:TimeExpression" xmi:id="_HH4rAKDaEe-VCZ2duhbeYQ"/>
+          </ownedRule>
+          <ownedRule xmi:type="uml:Constraint" xmi:id="_LmDfcKDaEe-VCZ2duhbeYQ" name=">24hAOraInizio"/>
           <trigger xmi:type="uml:Trigger" xmi:id="_Oca98KA9Ee-BJ-tEgSM6xw" name="UtenteChiedeModifica" event="_OVeocKA9Ee-BJ-tEgSM6xw"/>
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_WwBy4KA9Ee-BJ-tEgSM6xw" source="_iQsPIKA8Ee-BJ-tEgSM6xw" target="_cOIPwKA8Ee-BJ-tEgSM6xw">
-          <trigger xmi:type="uml:Trigger" xmi:id="_bgyMIKA9Ee-BJ-tEgSM6xw" name="ModificheConfermate" event="_bXOngKA9Ee-BJ-tEgSM6xw"/>
+          <trigger xmi:type="uml:Trigger" xmi:id="_bgyMIKA9Ee-BJ-tEgSM6xw" name="NessunaModifica" event="_bXOngKA9Ee-BJ-tEgSM6xw"/>
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_2V1jAKA9Ee-BJ-tEgSM6xw" source="_RcYkcKA8Ee-BJ-tEgSM6xw" target="_r3rpcKA6Ee-BJ-tEgSM6xw">
           <trigger xmi:type="uml:Trigger" xmi:id="_8jDTMKA9Ee-BJ-tEgSM6xw" name="CampoOccupato" event="_8b7XgKA9Ee-BJ-tEgSM6xw"/>
@@ -292,19 +296,23 @@
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_BOXWUKA_Ee-BJ-tEgSM6xw" source="_h8lK4KA9Ee-BJ-tEgSM6xw" target="_-L65AKA-Ee-BJ-tEgSM6xw"/>
         <transition xmi:type="uml:Transition" xmi:id="_EWeWwKA_Ee-BJ-tEgSM6xw" source="_iQsPIKA8Ee-BJ-tEgSM6xw" target="_h8lK4KA9Ee-BJ-tEgSM6xw">
+          <effect xmi:type="uml:Activity" xmi:id="_WSebUKDZEe-VCZ2duhbeYQ" name="Rimborso"/>
           <trigger xmi:type="uml:Trigger" xmi:id="_I4-4oKA_Ee-BJ-tEgSM6xw" name="UtenteCancella" event="_InpRAKA_Ee-BJ-tEgSM6xw"/>
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_RGZmAKA_Ee-BJ-tEgSM6xw" source="_N4YnUKA-Ee-BJ-tEgSM6xw" target="_h8lK4KA9Ee-BJ-tEgSM6xw">
-          <trigger xmi:type="uml:Trigger" xmi:id="_m8VXgKA_Ee-BJ-tEgSM6xw" name="Timeout" event="_mlp84KA_Ee-BJ-tEgSM6xw"/>
+          <trigger xmi:type="uml:Trigger" xmi:id="_Y4BTgKDUEe-VCZ2duhbeYQ" name="after (30 s)" event="_YtpPgKDUEe-VCZ2duhbeYQ"/>
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_MFATQKBAEe-BJ-tEgSM6xw" source="_cOIPwKA8Ee-BJ-tEgSM6xw" target="_H6bJMKBAEe-BJ-tEgSM6xw">
           <trigger xmi:type="uml:Trigger" xmi:id="_anynQKBAEe-BJ-tEgSM6xw" name="FineOrario" event="_afltgKBAEe-BJ-tEgSM6xw"/>
         </transition>
         <transition xmi:type="uml:Transition" xmi:id="_hBvy8KBAEe-BJ-tEgSM6xw" source="_H6bJMKBAEe-BJ-tEgSM6xw" target="_eRsGIKBAEe-BJ-tEgSM6xw"/>
+        <transition xmi:type="uml:Transition" xmi:id="_fV_DMKDZEe-VCZ2duhbeYQ" source="_iQsPIKA8Ee-BJ-tEgSM6xw" target="_RcYkcKA8Ee-BJ-tEgSM6xw">
+          <trigger xmi:type="uml:Trigger" xmi:id="_21mIQKDZEe-VCZ2duhbeYQ" name="CambiamentiRilevati" event="_2dDFYKDZEe-VCZ2duhbeYQ"/>
+        </transition>
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_s7CZUKA5Ee-BJ-tEgSM6xw" name=""/>
         <subvertex xmi:type="uml:State" xmi:id="_vA2PQKA5Ee-BJ-tEgSM6xw" name="Inizializzazione"/>
         <subvertex xmi:type="uml:State" xmi:id="_r3rpcKA6Ee-BJ-tEgSM6xw" name="Creazione">
-          <doActivity xmi:type="uml:Activity" xmi:id="_-InNsKA7Ee-BJ-tEgSM6xw" name="RiceviNomeCampo" isReentrant="false"/>
+          <doActivity xmi:type="uml:Activity" xmi:id="_SVXCUKDVEe-VCZ2duhbeYQ" name="ChiediNomeCampo; ChiediData; ChiediOra" isReentrant="true"/>
         </subvertex>
         <subvertex xmi:type="uml:State" xmi:id="_RcYkcKA8Ee-BJ-tEgSM6xw" name="InAttesaDiConferma"/>
         <subvertex xmi:type="uml:State" xmi:id="_cOIPwKA8Ee-BJ-tEgSM6xw" name="Confermata"/>
@@ -327,9 +335,9 @@
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_7CqCAKA-Ee-BJ-tEgSM6xw" name=">3 ErroriPagamento"/>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_InpRAKA_Ee-BJ-tEgSM6xw" name="UtenteCancella"/>
     <packagedElement xmi:type="uml:EnumerationLiteral" xmi:id="_cmlrsKA_Ee-BJ-tEgSM6xw" name="30s"/>
-    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_mlp84KA_Ee-BJ-tEgSM6xw" name="Timeout">
-      <when xmi:type="uml:TimeExpression" xmi:id="_mlp84aA_Ee-BJ-tEgSM6xw" name="Time">
-        <expr xmi:type="uml:Expression" xmi:id="_DRufwKBAEe-BJ-tEgSM6xw" name="Time > 30s"/>
+    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_mlp84KA_Ee-BJ-tEgSM6xw" name="After 45s">
+      <when xmi:type="uml:TimeExpression" xmi:id="_mlp84aA_Ee-BJ-tEgSM6xw" name="Time > 45s">
+        <expr xmi:type="uml:Expression" xmi:id="_DRufwKBAEe-BJ-tEgSM6xw" name="45s"/>
       </when>
     </packagedElement>
     <packagedElement xmi:type="uml:EnumerationLiteral" xmi:id="_aDb9AKBAEe-BJ-tEgSM6xw" name="OraFine"/>
@@ -338,6 +346,14 @@
         <expr xmi:type="uml:InstanceValue" xmi:id="_afltgqBAEe-BJ-tEgSM6xw" name="OraFine" instance="_aDb9AKBAEe-BJ-tEgSM6xw"/>
       </when>
     </packagedElement>
+    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_PhCygKDTEe-VCZ2duhbeYQ" name="After (30s)"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_dVy70KDTEe-VCZ2duhbeYQ" name="After (30s)" signal="_gcr0QKDTEe-VCZ2duhbeYQ"/>
+    <packagedElement xmi:type="uml:Signal" xmi:id="_gcr0QKDTEe-VCZ2duhbeYQ" name="After (30s)"/>
+    <packagedElement xmi:type="uml:TimeEvent" xmi:id="_YtpPgKDUEe-VCZ2duhbeYQ" name="after (30 s)">
+      <when xmi:type="uml:TimeExpression" xmi:id="_YtpPgaDUEe-VCZ2duhbeYQ" name="after (30 s)"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_rhmrgKDZEe-VCZ2duhbeYQ" name="CambiamentiRilevati"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_2dDFYKDZEe-VCZ2duhbeYQ" name="CambiamentiRilevati"/>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/Codegen/1#/"/>
