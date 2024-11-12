@@ -1,9 +1,10 @@
 /.classpath
 /.project
 /.settings/
-/components/
-/dataBase/
-/individui/
+/UML/
 /org.eclipse.papyrus.javagen.UML.di
 /org.eclipse.papyrus.javagen.UML.notation
 /org.eclipse.papyrus.javagen.UML.uml
+/matchPoint/
+/components/
+/functional/
