@@ -7,6 +7,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DataBase"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Database"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JarDB"/>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
