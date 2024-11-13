@@ -72,7 +72,7 @@ public class DataBase {
             createTable(conn);
             
             // Inserisce i dati nella tabella
-            insert(conn);
+           // insert(conn);
             
             // Seleziona e mostra i dati della tabella Utente
             selectAll(conn);
