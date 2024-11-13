@@ -10,7 +10,7 @@ public class DataBase {
 			pstmt.setString(1, "Marley");
 			pstmt.setDate(1, Date.valueOf("2003-11-08"));
 			pstmt.setInt(1, 21);
-			pstmt.setString(1, "BobbyOne");
+			pstmt.setString(1, "BobbySolo");
 			pstmt.setString(1, "BobbyGronde");
 			pstmt.executeUpdate();
 
