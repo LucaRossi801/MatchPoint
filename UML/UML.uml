@@ -548,6 +548,15 @@
         <transition xmi:type="uml:Transition" xmi:id="_9bOjIKHDEe-eb6QVehOhWg" source="_FTiYoKHDEe-eb6QVehOhWg" target="_LMlPoKHDEe-eb6QVehOhWg">
           <trigger xmi:type="uml:Trigger" xmi:id="_Ea0LcKHEEe-eb6QVehOhWg" event="_InpRAKA_Ee-BJ-tEgSM6xw"/>
         </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_DaDnIKHGEe-eb6QVehOhWg" source="_J6uqYKG8Ee-eb6QVehOhWg" target="_LMlPoKHDEe-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_F9AFAKHGEe-eb6QVehOhWg" event="_7CqCAKA-Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_RtpBgKHGEe-eb6QVehOhWg" source="_J6uqYKG8Ee-eb6QVehOhWg" target="_LMlPoKHDEe-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_2_STEKHGEe-eb6QVehOhWg" name="afrer(30 s)" event="_PhCygKDTEe-VCZ2duhbeYQ"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_HOpdoKHHEe-eb6QVehOhWg" source="_J6uqYKG8Ee-eb6QVehOhWg" target="_J6uqYKG8Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_SIptEKHHEe-eb6QVehOhWg" event="_rmAGwKA-Ee-BJ-tEgSM6xw"/>
+        </transition>
         <subvertex xmi:type="uml:State" xmi:id="_UEgosKG6Ee-eb6QVehOhWg" name="Inizializzazione"/>
         <subvertex xmi:type="uml:Pseudostate" xmi:id="_u1ILgKG6Ee-eb6QVehOhWg" name=""/>
         <subvertex xmi:type="uml:State" xmi:id="_3JWrgKG6Ee-eb6QVehOhWg" name="Creazione">
