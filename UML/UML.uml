@@ -518,6 +518,55 @@
     </packagedElement>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_rhmrgKDZEe-VCZ2duhbeYQ" name="CambiamentiRilevati"/>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_2dDFYKDZEe-VCZ2duhbeYQ" name="CambiamentiRilevati"/>
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="_Sx2G8KG6Ee-eb6QVehOhWg" name="StateMachine45">
+      <region xmi:type="uml:Region" xmi:id="_Tas2sKG6Ee-eb6QVehOhWg" name="Region1">
+        <transition xmi:type="uml:Transition" xmi:id="_12risKG6Ee-eb6QVehOhWg" source="_u1ILgKG6Ee-eb6QVehOhWg" target="_UEgosKG6Ee-eb6QVehOhWg"/>
+        <transition xmi:type="uml:Transition" xmi:id="_XUPeoKG7Ee-eb6QVehOhWg" source="_UEgosKG6Ee-eb6QVehOhWg" target="_3JWrgKG6Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_nmK1AKG7Ee-eb6QVehOhWg" name="AvvioPrenotazione" event="_syuZcKG7Ee-eb6QVehOhWg"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_czCpoKG7Ee-eb6QVehOhWg" source="_3JWrgKG6Ee-eb6QVehOhWg" target="_X911QKG7Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_w5tc8KG7Ee-eb6QVehOhWg" name="InfoInserite" event="_ws_2oKG7Ee-eb6QVehOhWg"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_dgNRoKG7Ee-eb6QVehOhWg" source="_X911QKG7Ee-eb6QVehOhWg" target="_3JWrgKG6Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_1UipgKG7Ee-eb6QVehOhWg" name="CampoOccupato" event="_1MuxUKG7Ee-eb6QVehOhWg"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_YnidEKG8Ee-eb6QVehOhWg" source="_X911QKG7Ee-eb6QVehOhWg" target="_J6uqYKG8Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_jEu0sKG8Ee-eb6QVehOhWg" name="CampoLibero" event="_i4a3AKG8Ee-eb6QVehOhWg"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_VzF7UKHDEe-eb6QVehOhWg" source="_J6uqYKG8Ee-eb6QVehOhWg" target="_IzJXQKG8Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_cEbWgKHDEe-eb6QVehOhWg" event="_dNAn8KA-Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_gFvP0KHDEe-eb6QVehOhWg" source="_IzJXQKG8Ee-eb6QVehOhWg" target="_86lJoKHCEe-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_lambsKHDEe-eb6QVehOhWg" event="_afltgKBAEe-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_oDqvsKHDEe-eb6QVehOhWg" source="_FTiYoKHDEe-eb6QVehOhWg" target="_IzJXQKG8Ee-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_rEUdQKHDEe-eb6QVehOhWg" event="_bXOngKA9Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_uaJwoKHDEe-eb6QVehOhWg" source="_IzJXQKG8Ee-eb6QVehOhWg" target="_FTiYoKHDEe-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_xmE6EKHDEe-eb6QVehOhWg" event="_OVeocKA9Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <transition xmi:type="uml:Transition" xmi:id="_9bOjIKHDEe-eb6QVehOhWg" source="_FTiYoKHDEe-eb6QVehOhWg" target="_LMlPoKHDEe-eb6QVehOhWg">
+          <trigger xmi:type="uml:Trigger" xmi:id="_Ea0LcKHEEe-eb6QVehOhWg" event="_InpRAKA_Ee-BJ-tEgSM6xw"/>
+        </transition>
+        <subvertex xmi:type="uml:State" xmi:id="_UEgosKG6Ee-eb6QVehOhWg" name="Inizializzazione"/>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_u1ILgKG6Ee-eb6QVehOhWg" name=""/>
+        <subvertex xmi:type="uml:State" xmi:id="_3JWrgKG6Ee-eb6QVehOhWg" name="Creazione">
+          <entry xmi:type="uml:Activity" xmi:id="_WNEbMKG7Ee-eb6QVehOhWg" name="ChiedNomeCampo; ChiediData; ChiediOra"/>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_X911QKG7Ee-eb6QVehOhWg" name="InAttesaDiConferma">
+          <entry xmi:type="uml:Activity" xmi:id="_A2u6UKG8Ee-eb6QVehOhWg" name="ControllaOccupazione"/>
+        </subvertex>
+        <subvertex xmi:type="uml:State" xmi:id="_IzJXQKG8Ee-eb6QVehOhWg" name="Confermata"/>
+        <subvertex xmi:type="uml:State" xmi:id="_J6uqYKG8Ee-eb6QVehOhWg" name="Pagamento"/>
+        <subvertex xmi:type="uml:State" xmi:id="_86lJoKHCEe-eb6QVehOhWg" name="Completata"/>
+        <subvertex xmi:type="uml:State" xmi:id="_FTiYoKHDEe-eb6QVehOhWg" name="InModifica"/>
+        <subvertex xmi:type="uml:State" xmi:id="_LMlPoKHDEe-eb6QVehOhWg" name="Cancellata"/>
+      </region>
+    </packagedElement>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_syuZcKG7Ee-eb6QVehOhWg" name="AvvioPrenotazione"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_ws_2oKG7Ee-eb6QVehOhWg" name="InfoInserite"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_1MuxUKG7Ee-eb6QVehOhWg" name="CampoOccupato"/>
+    <packagedElement xmi:type="uml:SignalEvent" xmi:id="_i4a3AKG8Ee-eb6QVehOhWg" name="CampoLibero"/>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/Codegen/1#/"/>
