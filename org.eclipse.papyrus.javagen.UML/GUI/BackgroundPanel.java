@@ -8,6 +8,9 @@ public class BackgroundPanel extends JPanel {
     private Image backgroundImage;
     private Image clearImage;
     private boolean imageRevealed;  // Flag per determinare se l'immagine è rivelata
+    private float fontSize = 24f;   // Dimensione iniziale del font
+    private boolean increasing = true; // Direzione di incremento/decremento della dimensione del font
+    private Timer pulseTimer;       // Timer per far pulsare la scritta
 
     public BackgroundPanel(String blurredImagePath, String clearImagePath) {
         this.imageRevealed = false;  // L'immagine è sfocata all'inizio
@@ -30,6 +33,24 @@ public class BackgroundPanel extends JPanel {
                 setImageRevealed(true);  // Rivelare l'immagine nitida al click
             }
         });
+
+        // Timer per far pulsare la scritta (aumenta o diminuisce la dimensione del font)
+        pulseTimer = new Timer(120, e -> {  // Timer più lento per transizioni più fluide
+            // Cambia la dimensione del font con un incremento/decremento più piccolo
+            if (increasing) {
+                fontSize += 0.5f;  // Aumento molto lento della dimensione
+                if (fontSize >= 26f) {  // Limita la dimensione massima a 26
+                    increasing = false;
+                }
+            } else {
+                fontSize -= 0.5f;  // Diminuzione molto lenta
+                if (fontSize <= 24f) {  // Limita la dimensione minima a 24
+                    increasing = true;
+                }
+            }
+            repaint();  // Ridisegna il pannello per aggiornare la dimensione del testo
+        });
+        pulseTimer.start();  // Avvia il timer per il pulsaggio
     }
 
     // Metodo per aggiornare lo stato dell'immagine (se è rivelata o meno)
@@ -48,6 +69,15 @@ public class BackgroundPanel extends JPanel {
         } else if (backgroundImage != null) {
             // Altrimenti, mostra l'immagine sfocata
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+
+            // Disegna la scritta "Clicca ovunque per continuare" sopra l'immagine sfocata
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Montserrat", Font.BOLD, (int) fontSize));  // Usa la dimensione pulsante del font
+            String text = "Clicca ovunque per continuare".toUpperCase();  // Trasforma il testo in maiuscolo
+            FontMetrics metrics = g.getFontMetrics();
+            int x = (getWidth() - metrics.stringWidth(text)) / 2; // Centra il testo
+            int y = (int) (getHeight() / 1.5f);  // Posiziona il testo più in basso
+            g.drawString(text, x, y);
         } else {
             g.drawString("Background image not found", 10, 20);
         }
