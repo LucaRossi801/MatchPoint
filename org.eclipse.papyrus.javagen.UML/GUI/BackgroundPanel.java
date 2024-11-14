@@ -89,7 +89,7 @@ public class BackgroundPanel extends JPanel {
                 if (isVisible) {
                     g.setColor(Color.BLACK);
                     g.setFont(new Font("Montserrat", Font.BOLD, 24));
-                    String text = "Clicca ovunque per continuare".toUpperCase();
+                    String text = "Clicca ovunque per continuare!".toUpperCase();
                     FontMetrics metricsText = g.getFontMetrics();
                     int xText = (getWidth() - metricsText.stringWidth(text)) / 2;
                     int yText = (int) (getHeight() * 0.75);
