@@ -208,17 +208,31 @@ public class BackgroundPanel extends JPanel {
         return panel;
     }
 
-    // Crea il pannello di registrazione
     private JPanel createRegisterPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         
+        // Creazione dei campi di testo
         JLabel firstNameLabel = new JLabel("Nome:");
         JTextField firstNameField = new JTextField(20);
         JLabel lastNameLabel = new JLabel("Cognome:");
         JTextField lastNameField = new JTextField(20);
-        JLabel dobLabel = new JLabel("Data di nascita:");
-        JTextField dobField = new JTextField(20);
+        
+        // Creazione dei campi per la data di nascita (giorno, mese, anno)
+        JLabel dobLabel = new JLabel("Data di nascita (gg/mm/aaaa):");
+        
+        // Creazione dei campi separati per giorno, mese, anno
+        JPanel datePanel = new JPanel();
+        JTextField dayField = new JTextField(2);  // Campo per il giorno
+        JTextField monthField = new JTextField(2);  // Campo per il mese
+        JTextField yearField = new JTextField(4);  // Campo per l'anno
+        datePanel.add(dayField);
+        datePanel.add(new JLabel("/"));
+        datePanel.add(monthField);
+        datePanel.add(new JLabel("/"));
+        datePanel.add(yearField);
+
+        // Creazione dei campi per username e password
         JLabel usernameLabel = new JLabel("Username:");
         JTextField usernameField = new JTextField(20);
         JLabel passwordLabel = new JLabel("Password:");
@@ -226,18 +240,62 @@ public class BackgroundPanel extends JPanel {
 
         JButton registerSubmitButton = new JButton("Register");
 
+        // Aggiungi tutti i componenti al pannello
         panel.add(firstNameLabel);
         panel.add(firstNameField);
         panel.add(lastNameLabel);
         panel.add(lastNameField);
         panel.add(dobLabel);
-        panel.add(dobField);
+        panel.add(datePanel);  // Pannello della data
         panel.add(usernameLabel);
         panel.add(usernameField);
         panel.add(passwordLabel);
         panel.add(passwordField);
         panel.add(registerSubmitButton);
-        
+
+        // Gestire l'evento di registrazione
+        registerSubmitButton.addActionListener(e -> {
+            String day = dayField.getText();
+            String month = monthField.getText();
+            String year = yearField.getText();
+
+            // Validazione dei dati
+            if (day.isEmpty() || month.isEmpty() || year.isEmpty()) {
+                JOptionPane.showMessageDialog(panel, "Compila correttamente la data di nascita.");
+                return;
+            }
+
+            // Prova a concatenare la data
+            try {
+                int d = Integer.parseInt(day);
+                int m = Integer.parseInt(month);
+                int y = Integer.parseInt(year);
+
+                // Validazione del giorno, mese e anno
+                if (m < 1 || m > 12) {
+                    JOptionPane.showMessageDialog(panel, "Il mese deve essere tra 1 e 12.");
+                    return;
+                }
+
+                if (d < 1 || d > 31) {
+                    JOptionPane.showMessageDialog(panel, "Il giorno deve essere tra 1 e 31.");
+                    return;
+                }
+
+                if (y < 1900 || y > 2025) {
+                    JOptionPane.showMessageDialog(panel, "L'anno deve essere tra 1900 e 2025.");
+                    return;
+                }
+
+                // Data valida
+                String birthDate = String.format("%02d/%02d/%04d", d, m, y);
+                System.out.println("Data di nascita: " + birthDate);
+                // Puoi usare la data in un formato concatenato o fare ulteriori elaborazioni
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(panel, "Inserisci numeri validi per la data.");
+            }
+        });
+
         return panel;
     }
 }
