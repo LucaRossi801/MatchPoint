@@ -7,13 +7,15 @@ import java.net.URL;
 public class BackgroundPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private JPanel homePanel;  // Pannello per la homepage (con l'immagine sfocata e la scritta lampeggiante)
-    private JPanel mainPanel;  // Pannello per la vista successiva (con l'immagine nitida e i bottoni)
+    private JPanel homePanel;  // Pannello per la homepage
+    private JPanel mainPanel;  // Pannello per la vista principale (con immagine nitida e bottoni)
+    private JPanel loginPanel; // Pannello per la vista di login
+    private JPanel registerPanel; // Pannello per la vista di registrazione
 
     private Image backgroundImage;
     private Image clearImage;
-    private boolean imageRevealed;  // Flag per determinare se l'immagine è rivelata
-    private boolean isVisible;  // Booleano per gestire la visibilità della scritta lampeggiante
+
+    private boolean isVisible;  // Booleano per la visibilità della scritta lampeggiante
     private Timer blinkTimer;   // Timer per gestire il lampeggiamento
     private int blinkInterval;  // Intervallo di tempo per il lampeggiamento
 
@@ -21,7 +23,6 @@ public class BackgroundPanel extends JPanel {
     private JButton loginButton;     // Bottone per il "Login"
 
     public BackgroundPanel(String blurredImagePath, String clearImagePath) {
-        this.imageRevealed = false;  // L'immagine è sfocata all'inizio
         this.isVisible = true;  // La scritta è visibile inizialmente
         this.blinkInterval = 800;  // Durata della visibilità della scritta (in ms)
 
@@ -29,13 +30,17 @@ public class BackgroundPanel extends JPanel {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Crea i due pannelli per le due viste
+        // Crea i pannelli per le diverse viste
         homePanel = createHomePanel(blurredImagePath);
         mainPanel = createMainPanel(clearImagePath);
+        loginPanel = createLoginPanel();
+        registerPanel = createRegisterPanel();
 
         // Aggiungi i pannelli al CardLayout
         cardPanel.add(homePanel, "home");
         cardPanel.add(mainPanel, "main");
+        cardPanel.add(loginPanel, "login");
+        cardPanel.add(registerPanel, "register");
 
         // Imposta la vista iniziale come la homepage
         cardLayout.show(cardPanel, "home");
@@ -103,12 +108,10 @@ public class BackgroundPanel extends JPanel {
 
         // Timer per il lampeggiamento della scritta
         blinkTimer = new Timer(blinkInterval, e -> {
-            if (!imageRevealed) {
-                isVisible = !isVisible;
-                blinkInterval = isVisible ? 300 : 800;
-                blinkTimer.setDelay(blinkInterval);
-                repaint();
-            }
+            isVisible = !isVisible;
+            blinkInterval = isVisible ? 300 : 800;
+            blinkTimer.setDelay(blinkInterval);
+            repaint();
         });
         blinkTimer.start();
 
@@ -169,6 +172,7 @@ public class BackgroundPanel extends JPanel {
         registerButton.setForeground(Color.WHITE);
         registerButton.setFocusPainted(false);
         registerButton.setBounds(300, 400, 200, 50); // Posizione
+        registerButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
         panel.add(registerButton);
 
         loginButton = new JButton("Login");
@@ -177,10 +181,63 @@ public class BackgroundPanel extends JPanel {
         loginButton.setForeground(Color.WHITE);
         loginButton.setFocusPainted(false);
         loginButton.setBounds(300, 470, 200, 50); // Posizione
+        loginButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
         panel.add(loginButton);
 
         return panel;
     }
+
+    // Crea il pannello di login
+    private JPanel createLoginPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(20);
+
+        JButton loginSubmitButton = new JButton("Login");
+        
+        panel.add(usernameLabel);
+        panel.add(usernameField);
+        panel.add(passwordLabel);
+        panel.add(passwordField);
+        panel.add(loginSubmitButton);
+        
+        return panel;
+    }
+
+    // Crea il pannello di registrazione
+    private JPanel createRegisterPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        JLabel firstNameLabel = new JLabel("Nome:");
+        JTextField firstNameField = new JTextField(20);
+        JLabel lastNameLabel = new JLabel("Cognome:");
+        JTextField lastNameField = new JTextField(20);
+        JLabel dobLabel = new JLabel("Data di nascita:");
+        JTextField dobField = new JTextField(20);
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(20);
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(20);
+
+        JButton registerSubmitButton = new JButton("Register");
+
+        panel.add(firstNameLabel);
+        panel.add(firstNameField);
+        panel.add(lastNameLabel);
+        panel.add(lastNameField);
+        panel.add(dobLabel);
+        panel.add(dobField);
+        panel.add(usernameLabel);
+        panel.add(usernameField);
+        panel.add(passwordLabel);
+        panel.add(passwordField);
+        panel.add(registerSubmitButton);
+        
+        return panel;
+    }
 }
-
-
