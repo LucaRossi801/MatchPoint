@@ -162,7 +162,7 @@ public class BackgroundPanel extends JPanel {
         if (clearImageUrl != null) {
             this.clearImage = new ImageIcon(clearImageUrl).getImage();
         } else {
-            System.out.println("Errore nel caricamento dell'immagine nitida: " + clearImagePath);
+            System.out.println("Errore nel caricamento dell'immagine : " + clearImagePath);
         }
 
         // Crea i bottoni "Register" e "Login"
