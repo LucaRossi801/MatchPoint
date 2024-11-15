@@ -1,5 +1,7 @@
 package individui;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -33,8 +35,9 @@ public abstract class Utente {
 	public int login(String username, String password) {
 		String sql="SELECT password FROM Utente WHERE username ="+username;
 		ResultSet select = null;
-		try {
-			select = DataBase.eseguiSelect(null, sql);
+		String url = "jdbc:sqlite:src/main/java/matchpointDB.db"; 
+		try  (Connection conn = DriverManager.getConnection(url)){
+			select = DataBase.eseguiSelect(conn, sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} //risultato della query
