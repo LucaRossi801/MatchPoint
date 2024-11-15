@@ -41,26 +41,15 @@ public class DataBase {
     }
 
     // Metodo per selezionare e visualizzare i dati nella tabella Utente
-    private static void selectAll(Connection conn) throws SQLException {
-        String selectSQL = "SELECT * FROM Utente";
+    private static ResultSet select(Connection conn, String sql) throws SQLException {
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(selectSQL)) {
-            // Stampa i risultati della query
-            while (rs.next()) {
-                int id = rs.getInt("ID");
-                String nome = rs.getString("Nome");
-                String cognome = rs.getString("Cognome");
-                Date dataNascita = rs.getDate("DataNascita");
-                int eta = rs.getInt("Eta");
-                String username = rs.getString("Username");
-                String password = rs.getString("Password");
-
-                // Mostra i risultati nel formato richiesto
-                System.out.println("ID: " + id + ", Nome: " + nome + ", Cognome: " + cognome +
-                                   ", Data di Nascita: " + dataNascita + ", Età: " + eta +
-                                   ", Username: " + username + ", Password: " + password);
-            }
-        }
+             ResultSet rs = stmt.executeQuery(sql)) {
+        	return rs;
+    }}
+    
+    public static ResultSet eseguiSelect(Connection conn, String sql) throws SQLException {
+    	ResultSet rs= select(conn, sql);
+    	return rs;
     }
 
     // Metodo principale
