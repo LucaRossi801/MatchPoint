@@ -1,5 +1,7 @@
 package individui;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 import dataBase.DataBase;
@@ -26,26 +28,26 @@ public abstract class Utente {
 		this.password=password;
 	}
 
-	public Utente() {
-
-	}
-
-	public Utente(String nome2, String cognome2, Date dataNascita2, Object username2, Object password2) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public abstract int registrazione(String username, String password);
 
 	public int login(String username, String password) {
 		String sql="SELECT password FROM Utente WHERE username ="+username;
-		String select = DataBase.eseguiSelect(null, sql); //risultato della query
-		if(password==select) {
+		ResultSet select = null;
+		try {
+			select = DataBase.eseguiSelect(null, sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //risultato della query
+		String RisSelect =select.toString();
+		if(password==RisSelect) {
 			return 1;
 		}
-		else if(select!=password) {
+		else if(RisSelect!=password) {
+			System.out.println("Password errata!");
 			return 0;
 		}
 		else {
+			System.out.println("Username errato!");
 			return 0;
 		}
 		

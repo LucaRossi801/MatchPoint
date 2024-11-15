@@ -64,7 +64,7 @@ public class DataBase {
            // insert(conn);
             
             // Seleziona e mostra i dati della tabella Utente
-            selectAll(conn);
+           //selectAll(conn);
         }
         
         System.out.println("CIAO BAMBOLINA!");

@@ -13,18 +13,8 @@ public class Gestore extends Utente {
 	}
 
 	@Override
-	public boolean login(String username, String password) {
-		if(this.password.equals(password)&&this.username.equals(username)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean registrazione(String username, String password) {
+	public int registrazione(String username, String password) {
 	//accesso al database?	
-		return true;
+		return 1;
 	}
 }
