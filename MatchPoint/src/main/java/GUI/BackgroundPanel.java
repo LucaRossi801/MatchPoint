@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.*;
+
+import individui.Utente;
+
 import java.awt.*;
 import java.net.URL;
 
@@ -204,6 +207,16 @@ public class BackgroundPanel extends JPanel {
 		panel.add(passwordLabel);
 		panel.add(passwordField);
 		panel.add(loginSubmitButton);
+		
+		 loginSubmitButton.addActionListener(e -> {
+        if (checkEmptyFields(usernameField, passwordField)) {
+            // Login se i campi sono corretti
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            System.out.println("Login con username: " + username + " e password: " + password);
+            Utente.login(username, password);
+        }
+    });
 
 		return panel;
 	}
@@ -298,4 +311,20 @@ public class BackgroundPanel extends JPanel {
 
 		return panel;
 	}
+	 private boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
+	        String username = usernameField.getText().trim();
+	        String password = new String(passwordField.getPassword()).trim();
+
+	        if (username.isEmpty()) {
+	            JOptionPane.showMessageDialog(loginPanel, "Il campo 'Username' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
+	            return false;
+	        }
+
+	        if (password.isEmpty()) {
+	            JOptionPane.showMessageDialog(loginPanel, "Il campo 'Password' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
+	            return false;
+	        }
+
+	        return true;
+	    }
 }

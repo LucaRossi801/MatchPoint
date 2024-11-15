@@ -52,15 +52,35 @@ public class DataBase {
 
     // Metodo per selezionare e visualizzare i dati nella tabella Utente
     private static ResultSet select(Connection conn, String sql) throws SQLException {
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-        	return rs;
-    }}
-    
-    public static ResultSet eseguiSelect(Connection conn, String sql) throws SQLException {
-    	ResultSet rs= select(conn, sql);
-    	return rs;
+        Statement stmt = conn.createStatement();
+        return stmt.executeQuery(sql); // Il chiamante è responsabile della chiusura
     }
+    
+    public static String eseguiSelect(Connection conn, String sql) throws SQLException {
+        ResultSet rs = select(conn, sql);
+        StringBuilder sb = new StringBuilder();
+        
+        // Ottieni i metadati della query per sapere i nomi delle colonne
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        
+        // Aggiungi i nomi delle colonne (opzionale)
+        for (int i = 1; i <= columnCount; i++) {
+            sb.append(metaData.getColumnName(i)).append("\t");
+        }
+        sb.append("\n");  // Aggiungi una nuova riga dopo i nomi delle colonne
+        
+        // Itera sulle righe del ResultSet e costruisci la stringa
+        while (rs.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                sb.append(rs.getString(i)).append("\t");
+            }
+            sb.append("\n");
+        }
+        
+        return sb.toString();
+    }
+    
 
     // Metodo principale
     public static void main(String[] args) throws SQLException {
@@ -68,13 +88,13 @@ public class DataBase {
         
         try (Connection conn = DriverManager.getConnection(url)) {
             // Crea la tabella se non esiste
-            createTable(conn);
+            //createTable(conn);
             
             // Inserisce i dati nella tabella
            // insert(conn);
             
             // Seleziona e mostra i dati della tabella Utente
-           //selectAll(conn);
+        	
         }
         
         System.out.println("CIAO BAMBOLINA!");

@@ -32,20 +32,20 @@ public abstract class Utente {
 
 	public abstract int registrazione(String username, String password);
 
-	public int login(String username, String password) {
-		String sql="SELECT password FROM Utente WHERE username ="+username;
-		ResultSet select = null;
+	public static int login(String username, String password) {
+		String sql="SELECT Password FROM Utente WHERE Username ='"+username+"'";
 		String url = "jdbc:sqlite:src/main/java/matchpointDB.db"; 
+		String ris="";
 		try  (Connection conn = DriverManager.getConnection(url)){
-			select = DataBase.eseguiSelect(conn, sql);
+			ris = DataBase.eseguiSelect(conn, sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} //risultato della query
-		String RisSelect =select.toString();
-		if(password==RisSelect) {
+		System.out.println(ris);
+		if(password==ris) {
 			return 1;
 		}
-		else if(RisSelect!=password) {
+		else if(ris!=password) {
 			System.out.println("Password errata!");
 			return 0;
 		}

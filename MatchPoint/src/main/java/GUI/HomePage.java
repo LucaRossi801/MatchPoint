@@ -1,6 +1,9 @@
 package GUI;
 
 import javax.swing.*;
+
+import individui.Utente;
+
 import java.awt.*;
 import java.net.URL;
 
@@ -41,7 +44,7 @@ public class HomePage {
         frame.setVisible(true);
     }
 
-    // Metodo per verificare che i campi non siano vuoti
+   /* // Metodo per verificare che i campi non siano vuoti
     private boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
@@ -58,34 +61,35 @@ public class HomePage {
 
         return true;
     }
-
+*/
     // Pannello di login con controlli per i campi vuoti
     private JPanel createLoginPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JLabel loginUsernameLabel = new JLabel("Username:");
+       /* JLabel loginUsernameLabel = new JLabel("Username:");
         loginUsernameField = new JTextField(20);
         JLabel loginPasswordLabel = new JLabel("Password:");
         loginPasswordField = new JPasswordField(20);
 
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton("Pippo");
 
         panel.add(loginUsernameLabel);
         panel.add(loginUsernameField);
         panel.add(loginPasswordLabel);
         panel.add(loginPasswordField);
-        panel.add(loginButton);
+        panel.add(loginButton);*/
 
         // Azione del pulsante Login
-        loginButton.addActionListener(e -> {
+       /* loginButton.addActionListener(e -> {
             if (checkEmptyFields(loginUsernameField, loginPasswordField)) {
                 // Login se i campi sono corretti
                 String username = loginUsernameField.getText();
                 String password = new String(loginPasswordField.getPassword());
                 System.out.println("Login con username: " + username + " e password: " + password);
+                Utente.login(username, password);
             }
-        });
+        });*/
 
         return panel;
     }
