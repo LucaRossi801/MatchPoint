@@ -65,7 +65,7 @@ public class DataBase {
 
     // Metodo principale
     public static void main(String[] args) throws SQLException {
-        String url = "jdbc:sqlite:matchpointDB.db";  
+        String url = "jdbc:sqlite:src/main/java/matchpointDB.db";  
         
         try (Connection conn = DriverManager.getConnection(url)) {
             // Crea la tabella se non esiste
