@@ -13,8 +13,18 @@ public class DataBase {
                                 "Eta INTEGER NOT NULL," +
                                 "Username TEXT NOT NULL," +
                                 "Password TEXT NOT NULL)";
+        String createTableGestore = "CREATE TABLE IF NOT EXISTS Gestore (" +
+                "ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "Nome TEXT NOT NULL," +
+                "Cognome TEXT NOT NULL," +
+                "DataNascita DATE NOT NULL," +
+                "Eta INTEGER NOT NULL," +
+                "Username TEXT NOT NULL," +
+                "Password TEXT NOT NULL)";
+        		//da aggiungere
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(createTableSQL);
+            stmt.execute(createTableGestore);
         }
     }
 
