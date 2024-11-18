@@ -128,67 +128,87 @@ public class BackgroundPanel extends JPanel {
 		return panel;
 	}
 
-	// Crea il pannello della vista principale con immagine nitida e bottoni
 	private JPanel createMainPanel(String clearImagePath) {
-		JPanel panel = new JPanel(null) { // Usa un layout null per posizionare i bottoni manualmente
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
+	    JPanel panel = new JPanel(null) { // Usa un layout null per posizionare i bottoni manualmente
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
 
-				// Disegna l'immagine nitida
-				if (clearImage != null) {
-					g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-				}
+	            // Disegna l'immagine nitida
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
 
-				// Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-				g.setColor(Color.BLACK); // Contorno nero
-				g.setFont(new Font("Impact", Font.BOLD, 70)); // Font grande e grassetto
-				String matchPointText = "MATCHPOINT";
-				FontMetrics metrics = g.getFontMetrics();
-				int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-				int y = 100;
+	            // Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
+	            g.setColor(Color.BLACK); // Contorno nero
+	            g.setFont(new Font("Impact", Font.BOLD, 70)); // Font grande e grassetto
+	            String matchPointText = "MATCHPOINT";
+	            FontMetrics metrics = g.getFontMetrics();
+	            int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+	            int y = 100;
 
-				// Contorno nero per la scritta
-				g.drawString(matchPointText, x - 2, y - 2);
-				g.drawString(matchPointText, x + 2, y - 2);
-				g.drawString(matchPointText, x - 2, y + 2);
-				g.drawString(matchPointText, x + 2, y + 2);
+	            // Contorno nero per la scritta
+	            g.drawString(matchPointText, x - 2, y - 2);
+	            g.drawString(matchPointText, x + 2, y - 2);
+	            g.drawString(matchPointText, x - 2, y + 2);
+	            g.drawString(matchPointText, x + 2, y + 2);
 
-				// Scritta principale in verde acqua
-				g.setColor(new Color(32, 178, 170));
-				g.drawString(matchPointText, x, y);
-			}
-		};
+	            // Scritta principale in verde acqua
+	            g.setColor(new Color(32, 178, 170));
+	            g.drawString(matchPointText, x, y);
+	        }
+	    };
 
-		// Carica l'immagine nitida
-		URL clearImageUrl = getClass().getResource(clearImagePath);
-		if (clearImageUrl != null) {
-			this.clearImage = new ImageIcon(clearImageUrl).getImage();
-		} else {
-			System.out.println("Errore nel caricamento dell'immagine : " + clearImagePath);
-		}
+	    // Carica l'immagine nitida
+	    URL clearImageUrl = getClass().getResource(clearImagePath);
+	    if (clearImageUrl != null) {
+	        this.clearImage = new ImageIcon(clearImageUrl).getImage();
+	    } else {
+	        System.out.println("Errore nel caricamento dell'immagine : " + clearImagePath);
+	    }
 
-		// Crea i bottoni "Register" e "Login"
-		registerButton = new JButton("Register");
-		registerButton.setFont(new Font("Arial", Font.BOLD, 20));
-		registerButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
-		registerButton.setForeground(Color.WHITE);
-		registerButton.setFocusPainted(false);
-		registerButton.setBounds(300, 400, 200, 50); // Posizione
-		registerButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
-		panel.add(registerButton);
+	    // Dimensioni e posizioni dei bottoni
+	    int buttonWidth = 220; // Aumentata la larghezza dei bottoni
+	    int buttonHeight = 50;
+	    int spacing = 30; // Spazio tra i due pulsanti
+	    int totalWidth = (2 * buttonWidth) + spacing; // Larghezza totale dei bottoni di registrazione più lo spazio
+	    int startX = (800 - totalWidth) / 2; // Calcola la posizione centrale basata su 800 di larghezza
 
-		loginButton = new JButton("Login");
-		loginButton.setFont(new Font("Arial", Font.BOLD, 20));
-		loginButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
-		loginButton.setForeground(Color.WHITE);
-		loginButton.setFocusPainted(false);
-		loginButton.setBounds(300, 470, 200, 50); // Posizione
-		loginButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
-		panel.add(loginButton);
+	    // Crea i bottoni "Register Giocatore" e "Register Gestore"
+	    JButton registerGiocatoreButton = new JButton("Register Giocatore");
+	    registerGiocatoreButton.setFont(new Font("Arial", Font.BOLD, 20));
+	    registerGiocatoreButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    registerGiocatoreButton.setForeground(Color.WHITE);
+	    registerGiocatoreButton.setFocusPainted(false);
+	    registerGiocatoreButton.setBounds(startX, 400, buttonWidth, buttonHeight);
+	    registerGiocatoreButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
+	    panel.add(registerGiocatoreButton);
 
-		return panel;
+	    JButton registerGestoreButton = new JButton("Register Gestore");
+	    registerGestoreButton.setFont(new Font("Arial", Font.BOLD, 20));
+	    registerGestoreButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    registerGestoreButton.setForeground(Color.WHITE);
+	    registerGestoreButton.setFocusPainted(false);
+	    registerGestoreButton.setBounds(startX + buttonWidth + spacing, 400, buttonWidth, buttonHeight);
+	    registerGestoreButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
+	    panel.add(registerGestoreButton);
+
+	    // Crea il pulsante "Login" con la larghezza totale
+	    loginButton = new JButton("Login");
+	    loginButton.setFont(new Font("Arial", Font.BOLD, 24)); // Font più grande per "Login"
+	    loginButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    loginButton.setForeground(Color.WHITE);
+	    loginButton.setFocusPainted(false);
+	    loginButton.setBounds(startX, 470, totalWidth, 60); // Posizione e larghezza corrispondente
+	    loginButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
+	    panel.add(loginButton);
+
+	    return panel;
 	}
+
+
+
+
 
 	// Crea il pannello di login
 	private JPanel createLoginPanel() {
