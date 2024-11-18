@@ -34,7 +34,7 @@ public abstract class Utente {
 
 	// Metodo per esecuzione del login
 	public static int login(String username, String password) {
-		String sql="SELECT Password FROM Utente WHERE Username ='"+username+"'";//creazione query
+		String sql="SELECT Password FROM Gestore WHERE Username ='"+username+"' UNION SELECT Password FROM Giocatore WHERE Username ='"+username+"'";//creazione query
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
 		String ris="";
 		try  (Connection conn = DriverManager.getConnection(url)){
