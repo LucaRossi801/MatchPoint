@@ -30,13 +30,17 @@
           <element xmi:type="uml:Property" href="UML.uml#__ZIuoJxPEe-HN_wxpUcLVw"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_ADQCoZxQEe-HN_wxpUcLVw"/>
         </children>
-        <children xmi:type="notation:Shape" xmi:id="_61MEMJ3BEe-Kue6wJ9OEIw" type="Property_ClassAttributeLabel">
-          <element xmi:type="uml:Property" href="UML.uml#_6HX78J3BEe-Kue6wJ9OEIw"/>
-          <layoutConstraint xmi:type="notation:Location" xmi:id="_61MEMZ3BEe-Kue6wJ9OEIw"/>
+        <children xmi:type="notation:Shape" xmi:id="_lwoFAKWzEe-3v4mki6UkVQ" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="UML.uml#_hiXU0KWzEe-3v4mki6UkVQ"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_lwoFAaWzEe-3v4mki6UkVQ"/>
         </children>
         <children xmi:type="notation:Shape" xmi:id="_Bw9jgJ3CEe-Kue6wJ9OEIw" type="Property_ClassAttributeLabel">
           <element xmi:type="uml:Property" href="UML.uml#_AyZCcJ3CEe-Kue6wJ9OEIw"/>
           <layoutConstraint xmi:type="notation:Location" xmi:id="_Bw9jgZ3CEe-Kue6wJ9OEIw"/>
+        </children>
+        <children xmi:type="notation:Shape" xmi:id="_61MEMJ3BEe-Kue6wJ9OEIw" type="Property_ClassAttributeLabel">
+          <element xmi:type="uml:Property" href="UML.uml#_6HX78J3BEe-Kue6wJ9OEIw"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_61MEMZ3BEe-Kue6wJ9OEIw"/>
         </children>
         <styles xmi:type="notation:TitleStyle" xmi:id="_mmh5AJxBEe-NMMM5isvduA"/>
         <styles xmi:type="notation:SortingStyle" xmi:id="_mmh5AZxBEe-NMMM5isvduA"/>
@@ -64,7 +68,7 @@
         <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmh5DZxBEe-NMMM5isvduA"/>
       </children>
       <element xmi:type="uml:Class" href="UML.uml#_ml_tgJxBEe-NMMM5isvduA"/>
-      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmL6wZxBEe-NMMM5isvduA" x="480" y="-20" width="281" height="241"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mmL6wZxBEe-NMMM5isvduA" x="480" y="-20" width="281" height="261"/>
     </children>
     <children xmi:type="notation:Shape" xmi:id="_YEMesJxGEe-HN_wxpUcLVw" type="Class_Shape">
       <children xmi:type="notation:DecorationNode" xmi:id="_YEQwIJxGEe-HN_wxpUcLVw" type="Class_NameLabel"/>
