@@ -14,25 +14,14 @@ public class Giocatore extends Utente {
 	}
 	public Campo[] campo;
 
-	@Override
-	public void registrazione() {
-		
-	}
 
 	@Override
-	public void login() {
-		
+	public int registrazione(String username, String password) {
+		return 0;
 	}
-
+	
 	@Override
-	public boolean registrazione(String username, String password) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean login(String username, String password) {
-		// TODO Auto-generated method stub
-		return false;
+	public int login(String username, String password) {
+		return 0;
 	}
 }
