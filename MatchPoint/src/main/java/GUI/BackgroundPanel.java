@@ -133,7 +133,7 @@ public class BackgroundPanel extends JPanel {
 	}
 
 	private JPanel createMainPanel(String clearImagePath) {
-	    JPanel panel = new JPanel(null) { // Usa un layout null per posizionare i bottoni manualmente
+	    JPanel panel = new JPanel(new GridBagLayout()) {
 	        @Override
 	        protected void paintComponent(Graphics g) {
 	            super.paintComponent(g);
@@ -141,25 +141,24 @@ public class BackgroundPanel extends JPanel {
 	            // Disegna l'immagine nitida
 	            if (clearImage != null) {
 	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	             // Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
+					g.setColor(Color.BLACK); // Contorno nero
+					g.setFont(new Font("Impact", Font.BOLD, 70)); // Font grande e grassetto
+					String matchPointText = "MATCHPOINT";
+					FontMetrics metrics = g.getFontMetrics();
+					int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+					int y = 100;
+
+					// Contorno nero per la scritta
+					g.drawString(matchPointText, x - 2, y - 2);
+					g.drawString(matchPointText, x + 2, y - 2);
+					g.drawString(matchPointText, x - 2, y + 2);
+					g.drawString(matchPointText, x + 2, y + 2);
+
+					// Scritta principale in verde acqua
+					g.setColor(new Color(32, 178, 170));
+					g.drawString(matchPointText, x, y);
 	            }
-
-	            // Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-	            g.setColor(Color.BLACK); // Contorno nero
-	            g.setFont(new Font("Impact", Font.BOLD, 70)); // Font grande e grassetto
-	            String matchPointText = "MATCHPOINT";
-	            FontMetrics metrics = g.getFontMetrics();
-	            int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-	            int y = 100;
-
-	            // Contorno nero per la scritta
-	            g.drawString(matchPointText, x - 2, y - 2);
-	            g.drawString(matchPointText, x + 2, y - 2);
-	            g.drawString(matchPointText, x - 2, y + 2);
-	            g.drawString(matchPointText, x + 2, y + 2);
-
-	            // Scritta principale in verde acqua
-	            g.setColor(new Color(32, 178, 170));
-	            g.drawString(matchPointText, x, y);
 	        }
 	    };
 
@@ -170,45 +169,47 @@ public class BackgroundPanel extends JPanel {
 	    } else {
 	        System.out.println("Errore nel caricamento dell'immagine : " + clearImagePath);
 	    }
+	    
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10); // Spaziatura tra i componenti
+	    gbc.fill = GridBagConstraints.HORIZONTAL; // I pulsanti si allargano orizzontalmente
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
 
-	    // Dimensioni e posizioni dei bottoni
-	    int buttonWidth = 220; // Aumentata la larghezza dei bottoni
-	    int buttonHeight = 50;
-	    int spacing = 30; // Spazio tra i due pulsanti
-	    int totalWidth = (2 * buttonWidth) + spacing; // Larghezza totale dei bottoni di registrazione più lo spazio
-	    int startX = (800 - totalWidth) / 2; // Calcola la posizione centrale basata su 800 di larghezza
-
-	    // Crea i bottoni "Register Giocatore" e "Register Gestore"
+	    // Bottone "Register Giocatore"
 	    JButton registerGiocatoreButton = new JButton("Register Giocatore");
 	    registerGiocatoreButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    registerGiocatoreButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    registerGiocatoreButton.setBackground(new Color(32, 178, 170));
 	    registerGiocatoreButton.setForeground(Color.WHITE);
 	    registerGiocatoreButton.setFocusPainted(false);
-	    registerGiocatoreButton.setBounds(startX, 400, buttonWidth, buttonHeight);
 	    registerGiocatoreButton.addActionListener(e -> cardLayout.show(cardPanel, "playerRegister"));
-	    panel.add(registerGiocatoreButton);
+	    panel.add(registerGiocatoreButton, gbc);
 
+	    // Bottone "Register Gestore"
+	    gbc.gridx = 1; // Passa alla colonna successiva
 	    JButton registerGestoreButton = new JButton("Register Gestore");
 	    registerGestoreButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    registerGestoreButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    registerGestoreButton.setBackground(new Color(32, 178, 170));
 	    registerGestoreButton.setForeground(Color.WHITE);
 	    registerGestoreButton.setFocusPainted(false);
-	    registerGestoreButton.setBounds(startX + buttonWidth + spacing, 400, buttonWidth, buttonHeight);
 	    registerGestoreButton.addActionListener(e -> cardLayout.show(cardPanel, "managerRegister"));
-	    panel.add(registerGestoreButton);
+	    panel.add(registerGestoreButton, gbc);
 
-	    // Crea il pulsante "Login" con la larghezza totale
-	    loginButton = new JButton("Login");
-	    loginButton.setFont(new Font("Arial", Font.BOLD, 24)); // Font più grande per "Login"
-	    loginButton.setBackground(new Color(32, 178, 170)); // Colore verde acqua
+	    // Bottone "Login"
+	    gbc.gridx = 0;
+	    gbc.gridy = 1; // Passa alla riga successiva
+	    gbc.gridwidth = 2; // Occupa entrambe le colonne
+	    JButton loginButton = new JButton("Login");
+	    loginButton.setFont(new Font("Arial", Font.BOLD, 24));
+	    loginButton.setBackground(new Color(32, 178, 170));
 	    loginButton.setForeground(Color.WHITE);
 	    loginButton.setFocusPainted(false);
-	    loginButton.setBounds(startX, 470, totalWidth, 60); // Posizione e larghezza corrispondente
 	    loginButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
-	    panel.add(loginButton);
+	    panel.add(loginButton, gbc);
 
 	    return panel;
 	}
+
 
 
 
