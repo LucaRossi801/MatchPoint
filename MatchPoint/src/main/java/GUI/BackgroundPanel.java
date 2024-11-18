@@ -5,6 +5,7 @@ import javax.swing.*;
 import individui.Utente;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.net.URL;
 
 public class BackgroundPanel extends JPanel {
@@ -281,188 +282,119 @@ public class BackgroundPanel extends JPanel {
 	    return panel;
 	}
 
+	private JPanel createRegisterPanel(String[][] additionalFields, ActionListener registerAction) {
+	    JPanel panel = new JPanel(new GridBagLayout()) {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            // Disegna lo sfondo
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
+	    panel.setOpaque(false);
+
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(5, 5, 5, 5); // Margini tra i componenti
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    gbc.anchor = GridBagConstraints.CENTER;
+
+	    // Campi comuni
+	    JLabel firstNameLabel = new JLabel("Nome:");
+	    JTextField firstNameField = new JTextField(15);
+	    panel.add(firstNameLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(firstNameField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    JLabel lastNameLabel = new JLabel("Cognome:");
+	    JTextField lastNameField = new JTextField(15);
+	    panel.add(lastNameLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(lastNameField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    JLabel dobLabel = new JLabel("Data di nascita:");
+	    JTextField dobField = new JTextField("gg/mm/aaaa", 15);
+	    panel.add(dobLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(dobField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    JLabel usernameLabel = new JLabel("Username:");
+	    JTextField usernameField = new JTextField(15);
+	    panel.add(usernameLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(usernameField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    JLabel passwordLabel = new JLabel("Password:");
+	    JPasswordField passwordField = new JPasswordField(15);
+	    panel.add(passwordLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(passwordField, gbc);
+
+	    // Campi aggiuntivi specificati
+	    for (String[] field : additionalFields) {
+	        gbc.gridx = 0;
+	        gbc.gridy++;
+	        JLabel label = new JLabel(field[0]);
+	        JTextField textField = new JTextField(15);
+	        textField.setName(field[1]); // Usa il nome per distinguere i campi
+	        panel.add(label, gbc);
+	        gbc.gridx++;
+	        panel.add(textField, gbc);
+	    }
+
+	    // Pulsante di registrazione
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    gbc.gridwidth = 2;
+	    gbc.fill = GridBagConstraints.CENTER;
+	    JButton registerButton = new JButton("Register");
+	    registerButton.setBackground(new Color(32, 178, 170));
+	    registerButton.setForeground(Color.WHITE);
+	    registerButton.setFocusPainted(false);
+
+	    registerButton.addActionListener(registerAction);
+
+	    panel.add(registerButton, gbc);
+
+	    return panel;
+	}
 
 
 	private JPanel createPlayerRegisterPanel() {
-	    JPanel panel = new JPanel() {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-
-	            // Disegna lo sfondo
-	            if (clearImage != null) {
-	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	            }
+	    return createRegisterPanel(
+	        new String[][]{
+	            {"Nome Squadra:", "teamName"}
+	        },
+	        e -> {
+	            // Gestione della registrazione del giocatore
+	            System.out.println("Registrazione Giocatore completata.");
 	        }
-	    };
-	    panel.setLayout(null); // Layout assoluto
-	    panel.setOpaque(false);
-
-	    // Campi comuni
-	    JLabel firstNameLabel = new JLabel("Nome:");
-	    firstNameLabel.setBounds(120, 100, 80, 25);
-	    JTextField firstNameField = new JTextField();
-	    firstNameField.setBounds(200, 100, 150, 25);
-
-	    JLabel lastNameLabel = new JLabel("Cognome:");
-	    lastNameLabel.setBounds(120, 140, 80, 25);
-	    JTextField lastNameField = new JTextField();
-	    lastNameField.setBounds(200, 140, 150, 25);
-
-	    JLabel dobLabel = new JLabel("Data di nascita:");
-	    dobLabel.setBounds(120, 180, 100, 25);
-	    JTextField dobField = new JTextField("gg/mm/aaaa");
-	    dobField.setBounds(200, 180, 150, 25);
-
-	    JLabel usernameLabel = new JLabel("Username:");
-	    usernameLabel.setBounds(120, 220, 80, 25);
-	    JTextField usernameField = new JTextField();
-	    usernameField.setBounds(200, 220, 150, 25);
-
-	    JLabel passwordLabel = new JLabel("Password:");
-	    passwordLabel.setBounds(120, 260, 80, 25);
-	    JPasswordField passwordField = new JPasswordField();
-	    passwordField.setBounds(200, 260, 150, 25);
-
-	    // Campo aggiuntivo per il giocatore
-	    JLabel teamNameLabel = new JLabel("Nome Squadra:");
-	    teamNameLabel.setBounds(120, 300, 100, 25);
-	    JTextField teamNameField = new JTextField();
-	    teamNameField.setBounds(200, 300, 150, 25);
-
-	    // Pulsante di registrazione
-	    JButton registerButton = new JButton("Register");
-	    registerButton.setBounds(200, 340, 150, 25);
-	    registerButton.setBackground(new Color(32, 178, 170));
-	    registerButton.setForeground(Color.WHITE);
-	    registerButton.setFocusPainted(false);
-
-	    registerButton.addActionListener(e -> {
-	        String firstName = firstNameField.getText().trim();
-	        String lastName = lastNameField.getText().trim();
-	        String dob = dobField.getText().trim();
-	        String username = usernameField.getText().trim();
-	        String password = new String(passwordField.getPassword()).trim();
-	        String teamName = teamNameField.getText().trim();
-
-	        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || username.isEmpty() || password.isEmpty() || teamName.isEmpty()) {
-	            JOptionPane.showMessageDialog(panel, "Tutti i campi sono obbligatori!", "Errore", JOptionPane.ERROR_MESSAGE);
-	        } else {
-	            System.out.println("Registrazione giocatore effettuata: " + firstName + " " + lastName + ", Squadra: " + teamName);
-	        }
-	    });
-
-	    // Aggiunta dei componenti
-	    panel.add(firstNameLabel);
-	    panel.add(firstNameField);
-	    panel.add(lastNameLabel);
-	    panel.add(lastNameField);
-	    panel.add(dobLabel);
-	    panel.add(dobField);
-	    panel.add(usernameLabel);
-	    panel.add(usernameField);
-	    panel.add(passwordLabel);
-	    panel.add(passwordField);
-	    panel.add(teamNameLabel);
-	    panel.add(teamNameField);
-	    panel.add(registerButton);
-
-	    return panel;
+	    );
 	}
+
 	private JPanel createManagerRegisterPanel() {
-	    JPanel panel = new JPanel() {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-
-	            // Disegna lo sfondo
-	            if (clearImage != null) {
-	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	            }
+	    return createRegisterPanel(
+	        new String[][]{
+	            {"Certificazioni:", "certifications"},
+	            {"Competenze:", "skills"}
+	        },
+	        e -> {
+	            // Gestione della registrazione del gestore
+	            System.out.println("Registrazione Gestore completata.");
 	        }
-	    };
-	    panel.setLayout(null); // Layout assoluto
-	    panel.setOpaque(false);
-
-	    // Campi comuni
-	    JLabel firstNameLabel = new JLabel("Nome:");
-	    firstNameLabel.setBounds(120, 100, 80, 25);
-	    JTextField firstNameField = new JTextField();
-	    firstNameField.setBounds(200, 100, 150, 25);
-
-	    JLabel lastNameLabel = new JLabel("Cognome:");
-	    lastNameLabel.setBounds(120, 140, 80, 25);
-	    JTextField lastNameField = new JTextField();
-	    lastNameField.setBounds(200, 140, 150, 25);
-
-	    JLabel dobLabel = new JLabel("Data di nascita:");
-	    dobLabel.setBounds(120, 180, 100, 25);
-	    JTextField dobField = new JTextField("gg/mm/aaaa");
-	    dobField.setBounds(200, 180, 150, 25);
-
-	    JLabel usernameLabel = new JLabel("Username:");
-	    usernameLabel.setBounds(120, 220, 80, 25);
-	    JTextField usernameField = new JTextField();
-	    usernameField.setBounds(200, 220, 150, 25);
-
-	    JLabel passwordLabel = new JLabel("Password:");
-	    passwordLabel.setBounds(120, 260, 80, 25);
-	    JPasswordField passwordField = new JPasswordField();
-	    passwordField.setBounds(200, 260, 150, 25);
-
-	    // Campi aggiuntivi per il gestore
-	    JLabel certificationsLabel = new JLabel("Certificazioni:");
-	    certificationsLabel.setBounds(120, 300, 100, 25);
-	    JTextField certificationsField = new JTextField();
-	    certificationsField.setBounds(200, 300, 150, 25);
-
-	    JLabel skillsLabel = new JLabel("Competenze:");
-	    skillsLabel.setBounds(120, 340, 100, 25);
-	    JTextField skillsField = new JTextField();
-	    skillsField.setBounds(200, 340, 150, 25);
-
-	    // Pulsante di registrazione
-	    JButton registerButton = new JButton("Register");
-	    registerButton.setBounds(200, 380, 150, 25);
-	    registerButton.setBackground(new Color(32, 178, 170));
-	    registerButton.setForeground(Color.WHITE);
-	    registerButton.setFocusPainted(false);
-
-	    registerButton.addActionListener(e -> {
-	        String firstName = firstNameField.getText().trim();
-	        String lastName = lastNameField.getText().trim();
-	        String dob = dobField.getText().trim();
-	        String username = usernameField.getText().trim();
-	        String password = new String(passwordField.getPassword()).trim();
-	        String certifications = certificationsField.getText().trim();
-	        String skills = skillsField.getText().trim();
-
-	        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || username.isEmpty() || password.isEmpty() || certifications.isEmpty() || skills.isEmpty()) {
-	            JOptionPane.showMessageDialog(panel, "Tutti i campi sono obbligatori!", "Errore", JOptionPane.ERROR_MESSAGE);
-	        } else {
-	            System.out.println("Registrazione gestore effettuata: " + firstName + " " + lastName + ", Certificazioni: " + certifications + ", Competenze: " + skills);
-	        }
-	    });
-
-	    // Aggiunta dei componenti
-	    panel.add(firstNameLabel);
-	    panel.add(firstNameField);
-	    panel.add(lastNameLabel);
-	    panel.add(lastNameField);
-	    panel.add(dobLabel);
-	    panel.add(dobField);
-	    panel.add(usernameLabel);
-	    panel.add(usernameField);
-	    panel.add(passwordLabel);
-	    panel.add(passwordField);
-	    panel.add(certificationsLabel);
-	    panel.add(certificationsField);
-	    panel.add(skillsLabel);
-	    panel.add(skillsField);
-	    panel.add(registerButton);
-
-	    return panel;
+	    );
 	}
+
 
 
 
