@@ -13,7 +13,8 @@ public class BackgroundPanel extends JPanel {
 	private JPanel homePanel; // Pannello per la homepage
 	private JPanel mainPanel; // Pannello per la vista principale (con immagine nitida e bottoni)
 	private JPanel loginPanel; // Pannello per la vista di login
-	private JPanel registerPanel; // Pannello per la vista di registrazione
+	private JPanel playerRegisterPanel; // Pannello per la vista di registrazione
+	private JPanel managerRegisterPanel; // Pannello per la vista di registrazione
 
 	private Image backgroundImage;
 	private Image clearImage;
@@ -37,13 +38,15 @@ public class BackgroundPanel extends JPanel {
 		homePanel = createHomePanel(blurredImagePath);
 		mainPanel = createMainPanel(clearImagePath);
 		loginPanel = createLoginPanel();
-		registerPanel = createRegisterPanel();
+		playerRegisterPanel = createPlayerRegisterPanel();
+		managerRegisterPanel = createManagerRegisterPanel();
 
 		// Aggiungi i pannelli al CardLayout
 		cardPanel.add(homePanel, "home");
 		cardPanel.add(mainPanel, "main");
 		cardPanel.add(loginPanel, "login");
-		cardPanel.add(registerPanel, "register");
+		cardPanel.add(playerRegisterPanel, "playerRegister");
+		cardPanel.add(managerRegisterPanel, "managerRegister");
 
 		// Imposta la vista iniziale come la homepage
 		cardLayout.show(cardPanel, "home");
@@ -181,7 +184,7 @@ public class BackgroundPanel extends JPanel {
 	    registerGiocatoreButton.setForeground(Color.WHITE);
 	    registerGiocatoreButton.setFocusPainted(false);
 	    registerGiocatoreButton.setBounds(startX, 400, buttonWidth, buttonHeight);
-	    registerGiocatoreButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
+	    registerGiocatoreButton.addActionListener(e -> cardLayout.show(cardPanel, "playerRegister"));
 	    panel.add(registerGiocatoreButton);
 
 	    JButton registerGestoreButton = new JButton("Register Gestore");
@@ -190,7 +193,7 @@ public class BackgroundPanel extends JPanel {
 	    registerGestoreButton.setForeground(Color.WHITE);
 	    registerGestoreButton.setFocusPainted(false);
 	    registerGestoreButton.setBounds(startX + buttonWidth + spacing, 400, buttonWidth, buttonHeight);
-	    registerGestoreButton.addActionListener(e -> cardLayout.show(cardPanel, "register"));
+	    registerGestoreButton.addActionListener(e -> cardLayout.show(cardPanel, "managerRegister"));
 	    panel.add(registerGestoreButton);
 
 	    // Crea il pulsante "Login" con la larghezza totale
@@ -212,125 +215,258 @@ public class BackgroundPanel extends JPanel {
 
 	// Crea il pannello di login
 	private JPanel createLoginPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    JPanel panel = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
 
-		JLabel usernameLabel = new JLabel("Username:");
-		JTextField usernameField = new JTextField(20);
-		JLabel passwordLabel = new JLabel("Password:");
-		JPasswordField passwordField = new JPasswordField(20);
+	            // Disegna lo sfondo
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    panel.setOpaque(false);
 
-		JButton loginSubmitButton = new JButton("Login");
+	    // Creazione dei componenti
+	    JLabel usernameLabel = new JLabel("Username:");
+	    usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		panel.add(usernameLabel);
-		panel.add(usernameField);
-		panel.add(passwordLabel);
-		panel.add(passwordField);
-		panel.add(loginSubmitButton);
-		
-		 loginSubmitButton.addActionListener(e -> {
-        if (checkEmptyFields(usernameField, passwordField)) {
-            // Login se i campi sono corretti
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
-            System.out.println("Login con username: " + username + " e password: " + password);
-            Utente.login(username, password);
-        }
-    });
+	    JTextField usernameField = new JTextField();
+	    usernameField.setFont(new Font("Arial", Font.PLAIN, 12)); // Font più piccolo
+	    usernameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+	    usernameField.setPreferredSize(new Dimension(100, 20)); // Altezza e larghezza più piccole
+	    usernameField.setMaximumSize(new Dimension(100, 20));   // Limita la dimensione massima
 
-		return panel;
+	    JLabel passwordLabel = new JLabel("Password:");
+	    passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+	    JPasswordField passwordField = new JPasswordField();
+	    passwordField.setFont(new Font("Arial", Font.PLAIN, 12)); // Font più piccolo
+	    passwordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+	    passwordField.setPreferredSize(new Dimension(100, 20)); // Altezza e larghezza più piccole
+	    passwordField.setMaximumSize(new Dimension(100, 20));   // Limita la dimensione massima
+
+	    JButton loginSubmitButton = new JButton("Login");
+	    loginSubmitButton.setFont(new Font("Arial", Font.BOLD, 12)); // Font più piccolo
+	    loginSubmitButton.setBackground(new Color(32, 178, 170));
+	    loginSubmitButton.setForeground(Color.WHITE);
+	    loginSubmitButton.setFocusPainted(false);
+	    loginSubmitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+	    loginSubmitButton.addActionListener(e -> {
+	        if (checkEmptyFields(usernameField, passwordField)) {
+	            // Login se i campi sono corretti
+	            String username = usernameField.getText();
+	            String password = new String(passwordField.getPassword());
+	            System.out.println("Login con username: " + username + " e password: " + password);
+	            Utente.login(username, password);
+	        }
+	    });
+
+	    // Aggiunta dei componenti al pannello con spazi ridotti
+	    panel.add(Box.createVerticalGlue());
+	    panel.add(usernameLabel);
+	    panel.add(Box.createRigidArea(new Dimension(0, 5))); // Spazio fisso
+	    panel.add(usernameField);
+	    panel.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio fisso
+	    panel.add(passwordLabel);
+	    panel.add(Box.createRigidArea(new Dimension(0, 5))); // Spazio fisso
+	    panel.add(passwordField);
+	    panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spazio fisso
+	    panel.add(loginSubmitButton);
+	    panel.add(Box.createVerticalGlue());
+
+	    return panel;
 	}
 
-	private JPanel createRegisterPanel() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		// Creazione dei campi di testo
-		JLabel firstNameLabel = new JLabel("Nome:");
-		JTextField firstNameField = new JTextField(20);
-		JLabel lastNameLabel = new JLabel("Cognome:");
-		JTextField lastNameField = new JTextField(20);
 
-		// Creazione dei campi per la data di nascita (giorno, mese, anno)
-		JLabel dobLabel = new JLabel("Data di nascita (gg/mm/aaaa):");
+	private JPanel createPlayerRegisterPanel() {
+	    JPanel panel = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
 
-		// Creazione dei campi separati per giorno, mese, anno
-		JPanel datePanel = new JPanel();
-		JTextField dayField = new JTextField(2); // Campo per il giorno
-		JTextField monthField = new JTextField(2); // Campo per il mese
-		JTextField yearField = new JTextField(4); // Campo per l'anno
-		datePanel.add(dayField);
-		datePanel.add(new JLabel("/"));
-		datePanel.add(monthField);
-		datePanel.add(new JLabel("/"));
-		datePanel.add(yearField);
+	            // Disegna lo sfondo
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
+	    panel.setLayout(null); // Layout assoluto
+	    panel.setOpaque(false);
 
-		// Creazione dei campi per username e password
-		JLabel usernameLabel = new JLabel("Username:");
-		JTextField usernameField = new JTextField(20);
-		JLabel passwordLabel = new JLabel("Password:");
-		JPasswordField passwordField = new JPasswordField(20);
+	    // Campi comuni
+	    JLabel firstNameLabel = new JLabel("Nome:");
+	    firstNameLabel.setBounds(120, 100, 80, 25);
+	    JTextField firstNameField = new JTextField();
+	    firstNameField.setBounds(200, 100, 150, 25);
 
-		JButton registerSubmitButton = new JButton("Register");
+	    JLabel lastNameLabel = new JLabel("Cognome:");
+	    lastNameLabel.setBounds(120, 140, 80, 25);
+	    JTextField lastNameField = new JTextField();
+	    lastNameField.setBounds(200, 140, 150, 25);
 
-		// Aggiungi tutti i componenti al pannello
-		panel.add(firstNameLabel);
-		panel.add(firstNameField);
-		panel.add(lastNameLabel);
-		panel.add(lastNameField);
-		panel.add(dobLabel);
-		panel.add(datePanel); // Pannello della data
-		panel.add(usernameLabel);
-		panel.add(usernameField);
-		panel.add(passwordLabel);
-		panel.add(passwordField);
-		panel.add(registerSubmitButton);
+	    JLabel dobLabel = new JLabel("Data di nascita:");
+	    dobLabel.setBounds(120, 180, 100, 25);
+	    JTextField dobField = new JTextField("gg/mm/aaaa");
+	    dobField.setBounds(200, 180, 150, 25);
 
-		// Gestire l'evento di registrazione
-		registerSubmitButton.addActionListener(e -> {
-			String day = dayField.getText();
-			String month = monthField.getText();
-			String year = yearField.getText();
+	    JLabel usernameLabel = new JLabel("Username:");
+	    usernameLabel.setBounds(120, 220, 80, 25);
+	    JTextField usernameField = new JTextField();
+	    usernameField.setBounds(200, 220, 150, 25);
 
-			// Validazione dei dati
-			if (day.isEmpty() || month.isEmpty() || year.isEmpty()) {
-				JOptionPane.showMessageDialog(panel, "Compila correttamente la data di nascita.");
-				return;
-			}
+	    JLabel passwordLabel = new JLabel("Password:");
+	    passwordLabel.setBounds(120, 260, 80, 25);
+	    JPasswordField passwordField = new JPasswordField();
+	    passwordField.setBounds(200, 260, 150, 25);
 
-			// Prova a concatenare la data
-			try {
-				int d = Integer.parseInt(day);
-				int m = Integer.parseInt(month);
-				int y = Integer.parseInt(year);
+	    // Campo aggiuntivo per il giocatore
+	    JLabel teamNameLabel = new JLabel("Nome Squadra:");
+	    teamNameLabel.setBounds(120, 300, 100, 25);
+	    JTextField teamNameField = new JTextField();
+	    teamNameField.setBounds(200, 300, 150, 25);
 
-				// Validazione del giorno, mese e anno
-				if (m < 1 || m > 12) {
-					JOptionPane.showMessageDialog(panel, "Il mese deve essere tra 1 e 12.");
-					return;
-				}
+	    // Pulsante di registrazione
+	    JButton registerButton = new JButton("Register");
+	    registerButton.setBounds(200, 340, 150, 25);
+	    registerButton.setBackground(new Color(32, 178, 170));
+	    registerButton.setForeground(Color.WHITE);
+	    registerButton.setFocusPainted(false);
 
-				if (d < 1 || d > 31) {
-					JOptionPane.showMessageDialog(panel, "Il giorno deve essere tra 1 e 31.");
-					return;
-				}
+	    registerButton.addActionListener(e -> {
+	        String firstName = firstNameField.getText().trim();
+	        String lastName = lastNameField.getText().trim();
+	        String dob = dobField.getText().trim();
+	        String username = usernameField.getText().trim();
+	        String password = new String(passwordField.getPassword()).trim();
+	        String teamName = teamNameField.getText().trim();
 
-				if (y < 1900 || y > 2025) {
-					JOptionPane.showMessageDialog(panel, "L'anno deve essere tra 1900 e 2025.");
-					return;
-				}
+	        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || username.isEmpty() || password.isEmpty() || teamName.isEmpty()) {
+	            JOptionPane.showMessageDialog(panel, "Tutti i campi sono obbligatori!", "Errore", JOptionPane.ERROR_MESSAGE);
+	        } else {
+	            System.out.println("Registrazione giocatore effettuata: " + firstName + " " + lastName + ", Squadra: " + teamName);
+	        }
+	    });
 
-				// Data valida
-				String birthDate = String.format("%02d/%02d/%04d", d, m, y);
-				System.out.println("Data di nascita: " + birthDate);
-				// Puoi usare la data in un formato concatenato o fare ulteriori elaborazioni
-			} catch (NumberFormatException ex) {
-				JOptionPane.showMessageDialog(panel, "Inserisci numeri validi per la data.");
-			}
-		});
+	    // Aggiunta dei componenti
+	    panel.add(firstNameLabel);
+	    panel.add(firstNameField);
+	    panel.add(lastNameLabel);
+	    panel.add(lastNameField);
+	    panel.add(dobLabel);
+	    panel.add(dobField);
+	    panel.add(usernameLabel);
+	    panel.add(usernameField);
+	    panel.add(passwordLabel);
+	    panel.add(passwordField);
+	    panel.add(teamNameLabel);
+	    panel.add(teamNameField);
+	    panel.add(registerButton);
 
-		return panel;
+	    return panel;
 	}
+	private JPanel createManagerRegisterPanel() {
+	    JPanel panel = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+
+	            // Disegna lo sfondo
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
+	    panel.setLayout(null); // Layout assoluto
+	    panel.setOpaque(false);
+
+	    // Campi comuni
+	    JLabel firstNameLabel = new JLabel("Nome:");
+	    firstNameLabel.setBounds(120, 100, 80, 25);
+	    JTextField firstNameField = new JTextField();
+	    firstNameField.setBounds(200, 100, 150, 25);
+
+	    JLabel lastNameLabel = new JLabel("Cognome:");
+	    lastNameLabel.setBounds(120, 140, 80, 25);
+	    JTextField lastNameField = new JTextField();
+	    lastNameField.setBounds(200, 140, 150, 25);
+
+	    JLabel dobLabel = new JLabel("Data di nascita:");
+	    dobLabel.setBounds(120, 180, 100, 25);
+	    JTextField dobField = new JTextField("gg/mm/aaaa");
+	    dobField.setBounds(200, 180, 150, 25);
+
+	    JLabel usernameLabel = new JLabel("Username:");
+	    usernameLabel.setBounds(120, 220, 80, 25);
+	    JTextField usernameField = new JTextField();
+	    usernameField.setBounds(200, 220, 150, 25);
+
+	    JLabel passwordLabel = new JLabel("Password:");
+	    passwordLabel.setBounds(120, 260, 80, 25);
+	    JPasswordField passwordField = new JPasswordField();
+	    passwordField.setBounds(200, 260, 150, 25);
+
+	    // Campi aggiuntivi per il gestore
+	    JLabel certificationsLabel = new JLabel("Certificazioni:");
+	    certificationsLabel.setBounds(120, 300, 100, 25);
+	    JTextField certificationsField = new JTextField();
+	    certificationsField.setBounds(200, 300, 150, 25);
+
+	    JLabel skillsLabel = new JLabel("Competenze:");
+	    skillsLabel.setBounds(120, 340, 100, 25);
+	    JTextField skillsField = new JTextField();
+	    skillsField.setBounds(200, 340, 150, 25);
+
+	    // Pulsante di registrazione
+	    JButton registerButton = new JButton("Register");
+	    registerButton.setBounds(200, 380, 150, 25);
+	    registerButton.setBackground(new Color(32, 178, 170));
+	    registerButton.setForeground(Color.WHITE);
+	    registerButton.setFocusPainted(false);
+
+	    registerButton.addActionListener(e -> {
+	        String firstName = firstNameField.getText().trim();
+	        String lastName = lastNameField.getText().trim();
+	        String dob = dobField.getText().trim();
+	        String username = usernameField.getText().trim();
+	        String password = new String(passwordField.getPassword()).trim();
+	        String certifications = certificationsField.getText().trim();
+	        String skills = skillsField.getText().trim();
+
+	        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || username.isEmpty() || password.isEmpty() || certifications.isEmpty() || skills.isEmpty()) {
+	            JOptionPane.showMessageDialog(panel, "Tutti i campi sono obbligatori!", "Errore", JOptionPane.ERROR_MESSAGE);
+	        } else {
+	            System.out.println("Registrazione gestore effettuata: " + firstName + " " + lastName + ", Certificazioni: " + certifications + ", Competenze: " + skills);
+	        }
+	    });
+
+	    // Aggiunta dei componenti
+	    panel.add(firstNameLabel);
+	    panel.add(firstNameField);
+	    panel.add(lastNameLabel);
+	    panel.add(lastNameField);
+	    panel.add(dobLabel);
+	    panel.add(dobField);
+	    panel.add(usernameLabel);
+	    panel.add(usernameField);
+	    panel.add(passwordLabel);
+	    panel.add(passwordField);
+	    panel.add(certificationsLabel);
+	    panel.add(certificationsField);
+	    panel.add(skillsLabel);
+	    panel.add(skillsField);
+	    panel.add(registerButton);
+
+	    return panel;
+	}
+
+
+
+
 	 private boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
 	        String username = usernameField.getText().trim();
 	        String password = new String(passwordField.getPassword()).trim();
