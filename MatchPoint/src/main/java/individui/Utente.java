@@ -32,25 +32,26 @@ public abstract class Utente {
 
 	public abstract int registrazione(String username, String password);
 
+	// Metodo per esecuzione del login
 	public static int login(String username, String password) {
-		String sql="SELECT Password FROM Utente WHERE Username ='"+username+"'";
-		String url = "jdbc:sqlite:src/main/java/matchpointDB.db"; 
+		String sql="SELECT Password FROM Utente WHERE Username ='"+username+"'";//creazione query
+		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
 		String ris="";
 		try  (Connection conn = DriverManager.getConnection(url)){
-			ris = DataBase.eseguiSelect(conn, sql);
+			ris = DataBase.eseguiSelect(conn, sql);//esecuzione select
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} //risultato della query
 		System.out.println(ris);
-		if(password==ris) {
+		if(password.equals(ris)) {//confronto con password inserita
 			return 1;
 		}
-		else if(ris!=password) {
-			System.out.println("Password errata!");
-			return 0;
+		else if(ris.equals("")) {
+			System.out.println("Username non trovato!");//se la select non produce risultati
+			return -3;
 		}
 		else {
-			System.out.println("Username errato!");
+			System.out.println("Password errata!");
 			return 0;
 		}
 		
