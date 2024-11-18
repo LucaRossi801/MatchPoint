@@ -128,7 +128,7 @@
       <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_oqGZoJxJEe-HN_wxpUcLVw" name="golf"/>
       <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_xJscIJxJEe-HN_wxpUcLVw" name="badminton"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Class" xmi:id="_5tvxwJxSEe-HN_wxpUcLVw" name="Servizi" visibility="private">
+    <packagedElement xmi:type="uml:Class" xmi:id="_5tvxwJxSEe-HN_wxpUcLVw" name="Servizio" visibility="public">
       <ownedAttribute xmi:type="uml:Property" xmi:id="_DcfH85xTEe-HN_wxpUcLVw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_DcfH8JxTEe-HN_wxpUcLVw">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DcgWEJxTEe-HN_wxpUcLVw"/>
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DchkMJxTEe-HN_wxpUcLVw" value="*"/>
@@ -152,7 +152,7 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_KIc0MJxUEe-HN_wxpUcLVw" value="*"/>
       </ownedEnd>
     </packagedElement>
-    <packagedElement xmi:type="uml:Association" xmi:id="_ECBcoJ3BEe-Kue6wJ9OEIw" memberEnd="_ECGVIJ3BEe-Kue6wJ9OEIw _ECG8Mp3BEe-Kue6wJ9OEIw">
+    <packagedElement xmi:type="uml:Association" xmi:id="_ECBcoJ3BEe-Kue6wJ9OEIw" memberEnd="_ECGVIJ3BEe-Kue6wJ9OEIw _ECG8Mp3BEe-Kue6wJ9OEIw" navigableOwnedEnd="_ECG8Mp3BEe-Kue6wJ9OEIw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ECFHAJ3BEe-Kue6wJ9OEIw" source="org.eclipse.papyrus">
         <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ECFHAZ3BEe-Kue6wJ9OEIw" key="nature" value="UML_Nature"/>
       </eAnnotations>
@@ -565,7 +565,7 @@
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_1MuxUKG7Ee-eb6QVehOhWg" name="CampoOccupato"/>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_i4a3AKG8Ee-eb6QVehOhWg" name="CampoLibero"/>
     <packagedElement xmi:type="uml:SignalEvent" xmi:id="_D7LsUKHIEe-eb6QVehOhWg" name="CambiamentiRilevati"/>
-    <packagedElement xmi:type="uml:AssociationClass" xmi:id="_NkcGQKWREe--5aEKsJhRNw" name="Prenotazione" visibility="public" memberEnd="_Nkiz8KWREe--5aEKsJhRNw _NkjbAKWREe--5aEKsJhRNw">
+    <packagedElement xmi:type="uml:AssociationClass" xmi:id="_NkcGQKWREe--5aEKsJhRNw" name="Prenotazione" visibility="public" memberEnd="_Nkiz8KWREe--5aEKsJhRNw _NkjbAKWREe--5aEKsJhRNw" navigableOwnedEnd="_Nkiz8KWREe--5aEKsJhRNw _NkjbAKWREe--5aEKsJhRNw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_NkiM4KWREe--5aEKsJhRNw" source="org.eclipse.papyrus">
         <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_NkiM4aWREe--5aEKsJhRNw" key="nature" value="UML_Nature"/>
       </eAnnotations>
@@ -578,7 +578,7 @@
       <ownedAttribute xmi:type="uml:Property" xmi:id="_jczgsKWREe--5aEKsJhRNw" name="OraFine" isUnique="false">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/EcorePrimitiveTypes.library.uml#EDate"/>
       </ownedAttribute>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_Nkiz8KWREe--5aEKsJhRNw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" aggregation="shared" association="_NkcGQKWREe--5aEKsJhRNw"/>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_Nkiz8KWREe--5aEKsJhRNw" name="campo" type="_NXnKwJxHEe-HN_wxpUcLVw" association="_NkcGQKWREe--5aEKsJhRNw"/>
       <ownedEnd xmi:type="uml:Property" xmi:id="_NkjbAKWREe--5aEKsJhRNw" name="giocatore" type="_qucXUJxGEe-HN_wxpUcLVw" association="_NkcGQKWREe--5aEKsJhRNw"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
