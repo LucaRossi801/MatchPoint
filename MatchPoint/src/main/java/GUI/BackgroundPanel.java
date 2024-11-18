@@ -305,6 +305,7 @@ public class BackgroundPanel extends JPanel {
 
 	    // Campi comuni
 	    JLabel firstNameLabel = new JLabel("Nome:");
+	    firstNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JTextField firstNameField = new JTextField(18);
 	    firstNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    firstNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -315,6 +316,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel lastNameLabel = new JLabel("Cognome:");
+	    lastNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JTextField lastNameField = new JTextField(18);
 	    lastNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    lastNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -325,6 +327,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel dobLabel = new JLabel("Data di nascita:");
+	    dobLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JTextField dobField = new JTextField("gg/mm/aaaa", 18);
 	    dobField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    dobField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -335,6 +338,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel emailLabel = new JLabel("E-mail:");
+	    emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JTextField emailField = new JTextField(18);
 	    emailField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    emailField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -345,6 +349,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel usernameLabel = new JLabel("Username:");
+	    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JTextField usernameField = new JTextField(18);
 	    usernameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -355,6 +360,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel passwordLabel = new JLabel("Password:");
+	    passwordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    JPasswordField passwordField = new JPasswordField(18);
 	    passwordField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -367,6 +373,7 @@ public class BackgroundPanel extends JPanel {
 	        gbc.gridx = 0;
 	        gbc.gridy++;
 	        JLabel label = new JLabel(field[0]);
+		    label.setFont(new Font("Arial", Font.PLAIN, 18));
 	        JTextField textField = new JTextField(18);
 	        textField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
 	        textField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
@@ -382,6 +389,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridwidth = 2;
 	    gbc.fill = GridBagConstraints.CENTER;
 	    JButton registerButton = new JButton("Register");
+	    registerButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo
 	    registerButton.setBackground(new Color(32, 178, 170));
 	    registerButton.setForeground(Color.WHITE);
 	    registerButton.setFocusPainted(false);
