@@ -331,6 +331,16 @@ public class BackgroundPanel extends JPanel {
 	    panel.add(dobLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(dobField, gbc);
+	    
+	    gbc.gridx = 0;
+	    gbc.gridy++;
+	    JLabel emailLabel = new JLabel("E-mail:");
+	    JTextField emailField = new JTextField(18);
+	    emailField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    emailField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
+	    panel.add(emailLabel, gbc);
+	    gbc.gridx++;
+	    panel.add(emailField, gbc);
 
 	    gbc.gridx = 0;
 	    gbc.gridy++;
