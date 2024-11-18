@@ -232,25 +232,27 @@ public class BackgroundPanel extends JPanel {
 
 	    // Creazione dei componenti
 	    JLabel usernameLabel = new JLabel("Username:");
+	    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 	    usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	    JTextField usernameField = new JTextField();
-	    usernameField.setFont(new Font("Arial", Font.PLAIN, 12)); // Font più piccolo
+	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
 	    usernameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-	    usernameField.setPreferredSize(new Dimension(100, 20)); // Altezza e larghezza più piccole
-	    usernameField.setMaximumSize(new Dimension(100, 20));   // Limita la dimensione massima
+	    usernameField.setPreferredSize(new Dimension(300, 30)); // Altezza e larghezza più piccole
+	    usernameField.setMaximumSize(new Dimension(300, 30));   // Limita la dimensione massima
 
 	    JLabel passwordLabel = new JLabel("Password:");
 	    passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    passwordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
 
 	    JPasswordField passwordField = new JPasswordField();
-	    passwordField.setFont(new Font("Arial", Font.PLAIN, 12)); // Font più piccolo
+	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    passwordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-	    passwordField.setPreferredSize(new Dimension(100, 20)); // Altezza e larghezza più piccole
-	    passwordField.setMaximumSize(new Dimension(100, 20));   // Limita la dimensione massima
+	    passwordField.setPreferredSize(new Dimension(300, 30)); // Altezza e larghezza più piccole
+	    passwordField.setMaximumSize(new Dimension(300, 30));   // Limita la dimensione massima
 
 	    JButton loginSubmitButton = new JButton("Login");
-	    loginSubmitButton.setFont(new Font("Arial", Font.BOLD, 12)); // Font più piccolo
+	    loginSubmitButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo
 	    loginSubmitButton.setBackground(new Color(32, 178, 170));
 	    loginSubmitButton.setForeground(Color.WHITE);
 	    loginSubmitButton.setFocusPainted(false);
@@ -303,7 +305,9 @@ public class BackgroundPanel extends JPanel {
 
 	    // Campi comuni
 	    JLabel firstNameLabel = new JLabel("Nome:");
-	    JTextField firstNameField = new JTextField(15);
+	    JTextField firstNameField = new JTextField(18);
+	    firstNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    firstNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    panel.add(firstNameLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(firstNameField, gbc);
@@ -311,7 +315,9 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel lastNameLabel = new JLabel("Cognome:");
-	    JTextField lastNameField = new JTextField(15);
+	    JTextField lastNameField = new JTextField(18);
+	    lastNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    lastNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    panel.add(lastNameLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(lastNameField, gbc);
@@ -319,7 +325,9 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel dobLabel = new JLabel("Data di nascita:");
-	    JTextField dobField = new JTextField("gg/mm/aaaa", 15);
+	    JTextField dobField = new JTextField("gg/mm/aaaa", 18);
+	    dobField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    dobField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    panel.add(dobLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(dobField, gbc);
@@ -327,7 +335,9 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel usernameLabel = new JLabel("Username:");
-	    JTextField usernameField = new JTextField(15);
+	    JTextField usernameField = new JTextField(18);
+	    usernameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    panel.add(usernameLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(usernameField, gbc);
@@ -335,7 +345,9 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridx = 0;
 	    gbc.gridy++;
 	    JLabel passwordLabel = new JLabel("Password:");
-	    JPasswordField passwordField = new JPasswordField(15);
+	    JPasswordField passwordField = new JPasswordField(18);
+	    passwordField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	    panel.add(passwordLabel, gbc);
 	    gbc.gridx++;
 	    panel.add(passwordField, gbc);
@@ -345,7 +357,9 @@ public class BackgroundPanel extends JPanel {
 	        gbc.gridx = 0;
 	        gbc.gridy++;
 	        JLabel label = new JLabel(field[0]);
-	        JTextField textField = new JTextField(15);
+	        JTextField textField = new JTextField(18);
+	        textField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
+	        textField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
 	        textField.setName(field[1]); // Usa il nome per distinguere i campi
 	        panel.add(label, gbc);
 	        gbc.gridx++;
@@ -394,7 +408,6 @@ public class BackgroundPanel extends JPanel {
 	        }
 	    );
 	}
-
 
 
 
