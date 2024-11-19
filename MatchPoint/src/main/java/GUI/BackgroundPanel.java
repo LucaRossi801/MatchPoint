@@ -243,13 +243,13 @@ public class BackgroundPanel extends JPanel {
 	    gbc.insets = new Insets(10, 10, 10, 10);
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-	    JLabel usernameLabel = new JLabel("Username:");
+	    JLabel usernameLabel = new OutlinedLabel("Username:");
 	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
 	    usernameLabel.setForeground(Color.WHITE);
 	    JTextField usernameField = new JTextField(20);
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
 
-	    JLabel passwordLabel = new JLabel("Password:");
+	    JLabel passwordLabel = new OutlinedLabel("Password:");
 	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
 	    passwordLabel.setForeground(Color.WHITE);
 	    JPasswordField passwordField = new JPasswordField(20);
@@ -407,7 +407,7 @@ public class BackgroundPanel extends JPanel {
 	    Component[] inputFields = new Component[fields.length];
 
 	    for (int i = 0; i < fields.length; i++) {
-	        JLabel label = new JLabel(fields[i][0]);
+	        JLabel label = new OutlinedLabel(fields[i][0]);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
 	        label.setForeground(Color.WHITE);
 
@@ -715,4 +715,42 @@ public class BackgroundPanel extends JPanel {
 
 	        return true;
 	    }
+	 //classe per le scritte con i bordiS
+
+	 public class OutlinedLabel extends JLabel {
+	     private Color outlineColor = Color.BLACK;
+
+	     public OutlinedLabel(String text) {
+	         super(text);
+	         setFont(new Font("Montserrat", Font.BOLD, 20)); // Font personalizzato
+	         setForeground(Color.WHITE); // Colore interno del testo
+	     }
+
+	     @Override
+	     protected void paintComponent(Graphics g) {
+	         Graphics2D g2 = (Graphics2D) g.create();
+	         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+	         String text = getText();
+	         if (text != null && !text.isEmpty()) {
+	             FontMetrics fm = g2.getFontMetrics(getFont());
+	             int x = 0; // Posizione orizzontale
+	             int y = fm.getAscent(); // Posizione verticale
+
+	             // Disegna il bordo
+	             g2.setColor(outlineColor);
+	             g2.drawString(text, x - 1, y - 1);
+	             g2.drawString(text, x + 1, y - 1);
+	             g2.drawString(text, x - 1, y + 1);
+	             g2.drawString(text, x + 1, y + 1);
+
+	             // Disegna il testo principale
+	             g2.setColor(getForeground());
+	             g2.drawString(text, x, y);
+	         }
+
+	         g2.dispose();
+	     }
+	 }
+
 }
