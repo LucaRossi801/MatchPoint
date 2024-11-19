@@ -215,9 +215,7 @@ public class BackgroundPanel extends JPanel {
 
 	    return panel;
 	}
-
-<<<<<<< Updated upstream
-
+	
 	private JButton createBackButton() {
 	    JButton backButton = new JButton("Back");
 	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
@@ -230,11 +228,6 @@ public class BackgroundPanel extends JPanel {
 
 
 
-
-	// Crea il pannello di login
-=======
-	//Crea il pannello di login
->>>>>>> Stashed changes
 	private JPanel createLoginPanel() {
 	    JPanel panel = new JPanel() {
 	        @Override
