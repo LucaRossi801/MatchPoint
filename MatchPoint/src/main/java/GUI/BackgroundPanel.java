@@ -245,13 +245,13 @@ public class BackgroundPanel extends JPanel {
 
 	    JLabel usernameLabel = new OutlinedLabel("Username:");
 	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    usernameLabel.setForeground(Color.WHITE);
+	    usernameLabel.setForeground(Color.BLACK);
 	    JTextField usernameField = new JTextField(20);
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
 
 	    JLabel passwordLabel = new OutlinedLabel("Password:");
 	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    passwordLabel.setForeground(Color.WHITE);
+	    passwordLabel.setForeground(Color.BLACK);
 	    JPasswordField passwordField = new JPasswordField(20);
 	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
 
@@ -409,7 +409,7 @@ public class BackgroundPanel extends JPanel {
 	    for (int i = 0; i < fields.length; i++) {
 	        JLabel label = new OutlinedLabel(fields[i][0]);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
-	        label.setForeground(Color.WHITE);
+	        label.setForeground(Color.BLACK);
 
 	        Component inputField;
 	        if ("dob".equals(fields[i][1])) {
@@ -718,12 +718,12 @@ public class BackgroundPanel extends JPanel {
 	 //classe per le scritte con i bordiS
 
 	 public class OutlinedLabel extends JLabel {
-	     private Color outlineColor = Color.BLACK;
+	     private Color outlineColor = Color.WHITE;
 
 	     public OutlinedLabel(String text) {
 	         super(text);
 	         setFont(new Font("Montserrat", Font.BOLD, 20)); // Font personalizzato
-	         setForeground(Color.WHITE); // Colore interno del testo
+	         setForeground(Color.BLACK); // Colore interno del testo
 	     }
 
 	     @Override
