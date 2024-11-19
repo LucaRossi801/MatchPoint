@@ -218,6 +218,15 @@ public class BackgroundPanel extends JPanel {
 	}
 
 
+	private JButton createBackButton() {
+	    JButton backButton = new JButton("Back");
+	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
+	    backButton.setBackground(new Color(32, 178, 170));
+	    backButton.setForeground(Color.WHITE);
+	    backButton.setFocusPainted(false);
+	    backButton.addActionListener(e -> cardLayout.show(cardPanel, "main"));
+	    return backButton;
+	}
 
 
 
@@ -282,12 +291,20 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridy = 2;
 	    gbc.gridwidth = 2;
 	    panel.add(loginButton, gbc);
+	    
+	 // Aggiungi il pulsante "Back"
+	    gbc.gridx = 0;
+	    gbc.gridy = 3;
+	    gbc.gridwidth = 2;
+	    panel.add(createBackButton(), gbc);
+
 
 	    return panel;
 	}
 
 	private JPanel createPlayerRegisterPanel() {
-	    return createRegisterPanel("Registrazione Giocatore", new String[][]{
+	    
+		return createRegisterPanel("Registrazione Giocatore", new String[][]{
 	            {"Nome:", "name"},
 	            {"Cognome:", "surname"},
 	            {"DataNascita:", "dob"},
@@ -299,6 +316,7 @@ public class BackgroundPanel extends JPanel {
 	        // Esegui la registrazione del giocatore
 	        System.out.println("Registrazione giocatore eseguita!");
 	    });
+	    
 	}
 
 	private JPanel createManagerRegisterPanel() {
@@ -435,6 +453,13 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridwidth = 2;
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(registerButton, gbc);
+	    
+	 // Aggiungi il pulsante "Back" sotto il pulsante "Registrati"
+	    gbc.gridx = 0;
+	    gbc.gridy = fields.length + 2; // Una riga sotto il pulsante "Registrati"
+	    gbc.gridwidth = 2;
+	    panel.add(createBackButton(), gbc);
+
 
 	    return panel;
 	}
