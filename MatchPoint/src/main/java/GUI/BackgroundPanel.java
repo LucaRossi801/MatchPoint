@@ -243,15 +243,16 @@ public class BackgroundPanel extends JPanel {
 	    gbc.insets = new Insets(10, 10, 10, 10);
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-	    JLabel usernameLabel = new OutlinedLabel("Username:");
+	    JLabel titleLabel = new OutlinedLabel("Login", Color.WHITE);
+	    titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
+	    
+	    JLabel usernameLabel = new OutlinedLabel("Username:", Color.BLACK);
 	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    usernameLabel.setForeground(Color.BLACK);
 	    JTextField usernameField = new JTextField(20);
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
 
-	    JLabel passwordLabel = new OutlinedLabel("Password:");
+	    JLabel passwordLabel = new OutlinedLabel("Password:", Color.BLACK);
 	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    passwordLabel.setForeground(Color.BLACK);
 	    JPasswordField passwordField = new JPasswordField(20);
 	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
 
@@ -268,30 +269,44 @@ public class BackgroundPanel extends JPanel {
 		        Utente.login(username, password);
 	    	}
 	    });
+	    // Posizionamento componenti
+	 // Aggiungi il titolo (Login)
+	    gbc.gridx = 0; // Colonna
+	    gbc.gridy = 0; // Riga
+	    gbc.gridwidth = 2; // Il titolo occupa entrambe le colonne
+	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
+	    panel.add(titleLabel, gbc);
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    panel.add(usernameLabel, gbc);
-
-	    gbc.gridx = 1;
-	    panel.add(usernameField, gbc);
-
+	    // Aggiungi l'etichetta e il campo per il nome utente
+	    gbc.gridwidth = 1; // Torna a occupare una colonna
+	    gbc.anchor = GridBagConstraints.WEST; // Allineato a sinistra
 	    gbc.gridx = 0;
 	    gbc.gridy = 1;
+	    panel.add(usernameLabel, gbc);
+
+	    gbc.gridx = 1; // Campo di testo accanto all'etichetta
+	    panel.add(usernameField, gbc);
+
+	    // Aggiungi l'etichetta e il campo per la password
+	    gbc.gridx = 0;
+	    gbc.gridy = 2;
 	    panel.add(passwordLabel, gbc);
 
 	    gbc.gridx = 1;
 	    panel.add(passwordField, gbc);
 
-	    gbc.gridx = 0;
-	    gbc.gridy = 2;
-	    gbc.gridwidth = 2;
-	    panel.add(loginButton, gbc);
-	    
-	 // Aggiungi il pulsante "Back"
+	    // Aggiungi il pulsante di login
 	    gbc.gridx = 0;
 	    gbc.gridy = 3;
-	    gbc.gridwidth = 2;
+	    gbc.gridwidth = 2; // Il pulsante di login occupa entrambe le colonne
+	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
+	    panel.add(loginButton, gbc);
+
+	    // Aggiungi il pulsante "Back"
+	    gbc.gridx = 0;
+	    gbc.gridy = 4; // Riga successiva
+	    gbc.gridwidth = 2; // Anche il pulsante "Back" occupa entrambe le colonne
+	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(createBackButton(), gbc);
 
 
@@ -393,9 +408,8 @@ public class BackgroundPanel extends JPanel {
 	    gbc.insets = new Insets(10, 10, 10, 10);
 	    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-	    JLabel titleLabel = new JLabel(title);
+	    JLabel titleLabel = new OutlinedLabel(title, Color.WHITE);
 	    titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
-	    titleLabel.setForeground(Color.WHITE);
 
 	    gbc.gridx = 0;
 	    gbc.gridy = 0;
@@ -407,7 +421,7 @@ public class BackgroundPanel extends JPanel {
 	    Component[] inputFields = new Component[fields.length];
 
 	    for (int i = 0; i < fields.length; i++) {
-	        JLabel label = new OutlinedLabel(fields[i][0]);
+	        JLabel label = new OutlinedLabel(fields[i][0], Color.BLACK);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
 	        label.setForeground(Color.BLACK);
 
@@ -718,12 +732,22 @@ public class BackgroundPanel extends JPanel {
 	 //classe per le scritte con i bordiS
 
 	 public class OutlinedLabel extends JLabel {
-	     private Color outlineColor = Color.WHITE;
+	     private Color outlineColor; // Variabile d'istanza per il colore del contorno
 
-	     public OutlinedLabel(String text) {
+	     public OutlinedLabel(String text, Color color) {   // Si passa come variabile il colore che desidero interno (o nero con bordo bianco o viceversa)
 	         super(text);
 	         setFont(new Font("Montserrat", Font.BOLD, 20)); // Font personalizzato
-	         setForeground(Color.BLACK); // Colore interno del testo
+
+	         // Imposta outlineColor e il colore del testo in base al parametro passato
+	         if (color == Color.WHITE) {
+	             this.outlineColor = Color.BLACK; // Colore del bordo nero
+	             setForeground(Color.WHITE); // Colore interno del testo
+	         } else if (color == Color.BLACK) {
+	             this.outlineColor = Color.WHITE; // Colore del bordo bianco
+	             setForeground(Color.BLACK); // Colore interno del testo
+	         } else {
+	             throw new IllegalArgumentException("Colore non supportato. Usa Color.BLACK o Color.WHITE.");
+	         }
 	     }
 
 	     @Override
@@ -752,5 +776,6 @@ public class BackgroundPanel extends JPanel {
 	         g2.dispose();
 	     }
 	 }
+
 
 }
