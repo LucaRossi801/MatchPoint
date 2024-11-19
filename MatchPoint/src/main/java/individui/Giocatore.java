@@ -16,7 +16,7 @@ public class Giocatore extends Utente {
 
 
 	@Override
-	public int registrazione(String username, String password) {
+	public int registrazione(String nome, String cognome, Date dataNascita, String email, String username, String password, String NomeSquadra) {
 		return 0;
 	}
 	

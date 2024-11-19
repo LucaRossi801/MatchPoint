@@ -13,7 +13,7 @@ public class Gestore extends Utente {
 	}
 
 	@Override
-	public int registrazione(String username, String password) {
+	public int registrazione(String nome, String cognome, Date dataNascita, String email, String username, String password, String Certificazioni, String Competenze) {
 	//accesso al database?	
 		return 1;
 	}
