@@ -53,8 +53,9 @@ public abstract class Utente {
 		
 	}
 
-	public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+	/*public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
 			String password, String certificazioni, String competenze) {
+		Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
 		return 0;
 	}
 	
@@ -62,5 +63,5 @@ public abstract class Utente {
 			String password, String nomeSquadra) {
 		return 0;
 	}
-
+*/
 }
