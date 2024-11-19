@@ -1,10 +1,7 @@
 package individui;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
+import java.sql.*;
+import java.sql.Date;
 
 import dataBase.DataBase;
 
@@ -21,16 +18,9 @@ public abstract class Utente {
 	public String username;
 	public String password;
 
-	public Utente(String nome, String cognome, Date dataNascita, String username, String password) {
+	public Utente() {
 		super();
-		this.nome = nome;
-		this.cognome = cognome;
-		this.dataNascita = dataNascita;
-		this.username=username;
-		this.password=password;
 	}
-
-	public abstract int registrazione(String nome, String cognome, Date dataNascita, String eMail, String username, String password);
 
 	/**
 	 *  Metodo per esecuzione del login
@@ -61,6 +51,16 @@ public abstract class Utente {
 			return 0;
 		}
 		
+	}
+
+	public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+			String password, String certificazioni, String competenze) {
+		return 0;
+	}
+	
+	public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+			String password, String nomeSquadra) {
+		return 0;
 	}
 
 }

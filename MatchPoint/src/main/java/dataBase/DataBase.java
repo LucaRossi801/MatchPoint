@@ -1,6 +1,7 @@
 package dataBase;
 
 import java.sql.*;
+import java.util.Date;
 
 public class DataBase {
 	// Metodo per creare la tabella Utente se non esiste
@@ -20,27 +21,38 @@ public class DataBase {
 	 * stmt.execute(createTableGestore); } }
 	 */
 
-	// Metodo per inserire i dati nella tabella Utente
-	private static void insert(Connection conn) throws SQLException {
-		String sql = "INSERT INTO Utente(Nome, Cognome, DataNascita, Eta, Username, Password) VALUES (?, ?, ?, ?, ?, ?)";
+	// Metodo per inserire i dati nella tabella Gestore
+	public static void insert(Connection conn, String nome, String cognome, Date dataNascita, int eta, String email, String username, String password, String certificazioni, String competenze) throws SQLException {
+		String sql = "INSERT INTO Gestore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, Certificazione, Competenze) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, "Bob");
-			pstmt.setString(2, "Marley");
-			pstmt.setDate(3, Date.valueOf("2003-11-08"));
-			pstmt.setInt(4, 21);
-			pstmt.setString(5, "BobbySolo");
-			pstmt.setString(6, "BobbyGronde");
-			pstmt.executeUpdate();
-
-			pstmt.setString(1, "Jhon");
-			pstmt.setString(2, "Abruzzi");
-			pstmt.setDate(3, Date.valueOf("1989-07-09"));
-			pstmt.setInt(4, 35);
-			pstmt.setString(5, "JhonAbru");
-			pstmt.setString(6, "TheMafiaBoss123");
+			pstmt.setString(1, nome);
+			pstmt.setString(2, cognome);
+			pstmt.setDate(3, (java.sql.Date) dataNascita);
+			pstmt.setInt(4, eta);
+			pstmt.setString(5, email);
+			pstmt.setString(6, username);
+			pstmt.setString(7, password);
+			pstmt.setString(8, certificazioni);
+			pstmt.setString(9, competenze);
 			pstmt.executeUpdate();
 		}
 	}
+	
+	// Metodo per inserire i dati nella tabella Giocatore
+		public static void insert(Connection conn, String nome, String cognome, Date dataNascita, int eta, String email, String username, String password, String nomeSquadra) throws SQLException {
+			String sql = "INSERT INTO Gestore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+				pstmt.setString(1, nome);
+				pstmt.setString(2, cognome);
+				pstmt.setDate(3, (java.sql.Date) dataNascita);
+				pstmt.setInt(4, eta);
+				pstmt.setString(5, email);
+				pstmt.setString(6, username);
+				pstmt.setString(7, password);
+				pstmt.setString(8, nomeSquadra);
+				pstmt.executeUpdate();
+			}
+		}
 
 	// Metodo privato per eseguire una select
 	private static ResultSet select(Connection conn, String sql) throws SQLException {

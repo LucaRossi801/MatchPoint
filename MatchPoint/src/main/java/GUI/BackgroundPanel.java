@@ -2,11 +2,15 @@ package GUI;
 
 import javax.swing.*;
 
+import individui.Gestore;
 import individui.Utente;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class BackgroundPanel extends JPanel {
 	private CardLayout cardLayout;
@@ -221,71 +225,188 @@ public class BackgroundPanel extends JPanel {
 	        @Override
 	        protected void paintComponent(Graphics g) {
 	            super.paintComponent(g);
-
-	            // Disegna lo sfondo
 	            if (clearImage != null) {
 	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
 	            }
 	        }
 	    };
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-	    panel.setOpaque(false);
+	    panel.setLayout(new GridBagLayout());
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10);
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-	    // Creazione dei componenti
 	    JLabel usernameLabel = new JLabel("Username:");
-	    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-	    JTextField usernameField = new JTextField();
+	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+	    usernameLabel.setForeground(Color.WHITE);
+	    JTextField usernameField = new JTextField(20);
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
-	    usernameField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-	    usernameField.setPreferredSize(new Dimension(300, 30)); // Altezza e larghezza più piccole
-	    usernameField.setMaximumSize(new Dimension(300, 30));   // Limita la dimensione massima
 
 	    JLabel passwordLabel = new JLabel("Password:");
-	    passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    passwordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+	    passwordLabel.setForeground(Color.WHITE);
+	    JPasswordField passwordField = new JPasswordField(20);
+	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
 
-	    JPasswordField passwordField = new JPasswordField();
-	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    passwordField.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-	    passwordField.setPreferredSize(new Dimension(300, 30)); // Altezza e larghezza più piccole
-	    passwordField.setMaximumSize(new Dimension(300, 30));   // Limita la dimensione massima
+	    JButton loginButton = new JButton("Login");
+	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
+	    loginButton.setBackground(new Color(32, 178, 170));
+	    loginButton.setForeground(Color.WHITE);
+	    loginButton.setFocusPainted(false);
 
-	    JButton loginSubmitButton = new JButton("Login");
-	    loginSubmitButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo
-	    loginSubmitButton.setBackground(new Color(32, 178, 170));
-	    loginSubmitButton.setForeground(Color.WHITE);
-	    loginSubmitButton.setFocusPainted(false);
-	    loginSubmitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-	    loginSubmitButton.addActionListener(e -> {
-	        if (checkEmptyFields(usernameField, passwordField)) {
-	            // Login se i campi sono corretti
-	            String username = usernameField.getText();
-	            String password = new String(passwordField.getPassword());
-	            System.out.println("Login con username: " + username + " e password: " + password);
-	            Utente.login(username, password);
-	        }
+	    loginButton.addActionListener(e -> {
+	    	if(checkEmptyFields(usernameField, passwordField)) {
+	    		String username = usernameField.getText();
+		        String password = new String(passwordField.getPassword());
+		        Utente.login(username, password);
+	    	}
 	    });
 
-	    // Aggiunta dei componenti al pannello con spazi ridotti
-	    panel.add(Box.createVerticalGlue());
-	    panel.add(usernameLabel);
-	    panel.add(Box.createRigidArea(new Dimension(0, 5))); // Spazio fisso
-	    panel.add(usernameField);
-	    panel.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio fisso
-	    panel.add(passwordLabel);
-	    panel.add(Box.createRigidArea(new Dimension(0, 5))); // Spazio fisso
-	    panel.add(passwordField);
-	    panel.add(Box.createRigidArea(new Dimension(0, 15))); // Spazio fisso
-	    panel.add(loginSubmitButton);
-	    panel.add(Box.createVerticalGlue());
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    panel.add(usernameLabel, gbc);
+
+	    gbc.gridx = 1;
+	    panel.add(usernameField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy = 1;
+	    panel.add(passwordLabel, gbc);
+
+	    gbc.gridx = 1;
+	    panel.add(passwordField, gbc);
+
+	    gbc.gridx = 0;
+	    gbc.gridy = 2;
+	    gbc.gridwidth = 2;
+	    panel.add(loginButton, gbc);
 
 	    return panel;
 	}
 
-	private JPanel createRegisterPanel(String[][] additionalFields, ActionListener registerAction) {
+	private JPanel createPlayerRegisterPanel() {
+	    return createRegisterPanel("Registrazione Giocatore", new String[][]{
+	            {"Nome:", "name"},
+	            {"Cognome:", "surname"},
+	            {"DataNascita:", "dob"},
+	            {"Email:", "email"},
+	            {"Username:", "username"},
+	            {"Password:", "password"},
+	            {"Nome Squadra:", "teamName"}
+	    }, e -> {
+	        // Esegui la registrazione del giocatore
+	        System.out.println("Registrazione giocatore eseguita!");
+	    });
+	}
+
+	private JPanel createManagerRegisterPanel() {
+	    return createRegisterPanel("Registrazione Gestore", new String[][]{
+	        {"Nome:", "name"},
+	        {"Cognome:", "surname"},
+	        {"DataNascita:", "dob"},
+	        {"Email:", "email"},
+	        {"Username:", "username"},
+	        {"Password:", "password"},
+	        {"Certificazioni:", "certifications"},
+	        {"Competenze:", "competences"}
+	    }, e -> {
+	        // Raccogli i dati dai campi di testo
+	        String name = getTextFieldValue("name");
+	        String surname = getTextFieldValue("surname");
+	        String dob = getTextFieldValue("dob");
+	        String email = getTextFieldValue("email");
+	        String username = getTextFieldValue("username");
+	        String password = getTextFieldValue("password");
+	        String certifications = getTextFieldValue("certifications");
+	        String competences = getTextFieldValue("competences");
+
+	        Date birthDate= Date.valueOf(dob);
+	       Gestore.registrazione(name, surname, birthDate, email, username, password, certifications, competences);
+	    });
+	}
+
+	private String getTextFieldValue(String fieldName) {
+	    // Trova il campo di testo corrispondente al fieldName
+	    for (Component component : getRootPane().getComponents()) {
+	        if (component instanceof JTextField) {
+	            JTextField textField = (JTextField) component;
+	            if (textField.getName().equals(fieldName)) {
+	                return textField.getText();
+	            }
+	        }
+	    }
+	    return ""; // Restituisce una stringa vuota se non trova il campo di testo
+	}
+
+	private JPanel createRegisterPanel(String title, String[][] fields, ActionListener registerAction) {
+	    JPanel panel = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            if (clearImage != null) {
+	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
+	    panel.setLayout(new GridBagLayout());
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10);
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+
+	    JLabel titleLabel = new JLabel(title);
+	    titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
+	    titleLabel.setForeground(Color.WHITE);
+
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    gbc.gridwidth = 2;
+	    gbc.anchor = GridBagConstraints.CENTER;
+	    panel.add(titleLabel, gbc);
+
+	    JTextField[] textFields = new JTextField[fields.length];
+	    for (int i = 0; i < fields.length; i++) {
+	        JLabel label = new JLabel(fields[i][0]);
+	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
+	        label.setForeground(Color.WHITE);
+	        JTextField textField = fields[i][1].equals("password") ? new JPasswordField(20) : new JTextField(20);
+	        textField.setFont(new Font("Arial", Font.PLAIN, 18));
+	        textFields[i] = textField;
+
+	        gbc.gridwidth = 1;
+	        gbc.anchor = GridBagConstraints.WEST;
+	        gbc.gridx = 0;
+	        gbc.gridy = i + 1;
+	        panel.add(label, gbc);
+
+	        gbc.gridx = 1;
+	        panel.add(textField, gbc);
+	    }
+
+	    JButton registerButton = new JButton("Registrati");
+	    registerButton.setFont(new Font("Arial", Font.BOLD, 20));
+	    registerButton.setBackground(new Color(32, 178, 170));
+	    registerButton.setForeground(Color.WHITE);
+	    registerButton.setFocusPainted(false);
+
+	    registerButton.addActionListener(e -> {
+	        StringBuilder data = new StringBuilder(title + ":\n");
+	        for (JTextField textField : textFields) {
+	            data.append(textField.getText()).append("\n");
+	        }
+	        /*System.out.println(data.toString());*/
+	        registerAction.actionPerformed(e);
+	    });
+
+	    gbc.gridx = 0;
+	    gbc.gridy = fields.length + 1;
+	    gbc.gridwidth = 2;
+	    gbc.anchor = GridBagConstraints.CENTER;
+	    panel.add(registerButton, gbc);
+
+	    return panel;
+	}
+
+
+/*	private JPanel createRegisterPanel(String[][] additionalFields, ActionListener registerAction) {
 	    JPanel panel = new JPanel(new GridBagLayout()) {
 	        @Override
 	        protected void paintComponent(Graphics g) {
@@ -416,17 +537,55 @@ public class BackgroundPanel extends JPanel {
 	}
 
 	private JPanel createManagerRegisterPanel() {
-	    return createRegisterPanel(
-	        new String[][]{
-	            {"Certificazioni:", "certifications"},
-	            {"Competenze:", "skills"}
-	        },
-	        e -> {
-	            // Gestione della registrazione del gestore
-	            System.out.println("Registrazione Gestore completata.");
+	    // Creazione del pannello principale
+	    JPanel panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+	    // Bottone per la registrazione
+	    JButton registerButton = new JButton("Register");
+	    registerButton.addActionListener(e -> {
+	        try {
+	            // Recupera i dati dai campi (già dichiarati fuori da questo metodo)
+	            String nome = nomeField.getText().trim();
+	            String cognome = cognomeField.getText().trim();
+	            String email = emailField.getText().trim();
+	            String username = usernameField.getText().trim();
+	            String password = new String(passwordField.getPassword()).trim();
+	            String dataNascitaText = dataNascitaField.getText().trim();
+	            String certificazioni = certificazioniField.getText().trim();
+	            String competenze = competenzeField.getText().trim();
+
+	            // Validazione dei dati
+	            if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || username.isEmpty() ||
+	                password.isEmpty() || dataNascitaText.isEmpty() || certificazioni.isEmpty() || competenze.isEmpty()) {
+	                throw new IllegalArgumentException("Tutti i campi devono essere compilati!");
+	            }
+
+	            // Conversione della data di nascita
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	            Date dataNascita = dateFormat.parse(dataNascitaText);
+
+	            // Chiamata al metodo di registrazione
+	            int result = Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
+	            if (result == 1) {
+	                JOptionPane.showMessageDialog(null, "Registrazione completata con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Errore durante la registrazione!", "Errore", JOptionPane.ERROR_MESSAGE);
+	            }
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(null, "Errore: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+	            ex.printStackTrace();
 	        }
-	    );
+	    });
+
+	    // Aggiunta del bottone al pannello
+	    panel.add(registerButton);
+	    panel.add(Box.createVerticalStrut(10)); // Spaziatura
+
+	    return panel;
 	}
+*/
+
 
 
 
