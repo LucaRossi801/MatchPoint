@@ -30,9 +30,15 @@ public abstract class Utente {
 		this.password=password;
 	}
 
-	public abstract int registrazione(String username, String password);
+	public abstract int registrazione(String nome, String cognome, Date dataNascita, String eMail, String username, String password);
 
-	// Metodo per esecuzione del login
+	/**
+	 *  Metodo per esecuzione del login
+	 * @param username
+	 * @param password
+	 * @return >0 succesful, =0 incorrect password, <0 no username in table
+	 * 
+	 */
 	public static int login(String username, String password) {
 		String sql="SELECT Password FROM Gestore WHERE Username ='"+username+"' UNION SELECT Password FROM Giocatore WHERE Username ='"+username+"'";//creazione query
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
