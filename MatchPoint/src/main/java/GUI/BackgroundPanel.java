@@ -1,7 +1,9 @@
 package GUI;
 
 import javax.swing.*;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 
+import org.jdatepicker.impl.*;
 import individui.Gestore;
 import individui.Utente;
 
@@ -11,6 +13,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 public class BackgroundPanel extends JPanel {
 	private CardLayout cardLayout;
@@ -362,14 +365,37 @@ public class BackgroundPanel extends JPanel {
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(titleLabel, gbc);
 
-	    JTextField[] textFields = new JTextField[fields.length];
+	    // Array per i campi di input
+	    Component[] inputFields = new Component[fields.length];
+
 	    for (int i = 0; i < fields.length; i++) {
 	        JLabel label = new JLabel(fields[i][0]);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
 	        label.setForeground(Color.WHITE);
-	        JTextField textField = fields[i][1].equals("password") ? new JPasswordField(20) : new JTextField(20);
-	        textField.setFont(new Font("Arial", Font.PLAIN, 18));
-	        textFields[i] = textField;
+
+	        Component inputField;
+	        if ("dob".equals(fields[i][1])) {
+	            // Usa JDatePicker per il campo "dob"
+	        	UtilDateModel model = new UtilDateModel();
+	        	Properties properties = new Properties();
+	        	properties.put("text.today", "Oggi");
+	        	properties.put("text.month", "Mese");
+	        	properties.put("text.year", "Anno");
+
+	        	JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
+	        	JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+
+	            datePicker.getJFormattedTextField().setFont(new Font("Arial", Font.PLAIN, 18));
+	            inputField = datePicker;
+	        } else if ("password".equals(fields[i][1])) {
+	            inputField = new JPasswordField(20);
+	            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
+	        } else {
+	            inputField = new JTextField(20);
+	            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
+	        }
+
+	        inputFields[i] = inputField;
 
 	        gbc.gridwidth = 1;
 	        gbc.anchor = GridBagConstraints.WEST;
@@ -378,7 +404,7 @@ public class BackgroundPanel extends JPanel {
 	        panel.add(label, gbc);
 
 	        gbc.gridx = 1;
-	        panel.add(textField, gbc);
+	        panel.add(inputField, gbc);
 	    }
 
 	    JButton registerButton = new JButton("Registrati");
@@ -388,13 +414,21 @@ public class BackgroundPanel extends JPanel {
 	    registerButton.setFocusPainted(false);
 
 	    registerButton.addActionListener(e -> {
-	        StringBuilder data = new StringBuilder(title + ":\n");
-	        for (JTextField textField : textFields) {
-	            data.append(textField.getText()).append("\n");
+	        for (int i = 0; i < inputFields.length; i++) {
+	            if ("dob".equals(fields[i][1])) {
+	                JDatePickerImpl datePicker = (JDatePickerImpl) inputFields[i];
+	                java.util.Date selectedDate = (java.util.Date) datePicker.getModel().getValue();
+	                if (selectedDate != null) {
+	                    java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
+	                    System.out.println("Data di nascita (SQL): " + sqlDate);
+	                } else {
+	                    System.out.println("Nessuna data selezionata.");
+	                }
+	            }
 	        }
-	        /*System.out.println(data.toString());*/
 	        registerAction.actionPerformed(e);
 	    });
+
 
 	    gbc.gridx = 0;
 	    gbc.gridy = fields.length + 1;
@@ -404,7 +438,41 @@ public class BackgroundPanel extends JPanel {
 
 	    return panel;
 	}
+	
+	private JDatePickerImpl createDatePicker() {
+	    UtilDateModel model = new UtilDateModel(); // Modello per la data
+	    model.setSelected(true); // Imposta la data attuale come predefinita (opzionale)
 
+	    // Proprietà per il formato della data
+	    Properties properties = new Properties();
+	    properties.put("text.today", "Oggi");
+	    properties.put("text.month", "Mese");
+	    properties.put("text.year", "Anno");
+
+	    // Pannello di selezione della data
+	    JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
+
+	    // Componente del selettore di date
+	    JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+	    return datePicker;
+	}
+	public class DateLabelFormatter extends AbstractFormatter {
+	    private SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+	    @Override
+	    public Object stringToValue(String text) throws ParseException {
+	        return dateFormatter.parse(text);
+	    }
+
+	    @Override
+	    public String valueToString(Object value) {
+	        if (value instanceof java.util.Calendar) {
+	            java.util.Calendar calendar = (java.util.Calendar) value;
+	            return dateFormatter.format(calendar.getTime());
+	        }
+	        return "";
+	    }
+	}
 
 /*	private JPanel createRegisterPanel(String[][] additionalFields, ActionListener registerAction) {
 	    JPanel panel = new JPanel(new GridBagLayout()) {
@@ -585,10 +653,6 @@ public class BackgroundPanel extends JPanel {
 	    return panel;
 	}
 */
-
-
-
-
 
 	 private boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
 	        String username = usernameField.getText().trim();
