@@ -1,6 +1,7 @@
 package individui;
 
-import java.util.Date;
+import java.sql.*;
+import java.sql.Date;
 
 import dataBase.DataBase;
 
@@ -17,38 +18,50 @@ public abstract class Utente {
 	public String username;
 	public String password;
 
-	public Utente(String nome, String cognome, Date dataNascita, String username, String password) {
-		super();
-		this.nome = nome;
-		this.cognome = cognome;
-		this.dataNascita = dataNascita;
-		this.username=username;
-		this.password=password;
-	}
-
 	public Utente() {
-
+		super();
 	}
 
-	public Utente(String nome2, String cognome2, Date dataNascita2, Object username2, Object password2) {
-		// TODO Auto-generated constructor stub
-	}
-
-	public abstract int registrazione(String username, String password);
-
-	public int login(String username, String password) {
-		String sql="SELECT password FROM Utente WHERE username ="+username;
-		String select = DataBase.eseguiSelect(null, sql); //risultato della query
-		if(password==select) {
+	/**
+	 *  Metodo per esecuzione del login
+	 * @param username
+	 * @param password
+	 * @return >0 succesful, =0 incorrect password, <0 no username in table
+	 * 
+	 */
+	public static int login(String username, String password) {
+		String sql="SELECT Password FROM Gestore WHERE Username ='"+username+"' UNION SELECT Password FROM Giocatore WHERE Username ='"+username+"'";//creazione query
+		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
+		String ris="";
+		try  (Connection conn = DriverManager.getConnection(url)){
+			ris = DataBase.eseguiSelect(conn, sql);//esecuzione select
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //risultato della query
+		System.out.println(ris);
+		if(password.equals(ris)) {//confronto con password inserita
 			return 1;
 		}
-		else if(select!=password) {
-			return 0;
+		else if(ris.equals("")) {
+			System.out.println("Username non trovato!");//se la select non produce risultati
+			return -3;
 		}
 		else {
+			System.out.println("Password errata!");
 			return 0;
 		}
 		
 	}
 
+	/*public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+			String password, String certificazioni, String competenze) {
+		Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
+		return 0;
+	}
+	
+	public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+			String password, String nomeSquadra) {
+		return 0;
+	}
+*/
 }
