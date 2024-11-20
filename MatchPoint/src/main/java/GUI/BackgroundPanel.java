@@ -15,25 +15,25 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 public class BackgroundPanel extends JPanel {
-	private CardLayout cardLayout;
-	private JPanel cardPanel;
-	private JPanel homePanel; //Pannello per la homepage
-	private JPanel mainPanel; //Pannello per la vista principale (con immagine nitida e bottoni)
-	private JPanel loginPanel; //Pannello per la vista di login
-	private JPanel playerRegisterPanel; //Pannello per la vista di registrazione
-	private JPanel managerRegisterPanel; //Pannello per la vista di registrazione
+	protected static CardLayout cardLayout;
+	protected static JPanel cardPanel;
+	protected JPanel homePanel; //Pannello per la homepage
+	protected JPanel mainPanel; //Pannello per la vista principale (con immagine nitida e bottoni)
+	protected static JPanel loginPanel; //Pannello per la vista di login
+	protected JPanel playerRegisterPanel; //Pannello per la vista di registrazione
+	protected JPanel managerRegisterPanel; //Pannello per la vista di registrazione
 
-	private Image backgroundImage;
-	private Image clearImage;
+	protected Image backgroundImage;
+	protected static Image clearImage;
 
-	private boolean isVisible; //Booleano per la visibilità della scritta lampeggiante
-	private Timer blinkTimer; //Timer per gestire il lampeggiamento
-	private int blinkInterval; //Intervallo di tempo per il lampeggiamento
+	protected boolean isVisible; //Booleano per la visibilità della scritta lampeggiante
+	protected Timer blinkTimer; //Timer per gestire il lampeggiamento
+	protected int blinkInterval; //Intervallo di tempo per il lampeggiamento
 
-	private JButton registerButton; //Bottone per il "Register"
-	private JButton loginButton; //Bottone per il "Login"
+	protected JButton registerButton; //Bottone per il "Register"
+	protected JButton loginButton; //Bottone per il "Login"
 
-	public BackgroundPanel(String blurredImagePath, String clearImagePath) {
+	protected BackgroundPanel(String blurredImagePath, String clearImagePath) {
 		this.isVisible = true; //La scritta è visibile inizialmente
 		this.blinkInterval = 800; //Durata della visibilità della scritta (in ms)
 
@@ -44,7 +44,7 @@ public class BackgroundPanel extends JPanel {
 		//Crea i pannelli per le diverse viste
 		homePanel = createHomePanel(blurredImagePath);
 		mainPanel = createMainPanel(clearImagePath);
-		loginPanel = createLoginPanel();
+		loginPanel = RegisterLogin.createLoginPanel();
 		playerRegisterPanel = createPlayerRegisterPanel();
 		managerRegisterPanel = createManagerRegisterPanel();
 
@@ -216,7 +216,8 @@ public class BackgroundPanel extends JPanel {
 	    return panel;
 	}
 	
-	private JButton createBackButton() {
+	//creazione del bottone back di register/login
+	protected static JButton createBackButton() {
 	    JButton backButton = new JButton("Back");
 	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
 	    backButton.setBackground(new Color(32, 178, 170));
@@ -226,92 +227,6 @@ public class BackgroundPanel extends JPanel {
 	    return backButton;
 	}
 
-
-
-	private JPanel createLoginPanel() {
-	    JPanel panel = new JPanel() {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-	            if (clearImage != null) {
-	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	            }
-	        }
-	    };
-	    panel.setLayout(new GridBagLayout());
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10);
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
-
-	    JLabel titleLabel = new OutlinedLabel("Login", Color.WHITE);
-	    titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
-	    
-	    JLabel usernameLabel = new OutlinedLabel("Username:", Color.BLACK);
-	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    JTextField usernameField = new JTextField(20);
-	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
-
-	    JLabel passwordLabel = new OutlinedLabel("Password:", Color.BLACK);
-	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    JPasswordField passwordField = new JPasswordField(20);
-	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-
-	    JButton loginButton = new JButton("Login");
-	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    loginButton.setBackground(new Color(32, 178, 170));
-	    loginButton.setForeground(Color.WHITE);
-	    loginButton.setFocusPainted(false);
-
-	    loginButton.addActionListener(e -> {
-	    	if(checkEmptyFields(usernameField, passwordField)) {
-	    		String username = usernameField.getText();
-		        String password = new String(passwordField.getPassword());
-		        Utente.login(username, password);
-	    	}
-	    });
-	    // Posizionamento componenti
-	 // Aggiungi il titolo (Login)
-	    gbc.gridx = 0; // Colonna
-	    gbc.gridy = 0; // Riga
-	    gbc.gridwidth = 2; // Il titolo occupa entrambe le colonne
-	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
-	    panel.add(titleLabel, gbc);
-
-	    // Aggiungi l'etichetta e il campo per il nome utente
-	    gbc.gridwidth = 1; // Torna a occupare una colonna
-	    gbc.anchor = GridBagConstraints.WEST; // Allineato a sinistra
-	    gbc.gridx = 0;
-	    gbc.gridy = 1;
-	    panel.add(usernameLabel, gbc);
-
-	    gbc.gridx = 1; // Campo di testo accanto all'etichetta
-	    panel.add(usernameField, gbc);
-
-	    // Aggiungi l'etichetta e il campo per la password
-	    gbc.gridx = 0;
-	    gbc.gridy = 2;
-	    panel.add(passwordLabel, gbc);
-
-	    gbc.gridx = 1;
-	    panel.add(passwordField, gbc);
-
-	    // Aggiungi il pulsante di login
-	    gbc.gridx = 0;
-	    gbc.gridy = 3;
-	    gbc.gridwidth = 2; // Il pulsante di login occupa entrambe le colonne
-	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
-	    panel.add(loginButton, gbc);
-
-	    // Aggiungi il pulsante "Back"
-	    gbc.gridx = 0;
-	    gbc.gridy = 4; // Riga successiva
-	    gbc.gridwidth = 2; // Anche il pulsante "Back" occupa entrambe le colonne
-	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(createBackButton(), gbc);
-
-
-	    return panel;
-	}
 
 	private JPanel createPlayerRegisterPanel() {
 	    
@@ -515,7 +430,7 @@ public class BackgroundPanel extends JPanel {
 	    JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 	    return datePicker;
 	}
-	public class DateLabelFormatter extends AbstractFormatter {
+	protected class DateLabelFormatter extends AbstractFormatter {
 	    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	    @Override
@@ -533,249 +448,17 @@ public class BackgroundPanel extends JPanel {
 	    }
 	}
 
-/*	private JPanel createRegisterPanel(String[][] additionalFields, ActionListener registerAction) {
-	    JPanel panel = new JPanel(new GridBagLayout()) {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-	            // Disegna lo sfondo
-	            if (clearImage != null) {
-	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	            }
-	        }
-	    };
-	    panel.setOpaque(false);
-
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(5, 5, 5, 5); // Margini tra i componenti
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    gbc.anchor = GridBagConstraints.CENTER;
-
-	    // Campi comuni
-	    JLabel firstNameLabel = new JLabel("Nome:");
-	    firstNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JTextField firstNameField = new JTextField(18);
-	    firstNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    firstNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(firstNameLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(firstNameField, gbc);
-
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    JLabel lastNameLabel = new JLabel("Cognome:");
-	    lastNameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JTextField lastNameField = new JTextField(18);
-	    lastNameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    lastNameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(lastNameLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(lastNameField, gbc);
-
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    JLabel dobLabel = new JLabel("Data di nascita:");
-	    dobLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JTextField dobField = new JTextField("gg/mm/aaaa", 18);
-	    dobField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    dobField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(dobLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(dobField, gbc);
-	    
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    JLabel emailLabel = new JLabel("E-mail:");
-	    emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JTextField emailField = new JTextField(18);
-	    emailField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    emailField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(emailLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(emailField, gbc);
-
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    JLabel usernameLabel = new JLabel("Username:");
-	    usernameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JTextField usernameField = new JTextField(18);
-	    usernameField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(usernameLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(usernameField, gbc);
-
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    JLabel passwordLabel = new JLabel("Password:");
-	    passwordLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-	    JPasswordField passwordField = new JPasswordField(18);
-	    passwordField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	    panel.add(passwordLabel, gbc);
-	    gbc.gridx++;
-	    panel.add(passwordField, gbc);
-
-	    // Campi aggiuntivi specificati
-	    for (String[] field : additionalFields) {
-	        gbc.gridx = 0;
-	        gbc.gridy++;
-	        JLabel label = new JLabel(field[0]);
-		    label.setFont(new Font("Arial", Font.PLAIN, 18));
-	        JTextField textField = new JTextField(18);
-	        textField.setPreferredSize(new Dimension(400, 30)); // Altezza e larghezza più piccole
-	        textField.setFont(new Font("Arial", Font.PLAIN, 18)); // Font più piccolo
-	        textField.setName(field[1]); // Usa il nome per distinguere i campi
-	        panel.add(label, gbc);
-	        gbc.gridx++;
-	        panel.add(textField, gbc);
-	    }
-
-	    // Pulsante di registrazione
-	    gbc.gridx = 0;
-	    gbc.gridy++;
-	    gbc.gridwidth = 2;
-	    gbc.fill = GridBagConstraints.CENTER;
-	    JButton registerButton = new JButton("Register");
-	    registerButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo
-	    registerButton.setBackground(new Color(32, 178, 170));
-	    registerButton.setForeground(Color.WHITE);
-	    registerButton.setFocusPainted(false);
-
-	    registerButton.addActionListener(registerAction);
-
-	    panel.add(registerButton, gbc);
-
-	    return panel;
-	}
 
 
-	private JPanel createPlayerRegisterPanel() {
-	    return createRegisterPanel(
-	        new String[][]{
-	            {"Nome Squadra:", "teamName"}
-	        },
-	        e -> {
-	            // Gestione della registrazione del giocatore
-	            System.out.println("Registrazione Giocatore completata.");
-	        }
-	    );
-	}
 
-	private JPanel createManagerRegisterPanel() {
-	    // Creazione del pannello principale
-	    JPanel panel = new JPanel();
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-	    // Bottone per la registrazione
-	    JButton registerButton = new JButton("Register");
-	    registerButton.addActionListener(e -> {
-	        try {
-	            // Recupera i dati dai campi (già dichiarati fuori da questo metodo)
-	            String nome = nomeField.getText().trim();
-	            String cognome = cognomeField.getText().trim();
-	            String email = emailField.getText().trim();
-	            String username = usernameField.getText().trim();
-	            String password = new String(passwordField.getPassword()).trim();
-	            String dataNascitaText = dataNascitaField.getText().trim();
-	            String certificazioni = certificazioniField.getText().trim();
-	            String competenze = competenzeField.getText().trim();
-
-	            // Validazione dei dati
-	            if (nome.isEmpty() || cognome.isEmpty() || email.isEmpty() || username.isEmpty() ||
-	                password.isEmpty() || dataNascitaText.isEmpty() || certificazioni.isEmpty() || competenze.isEmpty()) {
-	                throw new IllegalArgumentException("Tutti i campi devono essere compilati!");
-	            }
-
-	            // Conversione della data di nascita
-	            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-	            Date dataNascita = dateFormat.parse(dataNascitaText);
-
-	            // Chiamata al metodo di registrazione
-	            int result = Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
-	            if (result == 1) {
-	                JOptionPane.showMessageDialog(null, "Registrazione completata con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
-	            } else {
-	                JOptionPane.showMessageDialog(null, "Errore durante la registrazione!", "Errore", JOptionPane.ERROR_MESSAGE);
-	            }
-	        } catch (Exception ex) {
-	            JOptionPane.showMessageDialog(null, "Errore: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
-	            ex.printStackTrace();
-	        }
-	    });
-
-	    // Aggiunta del bottone al pannello
-	    panel.add(registerButton);
-	    panel.add(Box.createVerticalStrut(10)); // Spaziatura
-
-	    return panel;
-	}
-*/
-
-	 private boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
-	        String username = usernameField.getText().trim();
-	        String password = new String(passwordField.getPassword()).trim();
-
-	        if (username.isEmpty()) {
-	            JOptionPane.showMessageDialog(loginPanel, "Il campo 'Username' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
-	            return false;
-	        }
-
-	        if (password.isEmpty()) {
-	            JOptionPane.showMessageDialog(loginPanel, "Il campo 'Password' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
-	            return false;
-	        }
-
-	        return true;
-	    }
-	 //classe per le scritte con i bordiS
-
-	 public class OutlinedLabel extends JLabel {
-	     private Color outlineColor; // Variabile d'istanza per il colore del contorno
-
-	     public OutlinedLabel(String text, Color color) {   // Si passa come variabile il colore che desidero interno (o nero con bordo bianco o viceversa)
-	         super(text);
-	         setFont(new Font("Montserrat", Font.BOLD, 20)); // Font personalizzato
-
-	         // Imposta outlineColor e il colore del testo in base al parametro passato
-	         if (color == Color.WHITE) {
-	             this.outlineColor = Color.BLACK; // Colore del bordo nero
-	             setForeground(Color.WHITE); // Colore interno del testo
-	         } else if (color == Color.BLACK) {
-	             this.outlineColor = Color.WHITE; // Colore del bordo bianco
-	             setForeground(Color.BLACK); // Colore interno del testo
-	         } else {
-	             throw new IllegalArgumentException("Colore non supportato. Usa Color.BLACK o Color.WHITE.");
-	         }
-	     }
-
-	     @Override
-	     protected void paintComponent(Graphics g) {
-	         Graphics2D g2 = (Graphics2D) g.create();
-	         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-	         String text = getText();
-	         if (text != null && !text.isEmpty()) {
-	             FontMetrics fm = g2.getFontMetrics(getFont());
-	             int x = 0; // Posizione orizzontale
-	             int y = fm.getAscent(); // Posizione verticale
-
-	             // Disegna il bordo
-	             g2.setColor(outlineColor);
-	             g2.drawString(text, x - 1, y - 1);
-	             g2.drawString(text, x + 1, y - 1);
-	             g2.drawString(text, x - 1, y + 1);
-	             g2.drawString(text, x + 1, y + 1);
-
-	             // Disegna il testo principale
-	             g2.setColor(getForeground());
-	             g2.drawString(text, x, y);
-	         }
-
-	         g2.dispose();
-	     }
+	//metodo che permette di mostrare un pannello dato il nome del pannello
+	protected static void showPanel(String name) {
+		 try {
+			cardLayout.show(cardPanel, name);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	 }
-
 
 }
