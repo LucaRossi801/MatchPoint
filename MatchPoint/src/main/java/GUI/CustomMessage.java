@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.*;
+import java.net.URL;
 import javax.swing.*;
 
 public class CustomMessage {
@@ -12,12 +13,26 @@ public class CustomMessage {
      * @param success true per un messaggio di successo (verde acqua), false per errore (rosso)
      */
     public static void show(String message, String title, boolean success) {
+        // Percorso del logo
+        String logoPath = "/GUI/immagini/icona.png";
+
         JDialog dialog = new JDialog();
         dialog.setTitle(title);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setSize(400, 200);
+        dialog.setSize(400, 250); // Dimensione del dialogo
         dialog.setLocationRelativeTo(null); // Centra la finestra
         dialog.setLayout(new BorderLayout());
+
+        // Imposta l'icona della finestra
+        if (logoPath != null) {
+            URL iconURL = CustomMessage.class.getResource(logoPath);
+            if (iconURL != null) {
+                ImageIcon icon = new ImageIcon(iconURL);
+                dialog.setIconImage(icon.getImage());
+            } else {
+                System.err.println("Icona non trovata: " + logoPath);
+            }
+        }
 
         // Imposta il colore di sfondo
         JPanel panel = new JPanel();
@@ -26,19 +41,26 @@ public class CustomMessage {
         dialog.add(panel);
 
         // Testo del messaggio
-        JLabel messageLabel = new JLabel(message, SwingConstants.CENTER);
+        JLabel messageLabel = new JLabel("<html><center>" + message + "</center></html>", SwingConstants.CENTER);
         messageLabel.setFont(new Font("Arial", Font.BOLD, 20));
         messageLabel.setForeground(Color.WHITE); // Testo bianco
+        messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(messageLabel, BorderLayout.CENTER);
 
-        // Pulsante per chiudere
+        // Pulsante OK
         JButton okButton = new JButton("OK");
-        okButton.setFont(new Font("Arial", Font.BOLD, 18));
-        okButton.setBackground(Color.WHITE); // Sfondo del pulsante
+        okButton.setFont(new Font("Arial", Font.BOLD, 14));
+        okButton.setPreferredSize(new Dimension(80, 30)); // Pulsante più piccolo
+        okButton.setBackground(Color.WHITE); // Sfondo pulsante
         okButton.setForeground(success ? new Color(32, 178, 170) : Color.RED); // Testo in base al successo
         okButton.setFocusPainted(false);
         okButton.addActionListener(e -> dialog.dispose()); // Chiude il dialog
-        panel.add(okButton, BorderLayout.SOUTH);
+
+        // Pannello per il pulsante
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setOpaque(false); // Trasparente per adattarsi al colore di sfondo
+        buttonPanel.add(okButton); // Pulsante centrato
+        panel.add(buttonPanel, BorderLayout.SOUTH);
 
         dialog.setVisible(true);
     }
