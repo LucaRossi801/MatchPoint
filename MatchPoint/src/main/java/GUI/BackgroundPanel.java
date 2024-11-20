@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
+//Classe che gestisce il pannello della GUI
 public class BackgroundPanel extends JPanel {
 	protected static CardLayout cardLayout;
 	protected static JPanel cardPanel;
@@ -137,7 +138,8 @@ public class BackgroundPanel extends JPanel {
 
 		return panel;
 	}
-
+	
+	//Crea il pannello principale
 	private JPanel createMainPanel(String clearImagePath) {
 	    JPanel panel = new JPanel(new GridBagLayout()) {
 	        @Override

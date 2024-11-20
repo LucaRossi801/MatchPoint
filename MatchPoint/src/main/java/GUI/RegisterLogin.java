@@ -6,7 +6,7 @@ import individui.Utente;
 
 public class RegisterLogin {
 
-	//metodo per la crezione del pannello di login
+	//Metodo per la crezione del pannello di login
 	protected static JPanel createLoginPanel() {
 	    JPanel panel = new JPanel() {
 	        @Override
@@ -48,25 +48,25 @@ public class RegisterLogin {
 		        Utente.login(username, password);
 	    	}
 	    });
-	    // Posizionamento componenti
-	 // Aggiungi il titolo (Login)
-	    gbc.gridx = 0; // Colonna
-	    gbc.gridy = 0; // Riga
-	    gbc.gridwidth = 2; // Il titolo occupa entrambe le colonne
-	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
+	    //Posizionamento componenti
+	    //Aggiungi il titolo (Login)
+	    gbc.gridx = 0; //Colonna
+	    gbc.gridy = 0; //Riga
+	    gbc.gridwidth = 2; //Il titolo occupa entrambe le colonne
+	    gbc.anchor = GridBagConstraints.CENTER; //Centrato
 	    panel.add(titleLabel, gbc);
 
-	    // Aggiungi l'etichetta e il campo per il nome utente
-	    gbc.gridwidth = 1; // Torna a occupare una colonna
-	    gbc.anchor = GridBagConstraints.WEST; // Allineato a sinistra
+	    //Aggiungi l'etichetta e il campo per il nome utente
+	    gbc.gridwidth = 1; //Torna a occupare una colonna
+	    gbc.anchor = GridBagConstraints.WEST; //Allineato a sinistra
 	    gbc.gridx = 0;
 	    gbc.gridy = 1;
 	    panel.add(usernameLabel, gbc);
 
-	    gbc.gridx = 1; // Campo di testo accanto all'etichetta
+	    gbc.gridx = 1; //Campo di testo accanto all'etichetta
 	    panel.add(usernameField, gbc);
 
-	    // Aggiungi l'etichetta e il campo per la password
+	    //Aggiungi l'etichetta e il campo per la password
 	    gbc.gridx = 0;
 	    gbc.gridy = 2;
 	    panel.add(passwordLabel, gbc);
@@ -74,17 +74,17 @@ public class RegisterLogin {
 	    gbc.gridx = 1;
 	    panel.add(passwordField, gbc);
 
-	    // Aggiungi il pulsante di login
+	    //Aggiungi il pulsante di login
 	    gbc.gridx = 0;
 	    gbc.gridy = 3;
-	    gbc.gridwidth = 2; // Il pulsante di login occupa entrambe le colonne
-	    gbc.anchor = GridBagConstraints.CENTER; // Centrato
+	    gbc.gridwidth = 2; //Il pulsante di login occupa entrambe le colonne
+	    gbc.anchor = GridBagConstraints.CENTER; //Centrato
 	    panel.add(loginButton, gbc);
 
-	    // Aggiungi il pulsante "Back"
+	    //Aggiungi il pulsante "Back"
 	    gbc.gridx = 0;
-	    gbc.gridy = 4; // Riga successiva
-	    gbc.gridwidth = 2; // Anche il pulsante "Back" occupa entrambe le colonne
+	    gbc.gridy = 4; //Riga successiva
+	    gbc.gridwidth = 2; //Anche il pulsante "Back" occupa entrambe le colonne
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(BackgroundPanel.createBackButton(), gbc);
 
@@ -92,7 +92,7 @@ public class RegisterLogin {
 	    return panel;
 	}
 	
-	//controlla i campi del login, se sono vuoti restituisce errore
+	//Controlla i campi del login, se sono vuoti restituisce errore
 	private static boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
