@@ -17,6 +17,7 @@ public class HomePage {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				HomePage window = new HomePage();
+				
 			}
 		});
 	}
@@ -28,6 +29,7 @@ public class HomePage {
 	public void initialize() {
 		// Verifica e carica l'icona dell'applicazione
 		frame = new JFrame("MatchPoint");
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		URL iconUrl = getClass().getResource("/GUI/immagini/icona.png"); // Percorso dell'icona
 		if (iconUrl != null) {
