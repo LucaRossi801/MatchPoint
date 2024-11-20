@@ -54,6 +54,7 @@ public class BackgroundPanel extends JPanel {
 		cardPanel.add(playerRegisterPanel, "playerRegister");
 		cardPanel.add(managerRegisterPanel, "managerRegister");
 		cardPanel.add(new CreateGestorePanel(cardLayout, cardPanel), "createGestore");
+		cardPanel.add(new CreateGiocatorePanel(cardLayout, cardPanel), "createGiocatore");
 		
 		//Imposta la vista iniziale come la homepage
 		cardLayout.show(cardPanel, "home");

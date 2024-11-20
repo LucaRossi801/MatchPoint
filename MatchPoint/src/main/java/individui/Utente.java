@@ -3,6 +3,7 @@ package individui;
 import java.sql.*;
 import java.sql.Date;
 
+import GUI.CustomMessage;
 import dataBase.DataBase;
 
 //--------------------------------------------------------
@@ -52,6 +53,35 @@ public abstract class Utente {
 		}
 		
 	}
+	public static String getRuoloUtente(String username, String password) {
+	    String ruolo = null;
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // Connessione al database
+
+	    try (Connection conn = DriverManager.getConnection(url)) {
+	        // Query per verificare se l'utente è un Gestore
+	        String queryGestore = "SELECT username FROM Gestore WHERE username = '" + username + "' AND password = '" + password + "'";
+	        String risultatoGestore = DataBase.eseguiSelect(conn, queryGestore);
+
+	        if (risultatoGestore != null && !risultatoGestore.isEmpty()) {
+	            ruolo = "Gestore";
+	        } else {
+	            // Query per verificare se l'utente è un Giocatore
+	            String queryGiocatore = "SELECT username FROM Giocatore WHERE username = '" + username + "' AND password = '" + password + "'";
+	            String risultatoGiocatore = DataBase.eseguiSelect(conn, queryGiocatore);
+
+	            if (risultatoGiocatore != null && !risultatoGiocatore.isEmpty()) {
+	                ruolo = "Giocatore";
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        CustomMessage.show("Errore durante il recupero del ruolo dell'utente!", "Errore", false);
+	    }
+
+	    return ruolo; // Restituisce "Gestore", "Giocatore", oppure null se non trovato
+	}
+
+
 
 	/*public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
 			String password, String certificazioni, String competenze) {

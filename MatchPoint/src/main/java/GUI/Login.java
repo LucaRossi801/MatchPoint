@@ -51,14 +51,27 @@ public class Login {
 	            String password = new String(passwordField.getPassword());
 
 	            if (validateCredentials(username, password)) {
-	            	CustomMessage.show("Login effettuato con successo!", "Successo", true);
-	                Utente.login(username, password); // Login per l'utente
-	                BackgroundPanel.showPanel("createGestore"); // Passa al pannello successivo
+	                CustomMessage.show("Login effettuato con successo!", "Successo", true);
+	                
+	                // Esegui la login per l'utente
+	                Utente.login(username, password);
+
+	                // Determina il ruolo dell'utente
+	                String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
+	                
+	                if ("Gestore".equalsIgnoreCase(ruolo)) {
+	                    BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
+	                } else if ("Giocatore".equalsIgnoreCase(ruolo)) {
+	                    BackgroundPanel.showPanel("createGiocatore"); // Mostra pannello Giocatore
+	                } else {
+	                    CustomMessage.show("Ruolo sconosciuto! Contatta l'amministratore.", "Errore", false);
+	                }
 	            } else {
-	            	CustomMessage.show("Username o password errati!", "Errore", false);
+	                CustomMessage.show("Username o password errati!", "Errore", false);
 	            }
 	        }
 	    });
+
 	    //Posizionamento componenti
 	    //Aggiungi il titolo (Login)
 	    gbc.gridx = 0; //Colonna
