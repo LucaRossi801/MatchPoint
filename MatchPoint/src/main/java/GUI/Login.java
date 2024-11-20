@@ -71,6 +71,8 @@ public class Login {
 	            }
 	        }
 	    });
+	    
+
 
 	    //Posizionamento componenti
 	    //Aggiungi il titolo (Login)
@@ -110,8 +112,7 @@ public class Login {
 	    gbc.gridy = 4; //Riga successiva
 	    gbc.gridwidth = 2; //Anche il pulsante "Back" occupa entrambe le colonne
 	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(createBackButton(), gbc);
-
+	    panel.add(createBackButton(usernameField, passwordField), gbc);
 
 	    return panel;
 	}
@@ -134,16 +135,26 @@ public class Login {
         return true;
     }
 	//Creazione del bottone "Back" con colore grigio
-	protected static JButton createBackButton() {
+	protected static JButton createBackButton(JTextField usernameField, JPasswordField passwordField) {
 	    JButton backButton = new JButton("Back");
 	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
-	    backButton.setBackground(Color.GRAY); // Colore di sfondo grigio
-	    backButton.setForeground(Color.WHITE); // Colore del testo bianco
+	    backButton.setBackground(Color.GRAY);
+	    backButton.setForeground(Color.WHITE);
 	    backButton.setFocusPainted(false);
-	    backButton.setPreferredSize(new Dimension(120, 30)); // Dimensioni personalizzate: meno alto
-	    backButton.addActionListener(e -> BackgroundPanel.showPanel("main"));
+	    backButton.setPreferredSize(new Dimension(120, 30));
+
+	    backButton.addActionListener(e -> {
+	        // Resetta i campi di input
+	        usernameField.setText("");
+	        passwordField.setText("");
+
+	        // Cambia pannello
+	        BackgroundPanel.showPanel("main");
+	    });
+
 	    return backButton;
 	}
+
 	
 	// Metodo validateCredentials con accesso al database
 	private static boolean validateCredentials(String username, String password) {
