@@ -16,7 +16,7 @@ public class CreateGestorePanel extends JPanel {
             System.out.println("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png");
         }
 
-        // Imposta il layout
+        //Imposta il layout
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(20, 0, 20, 0); // Maggiore spaziatura tra i pulsanti
@@ -24,23 +24,35 @@ public class CreateGestorePanel extends JPanel {
 
         Dimension buttonSize = new Dimension(300, 90); // Dimensioni personalizzate aumentate
 
-        // Crea il primo pulsante "Inserisci Centro"
+        //Crea il primo pulsante "Inserisci Centro"
         JButton inserisciCentroButton = new JButton("Inserisci Centro", caricaIcona("/GUI/immagini/add_icon.png"));
         personalizzaBottone(inserisciCentroButton, cardLayout, cardPanel, "inserisciCentro", buttonSize);
         gbc.gridy = 0; // Prima riga
         add(inserisciCentroButton, gbc);
 
-        // Crea il secondo pulsante "Modifica Centro"
+        //Crea il secondo pulsante "Modifica Centro"
         JButton modificaCentroButton = new JButton("Modifica Centro", caricaIcona("/GUI/immagini/edit_icon.png"));
         personalizzaBottone(modificaCentroButton, cardLayout, cardPanel, "modificaCentro", buttonSize);
         gbc.gridy = 1; // Seconda riga
         add(modificaCentroButton, gbc);
 
-        // Crea il terzo pulsante "Vedi Prenotazioni"
+        //Crea il terzo pulsante "Vedi Prenotazioni"
         JButton vediPrenotazioniButton = new JButton("Vedi Prenotazioni", caricaIcona("/GUI/immagini/list_icon.png"));
         personalizzaBottone(vediPrenotazioniButton, cardLayout, cardPanel, "vediPrenotazioni", buttonSize);
         gbc.gridy = 2; // Terza riga
         add(vediPrenotazioniButton, gbc);
+
+        //Crea il pulsante "Back"
+        JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo
+        backButton.setBackground(Color.GRAY); // Colore di sfondo grigio
+        backButton.setForeground(Color.WHITE); // Testo bianco
+        backButton.setFocusPainted(false);
+        backButton.setPreferredSize(new Dimension(150, 50)); // Dimensioni più compatte (meno alto)
+        backButton.addActionListener(e -> cardLayout.show(cardPanel, "login")); // Torna al pannello "login"
+        gbc.gridy = 3; // Quarta riga
+        add(backButton, gbc);
+
     }
 
     private void personalizzaBottone(JButton button, CardLayout cardLayout, JPanel cardPanel, String targetCard, Dimension size) {
@@ -57,7 +69,10 @@ public class CreateGestorePanel extends JPanel {
     private ImageIcon caricaIcona(String percorso) {
         URL iconUrl = getClass().getResource(percorso);
         if (iconUrl != null) {
-            return new ImageIcon(iconUrl);
+            ImageIcon icon = new ImageIcon(iconUrl);
+            // Ridimensiona l'immagine
+            Image scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImage);
         } else {
             System.out.println("Errore nel caricamento dell'icona: " + percorso);
             return null; // Restituisci null se l'icona non viene trovata

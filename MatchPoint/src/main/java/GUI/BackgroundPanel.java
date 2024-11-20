@@ -20,15 +20,8 @@ public class BackgroundPanel extends JPanel {
 	protected JPanel homePanel; //Pannello per la homepage
 	protected JPanel mainPanel; //Pannello per la vista principale (con immagine nitida e bottoni)
 	protected static JPanel loginPanel; //Pannello per la vista di login
-<<<<<<< Updated upstream
 	protected static JPanel playerRegisterPanel; //Pannello per la vista di registrazione
 	protected static JPanel managerRegisterPanel; //Pannello per la vista di registrazione
-
-=======
-	protected JPanel playerRegisterPanel; //Pannello per la vista di registrazione
-	protected JPanel managerRegisterPanel; //Pannello per la vista di registrazione
-	
->>>>>>> Stashed changes
 	protected Image backgroundImage;
 	protected static Image clearImage;
 
@@ -50,17 +43,10 @@ public class BackgroundPanel extends JPanel {
 		//Crea i pannelli per le diverse viste
 		homePanel = createHomePanel(blurredImagePath);
 		mainPanel = createMainPanel(clearImagePath);
-<<<<<<< Updated upstream
 		loginPanel = Login.createLoginPanel();
 		playerRegisterPanel = Register.createRegisterPanel("Giocatore");
 		managerRegisterPanel = Register.createRegisterPanel("Gestore");
-
-=======
-		loginPanel = RegisterLogin.createLoginPanel();
-		playerRegisterPanel = createPlayerRegisterPanel();
-		managerRegisterPanel = createManagerRegisterPanel();
-	    
->>>>>>> Stashed changes
+		
 		//Aggiungi i pannelli al CardLayout
 		cardPanel.add(homePanel, "home");
 		cardPanel.add(mainPanel, "main");
@@ -231,18 +217,8 @@ public class BackgroundPanel extends JPanel {
 	    return panel;
 	}
 	
-	//creazione del bottone back di register/login
-	protected static JButton createBackButton() {
-	    JButton backButton = new JButton("Back");
-	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
-	    backButton.setBackground(new Color(32, 178, 170));
-	    backButton.setForeground(Color.WHITE);
-	    backButton.setFocusPainted(false);
-	    backButton.addActionListener(e -> cardLayout.show(cardPanel, "main"));
-	    return backButton;
-	}
+	
 
-<<<<<<< Updated upstream
 
 	/*private JPanel createPlayerRegisterPanel() {
 =======

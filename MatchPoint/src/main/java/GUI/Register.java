@@ -107,7 +107,7 @@ public class Register {
 	    gbc.gridy = row+1; //Riga successiva
 	    gbc.gridwidth = 2; //Anche il pulsante "Back" occupa entrambe le colonne
 	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(BackgroundPanel.createBackButton(), gbc);
+	    panel.add(createBackButton(), gbc);
 	    // Aggiungi un ActionListener al pulsante
 	    registerButton.addActionListener(e -> {
 	        try {
@@ -162,6 +162,7 @@ public class Register {
 
 	            // Messaggio di successo
 	            JOptionPane.showMessageDialog(panel, "Registrazione completata con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+	            BackgroundPanel.showPanel("login");
 	        } catch (Exception ex) {
 	            // Messaggio di errore generico
 	            JOptionPane.showMessageDialog(panel, "Errore durante la registrazione: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
@@ -170,9 +171,21 @@ public class Register {
 	    });
 	    
 	    return panel;
+	    
+	    
 	}
 
-
+	// Creazione del bottone "Back" con colore grigio e dimensioni personalizzate
+	protected static JButton createBackButton() {
+	    JButton backButton = new JButton("Back");
+	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
+	    backButton.setBackground(Color.GRAY); // Colore di sfondo grigio
+	    backButton.setForeground(Color.WHITE); // Colore del testo bianco
+	    backButton.setFocusPainted(false);
+	    backButton.setPreferredSize(new Dimension(120, 30)); // Dimensioni personalizzate: meno alto
+	    backButton.addActionListener(e -> BackgroundPanel.showPanel("main"));
+	    return backButton;
+	}
 
 	/*private JPanel createPlayerRegisterPanel() {
 

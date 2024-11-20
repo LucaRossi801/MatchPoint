@@ -46,6 +46,7 @@ public class Login {
 	    		String username = usernameField.getText();
 		        String password = new String(passwordField.getPassword());
 		        Utente.login(username, password);
+	            BackgroundPanel.showPanel("createGestore");
 	    	}
 	    });
 	    //Posizionamento componenti
@@ -86,7 +87,7 @@ public class Login {
 	    gbc.gridy = 4; //Riga successiva
 	    gbc.gridwidth = 2; //Anche il pulsante "Back" occupa entrambe le colonne
 	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(BackgroundPanel.createBackButton(), gbc);
+	    panel.add(createBackButton(), gbc);
 
 
 	    return panel;
@@ -109,6 +110,16 @@ public class Login {
 
         return true;
     }
-	
-	
+	//Creazione del bottone "Back" con colore grigio
+	protected static JButton createBackButton() {
+	    JButton backButton = new JButton("Back");
+	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
+	    backButton.setBackground(Color.GRAY); // Colore di sfondo grigio
+	    backButton.setForeground(Color.WHITE); // Colore del testo bianco
+	    backButton.setFocusPainted(false);
+	    backButton.setPreferredSize(new Dimension(120, 30)); // Dimensioni personalizzate: meno alto
+	    backButton.addActionListener(e -> BackgroundPanel.showPanel("main"));
+	    return backButton;
+	}
+
 }
