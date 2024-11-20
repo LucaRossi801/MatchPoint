@@ -183,12 +183,11 @@ public class Register {
 	            }
 
 	            // Messaggio di successo
-	            JOptionPane.showMessageDialog(panel, "Registrazione completata con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+	            CustomMessage.show("Registrazione effettuata con successo!", "Successo", true);
 	            BackgroundPanel.showPanel("login");
 	        } catch (Exception ex) {
 	            // Messaggio di errore generico
-	            JOptionPane.showMessageDialog(panel, "Errore durante la registrazione: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
-	            ex.printStackTrace();
+	        	CustomMessage.show("Errore durante la registrazione", "Errore", false);
 	        }
 	    });
 	    

@@ -51,17 +51,11 @@ public class Login {
 	            String password = new String(passwordField.getPassword());
 
 	            if (validateCredentials(username, password)) {
-	                JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, 
-	                    "Login effettuato con successo!", 
-	                    "Successo", 
-	                    JOptionPane.INFORMATION_MESSAGE);
+	            	CustomMessage.show("Login effettuato con successo!", "Successo", true);
 	                Utente.login(username, password); // Login per l'utente
 	                BackgroundPanel.showPanel("createGestore"); // Passa al pannello successivo
 	            } else {
-	                JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, 
-	                    "Username o password errati!", 
-	                    "Errore", 
-	                    JOptionPane.ERROR_MESSAGE);
+	            	CustomMessage.show("Username o password errati!", "Errore", false);
 	            }
 	        }
 	    });
