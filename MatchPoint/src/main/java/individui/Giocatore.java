@@ -7,9 +7,11 @@ package individui;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import components.Campo;
@@ -22,12 +24,15 @@ public class Giocatore extends Utente {
 
 	public Campo[] campo;
 
-	public static int registrazione(String nome, String cognome, Date dataNascita, String email, String username,
+	public static int registrazione(String nome, String cognome, String dataNascita, String email, String username,
 			String password, String nomeSquadra) {
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // connessione al database
-		LocalDate dataNascitaLD = dataNascita.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); 
-		Period periodo = Period.between(dataNascitaLD, LocalDate.now());
-		int eta = periodo.getYears();
+		int eta;
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        LocalDate nascita = LocalDate.parse(dataNascita, formatter);
+	        LocalDate oggi = LocalDate.now();
+	        Period periodo = Period.between(nascita, oggi);
+	        eta= periodo.getYears();
 		String sql = "SELECT Password FROM Gestore WHERE Username ='" + username
 				+ "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'";// creazione query
 		String ris = "";

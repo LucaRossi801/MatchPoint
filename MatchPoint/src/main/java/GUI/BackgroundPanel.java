@@ -411,22 +411,7 @@ public class BackgroundPanel extends JPanel {
 	}*/
 	
 	//Creazione del calendario per data di nascita
-	private JDatePickerImpl createDatePicker() {
-	    UtilDateModel model = new UtilDateModel(); //Modello per la data
-	    
-	    //Proprietà per il formato della data
-	    Properties properties = new Properties();
-	    properties.put("text.day", "Giorno");
-	    properties.put("text.month", "Mese");
-	    properties.put("text.year", "Anno");
-
-	    //Pannello di selezione della data
-	    JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
-
-	    //Componente del selettore di date
-	    JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-	    return datePicker;
-	}
+	
 	
 	//metodo che permette di mostrare un pannello dato il nome del pannello
 	protected static void showPanel(String name) {
@@ -437,22 +422,6 @@ public class BackgroundPanel extends JPanel {
 		}
 	 }
 	
-public class DateLabelFormatter extends AbstractFormatter {
-	    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
-	    @Override
-	    public Object stringToValue(String text) throws ParseException {
-	        return dateFormatter.parse(text);
-	    }
-
-	    @Override
-	    public String valueToString(Object value) {
-	        if (value instanceof java.util.Calendar) {
-	            java.util.Calendar calendar = (java.util.Calendar) value;
-	            return dateFormatter.format(calendar.getTime());
-	        }
-	        return "Seleziona da calendario";
-	    }
-	}
 
 }

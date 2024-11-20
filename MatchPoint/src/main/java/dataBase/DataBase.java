@@ -22,12 +22,12 @@ public class DataBase {
 	 */
 
 	// Metodo per inserire i dati nella tabella Gestore
-	public static void insert(Connection conn, String nome, String cognome, Date dataNascita, int eta, String email, String username, String password, String certificazioni, String competenze) throws SQLException {
+	public static void insert(Connection conn, String nome, String cognome, String data, int eta, String email, String username, String password, String certificazioni, String competenze) throws SQLException {
 		String sql = "INSERT INTO Gestore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, Certificazione, Competenze) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
-			pstmt.setDate(3, (java.sql.Date) dataNascita);
+			pstmt.setString(3, data);
 			pstmt.setInt(4, eta);
 			pstmt.setString(5, email);
 			pstmt.setString(6, username);
@@ -39,12 +39,12 @@ public class DataBase {
 	}
 	
 	// Metodo per inserire i dati nella tabella Giocatore
-		public static void insert(Connection conn, String nome, String cognome, Date dataNascita, int eta, String email, String username, String password, String nomeSquadra) throws SQLException {
-			String sql = "INSERT INTO Gestore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		public static void insert(Connection conn, String nome, String cognome, String dataNascita, int eta, String email, String username, String password, String nomeSquadra) throws SQLException {
+			String sql = "INSERT INTO Giocatore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 				pstmt.setString(1, nome);
 				pstmt.setString(2, cognome);
-				pstmt.setDate(3, (java.sql.Date) dataNascita);
+				pstmt.setString(3, dataNascita);
 				pstmt.setInt(4, eta);
 				pstmt.setString(5, email);
 				pstmt.setString(6, username);
@@ -99,6 +99,6 @@ public class DataBase {
 
 		}
 
-		System.out.println("CIAO PASTICCINO!");
+		//System.out.println("CIAO PASTICCINO!");
 	}
 }
