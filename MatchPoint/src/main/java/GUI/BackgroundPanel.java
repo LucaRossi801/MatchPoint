@@ -20,8 +20,8 @@ public class BackgroundPanel extends JPanel {
 	protected JPanel homePanel; //Pannello per la homepage
 	protected JPanel mainPanel; //Pannello per la vista principale (con immagine nitida e bottoni)
 	protected static JPanel loginPanel; //Pannello per la vista di login
-	protected JPanel playerRegisterPanel; //Pannello per la vista di registrazione
-	protected JPanel managerRegisterPanel; //Pannello per la vista di registrazione
+	protected static JPanel playerRegisterPanel; //Pannello per la vista di registrazione
+	protected static JPanel managerRegisterPanel; //Pannello per la vista di registrazione
 
 	protected Image backgroundImage;
 	protected static Image clearImage;
@@ -44,9 +44,9 @@ public class BackgroundPanel extends JPanel {
 		//Crea i pannelli per le diverse viste
 		homePanel = createHomePanel(blurredImagePath);
 		mainPanel = createMainPanel(clearImagePath);
-		loginPanel = RegisterLogin.createLoginPanel();
-		playerRegisterPanel = createPlayerRegisterPanel();
-		managerRegisterPanel = createManagerRegisterPanel();
+		loginPanel = Login.createLoginPanel();
+		playerRegisterPanel = Register.createRegisterPanel("Giocatore");
+		managerRegisterPanel = Register.createRegisterPanel("Gestore");
 
 		//Aggiungi i pannelli al CardLayout
 		cardPanel.add(homePanel, "home");
@@ -229,7 +229,7 @@ public class BackgroundPanel extends JPanel {
 	}
 
 
-	private JPanel createPlayerRegisterPanel() {
+	/*private JPanel createPlayerRegisterPanel() {
 	    
 		return createRegisterPanel("Registrazione Giocatore", new String[][]{
 	            {"Nome:", "name"},
@@ -412,7 +412,7 @@ public class BackgroundPanel extends JPanel {
 
 
 	    return panel;
-	}
+	}*/
 	
 	//Creazione del calendario per data di nascita
 	private JDatePickerImpl createDatePicker() {

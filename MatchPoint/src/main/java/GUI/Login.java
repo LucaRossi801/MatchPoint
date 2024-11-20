@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import individui.Utente;
 
-public class RegisterLogin {
+public class Login {
 
 	//Metodo per la crezione del pannello di login
 	protected static JPanel createLoginPanel() {

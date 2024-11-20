@@ -37,8 +37,7 @@ public class Gestore extends Utente {
 		if(ris.equals("")) {		//se username non esiste
 			System.out.println("Username valido");
 			try  (Connection conn = DriverManager.getConnection(url)){
-				System.out.println("ciaoo"+nome+cognome+email);
-				//DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, certificazioni, competenze);
+				DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, certificazioni, competenze);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} 
