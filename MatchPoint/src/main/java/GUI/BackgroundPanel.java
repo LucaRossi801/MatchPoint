@@ -20,9 +20,15 @@ public class BackgroundPanel extends JPanel {
 	protected JPanel homePanel; //Pannello per la homepage
 	protected JPanel mainPanel; //Pannello per la vista principale (con immagine nitida e bottoni)
 	protected static JPanel loginPanel; //Pannello per la vista di login
+<<<<<<< Updated upstream
 	protected static JPanel playerRegisterPanel; //Pannello per la vista di registrazione
 	protected static JPanel managerRegisterPanel; //Pannello per la vista di registrazione
 
+=======
+	protected JPanel playerRegisterPanel; //Pannello per la vista di registrazione
+	protected JPanel managerRegisterPanel; //Pannello per la vista di registrazione
+	
+>>>>>>> Stashed changes
 	protected Image backgroundImage;
 	protected static Image clearImage;
 
@@ -44,17 +50,25 @@ public class BackgroundPanel extends JPanel {
 		//Crea i pannelli per le diverse viste
 		homePanel = createHomePanel(blurredImagePath);
 		mainPanel = createMainPanel(clearImagePath);
+<<<<<<< Updated upstream
 		loginPanel = Login.createLoginPanel();
 		playerRegisterPanel = Register.createRegisterPanel("Giocatore");
 		managerRegisterPanel = Register.createRegisterPanel("Gestore");
 
+=======
+		loginPanel = RegisterLogin.createLoginPanel();
+		playerRegisterPanel = createPlayerRegisterPanel();
+		managerRegisterPanel = createManagerRegisterPanel();
+	    
+>>>>>>> Stashed changes
 		//Aggiungi i pannelli al CardLayout
 		cardPanel.add(homePanel, "home");
 		cardPanel.add(mainPanel, "main");
 		cardPanel.add(loginPanel, "login");
 		cardPanel.add(playerRegisterPanel, "playerRegister");
 		cardPanel.add(managerRegisterPanel, "managerRegister");
-
+		cardPanel.add(new CreateGestorePanel(cardLayout, cardPanel), "createGestore");
+		
 		//Imposta la vista iniziale come la homepage
 		cardLayout.show(cardPanel, "home");
 
@@ -228,8 +242,12 @@ public class BackgroundPanel extends JPanel {
 	    return backButton;
 	}
 
+<<<<<<< Updated upstream
 
 	/*private JPanel createPlayerRegisterPanel() {
+=======
+	private JPanel createPlayerRegisterPanel() {
+>>>>>>> Stashed changes
 	    
 		return createRegisterPanel("Registrazione Giocatore", new String[][]{
 	            {"Nome:", "name"},
@@ -268,7 +286,9 @@ public class BackgroundPanel extends JPanel {
 	        String competences = getTextFieldValue("competences");
 	       Date birthDate= Date.valueOf("2003-08-01");
 	       Gestore.registrazione(name, surname, birthDate, email, username, password, certifications, competences);
+	       cardLayout.show(cardPanel, "createGestore");
 	    });
+	    	
 	}
 
 	private String getTextFieldValue(String fieldName) {
