@@ -5,7 +5,6 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.*;
 import individui.Gestore;
-import individui.Utente;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
@@ -432,7 +431,17 @@ public class BackgroundPanel extends JPanel {
 	    JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
 	    return datePicker;
 	}
-	protected class DateLabelFormatter extends AbstractFormatter {
+	
+	//metodo che permette di mostrare un pannello dato il nome del pannello
+	protected static void showPanel(String name) {
+		 try {
+			cardLayout.show(cardPanel, name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	 }
+	
+public class DateLabelFormatter extends AbstractFormatter {
 	    private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	    @Override
@@ -449,18 +458,5 @@ public class BackgroundPanel extends JPanel {
 	        return "Seleziona da calendario";
 	    }
 	}
-
-
-
-
-	//metodo che permette di mostrare un pannello dato il nome del pannello
-	protected static void showPanel(String name) {
-		 try {
-			cardLayout.show(cardPanel, name);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	 }
 
 }
