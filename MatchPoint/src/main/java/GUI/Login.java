@@ -1,8 +1,11 @@
 package GUI;
 
 import java.awt.*;
+import java.sql.*;
 import javax.swing.*;
 import individui.Utente;
+import dataBase.DataBase;
+
 
 public class Login {
 
@@ -41,13 +44,26 @@ public class Login {
 	    loginButton.setForeground(Color.WHITE);
 	    loginButton.setFocusPainted(false);
 
+	 // Listener del bottone "Login"
 	    loginButton.addActionListener(e -> {
-	    	if(checkEmptyFields(usernameField, passwordField)) {
-	    		String username = usernameField.getText();
-		        String password = new String(passwordField.getPassword());
-		        Utente.login(username, password);
-	            BackgroundPanel.showPanel("createGestore");
-	    	}
+	        if (checkEmptyFields(usernameField, passwordField)) {
+	            String username = usernameField.getText();
+	            String password = new String(passwordField.getPassword());
+
+	            if (validateCredentials(username, password)) {
+	                JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, 
+	                    "Login effettuato con successo!", 
+	                    "Successo", 
+	                    JOptionPane.INFORMATION_MESSAGE);
+	                Utente.login(username, password); // Login per l'utente
+	                BackgroundPanel.showPanel("createGestore"); // Passa al pannello successivo
+	            } else {
+	                JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, 
+	                    "Username o password errati!", 
+	                    "Errore", 
+	                    JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
 	    });
 	    //Posizionamento componenti
 	    //Aggiungi il titolo (Login)
@@ -121,5 +137,37 @@ public class Login {
 	    backButton.addActionListener(e -> BackgroundPanel.showPanel("main"));
 	    return backButton;
 	}
+	
+	// Metodo validateCredentials con accesso al database
+	private static boolean validateCredentials(String username, String password) {
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	    String query = "SELECT COUNT(*) FROM (" +
+	                   "    SELECT Username, Password FROM Gestore " +
+	                   "    UNION ALL " +
+	                   "    SELECT Username, Password FROM Giocatore" +
+	                   ") AS Utenti " +
+	                   "WHERE Username = ? AND Password = ?";
+
+	    try (Connection conn = DriverManager.getConnection(url)) {
+	        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+	            pstmt.setString(1, username);
+	            pstmt.setString(2, password);
+
+	            ResultSet rs = pstmt.executeQuery();
+	            if (rs.next()) {
+	                return rs.getInt(1) > 0; // Ritorna true se esiste almeno un risultato
+	            }
+	        }
+	    } catch (SQLException e) {
+	        JOptionPane.showMessageDialog(null,
+	            "Errore nel connettersi al database: " + e.getMessage(),
+	            "Errore",
+	            JOptionPane.ERROR_MESSAGE);
+	        e.printStackTrace();
+	    }
+	    return false; // False se le credenziali non sono valide o si verifica un errore
+	}
+
 
 }
