@@ -212,9 +212,19 @@ public class BackgroundPanel extends JPanel {
 	    gbc.weightx = 0; 
 	    gbc.weighty = 0; 
 
+	    // Spazio vuoto (utilizzando un pannello invisibile)
+	    JPanel spacer = new JPanel();
+	    spacer.setOpaque(false); // Rende il pannello trasparente
+	    spacer.setPreferredSize(new Dimension(1, 400)); // Altezza dello spazio
+	    gbc.gridx = 0;
+	    gbc.gridy = 0; // Prima riga
+	    gbc.gridwidth = 2; // Occupa entrambe le colonne
+	    panel.add(spacer, gbc);
+
 	    // Bottone "Register Giocatore"
 	    gbc.gridx = 0;
-	    gbc.gridy = 0;
+	    gbc.gridy = 1; // Riga successiva
+	    gbc.gridwidth = 1; // Reset larghezza
 	    gbc.anchor = GridBagConstraints.CENTER; // Allineamento centrale
 	    Dimension largeButtonSize = new Dimension(250, 80);
 	    JButton registerGiocatoreButton = createFlatButton("Register Giocatore", 
@@ -223,20 +233,18 @@ public class BackgroundPanel extends JPanel {
 
 	    // Bottone "Register Gestore"
 	    gbc.gridx = 1; // Colonna successiva
+	    gbc.gridy = 1;
 	    JButton registerGestoreButton = createFlatButton("Register Gestore", 
 	        e -> cardLayout.show(cardPanel, "managerRegister"), largeButtonSize);
 	    panel.add(registerGestoreButton, gbc);
 
 	    // Bottone "Login"
 	    gbc.gridx = 0;
-	    gbc.gridy = 1; // Riga successiva
+	    gbc.gridy = 2; // Riga successiva
 	    gbc.gridwidth = 2; // Occupa entrambe le colonne
 	    JButton loginButton = createFlatButton("Login", 
 	        e -> cardLayout.show(cardPanel, "login"), new Dimension(300, 90));
 	    panel.add(loginButton, gbc);
-
-
-
 
 
 	    return panel;
