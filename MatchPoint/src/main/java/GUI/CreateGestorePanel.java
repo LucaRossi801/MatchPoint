@@ -18,65 +18,92 @@ public class CreateGestorePanel extends JPanel {
             System.out.println("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png");
         }
 
+        // Crea pulsanti
+     // Imposta il layout
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 0, 20, 0);
-        gbc.gridx = 0;
+        gbc.insets = new Insets(20, 0, 20, 0); // Maggiore spaziatura tra i pulsanti
+        gbc.gridx = 0; // Centra i pulsanti orizzontalmente
 
-        Dimension buttonSize = new Dimension(300, 90);
+        Dimension buttonSize = new Dimension(300, 90); // Dimensioni personalizzate aumentate
 
-        // Crea pulsanti
-        JButton inserisciCentroButton = creaBottone("Inserisci Centro", "GUI/immagini/add_icon.png", buttonSize);
-        inserisciCentroButton.addActionListener(e -> cardLayout.show(cardPanel, "inserisciCentro"));
-        gbc.gridy = 0;
-        add(inserisciCentroButton, gbc);
+     // Crea il primo pulsante "Inserisci Centro"
+        JButton InserisciCentroButton = BackgroundPanel.createFlatButton(
+            "Inserisci Centro",
+            e -> cardLayout.show(cardPanel, "inserisciCentro"),
+            buttonSize
+        );
+        // Aggiungi l'icona al pulsante
+        ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
+        if (addIcon != null) {
+        	InserisciCentroButton.setIcon(addIcon);
+        	InserisciCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona
+        	InserisciCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo
+        }
+        gbc.gridy = 0; // Prima riga
+        add(InserisciCentroButton, gbc);
 
-        JButton modificaCentroButton = creaBottone("Modifica Centro", "GUI/immagini/edit_icon.png", buttonSize);
-        modificaCentroButton.addActionListener(e -> cardLayout.show(cardPanel, "modificaCentro"));
-        gbc.gridy = 1;
-        add(modificaCentroButton, gbc);
-
-        JButton vediPrenotazioniButton = creaBottone("Vedi Prenotazioni", "GUI/immagini/list_icon.png", buttonSize);
-        vediPrenotazioniButton.addActionListener(e -> cardLayout.show(cardPanel, "vediPrenotazioni"));
-        gbc.gridy = 2;
+        // Crea il secondo pulsante "Modifica Centro"
+        JButton ModificaCentroButton = BackgroundPanel.createFlatButton(
+            "Modifica Centro",
+            e -> cardLayout.show(cardPanel, "modificaCentro"),
+            buttonSize
+        );
+        // Aggiungi l'icona al pulsante
+        ImageIcon editIcon = caricaIcona("/GUI/immagini/edit_icon.png");
+        if (editIcon != null) {
+        	ModificaCentroButton.setIcon(editIcon);
+        	ModificaCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona
+        	ModificaCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo
+        }
+        gbc.gridy = 1; // Seconda riga
+        add(ModificaCentroButton, gbc);
+        
+        // Crea il terzo pulsante "VediPrenotazioni"
+        JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
+            "Modifica Centro",
+            e -> cardLayout.show(cardPanel, "vediPrenotazioniRicevute"),
+            buttonSize
+        );
+        // Aggiungi l'icona al pulsante
+        ImageIcon listIcon = caricaIcona("/GUI/immagini/list_icon.png");
+        if (listIcon != null) {
+            vediPrenotazioniButton.setIcon(listIcon);
+            vediPrenotazioniButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona
+            vediPrenotazioniButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo
+        }
+        gbc.gridy = 2; // Terza riga
         add(vediPrenotazioniButton, gbc);
 
-        JButton backButton = creaBottone("Back", null, new Dimension(150, 50));
+        // Crea il pulsante "Back"
+        JButton backButton = BackgroundPanel.createFlatButton(
+            "Back",
+            e -> cardLayout.show(cardPanel, "login"),
+            new Dimension(150, 50)
+        );
+        // Personalizza colore per il pulsante "Back"
         backButton.setForeground(Color.GRAY); // Sfondo grigio
         backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
-        backButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
-        gbc.gridy = 3;
+        backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
+        gbc.gridy = 3; // Quarta riga
         add(backButton, gbc);
+        
+        
     }
 
-    private JButton creaBottone(String testo, String percorsoIcona, Dimension size) {
-        JButton button = new JButton(testo);
-        button.setFont(new Font("Arial", Font.BOLD, 18));
-        button.setFocusPainted(false);
-        button.setPreferredSize(size);
-        button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(15);
-
-        // Aggiungi icona PNG se disponibile
-        if (percorsoIcona != null) {
-            try {
-                ImageIcon icon = new ImageIcon(percorsoIcona);
-                // Ridimensiona l'icona per adattarla alla dimensione desiderata
+        
+        private ImageIcon caricaIcona(String percorso) {
+            URL iconUrl = getClass().getResource(percorso);
+            if (iconUrl != null) {
+                ImageIcon icon = new ImageIcon(iconUrl);
+                // Ridimensiona l'immagine
                 Image scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                button.setIcon(new ImageIcon(scaledImage));
-            } catch (Exception ex) {
-                System.out.println("Errore nel caricamento dell'icona PNG: " + percorsoIcona);
+                return new ImageIcon(scaledImage);
+            } else {
+                System.out.println("Errore nel caricamento dell'icona: " + percorso);
+                return null; // Restituisci null se l'icona non viene trovata
             }
         }
-
-        // Stile FlatLaf
-        button.putClientProperty("JButton.buttonType", "roundRect"); // Stile moderno arrotondato
-        button.putClientProperty("JButton.backgroundColor", new Color(32, 178, 170));
-        button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138));
-
-        return button;
-    }
-
 
     @Override
     protected void paintComponent(Graphics g) {

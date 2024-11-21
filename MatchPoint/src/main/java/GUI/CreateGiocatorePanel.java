@@ -27,7 +27,7 @@ public class CreateGiocatorePanel extends JPanel {
      // Crea il primo pulsante "Prenota"
         JButton prenotaButton = BackgroundPanel.createFlatButton(
             "Prenota",
-            e -> cardLayout.show(cardPanel, "inserisciCentro"),
+            e -> cardLayout.show(cardPanel, "prenota"),
             buttonSize
         );
         // Aggiungi l'icona al pulsante
@@ -43,13 +43,13 @@ public class CreateGiocatorePanel extends JPanel {
         // Crea il secondo pulsante "Vedi Prenotazioni"
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
-            e -> cardLayout.show(cardPanel, "modificaCentro"),
+            e -> cardLayout.show(cardPanel, "vediPrenotazioniFatte"),
             buttonSize
         );
         // Aggiungi l'icona al pulsante
-        ImageIcon editIcon = caricaIcona("/GUI/immagini/edit_icon.png");
-        if (editIcon != null) {
-            vediPrenotazioniButton.setIcon(editIcon);
+        ImageIcon listIcon = caricaIcona("/GUI/immagini/list_icon.png");
+        if (listIcon != null) {
+            vediPrenotazioniButton.setIcon(listIcon);
             vediPrenotazioniButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona
             vediPrenotazioniButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo
         }
