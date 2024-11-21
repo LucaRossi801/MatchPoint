@@ -225,7 +225,8 @@ public class Register {
 	    );
 
 	    // Personalizzazioni specifiche per il pulsante "Back"
-	    backButton.setBackground(Color.GRAY);
+        backButton.setForeground(Color.GRAY); // Sfondo grigio
+        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
 	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
 
 	    return backButton;

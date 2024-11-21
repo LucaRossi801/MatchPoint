@@ -63,8 +63,8 @@ public class CreateGiocatorePanel extends JPanel {
             new Dimension(150, 50)
         );
         // Personalizza colore per il pulsante "Back"
-        backButton.putClientProperty("JButton.backgroundColor", Color.GRAY); // Sfondo grigio
-        backButton.putClientProperty("JButton.hoverBackgroundColor", Color.DARK_GRAY); // Sfondo al passaggio del mouse
+        backButton.setForeground(Color.GRAY); // Sfondo grigio
+        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
         backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
         gbc.gridy = 3; // Quarta riga
         add(backButton, gbc);
