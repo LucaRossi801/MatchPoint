@@ -38,39 +38,44 @@ public class Login {
 	    JPasswordField passwordField = new JPasswordField(20);
 	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
 
-	    JButton loginButton = new JButton("Login");
+	 // Crea il pulsante "Login" utilizzando createFlatButton
+	    JButton loginButton = BackgroundPanel.createFlatButton(
+	        "Login", // Testo del pulsante
+	        e -> { // Azione associata al pulsante
+	            if (checkEmptyFields(usernameField, passwordField)) {
+	                String username = usernameField.getText();
+	                String password = new String(passwordField.getPassword());
+
+	                if (validateCredentials(username, password)) {
+	                    CustomMessage.show("Login effettuato con successo!", "Successo", true);
+
+	                    // Esegui la login per l'utente
+	                    Utente.login(username, password);
+
+	                    // Determina il ruolo dell'utente
+	                    String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
+
+	                    if ("Gestore".equalsIgnoreCase(ruolo)) {
+	                        BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
+	                    } else if ("Giocatore".equalsIgnoreCase(ruolo)) {
+	                        BackgroundPanel.showPanel("createGiocatore"); // Mostra pannello Giocatore
+	                    } else {
+	                        CustomMessage.show("Ruolo sconosciuto! Contatta l'amministratore.", "Errore", false);
+	                    }
+	                } else {
+	                    CustomMessage.show("Username o password errati!", "Errore", false);
+	                }
+	            }
+	        },
+	        new Dimension(100, 40) // Dimensione del pulsante
+	    );
+
+	    // Personalizza ulteriormente il pulsante (opzionale)
 	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
 	    loginButton.setBackground(new Color(32, 178, 170));
 	    loginButton.setForeground(Color.WHITE);
 	    loginButton.setFocusPainted(false);
 
-	 // Listener del bottone "Login"
-	    loginButton.addActionListener(e -> {
-	        if (checkEmptyFields(usernameField, passwordField)) {
-	            String username = usernameField.getText();
-	            String password = new String(passwordField.getPassword());
-
-	            if (validateCredentials(username, password)) {
-	                CustomMessage.show("Login effettuato con successo!", "Successo", true);
-	                
-	                // Esegui la login per l'utente
-	                Utente.login(username, password);
-
-	                // Determina il ruolo dell'utente
-	                String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
-	                
-	                if ("Gestore".equalsIgnoreCase(ruolo)) {
-	                    BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
-	                } else if ("Giocatore".equalsIgnoreCase(ruolo)) {
-	                    BackgroundPanel.showPanel("createGiocatore"); // Mostra pannello Giocatore
-	                } else {
-	                    CustomMessage.show("Ruolo sconosciuto! Contatta l'amministratore.", "Errore", false);
-	                }
-	            } else {
-	                CustomMessage.show("Username o password errati!", "Errore", false);
-	            }
-	        }
-	    });
 	    
 
 
@@ -136,24 +141,27 @@ public class Login {
     }
 	//Creazione del bottone "Back" con colore grigio
 	protected static JButton createBackButton(JTextField usernameField, JPasswordField passwordField) {
-	    JButton backButton = new JButton("Back");
-	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
+	    // Utilizza createFlatButton per creare un pulsante "Back"
+	    JButton backButton = BackgroundPanel.createFlatButton(
+	        "Back", // Testo del pulsante
+	        e -> {
+	            // Resetta i campi di input
+	            usernameField.setText("");
+	            passwordField.setText("");
+
+	            // Cambia pannello
+	            BackgroundPanel.showPanel("main");
+	        },
+	        new Dimension(120, 30) // Dimensione del pulsante
+	    );
+
+	    // Personalizzazioni specifiche per il pulsante "Back"
 	    backButton.setBackground(Color.GRAY);
-	    backButton.setForeground(Color.WHITE);
-	    backButton.setFocusPainted(false);
-	    backButton.setPreferredSize(new Dimension(120, 30));
-
-	    backButton.addActionListener(e -> {
-	        // Resetta i campi di input
-	        usernameField.setText("");
-	        passwordField.setText("");
-
-	        // Cambia pannello
-	        BackgroundPanel.showPanel("main");
-	    });
+	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
 
 	    return backButton;
 	}
+
 
 	
 	// Metodo validateCredentials con accesso al database

@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.*;
+
+import com.formdev.flatlaf.FlatLightLaf;
+
 import individui.Gestore;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -33,6 +36,13 @@ public class BackgroundPanel extends JPanel {
 	protected JButton loginButton; //Bottone per il "Login"
 
 	protected BackgroundPanel(String blurredImagePath, String clearImagePath) {
+		// Imposta il tema FlatLaf
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf()); // Usa FlatLightLaf o FlatDarkLaf
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+		
 		this.isVisible = true; //La scritta è visibile inizialmente
 		this.blinkInterval = 800; //Durata della visibilità della scritta (in ms)
 
@@ -66,6 +76,9 @@ public class BackgroundPanel extends JPanel {
 		//Imposta la dimensione iniziale del pannello
 		setPreferredSize(new Dimension(800, 600)); 
 	}
+	
+	
+
 
 	//Crea il pannello della homepage con immagine sfocata e scritta lampeggiante
 	private JPanel createHomePanel(String blurredImagePath) {
@@ -82,22 +95,25 @@ public class BackgroundPanel extends JPanel {
 				}
 
 				//Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-				g.setColor(Color.BLACK); //Contorno nero
-				g.setFont(new Font("Impact", Font.BOLD, 70)); 
-				String matchPointText = "MATCHPOINT";
-				FontMetrics metrics = g.getFontMetrics();
-				int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-				int y = 100;
+			    Graphics2D g2d = (Graphics2D) g;
+			    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-				//Contorno nero per la scritta
-				g.drawString(matchPointText, x - 2, y - 2);
-				g.drawString(matchPointText, x + 2, y - 2);
-				g.drawString(matchPointText, x - 2, y + 2);
-				g.drawString(matchPointText, x + 2, y + 2);
+			    // Font moderno e dimensione
+			    Font modernFont = new Font("SansSerif", Font.BOLD, 100);
+			    g2d.setFont(modernFont);
 
-				//Scritta principale in verde acqua
-				g.setColor(new Color(32, 178, 170));
-				g.drawString(matchPointText, x, y);
+			    String matchPointText = "MATCHPOINT";
+			    FontMetrics metrics = g2d.getFontMetrics(modernFont);
+			    int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+			    int y = 150; // Altezza regolata per posizionare più in alto il testo
+
+			    // Ombra sottile
+			    g2d.setColor(new Color(0, 0, 0, 80)); // Nero trasparente
+			    g2d.drawString(matchPointText, x + 5, y + 5);
+
+			    // Colore principale
+			    g2d.setColor(new Color(32, 178, 170)); // Verde acqua
+			    g2d.drawString(matchPointText, x, y);
 
 				//Scritta "Clicca ovunque per continuare"
 				if (isVisible) {
@@ -149,23 +165,26 @@ public class BackgroundPanel extends JPanel {
 	            //Disegna l'immagine nitida
 	            if (clearImage != null) {
 	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	             //Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-					g.setColor(Color.BLACK); // Contorno nero
-					g.setFont(new Font("Impact", Font.BOLD, 70));
-					String matchPointText = "MATCHPOINT";
-					FontMetrics metrics = g.getFontMetrics();
-					int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-					int y = 100;
+	              //Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
+				    Graphics2D g2d = (Graphics2D) g;
+				    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-					//Contorno nero per la scritta
-					g.drawString(matchPointText, x - 2, y - 2);
-					g.drawString(matchPointText, x + 2, y - 2);
-					g.drawString(matchPointText, x - 2, y + 2);
-					g.drawString(matchPointText, x + 2, y + 2);
+				    // Font moderno e dimensione
+				    Font modernFont = new Font("SansSerif", Font.BOLD, 100);
+				    g2d.setFont(modernFont);
 
-					//Scritta principale in verde acqua
-					g.setColor(new Color(32, 178, 170));
-					g.drawString(matchPointText, x, y);
+				    String matchPointText = "MATCHPOINT";
+				    FontMetrics metrics = g2d.getFontMetrics(modernFont);
+				    int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+				    int y = 150; // Altezza regolata per posizionare più in alto il testo
+
+				    // Ombra sottile
+				    g2d.setColor(new Color(0, 0, 0, 80)); // Nero trasparente
+				    g2d.drawString(matchPointText, x + 5, y + 5);
+
+				    // Colore principale
+				    g2d.setColor(new Color(32, 178, 170)); // Verde acqua
+				    g2d.drawString(matchPointText, x, y);
 	            }
 	        }
 	    };
@@ -179,239 +198,41 @@ public class BackgroundPanel extends JPanel {
 	    }
 	    
 	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10); //Spaziatura tra i componenti
-	    gbc.fill = GridBagConstraints.HORIZONTAL; //I pulsanti si allargano orizzontalmente
+	    gbc.insets = new Insets(10, 10, 10, 10); // Margini uniformi
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
+	    gbc.weightx = 0; 
+	    gbc.weighty = 0; 
+
+	    // Bottone "Register Giocatore"
 	    gbc.gridx = 0;
 	    gbc.gridy = 0;
-
-	    //Bottone "Register Giocatore"
-	    JButton registerGiocatoreButton = new JButton("Register Giocatore");
-	    registerGiocatoreButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    registerGiocatoreButton.setBackground(new Color(32, 178, 170));
-	    registerGiocatoreButton.setForeground(Color.WHITE);
-	    registerGiocatoreButton.setFocusPainted(false);
-	    registerGiocatoreButton.addActionListener(e -> cardLayout.show(cardPanel, "playerRegister"));
+	    gbc.anchor = GridBagConstraints.CENTER; // Allineamento centrale
+	    Dimension largeButtonSize = new Dimension(250, 80);
+	    JButton registerGiocatoreButton = createFlatButton("Register Giocatore", 
+	        e -> cardLayout.show(cardPanel, "playerRegister"), largeButtonSize);
 	    panel.add(registerGiocatoreButton, gbc);
 
-	    //Bottone "Register Gestore"
-	    gbc.gridx = 1; // Passa alla colonna successiva
-	    JButton registerGestoreButton = new JButton("Register Gestore");
-	    registerGestoreButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    registerGestoreButton.setBackground(new Color(32, 178, 170));
-	    registerGestoreButton.setForeground(Color.WHITE);
-	    registerGestoreButton.setFocusPainted(false);
-	    registerGestoreButton.addActionListener(e -> cardLayout.show(cardPanel, "managerRegister"));
+	    // Bottone "Register Gestore"
+	    gbc.gridx = 1; // Colonna successiva
+	    JButton registerGestoreButton = createFlatButton("Register Gestore", 
+	        e -> cardLayout.show(cardPanel, "managerRegister"), largeButtonSize);
 	    panel.add(registerGestoreButton, gbc);
 
-	    //Bottone "Login"
+	    // Bottone "Login"
 	    gbc.gridx = 0;
-	    gbc.gridy = 1; // Passa alla riga successiva
+	    gbc.gridy = 1; // Riga successiva
 	    gbc.gridwidth = 2; // Occupa entrambe le colonne
-	    JButton loginButton = new JButton("Login");
-	    loginButton.setFont(new Font("Arial", Font.BOLD, 24));
-	    loginButton.setBackground(new Color(32, 178, 170));
-	    loginButton.setForeground(Color.WHITE);
-	    loginButton.setFocusPainted(false);
-	    loginButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
+	    JButton loginButton = createFlatButton("Login", 
+	        e -> cardLayout.show(cardPanel, "login"), new Dimension(300, 90));
 	    panel.add(loginButton, gbc);
 
-	    return panel;
-	}
-	
-	
 
 
-	/*private JPanel createPlayerRegisterPanel() {
-=======
-	private JPanel createPlayerRegisterPanel() {
->>>>>>> Stashed changes
-	    
-		return createRegisterPanel("Registrazione Giocatore", new String[][]{
-	            {"Nome:", "name"},
-	            {"Cognome:", "surname"},
-	            {"DataNascita:", "dob"},
-	            {"Email:", "email"},
-	            {"Username:", "username"},
-	            {"Password:", "password"},
-	            {"Nome Squadra:", "teamName"}
-	    }, e -> {
-	        // Esegui la registrazione del giocatore
-	        System.out.println("Registrazione giocatore eseguita!");
-	    });
-	    
-	}
-
-	private JPanel createManagerRegisterPanel() {
-	    return createRegisterPanel("Registrazione Gestore", new String[][]{
-	        {"Nome:", "name"},
-	        {"Cognome:", "surname"},
-	        {"DataNascita:", "dob"},
-	        {"Email:", "email"},
-	        {"Username:", "username"},
-	        {"Password:", "password"},
-	        {"Certificazioni:", "certifications"},
-	        {"Competenze:", "competences"}
-	    }, e -> {
-	        // Raccogli i dati dai campi di testo
-	        String name = getTextFieldValue("name");
-	        String surname = getTextFieldValue("surname");
-	        String dob = getDatePicker("dob");
-	        String email = getTextFieldValue("email");
-	        String username = getTextFieldValue("username");
-	        String password = getTextFieldValue("password");
-	        String certifications = getTextFieldValue("certifications");
-	        String competences = getTextFieldValue("competences");
-	       Date birthDate= Date.valueOf("2003-08-01");
-	       Gestore.registrazione(name, surname, birthDate, email, username, password, certifications, competences);
-	       cardLayout.show(cardPanel, "createGestore");
-	    });
-	    	
-	}
-
-	private String getTextFieldValue(String fieldName) {
-	    for (Component component : getRootPane().getComponents()) {
-	        if (component instanceof JTextField) {
-	            JTextField textField = (JTextField) component;
-	            if (textField.getName().equals(fieldName)) {
-	            	if(textField.getText().equals("")) {
-	            		System.out.println(textField.getName());
-	    	            JOptionPane.showMessageDialog(managerRegisterPanel, "Tutti i campi devono essere riempiti!", "Errore", JOptionPane.ERROR_MESSAGE);
-	            	}
-	            	System.out.println(textField.getName());
-	            }
-	            else {
-	            	return textField.getText();
-	            }
-	        }
-	    }
-	    return "";  // Stringa vuota se il campo non viene trovato
-	}
-	
-	private String getDatePicker(String fieldName) {
-	    // Trova il campo di testo corrispondente al fieldName
-	    for (Component component : getRootPane().getComponents()) {
-	        if (component instanceof JDatePicker) {
-	        	JDatePicker datePicker = (JDatePicker) component;
-	            if (((Component) datePicker).getName().equals(fieldName)) {
-	            	java.util.Date selectedDate = (java.util.Date) datePicker.getModel().getValue();
-	                if (selectedDate != null) {
-	                    java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
-	                    return sqlDate.toString();
-	            }
-	        }
-	    }}
-	    return ""; // Restituisce una stringa vuota se non trova il campo di testo
-		
-	
-	    }
-
-
-	private JPanel createRegisterPanel(String title, String[][] fields, ActionListener registerAction) {
-	    JPanel panel = new JPanel() {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-	            if (clearImage != null) {
-	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	            }
-	        }
-	    };
-	    panel.setLayout(new GridBagLayout());
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10);
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
-
-	    JLabel titleLabel = new OutlinedLabel(title, Color.WHITE);
-	    titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
-
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    gbc.gridwidth = 2;
-	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(titleLabel, gbc);
-
-	    // Array per i campi di input
-	    Component[] inputFields = new Component[fields.length];
-
-	    for (int i = 0; i < fields.length; i++) {
-	        JLabel label = new OutlinedLabel(fields[i][0], Color.BLACK);
-	        label.setFont(new Font("Montserrat", Font.BOLD, 20));
-	        label.setForeground(Color.BLACK);
-
-	        Component inputField;
-	        if ("dob".equals(fields[i][1])) {
-	            // Usa JDatePicker per il campo "dob"
-	        	UtilDateModel model = new UtilDateModel();
-	        	Properties properties = new Properties();
-	        	properties.put("text.today", "Oggi");
-	        	properties.put("text.month", "Mese");
-	        	properties.put("text.year", "Anno");
-
-	        	JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
-	        	JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-
-	            datePicker.getJFormattedTextField().setFont(new Font("Arial", Font.PLAIN, 18));
-	            inputField = datePicker;
-	            inputField.setName(fields[i][1]);
-	        } else if ("password".equals(fields[i][1])) {
-	            inputField = new JPasswordField(20);
-	            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
-	            inputField.setName(fields[i][1]);
-	        } else {
-	            inputField = new TextField(20);
-	            inputField.setName(fields[i][1]);
-	            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
-	        }
-
-	        inputFields[i] = inputField;
-
-	        gbc.gridwidth = 1;
-	        gbc.anchor = GridBagConstraints.WEST;
-	        gbc.gridx = 0;
-	        gbc.gridy = i + 1;
-	        panel.add(label, gbc);
-
-	        gbc.gridx = 1;
-	        panel.add(inputField, gbc);
-	    }
-
-	    JButton registerButton = new JButton("Registrati");
-	    registerButton.setFont(new Font("Arial", Font.BOLD, 20));
-	    registerButton.setBackground(new Color(32, 178, 170));
-	    registerButton.setForeground(Color.WHITE);
-	    registerButton.setFocusPainted(false);
-
-	    registerButton.addActionListener(e -> {
-	        for (int i = 0; i < inputFields.length; i++) {
-	            if ("dob".equals(fields[i][1])) {
-	                JDatePickerImpl datePicker = (JDatePickerImpl) inputFields[i];
-	                java.util.Date selectedDate = (java.util.Date) datePicker.getModel().getValue();
-	                if (selectedDate == null) {
-	                	JOptionPane.showMessageDialog(managerRegisterPanel, "Tutti i campi devono essere riempiti!", "Errore", JOptionPane.ERROR_MESSAGE);	                } else {
-	                }
-	            }
-	        }
-	        registerAction.actionPerformed(e);
-	    });
-
-
-	    gbc.gridx = 0;
-	    gbc.gridy = fields.length + 1;
-	    gbc.gridwidth = 2;
-	    gbc.anchor = GridBagConstraints.CENTER;
-	    panel.add(registerButton, gbc);
-	    
-	 // Aggiungi il pulsante "Back" sotto il pulsante "Registrati"
-	    gbc.gridx = 0;
-	    gbc.gridy = fields.length + 2; // Una riga sotto il pulsante "Registrati"
-	    gbc.gridwidth = 2;
-	    panel.add(createBackButton(), gbc);
 
 
 	    return panel;
-	}*/
+	}
 	
-	//Creazione del calendario per data di nascita
 	
 	
 	//metodo che permette di mostrare un pannello dato il nome del pannello
@@ -422,7 +243,23 @@ public class BackgroundPanel extends JPanel {
 			e.printStackTrace();
 		}
 	 }
-	
+	// Aggiorna i pulsanti per usare il tema FlatLaf
+	public static JButton createFlatButton(String text, ActionListener action, Dimension size) {
+	    JButton button = new JButton(text);
+	    button.addActionListener(action);
+
+	    // Imposta stile FlatLaf
+	    button.setFont(new Font("Arial", Font.BOLD, 22)); // Font più grande per i pulsanti più grandi
+	    button.putClientProperty("JButton.buttonType", "roundRect"); // Tipo di bottone arrotondato
+	    button.putClientProperty("JButton.backgroundColor", new Color(32, 178, 170)); // Colore sfondo
+	    button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138)); // Colore al passaggio del mouse
+
+	    button.setForeground(Color.BLACK); // Colore del testo
+	    button.setFocusPainted(false); // Rimuove il bordo al click
+
+	    button.setPreferredSize(size); // Dimensione personalizzata
+	    return button;
+	}
 
 
 }
