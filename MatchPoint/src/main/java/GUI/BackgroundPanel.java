@@ -94,26 +94,31 @@ public class BackgroundPanel extends JPanel {
 					System.out.println("Immagine sfocata non trovata!");
 				}
 
-				//Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-			    Graphics2D g2d = (Graphics2D) g;
-			    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				// Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero e stile moderno
+				Graphics2D g2d = (Graphics2D) g;
+				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			    // Font moderno e dimensione
-			    Font modernFont = new Font("SansSerif", Font.BOLD, 100);
-			    g2d.setFont(modernFont);
+				// Font moderno e dimensione
+				Font modernFont = new Font("SansSerif", Font.BOLD, 100);
+				g2d.setFont(modernFont);
 
-			    String matchPointText = "MATCHPOINT";
-			    FontMetrics metrics = g2d.getFontMetrics(modernFont);
-			    int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-			    int y = 150; // Altezza regolata per posizionare più in alto il testo
+				String matchPointText = "MATCHPOINT";
+				FontMetrics metrics = g2d.getFontMetrics(modernFont);
+				int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+				int y = 150; // Altezza regolata per posizionare più in alto il testo
 
-			    // Ombra sottile
-			    g2d.setColor(new Color(0, 0, 0, 80)); // Nero trasparente
-			    g2d.drawString(matchPointText, x + 5, y + 5);
+				// Ombra più visibile
+				g2d.setColor(new Color(0, 0, 0, 120)); // Nero con maggiore opacità
+				g2d.drawString(matchPointText, x + 6, y + 6);
 
-			    // Colore principale
-			    g2d.setColor(new Color(32, 178, 170)); // Verde acqua
-			    g2d.drawString(matchPointText, x, y);
+				// Gradiente moderno per il testo
+				GradientPaint gradient = new GradientPaint(
+				    x, y, new Color(50, 220, 210),  // Colore più deciso
+				    x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) // Sfumatura
+				);
+				g2d.setPaint(gradient);
+				g2d.drawString(matchPointText, x, y);
+
 
 				//Scritta "Clicca ovunque per continuare"
 				if (isVisible) {
@@ -165,26 +170,30 @@ public class BackgroundPanel extends JPanel {
 	            //Disegna l'immagine nitida
 	            if (clearImage != null) {
 	                g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-	              //Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero
-				    Graphics2D g2d = (Graphics2D) g;
-				    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	                // Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero e stile moderno
+					Graphics2D g2d = (Graphics2D) g;
+					g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-				    // Font moderno e dimensione
-				    Font modernFont = new Font("SansSerif", Font.BOLD, 100);
-				    g2d.setFont(modernFont);
+					// Font moderno e dimensione
+					Font modernFont = new Font("SansSerif", Font.BOLD, 100);
+					g2d.setFont(modernFont);
 
-				    String matchPointText = "MATCHPOINT";
-				    FontMetrics metrics = g2d.getFontMetrics(modernFont);
-				    int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-				    int y = 150; // Altezza regolata per posizionare più in alto il testo
+					String matchPointText = "MATCHPOINT";
+					FontMetrics metrics = g2d.getFontMetrics(modernFont);
+					int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
+					int y = 150; // Altezza regolata per posizionare più in alto il testo
 
-				    // Ombra sottile
-				    g2d.setColor(new Color(0, 0, 0, 80)); // Nero trasparente
-				    g2d.drawString(matchPointText, x + 5, y + 5);
+					// Ombra più visibile
+					g2d.setColor(new Color(0, 0, 0, 120)); // Nero con maggiore opacità
+					g2d.drawString(matchPointText, x + 6, y + 6);
 
-				    // Colore principale
-				    g2d.setColor(new Color(32, 178, 170)); // Verde acqua
-				    g2d.drawString(matchPointText, x, y);
+					// Gradiente moderno per il testo
+					GradientPaint gradient = new GradientPaint(
+					    x, y, new Color(50, 220, 210),  // Colore più deciso
+					    x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) // Sfumatura
+					);
+					g2d.setPaint(gradient);
+					g2d.drawString(matchPointText, x, y);
 	            }
 	        }
 	    };

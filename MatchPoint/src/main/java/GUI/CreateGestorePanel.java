@@ -42,7 +42,8 @@ public class CreateGestorePanel extends JPanel {
         add(vediPrenotazioniButton, gbc);
 
         JButton backButton = creaBottone("Back", null, new Dimension(150, 50));
-        backButton.setBackground(Color.GRAY);
+        backButton.setForeground(Color.GRAY); // Sfondo grigio
+        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
         backButton.addActionListener(e -> cardLayout.show(cardPanel, "login"));
         gbc.gridy = 3;
         add(backButton, gbc);
