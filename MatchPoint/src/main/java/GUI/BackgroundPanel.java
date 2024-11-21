@@ -245,6 +245,17 @@ public class BackgroundPanel extends JPanel {
 	    JButton loginButton = createFlatButton("Login", 
 	        e -> cardLayout.show(cardPanel, "login"), new Dimension(300, 90));
 	    panel.add(loginButton, gbc);
+	    
+	    // Bottone "Quit"
+	    gbc.gridx = 0;
+	    gbc.gridy = 3; // Riga successiva sotto il bottone "Login"
+	    gbc.gridwidth = 2; // Centrare il bottone
+	    JButton quitButton = createFlatButton("Quit", 
+	        e -> System.exit(0), new Dimension(300, 40)); // Azione per chiudere l'applicazione
+	    quitButton.setForeground(Color.GRAY); // Sfondo grigio
+        quitButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
+	    panel.add(quitButton, gbc);
+
 
 
 	    return panel;
@@ -268,10 +279,10 @@ public class BackgroundPanel extends JPanel {
 	    // Imposta stile FlatLaf
 	    button.setFont(new Font("Arial", Font.BOLD, 22)); // Font più grande per i pulsanti più grandi
 	    button.putClientProperty("JButton.buttonType", "roundRect"); // Tipo di bottone arrotondato
-	    button.putClientProperty("JButton.backgroundColor", new Color(32, 178, 170)); // Colore sfondo
+	    button.setBackground(new Color(32, 178, 170)); // Colore sfondo
 	    button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138)); // Colore al passaggio del mouse
 
-	    button.setForeground(Color.BLACK); // Colore del testo
+	    button.setForeground(Color.WHITE); // Colore del testo
 	    button.setFocusPainted(false); // Rimuove il bordo al click
 
 	    button.setPreferredSize(size); // Dimensione personalizzata
