@@ -30,6 +30,8 @@ public class CreateGiocatorePanel extends JPanel {
             e -> cardLayout.show(cardPanel, "prenota"),
             buttonSize
         );
+        prenotaButton.setForeground(new Color(220, 250, 245));
+        
         // Aggiungi l'icona al pulsante
         ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
         if (addIcon != null) {
@@ -46,6 +48,8 @@ public class CreateGiocatorePanel extends JPanel {
             e -> cardLayout.show(cardPanel, "vediPrenotazioniFatte"),
             buttonSize
         );
+        vediPrenotazioniButton.setForeground(new Color(220, 250, 245));
+        
         // Aggiungi l'icona al pulsante
         ImageIcon listIcon = caricaIcona("/GUI/immagini/list_icon.png");
         if (listIcon != null) {

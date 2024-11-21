@@ -33,6 +33,8 @@ public class CreateGestorePanel extends JPanel {
             e -> cardLayout.show(cardPanel, "inserisciCentro"),
             buttonSize
         );
+        InserisciCentroButton.setForeground(new Color(220, 250, 245));
+        
         // Aggiungi l'icona al pulsante
         ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
         if (addIcon != null) {
@@ -49,6 +51,8 @@ public class CreateGestorePanel extends JPanel {
             e -> cardLayout.show(cardPanel, "modificaCentro"),
             buttonSize
         );
+        ModificaCentroButton.setForeground(new Color(220, 250, 245));
+        
         // Aggiungi l'icona al pulsante
         ImageIcon editIcon = caricaIcona("/GUI/immagini/edit_icon.png");
         if (editIcon != null) {
@@ -65,6 +69,8 @@ public class CreateGestorePanel extends JPanel {
             e -> cardLayout.show(cardPanel, "vediPrenotazioniRicevute"),
             buttonSize
         );
+        vediPrenotazioniButton.setForeground(new Color(220, 250, 245));
+        
         // Aggiungi l'icona al pulsante
         ImageIcon listIcon = caricaIcona("/GUI/immagini/list_icon.png");
         if (listIcon != null) {

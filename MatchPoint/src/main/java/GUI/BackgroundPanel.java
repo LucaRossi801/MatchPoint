@@ -243,7 +243,7 @@ public class BackgroundPanel extends JPanel {
 	    gbc.gridy = 2; // Riga successiva
 	    gbc.gridwidth = 2; // Occupa entrambe le colonne
 	    JButton loginButton = createFlatButton("Login", 
-	        e -> cardLayout.show(cardPanel, "login"), new Dimension(300, 90));
+	        e -> cardLayout.show(cardPanel, "login"), new Dimension(250, 80));
 	    panel.add(loginButton, gbc);
 	    
 	    // Bottone "Quit"
@@ -282,7 +282,7 @@ public class BackgroundPanel extends JPanel {
 	    button.setBackground(new Color(32, 178, 170)); // Colore sfondo
 	    button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138)); // Colore al passaggio del mouse
 
-	    button.setForeground(Color.WHITE); // Colore del testo
+	    button.setForeground(new Color(220, 250, 245)); // Colore del testo
 	    button.setFocusPainted(false); // Rimuove il bordo al click
 
 	    button.setPreferredSize(size); // Dimensione personalizzata

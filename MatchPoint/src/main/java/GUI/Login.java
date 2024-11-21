@@ -73,7 +73,7 @@ public class Login {
 	    // Personalizza ulteriormente il pulsante (opzionale)
 	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
 	    loginButton.setBackground(new Color(32, 178, 170));
-	    loginButton.setForeground(Color.WHITE);
+	    loginButton.setForeground(new Color(220, 250, 245));
 	    loginButton.setFocusPainted(false);
 
 	    

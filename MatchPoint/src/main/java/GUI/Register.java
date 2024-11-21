@@ -183,7 +183,7 @@ public class Register {
 	    // Configura il layout e aggiungi il pulsante "Register"
 	    registerButton.setFont(new Font("Arial", Font.BOLD, 18));
 	    registerButton.setBackground(new Color(32, 178, 170));
-	    registerButton.setForeground(Color.WHITE);
+	    registerButton.setForeground(new Color(220, 250, 245));
 	    registerButton.setFocusPainted(false);
 
 	    gbc.gridx = 0;
