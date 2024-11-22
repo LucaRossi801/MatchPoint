@@ -128,12 +128,12 @@ public class Login {
         String password = new String(passwordField.getPassword()).trim();
 
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, "Il campo 'Username' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
+        	CustomMessage.show("Il campo 'Username' non può essere vuoto!", "Errore", false);
             return false;
         }
 
         if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(BackgroundPanel.loginPanel, "Il campo 'Password' non può essere vuoto!", "Errore", JOptionPane.ERROR_MESSAGE);
+        	CustomMessage.show("Il campo 'Password' non può essere vuoto!", "Errore", false);
             return false;
         }
 

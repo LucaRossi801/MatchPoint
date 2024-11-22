@@ -122,7 +122,7 @@ public class Register {
 	                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	                    birthDate = sdf.format(date);
 	                } else {
-	                    JOptionPane.showMessageDialog(panel, "Errore: Devi selezionare una data di nascita!", "Errore", JOptionPane.WARNING_MESSAGE);
+	                	CustomMessage.show("Compilare la data di nascita!", "Errore", false);
 	                    return;
 	                }
 	                String email = ((JTextField) fields.get("Email")).getText().trim();
@@ -134,7 +134,7 @@ public class Register {
 	                // Controlla se ci sono campi vuoti
 	                if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() ||
 	                    (tipologia.equals("Gestore") && (certifications.isEmpty() || competences.isEmpty()))) {
-	                    JOptionPane.showMessageDialog(panel, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.WARNING_MESSAGE);
+	                	CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
 	                    return;
 	                }
 
@@ -146,13 +146,13 @@ public class Register {
 	                    ris = DataBase.eseguiSelect(conn, sql);
 	                } catch (SQLException ex) {
 	                    ex.printStackTrace();
-	                    JOptionPane.showMessageDialog(panel, "Errore di connessione al database: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+	                    CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
 	                    return;
 	                }
 
 	                if (!ris.isEmpty()) {
 	                    // Lo username esiste già
-	                    JOptionPane.showMessageDialog(panel, "Errore: Lo username '" + username + "' è già in uso!", "Errore", JOptionPane.WARNING_MESSAGE);
+	                	CustomMessage.show("Lo username '" + username + "' è già in uso!", "Errore", false);
 	                    return;
 	                }
 
@@ -163,7 +163,7 @@ public class Register {
 	                } else {
 	                    String teamName = ((JTextField) fields.get("NomeSquadra")).getText().trim();
 	                    if (teamName.isEmpty()) {
-	                        JOptionPane.showMessageDialog(panel, "Errore: Tutti i campi devono essere compilati!", "Errore", JOptionPane.WARNING_MESSAGE);
+	                    	CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
 	                        return;
 	                    }
 	                    Giocatore.registrazione(name, surname, birthDate, email, username, password, teamName);
