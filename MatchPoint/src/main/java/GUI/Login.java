@@ -75,9 +75,7 @@ public class Login {
 	    loginButton.setBackground(new Color(32, 178, 170));
 	    loginButton.setForeground(new Color(220, 250, 245));
 	    loginButton.setFocusPainted(false);
-
 	    
-
 
 	    //Posizionamento componenti
 	    //Aggiungi il titolo (Login)
@@ -195,6 +193,5 @@ public class Login {
 	    }
 	    return false; // False se le credenziali non sono valide o si verifica un errore
 	}
-
 
 }

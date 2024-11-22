@@ -22,7 +22,7 @@ public class CreateGiocatorePanel extends JPanel {
         gbc.insets = new Insets(20, 0, 20, 0); // Maggiore spaziatura tra i pulsanti
         gbc.gridx = 0; // Centra i pulsanti orizzontalmente
 
-        Dimension buttonSize = new Dimension(300, 90); // Dimensioni personalizzate aumentate
+        Dimension buttonSize = new Dimension(400, 120); // Dimensioni personalizzate aumentate
 
      // Crea il primo pulsante "Prenota"
         JButton prenotaButton = BackgroundPanel.createFlatButton(
