@@ -43,9 +43,6 @@ public class BackgroundPanel extends JPanel {
             e.printStackTrace();
         }
 		
-		this.isVisible = true; //La scritta è visibile inizialmente
-		this.blinkInterval = 800; //Durata della visibilità della scritta (in ms)
-
 		//Usa CardLayout per gestire le diverse viste
 		cardLayout = new CardLayout();
 		cardPanel = new JPanel(cardLayout);
@@ -67,21 +64,14 @@ public class BackgroundPanel extends JPanel {
 		cardPanel.add(new CreateGiocatorePanel(cardLayout, cardPanel), "createGiocatore");
 		cardPanel.add(new InserisciCentroPanel(cardLayout, cardPanel), "inserisciCentro");
 
-		
 		//Imposta la vista iniziale come la homepage
 		cardLayout.show(cardPanel, "home");
 
 		//Imposta il layout del pannello principale
 		setLayout(new BorderLayout());
 		add(cardPanel, BorderLayout.CENTER);
-
-		//Imposta la dimensione iniziale del pannello
-		setPreferredSize(new Dimension(800, 600)); 
 	}
 	
-	
-
-
 	//Crea il pannello della homepage con immagine sfocata e scritta lampeggiante
 	private JPanel createHomePanel(String blurredImagePath) {
 		JPanel panel = new JPanel() {
@@ -107,16 +97,16 @@ public class BackgroundPanel extends JPanel {
 				String matchPointText = "MATCHPOINT";
 				FontMetrics metrics = g2d.getFontMetrics(modernFont);
 				int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;
-				int y = 150; // Altezza regolata per posizionare più in alto il testo
+				int y = 150; //Posizione in altezza
 
-				// Ombra più visibile
-				g2d.setColor(new Color(0, 0, 0, 120)); // Nero con maggiore opacità
+				//Contorno nero
+				g2d.setColor(new Color(0, 0, 0, 120)); //Nero con maggiore opacità
 				g2d.drawString(matchPointText, x + 6, y + 6);
 
 				// Gradiente moderno per il testo
 				GradientPaint gradient = new GradientPaint(
-				    x, y, new Color(50, 220, 210),  // Colore più deciso
-				    x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) // Sfumatura
+				    x, y, new Color(50, 220, 210), 
+				    x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) //Sfumatura
 				);
 				g2d.setPaint(gradient);
 				g2d.drawString(matchPointText, x, y);
