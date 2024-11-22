@@ -43,7 +43,7 @@ public class InserisciCentroPanel extends JPanel {
 
         for (String campo : campi) {
             // Etichetta
-            JLabel label = new JLabel(campo + ":");
+            JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
             label.setFont(new Font("Montserrat", Font.BOLD, 24));
             gbc.gridx = 0; // Colonna sinistra
             gbc.gridy = row;
@@ -85,10 +85,10 @@ public class InserisciCentroPanel extends JPanel {
 
         // Bottone Indietro
         JButton backButton = BackgroundPanel.createFlatButton(
-            "Indietro",
+            "Back",
             e -> {
                 // Cambia schermata
-                cardLayout.show(cardPanel, "gestorePanel");
+                cardLayout.show(cardPanel, "createGestore");
             },
             new Dimension(120, 30)
         );
