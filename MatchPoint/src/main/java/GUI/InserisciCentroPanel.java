@@ -3,6 +3,8 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InserisciCentroPanel extends JPanel {
     private Image background;
@@ -22,39 +24,79 @@ public class InserisciCentroPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Titolo
+        JLabel titleLabel = new OutlinedLabel("Inserisci Centro", Color.WHITE);
+        titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Il titolo occupa due colonne
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(titleLabel, gbc);
+
+        // Mappa per gestire i campi
+        Map<String, JTextField> fields = new HashMap<>();
+
         // Campi di testo
-        JTextField nomeCentroField = new JTextField(20);
-        JTextField provinciaField = new JTextField(20);
-        JTextField comuneField = new JTextField(20);
+        String[] campi = {"NomeCentro", "Provincia", "Comune"};
+        int row = 1; // Riga di partenza
 
-        // Etichette e campi
-        gbc.gridx = 0; gbc.gridy = 0;
-        add(new JLabel("Nome Centro:"), gbc);
-        gbc.gridx = 1;
-        add(nomeCentroField, gbc);
+        for (String campo : campi) {
+            // Etichetta
+            JLabel label = new JLabel(campo + ":");
+            label.setFont(new Font("Montserrat", Font.BOLD, 24));
+            gbc.gridx = 0; // Colonna sinistra
+            gbc.gridy = row;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(label, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1;
-        add(new JLabel("Provincia:"), gbc);
-        gbc.gridx = 1;
-        add(provinciaField, gbc);
+            // Campo di input
+            JTextField inputField = new JTextField(20);
+            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
+            gbc.gridx = 1; // Colonna destra
+            add(inputField, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 2;
-        add(new JLabel("Comune:"), gbc);
-        gbc.gridx = 1;
-        add(comuneField, gbc);
+            // Salva il campo nella mappa
+            fields.put(campo, inputField);
 
-        // Bottone per aprire sovrimpressione
-        JButton aggiungiCampoButton = new JButton("Aggiungi Campo");
-        aggiungiCampoButton.addActionListener(e -> {
-            new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this));
-        });
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
+            row++;
+        }
+
+        // Bottone per aggiungere campo
+        JButton aggiungiCampoButton = BackgroundPanel.createFlatButton(
+            "Aggiungi Campo",
+            e -> {
+                // Apre il dialog
+                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this));
+            },
+            new Dimension(300, 50)
+        );
+        aggiungiCampoButton.setFont(new Font("Arial", Font.BOLD, 18));
+        aggiungiCampoButton.setBackground(new Color(32, 178, 170));
+        aggiungiCampoButton.setForeground(new Color(220, 250, 245));
+        aggiungiCampoButton.setFocusPainted(false);
+
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         add(aggiungiCampoButton, gbc);
 
-        // Pulsante "Indietro"
-        JButton backButton = new JButton("Indietro");
-        backButton.addActionListener(e -> cardLayout.show(cardPanel, "gestorePanel"));
-        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        // Bottone Indietro
+        JButton backButton = BackgroundPanel.createFlatButton(
+            "Indietro",
+            e -> {
+                // Cambia schermata
+                cardLayout.show(cardPanel, "gestorePanel");
+            },
+            new Dimension(120, 30)
+        );
+        backButton.setFont(new Font("Arial", Font.BOLD, 18));
+        backButton.setForeground(Color.GRAY);
+        backButton.setBackground(Color.DARK_GRAY);
+
+        gbc.gridy = row + 1;
         add(backButton, gbc);
     }
 

@@ -2,6 +2,8 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AggiungiCampoDialog extends JDialog {
     private boolean isCoperto = false;
@@ -15,57 +17,74 @@ public class AggiungiCampoDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Campi
-        JTextField tipologiaCampoField = new JTextField(20);
-        JTextField costoOraNotturnaField = new JTextField(10);
-        JTextField costoOraDiurnaField = new JTextField(10);
-        JTextField lunghezzaField = new JTextField(10);
-        JTextField larghezzaField = new JTextField(10);
+        String[] campi = {"TipologiaCampo", "CostoOraNotturna", "CostoOraDiurna", "Lunghezza", "Larghezza"};
+        Map<String, JTextField> fields = new HashMap<>();
 
-        // Etichette e campi
-        gbc.gridx = 0; gbc.gridy = 0;
-        add(new JLabel("Tipologia Campo:"), gbc);
-        gbc.gridx = 1;
-        add(tipologiaCampoField, gbc);
+        int row = 0;
 
-        gbc.gridx = 0; gbc.gridy = 1;
-        add(new JLabel("Costo Ora Notturna:"), gbc);
-        gbc.gridx = 1;
-        add(costoOraNotturnaField, gbc);
+        for (String campo : campi) {
+            JLabel label = new JLabel(campo + ":");
+            label.setFont(new Font("Montserrat", Font.BOLD, 24));
+            gbc.gridx = 0;
+            gbc.gridy = row;
+            gbc.gridwidth = 1;
+            gbc.anchor = GridBagConstraints.WEST;
+            add(label, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 2;
-        add(new JLabel("Costo Ora Diurna:"), gbc);
-        gbc.gridx = 1;
-        add(costoOraDiurnaField, gbc);
+            JTextField field = new JTextField(20);
+            field.setFont(new Font("Arial", Font.PLAIN, 18));
+            gbc.gridx = 1;
+            add(field, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3;
-        add(new JLabel("Lunghezza:"), gbc);
-        gbc.gridx = 1;
-        add(lunghezzaField, gbc);
+            fields.put(campo, field);
 
-        gbc.gridx = 0; gbc.gridy = 4;
-        add(new JLabel("Larghezza:"), gbc);
-        gbc.gridx = 1;
-        add(larghezzaField, gbc);
+            row++;
+        }
 
-        // Bottone "Coperto"
-        JButton copertoButton = new JButton("Non coperto");
-        copertoButton.addActionListener(e -> {
-            isCoperto = !isCoperto;
-            copertoButton.setText(isCoperto ? "Coperto" : "Non coperto");
-        });
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        // Bottone per selezionare "Coperto"
+     // Dichiarazione iniziale
+        final JButton[] copertoButtonHolder = new JButton[1]; // Array per consentire la modifica in lambda
+
+        // Creazione del pulsante
+        copertoButtonHolder[0] = BackgroundPanel.createFlatButton(
+            "Non coperto", // Testo iniziale
+            e -> { 
+                isCoperto = !isCoperto; // Cambia lo stato di "Coperto"
+                copertoButtonHolder[0].setText(isCoperto ? "Coperto" : "Non coperto"); // Aggiorna il testo del pulsante
+            },
+            new Dimension(200, 40) // Dimensione del pulsante
+        );
+
+        // Riferimento finale al pulsante
+        JButton copertoButton = copertoButtonHolder[0];
+        copertoButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font specifico
+
+
+
+
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
         add(copertoButton, gbc);
 
-        // Bottone "Salva"
-        JButton salvaButton = new JButton("Salva");
-        salvaButton.addActionListener(e -> {
-            // Logica di salvataggio qui
-            dispose();
-        });
-        gbc.gridy = 6;
+        // Bottone Salva
+        JButton salvaButton = BackgroundPanel.createFlatButton(
+            "Salva",
+            e -> {
+                // Aggiungere il codice per salvare i dati inseriti
+                dispose();
+            },
+            new Dimension(200, 40)
+        );
+        salvaButton.setFont(new Font("Arial", Font.BOLD, 18));
+        salvaButton.setBackground(new Color(32, 178, 170));
+        salvaButton.setForeground(new Color(220, 250, 245));
+
+        gbc.gridy = row + 1;
         add(salvaButton, gbc);
 
-        setSize(400, 400);
+        setSize(500, 500);
         setLocationRelativeTo(owner);
         setVisible(true);
     }
