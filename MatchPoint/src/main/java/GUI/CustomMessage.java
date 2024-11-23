@@ -36,7 +36,7 @@ public class CustomMessage {
 
         // Imposta il colore di sfondo
         JPanel panel = new JPanel();
-        panel.setBackground(success ? new Color(32, 178, 170) : Color.RED);
+        panel.setBackground(success ? new Color(34, 139, 34) : Color.RED);
         panel.setLayout(new BorderLayout());
         dialog.add(panel);
 
