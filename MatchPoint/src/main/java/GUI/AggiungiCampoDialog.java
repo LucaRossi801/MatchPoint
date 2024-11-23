@@ -81,21 +81,25 @@ public class AggiungiCampoDialog extends JDialog {
         gbc.anchor = GridBagConstraints.CENTER;
         add(copertoButton, gbc);
 
-        // Bottone Salva
+        // Pulsante Salva
         JButton salvaButton = BackgroundPanel.createFlatButton(
-                "Salva",
-                e -> {
-                    // Costruisce il riepilogo
-                    StringBuilder riepilogo = new StringBuilder(riepilogoArea.getText());
-                    for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
-                        riepilogo.append(entry.getKey()).append(": ").append(entry.getValue().getText()).append("\n");
-                    }
-                    riepilogo.append("Coperto: ").append(isCoperto ? "Sì" : "No").append("\n");
-                    riepilogoArea.setText(riepilogo.toString());
-                    dispose(); // Chiude il dialogo
-                },
-                new Dimension(200, 40)
+            "Salva",
+            e -> {
+                // Costruisce il riepilogo
+                StringBuilder riepilogo = new StringBuilder(riepilogoArea.getText());
+                for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
+                    riepilogo.append(entry.getKey()).append(": ").append(entry.getValue().getText()).append("\n");
+                }
+                riepilogo.append("Coperto: ").append(isCoperto ? "Sì" : "No").append("\n\n");
+
+                // Aggiorna il JTextArea
+                riepilogoArea.setText(riepilogo.toString());
+
+                dispose(); // Chiude il dialogo
+            },
+            new Dimension(200, 50) // Dimensioni personalizzate
         );
+        
         salvaButton.setFont(new Font("Arial", Font.BOLD, 18));
 
         gbc.gridy = row + 1;

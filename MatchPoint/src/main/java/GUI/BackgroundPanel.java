@@ -281,5 +281,4 @@ public class BackgroundPanel extends JPanel {
 	    return button;
 	}
 
-
 }

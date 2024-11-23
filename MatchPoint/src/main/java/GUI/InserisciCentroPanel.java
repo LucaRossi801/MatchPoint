@@ -8,8 +8,16 @@ import java.util.Map;
 
 public class InserisciCentroPanel extends JPanel {
     private Image background;
+	private final JTextArea riepilogoArea; // Variabile d'istanza
 
     public InserisciCentroPanel(CardLayout cardLayout, JPanel cardPanel) {
+        // Inizializza la JTextArea
+        riepilogoArea = new JTextArea(10, 30); // Inizializza la variabile d'istanza
+        riepilogoArea.setEditable(false);
+        riepilogoArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        JScrollPane scrollPane = new JScrollPane(riepilogoArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         // Carica immagine di sfondo
         URL backgroundUrl = getClass().getClassLoader().getResource("GUI/immagini/sfondohome.png");
         if (backgroundUrl != null) {
@@ -67,11 +75,12 @@ public class InserisciCentroPanel extends JPanel {
         JButton aggiungiCampoButton = BackgroundPanel.createFlatButton(
             "Aggiungi Campo",
             e -> {
-                // Apre il dialog
-                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), null);
+                // Apre il dialog passando la variabile d'istanza riepilogoArea
+                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoArea);
             },
             new Dimension(300, 50)
         );
+
         aggiungiCampoButton.setFont(new Font("Arial", Font.BOLD, 18));
         aggiungiCampoButton.setBackground(new Color(32, 178, 170));
         aggiungiCampoButton.setForeground(new Color(220, 250, 245));
@@ -82,29 +91,12 @@ public class InserisciCentroPanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         add(aggiungiCampoButton, gbc);
-        
-     
 
         // Aggiungi il JTextArea per il riepilogo
-        JTextArea riepilogoArea = new JTextArea(10, 30);
-        riepilogoArea.setEditable(false);
-        riepilogoArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        JScrollPane scrollPane = new JScrollPane(riepilogoArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
         gbc.gridy = row + 1;
         gbc.gridwidth = 2;
         add(scrollPane, gbc);
 
-        // Passa la JTextArea al dialogo
-        JButton aggiungiCampoButton1 = BackgroundPanel.createFlatButton(
-            "Aggiungi Campo",
-            e -> {
-                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoArea);
-            },
-            new Dimension(300, 50)
-        );
-        
         // Bottone Inserisci Centro
         JButton inserisciCentroButton = BackgroundPanel.createFlatButton(
             "Inserisci Centro",
@@ -126,28 +118,13 @@ public class InserisciCentroPanel extends JPanel {
             },
             new Dimension(300, 50)
         );
+
         inserisciCentroButton.setFont(new Font("Arial", Font.BOLD, 18));
         inserisciCentroButton.setBackground(new Color(0, 128, 128));
         inserisciCentroButton.setForeground(Color.WHITE);
 
         gbc.gridy = row + 2;
         add(inserisciCentroButton, gbc);
-        
-        // Bottone Indietro
-        JButton backButton = BackgroundPanel.createFlatButton(
-            "Back",
-            e -> {
-                // Cambia schermata
-                cardLayout.show(cardPanel, "createGestore");
-            },
-            new Dimension(120, 30)
-        );
-        backButton.setFont(new Font("Arial", Font.BOLD, 18));
-        backButton.setForeground(Color.GRAY);
-        backButton.setBackground(Color.DARK_GRAY);
-
-        gbc.gridy = row + 3;
-        add(backButton, gbc);
     }
 
     @Override
