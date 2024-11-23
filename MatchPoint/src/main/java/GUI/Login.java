@@ -8,6 +8,9 @@ import dataBase.DataBase;
 
 
 public class Login {
+	
+	private static JTextField usernameField;
+    private static JPasswordField passwordField;
 
 	//Metodo per la crezione del pannello di login
 	protected static JPanel createLoginPanel() {
@@ -30,12 +33,12 @@ public class Login {
 	    
 	    JLabel usernameLabel = new OutlinedLabel("Username:", Color.BLACK);
 	    usernameLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    JTextField usernameField = new JTextField(20);
+	    usernameField = new JTextField(20);
 	    usernameField.setFont(new Font("Arial", Font.PLAIN, 18));
 
 	    JLabel passwordLabel = new OutlinedLabel("Password:", Color.BLACK);
 	    passwordLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-	    JPasswordField passwordField = new JPasswordField(20);
+	    passwordField = new JPasswordField(20);
 	    passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
 
 	 // Crea il pulsante "Login" utilizzando createFlatButton
@@ -70,7 +73,7 @@ public class Login {
 	        new Dimension(100, 40) // Dimensione del pulsante
 	    );
 
-	    // Personalizza ulteriormente il pulsante (opzionale)
+	    // Personalizza ulteriormente il pulsante
 	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
 	    loginButton.setBackground(new Color(32, 178, 170));
 	    loginButton.setForeground(new Color(220, 250, 245));
@@ -119,6 +122,15 @@ public class Login {
 
 	    return panel;
 	}
+	
+	public static void resetFields() {
+        if (usernameField != null) {
+            usernameField.setText("");
+        }
+        if (passwordField != null) {
+            passwordField.setText("");
+        }
+    }
 	
 	//Controlla i campi del login, se sono vuoti restituisce errore
 	private static boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
@@ -193,5 +205,6 @@ public class Login {
 	    }
 	    return false; // False se le credenziali non sono valide o si verifica un errore
 	}
+	
 
 }

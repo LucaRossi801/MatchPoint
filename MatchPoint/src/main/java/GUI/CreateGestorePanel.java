@@ -83,10 +83,13 @@ public class CreateGestorePanel extends JPanel {
 
         // Crea il pulsante "Back"
         JButton backButton = BackgroundPanel.createFlatButton(
-            "Back",
-            e -> cardLayout.show(cardPanel, "login"),
-            new Dimension(150, 50)
-        );
+        	    "Back", 
+        	    e -> {
+        	        Login.resetFields(); // Svuota i campi di testo
+        	        BackgroundPanel.showPanel("login"); // Torna al pannello di login
+        	    }, 
+        	    new Dimension(150, 50) // Dimensione personalizzata del bottone
+        	);
         // Personalizza colore per il pulsante "Back"
         backButton.setForeground(Color.GRAY); // Sfondo grigio
         backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
