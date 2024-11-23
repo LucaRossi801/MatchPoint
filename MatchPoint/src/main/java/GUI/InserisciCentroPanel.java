@@ -68,7 +68,7 @@ public class InserisciCentroPanel extends JPanel {
             "Aggiungi Campo",
             e -> {
                 // Apre il dialog
-                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this));
+                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), null);
             },
             new Dimension(300, 50)
         );
@@ -82,7 +82,57 @@ public class InserisciCentroPanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         add(aggiungiCampoButton, gbc);
+        
+     
 
+        // Aggiungi il JTextArea per il riepilogo
+        JTextArea riepilogoArea = new JTextArea(10, 30);
+        riepilogoArea.setEditable(false);
+        riepilogoArea.setFont(new Font("Arial", Font.PLAIN, 16));
+        JScrollPane scrollPane = new JScrollPane(riepilogoArea);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        gbc.gridy = row + 1;
+        gbc.gridwidth = 2;
+        add(scrollPane, gbc);
+
+        // Passa la JTextArea al dialogo
+        JButton aggiungiCampoButton1 = BackgroundPanel.createFlatButton(
+            "Aggiungi Campo",
+            e -> {
+                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoArea);
+            },
+            new Dimension(300, 50)
+        );
+        
+        // Bottone Inserisci Centro
+        JButton inserisciCentroButton = BackgroundPanel.createFlatButton(
+            "Inserisci Centro",
+            e -> {
+                // Recupera i dati inseriti e fai l'inserimento
+                String nomeCentro = fields.get("NomeCentro").getText();
+                String provincia = fields.get("Provincia").getText();
+                String comune = fields.get("Comune").getText();
+
+                // Controlla se tutti i campi sono stati compilati
+                if (nomeCentro.isEmpty() || provincia.isEmpty() || comune.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Compila tutti i campi!", "Errore", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Logica per salvare il centro
+                System.out.println("Centro inserito: Nome=" + nomeCentro + ", Provincia=" + provincia + ", Comune=" + comune);
+                JOptionPane.showMessageDialog(this, "Centro inserito con successo!", "Successo", JOptionPane.INFORMATION_MESSAGE);
+            },
+            new Dimension(300, 50)
+        );
+        inserisciCentroButton.setFont(new Font("Arial", Font.BOLD, 18));
+        inserisciCentroButton.setBackground(new Color(0, 128, 128));
+        inserisciCentroButton.setForeground(Color.WHITE);
+
+        gbc.gridy = row + 2;
+        add(inserisciCentroButton, gbc);
+        
         // Bottone Indietro
         JButton backButton = BackgroundPanel.createFlatButton(
             "Back",
@@ -96,7 +146,7 @@ public class InserisciCentroPanel extends JPanel {
         backButton.setForeground(Color.GRAY);
         backButton.setBackground(Color.DARK_GRAY);
 
-        gbc.gridy = row + 1;
+        gbc.gridy = row + 3;
         add(backButton, gbc);
     }
 
