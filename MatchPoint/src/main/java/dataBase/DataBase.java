@@ -1,7 +1,13 @@
 package dataBase;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import components.CentroSportivo;
 
 public class DataBase {
 	// Metodo per creare la tabella Utente se non esiste
@@ -37,6 +43,8 @@ public class DataBase {
 			pstmt.executeUpdate();
 		}
 	}
+	
+	
 	
 	// Metodo per inserire i dati nella tabella Giocatore
 		public static void insert(Connection conn, String nome, String cognome, String dataNascita, int eta, String email, String username, String password, String nomeSquadra) throws SQLException {
@@ -84,21 +92,117 @@ public class DataBase {
 		return sb.toString().trim(); // Rimuove l'ultima nuova riga in eccesso
 	}
 
-	// Metodo principale
-	public static void main(String[] args) throws SQLException {
-		String url = "jdbc:sqlite:src/main/java/matchpointDB.db";
+	 public static Map<String, CentroSportivo> getCentriSportiviGestiti(int gestoreId) {
+	        Map<String, CentroSportivo> centri = new HashMap<>();
+	        String query = "SELECT id, nome, provincia, comune FROM centri_sportivi WHERE gestore_id = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-		try (Connection conn = DriverManager.getConnection(url)) {
-			// Crea la tabella se non esiste
-			// createTable(conn);
+	            stmt.setInt(1, gestoreId);
+	            ResultSet rs = stmt.executeQuery();
 
-			// Inserisce i dati nella tabella
-			// insert(conn);
+	            while (rs.next()) {
+	                int id = rs.getInt("id");
+	                String nome = rs.getString("nome");
+	                String provincia = rs.getString("provincia");
+	                String comune = rs.getString("comune");
 
-			// Seleziona e mostra i dati della tabella Utente
+	                // Crea l'oggetto CentroSportivo
+	                CentroSportivo centro = new CentroSportivo(null, id, nome, provincia, comune); // Gestore può essere impostato successivamente
+	                centri.put(nome, centro); // Usa il nome come chiave
+	            }
 
-		}
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 
-		//System.out.println("CIAO PASTICCINO!");
-	}
+	        return centri;
+	    }
+	 
+	 public boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
+		    String query = "UPDATE centri_sportivi SET nome = ?, provincia = ?, comune = ? WHERE id = ?";
+		    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+		        stmt.setString(1, nome);
+		        stmt.setString(2, provincia);
+		        stmt.setString(3, comune);
+		        stmt.setInt(4, centroId);
+
+		        int rowsUpdated = stmt.executeUpdate();
+		        return rowsUpdated > 0; // True se l'aggiornamento è andato a buon fine
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		        return false;
+		    }
+	 	}
+
+	 public boolean eliminaCampo(int centroID, String campoSelezionato) {
+	        String query = "DELETE FROM campi_sportivi WHERE centro_id = ? AND nome = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, centroID);
+	            stmt.setString(2, campoSelezionato);
+	            int rowsAffected = stmt.executeUpdate();
+	            return rowsAffected > 0; // True se almeno una riga è stata eliminata
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false; // In caso di errore
+	        }
+	    }
+
+	    public boolean modificaCampo(int centroID, String campoSelezionato, String nuovoNome) {
+	        String query = "UPDATE campi_sportivi SET nome = ? WHERE centro_id = ? AND nome = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setString(1, nuovoNome);
+	            stmt.setInt(2, centroID);
+	            stmt.setString(3, campoSelezionato);
+	            int rowsAffected = stmt.executeUpdate();
+	            return rowsAffected > 0; // True se almeno una riga è stata aggiornata
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false; // In caso di errore
+	        }
+	    }
+
+	    public boolean aggiungiCampo(int centroID, String nuovoCampo) {
+	        String query = "INSERT INTO campi_sportivi (centro_id, nome) VALUES (?, ?)";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, centroID);
+	            stmt.setString(2, nuovoCampo);
+	            int rowsAffected = stmt.executeUpdate();
+	            return rowsAffected > 0; // True se una riga è stata aggiunta
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false; // In caso di errore
+	        }
+	    }
+	    
+	    public List<String> getCampiByCentro(int centroID) {
+	        String query = "SELECT nome FROM campi_sportivi WHERE centro_id = ?";
+	        List<String> campi = new ArrayList<>();
+
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, centroID);
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    campi.add(rs.getString("nome"));
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return campi;
+	    }
 }

@@ -9,6 +9,7 @@ import dataBase.DataBase;
 
 public class Login {
 	
+	private static String loggedUser;
 	private static JTextField usernameField;
     private static JPasswordField passwordField;
 
@@ -52,8 +53,9 @@ public class Login {
 	                if (validateCredentials(username, password)) {
 	                    CustomMessage.show("Login effettuato con successo!", "Successo", true);
 
-	                    // Esegui la login per l'utente
+	                    // Esegui il login per l'utente
 	                    Utente.login(username, password);
+	                    loggedUser=username;
 
 	                    // Determina il ruolo dell'utente
 	                    String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
@@ -161,6 +163,7 @@ public class Login {
 
 	            // Cambia pannello
 	            BackgroundPanel.showPanel("main");
+	            loggedUser=""; //toglie utente
 	        },
 	        new Dimension(120, 30) // Dimensione del pulsante
 	    );
@@ -206,5 +209,8 @@ public class Login {
 	    return false; // False se le credenziali non sono valide o si verifica un errore
 	}
 	
+	public static String getLoggedUser() {
+		return loggedUser;
+	}
 
 }

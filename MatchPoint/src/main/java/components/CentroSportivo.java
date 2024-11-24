@@ -9,9 +9,19 @@ import individui.Gestore;
 public class CentroSportivo
 {
 	public Gestore gestore;
-	public Campo[] campo;
 	public int ID;
 	public String nome;
-	public String[] provincia;	
+	public String provincia;	
 	public String comune;
+	
+	public CentroSportivo(Gestore gestore, int iD, String nome, String provincia, String comune) {
+		super();
+		this.gestore = gestore;
+		ID = iD;
+		this.nome = nome;
+		this.provincia = provincia;
+		this.comune = comune;
+	}
+	
+	
 }
