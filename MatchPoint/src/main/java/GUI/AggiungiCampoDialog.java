@@ -68,22 +68,32 @@ public class AggiungiCampoDialog extends JDialog {
 		}
 
 		// Switch per Coperto
-		// Crea un pannello orizzontale per la scritta e lo switch
-		JPanel copertoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 55, 0)); // Layout orizzontale con spazio tra i componenti
-		copertoPanel.setBackground(Color.WHITE); // Sfondo bianco come richiesto
+		// Pannello per Coperto
+		JPanel copertoPanel = new JPanel(new GridBagLayout());
+		copertoPanel.setBackground(getBackground()); // Sfondo uguale alla finestra principale
 
 		// Etichetta "Coperto:"
-		JLabel copertoLabel = new OutlinedLabel("Coperto:", Color.BLACK);
+		JLabel copertoLabel = new JLabel("Coperto:");
 		copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
-		copertoPanel.add(copertoLabel); // Aggiungi la scritta al pannello
+		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo
+		copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità
+
+		// Configura GridBagConstraints per il pannello Coperto
+		GridBagConstraints copertoGbc = new GridBagConstraints();
+		copertoGbc.insets = new Insets(0, 10, 0, 10); // Margini uniformi
+		copertoGbc.anchor = GridBagConstraints.WEST; // Allineamento sinistra
+		copertoGbc.gridx = 0; // Colonna 0
+		copertoGbc.gridy = 0; // Riga 0
+		copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta
 
 		// Switch per Coperto
 		JToggleButton switchButton = new JToggleButton();
 		switchButton.setPreferredSize(new Dimension(50, 25));
 		switchButton.setFocusPainted(false);
 		switchButton.setBorder(BorderFactory.createEmptyBorder());
-		switchButton.setBackground(Color.WHITE); // Sfondo bianco
-		switchButton.setOpaque(true);
+		switchButton.setBackground(getBackground()); // Sfondo uguale alla finestra
+		switchButton.setContentAreaFilled(false); // Disabilita l'area predefinita del contenuto
+		switchButton.setOpaque(false); // Assicurati che lo sfondo non sia dipinto
 
 		// Creazione delle icone per gli stati
 		Icon offIcon = new Icon() {
@@ -135,18 +145,18 @@ public class AggiungiCampoDialog extends JDialog {
 		switchButton.setSelectedIcon(onIcon); // Stato selezionato
 
 		// Aggiorna il valore di isCoperto in base allo stato
-		switchButton.addActionListener(e -> {
-		    isCoperto = switchButton.isSelected();
-		});
+		switchButton.addActionListener(e -> isCoperto = switchButton.isSelected());
 
 		// Aggiungi lo switch al pannello
-		copertoPanel.add(switchButton);
+		copertoGbc.gridx = 1; // Colonna 1
+		copertoPanel.add(switchButton, copertoGbc);
 
-		// Aggiungi il pannello alla GUI
+		// Aggiungi il pannello Coperto alla finestra principale
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		gbc.gridwidth = 2; // Il pannello occupa due colonne
 		add(copertoPanel, gbc);
+
 
 
 
