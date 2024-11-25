@@ -8,15 +8,15 @@ import java.util.Map;
 
 public class InserisciCentroPanel extends JPanel {
     private Image background;
-	private final JTextArea riepilogoArea; // Variabile d'istanza
 
     public InserisciCentroPanel(CardLayout cardLayout, JPanel cardPanel) {
-        // Inizializza la JTextArea
-        riepilogoArea = new JTextArea(10, 30); // Inizializza la variabile d'istanza
-        riepilogoArea.setEditable(false);
-        riepilogoArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        JScrollPane scrollPane = new JScrollPane(riepilogoArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    	JPanel riepilogoPanel = new JPanel();
+    	riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
+    	riepilogoPanel.setBackground(Color.WHITE);
+
+    	JScrollPane scrollPane = new JScrollPane(riepilogoPanel);
+    	scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    	scrollPane.setPreferredSize(new Dimension(350, 200));
 
         // Carica immagine di sfondo
         URL backgroundUrl = getClass().getClassLoader().getResource("GUI/immagini/sfondohome.png");
@@ -73,13 +73,13 @@ public class InserisciCentroPanel extends JPanel {
 
         // Bottone per aggiungere campo
         JButton aggiungiCampoButton = BackgroundPanel.createFlatButton(
-            "Aggiungi Campo",
-            e -> {
-                // Apre il dialog passando la variabile d'istanza riepilogoArea
-                new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoArea);
-            },
-            new Dimension(300, 50)
-        );
+        	    "Aggiungi Campo",
+        	    e -> {
+        	        // Passa riepilogoPanel invece di riepilogoArea
+        	        new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);
+        	    },
+        	    new Dimension(300, 50)
+        	);
 
         aggiungiCampoButton.setFont(new Font("Arial", Font.BOLD, 18));
         aggiungiCampoButton.setBackground(new Color(32, 178, 170));
@@ -151,4 +151,4 @@ public class InserisciCentroPanel extends JPanel {
             g.drawImage(background, 0, 0, getWidth(), getHeight(), this);
         }
     }
-}
+} 
