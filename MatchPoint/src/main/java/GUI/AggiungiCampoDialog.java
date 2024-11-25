@@ -28,13 +28,13 @@ public class AggiungiCampoDialog extends JDialog {
 
 		// Combobox per selezione tipo campo
 		JLabel tipoLabel = new JLabel("Tipologia Campo:");
-		tipoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+		tipoLabel.setFont(new Font("Arial", Font.BOLD, 18));
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		add(tipoLabel, gbc);
 
 		JComboBox<TipologiaCampo> tipoComboBox = new JComboBox<>(TipologiaCampo.values());
-		tipoComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+		tipoComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
 		gbc.gridx = 1;
 		gbc.gridy = row;
 		add(tipoComboBox, gbc);
@@ -45,10 +45,10 @@ public class AggiungiCampoDialog extends JDialog {
 		
 		row++;
 
-		// Campo per larghezza
+		// Campi
 		for (String campo : campiNumerici) {
 			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 24)); // Stile originale
+			label.setFont(new Font("Montserrat", Font.BOLD, 18)); // Stile originale
 			gbc.gridx = 0;
 			gbc.gridy=row;
 			gbc.gridwidth = 1;
@@ -56,7 +56,7 @@ public class AggiungiCampoDialog extends JDialog {
 			add(label, gbc);
 
 			JTextField field = new JTextField(30); // Larghezza dei campi di testo
-			field.setFont(new Font("Arial", Font.PLAIN, 20)); // Font personalizzato
+			field.setFont(new Font("Arial", Font.PLAIN, 18)); // Font personalizzato
 			((PlainDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter());
 			gbc.gridx = 1;
 			add(field, gbc);
@@ -95,7 +95,7 @@ public class AggiungiCampoDialog extends JDialog {
 
 		            String valore = field.getText();
 		            if (valore.isEmpty()) {
-		                JOptionPane.showMessageDialog(this, "Compila il campo " + campo + "!", "Errore", JOptionPane.ERROR_MESSAGE);
+		                CustomMessage.show("Compila il campo " + campo + "!", "Errore", false);
 		                return;
 		            }
 		            riepilogo.append(campo).append(": ").append(valore).append("\n");
