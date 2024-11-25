@@ -2,43 +2,41 @@ package GUI;
 
 import javax.swing.*;
 import components.CentroSportivo;
+import components.Sessione;
 import dataBase.DataBase;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.Map;
 
 public class ModificaCentroPanel extends JPanel {
-    private JComboBox<String> centriComboBox;
+    private JComboBox<String> centriComboBox; // ComboBox per selezione centri
     private JTextField nomeField, provinciaField, comuneField;
     private JButton salvaButton, modificaCampiButton;
-    private Map<String, CentroSportivo> centriGestiti; // Mappa con nome del centro come chiave e CentroSportivo come valore
-    private int utenteId; // ID dell'utente loggato
-    private DataBase dataBase; // Riferimento alla classe DataBase
+    private Map<String, CentroSportivo> centriGestiti; // Mappa nome-centro
+    private Integer utenteId; // ID dell'utente loggato
+    private DataBase dataBase; // Database di riferimento
 
-    public ModificaCentroPanel(CardLayout cardLayout, JPanel cardPanel) {
-     
+    public ModificaCentroPanel() {
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 248, 255)); // Sfondo chiaro
+        setBackground(new Color(240, 248, 255));
 
-        // Recupera i centri gestiti tramite il metodo di DataBase
-        centriGestiti = DataBase.getCentriSportiviGestiti(utenteId);
+        // Inizializza ID utente dalla sessione
+        utenteId = Sessione.getId();
 
         // Pannello superiore per selezione del centro
         JPanel selezionePanel = new JPanel(new FlowLayout());
         selezionePanel.setBackground(new Color(32, 178, 170));
-
         JLabel selezionaLabel = new JLabel("Seleziona Centro:");
         selezionaLabel.setForeground(Color.WHITE);
         selezionePanel.add(selezionaLabel);
 
-        centriComboBox = new JComboBox<>(centriGestiti.keySet().toArray(new String[0]));
+        centriComboBox = new JComboBox<>();
         centriComboBox.addActionListener(e -> aggiornaDettagliCentro());
         selezionePanel.add(centriComboBox);
 
         add(selezionePanel, BorderLayout.NORTH);
 
-        // Pannello centrale per i dettagli del centro
+        // Pannello centrale per dettagli del centro
         JPanel dettagliPanel = new JPanel(new GridBagLayout());
         dettagliPanel.setBackground(new Color(240, 248, 255));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -71,7 +69,7 @@ public class ModificaCentroPanel extends JPanel {
 
         add(dettagliPanel, BorderLayout.CENTER);
 
-        // Pannello inferiore per i pulsanti
+        // Pannello inferiore per pulsanti
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.setBackground(new Color(240, 248, 255));
 
@@ -85,36 +83,54 @@ public class ModificaCentroPanel extends JPanel {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Popola i dettagli del primo centro selezionato
-        aggiornaDettagliCentro();
+        // Carica i centri sportivi gestiti
+        caricaCentriGestiti();
     }
 
-    /**
-     * Aggiorna i campi di input con i dettagli del centro selezionato.
-     */
-    private void aggiornaDettagliCentro() {
-        String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        if (centroSelezionato != null) {
-            CentroSportivo centro = centriGestiti.get(centroSelezionato);
-            nomeField.setText(centro.nome);
-            provinciaField.setText(centro.provincia);
-            comuneField.setText(centro.comune);
+    private void caricaCentriGestiti() {
+        // Controlla se l'utente è loggato
+        utenteId = Sessione.getId();
+        if (utenteId != null && utenteId > 0) {
+            centriGestiti = dataBase.getCentriSportiviGestiti(utenteId); // Ottieni centri gestiti
+            centriComboBox.removeAllItems(); // Svuota ComboBox
+
+            if (centriGestiti != null && !centriGestiti.isEmpty()) {
+                for (String nomeCentro : centriGestiti.keySet()) {
+                    centriComboBox.addItem(nomeCentro);
+                }
+                aggiornaDettagliCentro(); // Aggiorna dettagli del primo centro
+            } else {
+                JOptionPane.showMessageDialog(this, "Nessun centro sportivo trovato per l'utente loggato.",
+                        "Errore", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Effettua il login per modificare i centri sportivi.",
+                    "Errore", JOptionPane.WARNING_MESSAGE);
         }
     }
 
-    /**
-     * Salva le modifiche al centro selezionato nel database.
-     */
+    private void aggiornaDettagliCentro() {
+        // Aggiorna i dettagli del centro selezionato
+        String centroSelezionato = (String) centriComboBox.getSelectedItem();
+        if (centroSelezionato != null && centriGestiti != null) {
+            CentroSportivo centro = centriGestiti.get(centroSelezionato);
+            if (centro != null) {
+                nomeField.setText(centro.nome);
+                provinciaField.setText(centro.provincia);
+                comuneField.setText(centro.comune);
+            }
+        }
+    }
+
     private void salvaModifiche() {
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        if (centroSelezionato != null) {
+        if (centroSelezionato != null && centriGestiti != null) {
             CentroSportivo centro = centriGestiti.get(centroSelezionato);
 
             String nuovoNome = nomeField.getText();
             String nuovaProvincia = provinciaField.getText();
             String nuovoComune = comuneField.getText();
 
-            // Usa il metodo di DataBase per aggiornare il centro
             boolean success = dataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
 
             if (success) {
@@ -128,20 +144,13 @@ public class ModificaCentroPanel extends JPanel {
         }
     }
 
-    /**
-     * Naviga a una schermata per modificare i campi del centro selezionato.
-     */
     private void modificaCampi() {
-        // Ottieni il nome del centro selezionato
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        if (centroSelezionato != null) {
-            // Ottieni l'oggetto CentroSportivo corrispondente
+        if (centroSelezionato != null && centriGestiti != null) {
             CentroSportivo centro = centriGestiti.get(centroSelezionato);
 
-            // Crea un JDialog per modificare i campi del centro selezionato
             ModificaCampiDialog modificaCampiDialog = new ModificaCampiDialog(SwingUtilities.getWindowAncestor(this), centro, dataBase);
             modificaCampiDialog.setVisible(true);
-
         } else {
             JOptionPane.showMessageDialog(this, "Seleziona un centro sportivo per modificarne i campi.",
                     "Attenzione", JOptionPane.WARNING_MESSAGE);

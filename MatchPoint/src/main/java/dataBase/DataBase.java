@@ -45,7 +45,25 @@ public class DataBase {
 	}
 	
 	
-	
+
+    //Metodo per ottenere l'ID di un utente
+    public static int getIdUtente(String username, String tipologia) throws SQLException {
+    	System.out.println(tipologia);
+    	System.out.println(username);
+        String query = "SELECT ID FROM "+tipologia+" WHERE username = ?";
+        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+            	System.out.println(rs.getInt("ID"));
+                return rs.getInt("ID"); // Restituisce l'ID dell'utente
+            }
+        }
+		return -8;
+    }
 	// Metodo per inserire i dati nella tabella Giocatore
 		public static void insert(Connection conn, String nome, String cognome, String dataNascita, int eta, String email, String username, String password, String nomeSquadra) throws SQLException {
 			String sql = "INSERT INTO Giocatore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -94,7 +112,7 @@ public class DataBase {
 
 	 public static Map<String, CentroSportivo> getCentriSportiviGestiti(int gestoreId) {
 	        Map<String, CentroSportivo> centri = new HashMap<>();
-	        String query = "SELECT id, nome, provincia, comune FROM centri_sportivi WHERE gestore_id = ?";
+	        String query = "SELECT ID, Nome, Provincia, Comune FROM CentroSportivo WHERE Gestore = ?";
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 	        try (Connection conn = DriverManager.getConnection(url);
 	             PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -103,10 +121,10 @@ public class DataBase {
 	            ResultSet rs = stmt.executeQuery();
 
 	            while (rs.next()) {
-	                int id = rs.getInt("id");
-	                String nome = rs.getString("nome");
-	                String provincia = rs.getString("provincia");
-	                String comune = rs.getString("comune");
+	                int id = rs.getInt("ID");
+	                String nome = rs.getString("Nome");
+	                String provincia = rs.getString("Provincia");
+	                String comune = rs.getString("Comune");
 
 	                // Crea l'oggetto CentroSportivo
 	                CentroSportivo centro = new CentroSportivo(null, id, nome, provincia, comune); // Gestore può essere impostato successivamente
@@ -116,12 +134,11 @@ public class DataBase {
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
-
 	        return centri;
 	    }
 	 
 	 public boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
-		    String query = "UPDATE centri_sportivi SET nome = ?, provincia = ?, comune = ? WHERE id = ?";
+		    String query = "UPDATE CentroSportivo SET Nome = ?, Provincia = ?, Comune = ? WHERE ID = ?";
 		    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);
 		         PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -141,7 +158,7 @@ public class DataBase {
 	 	}
 
 	 public boolean eliminaCampo(int centroID, String campoSelezionato) {
-	        String query = "DELETE FROM campi_sportivi WHERE centro_id = ? AND nome = ?";
+	        String query = "DELETE FROM Campo WHERE CentroSportivo = ? AND Nome = ?";
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);
 		         PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -156,7 +173,7 @@ public class DataBase {
 	    }
 
 	    public boolean modificaCampo(int centroID, String campoSelezionato, String nuovoNome) {
-	        String query = "UPDATE campi_sportivi SET nome = ? WHERE centro_id = ? AND nome = ?";
+	        String query = "UPDATE Campo SET Nome = ? WHERE CentroSportivo = ? AND Nome = ?";
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);
 		         PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -172,7 +189,7 @@ public class DataBase {
 	    }
 
 	    public boolean aggiungiCampo(int centroID, String nuovoCampo) {
-	        String query = "INSERT INTO campi_sportivi (centro_id, nome) VALUES (?, ?)";
+	        String query = "INSERT INTO Campo (CentroSportivo, Nome) VALUES (?, ?)";
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);
 		         PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -187,7 +204,7 @@ public class DataBase {
 	    }
 	    
 	    public List<String> getCampiByCentro(int centroID) {
-	        String query = "SELECT nome FROM campi_sportivi WHERE centro_id = ?";
+	        String query = "SELECT nome FROM Campo WHERE CentroSportivo = ?";
 	        List<String> campi = new ArrayList<>();
 
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -196,7 +213,7 @@ public class DataBase {
 	            stmt.setInt(1, centroID);
 	            try (ResultSet rs = stmt.executeQuery()) {
 	                while (rs.next()) {
-	                    campi.add(rs.getString("nome"));
+	                    campi.add(rs.getString("Nome"));
 	                }
 	            }
 	        } catch (SQLException e) {

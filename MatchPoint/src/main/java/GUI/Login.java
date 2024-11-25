@@ -3,13 +3,14 @@ package GUI;
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
+
+import components.Sessione;
 import individui.Utente;
 import dataBase.DataBase;
 
 
 public class Login {
 	
-	private static String loggedUser;
 	private static JTextField usernameField;
     private static JPasswordField passwordField;
 
@@ -49,17 +50,16 @@ public class Login {
 	            if (checkEmptyFields(usernameField, passwordField)) {
 	                String username = usernameField.getText();
 	                String password = new String(passwordField.getPassword());
-
+	              
 	                if (validateCredentials(username, password)) {
 	                    CustomMessage.show("Login effettuato con successo!", "Successo", true);
 
-	                    // Esegui il login per l'utente
-	                    Utente.login(username, password);
-	                    loggedUser=username;
-
 	                    // Determina il ruolo dell'utente
 	                    String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
-
+	                    
+	                    login(username, ruolo);
+	                    Utente.login(username, password);
+	                    //ModificaCentroPanel.aggiornaDopoLogin();
 	                    if ("Gestore".equalsIgnoreCase(ruolo)) {
 	                        BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
 	                    } else if ("Giocatore".equalsIgnoreCase(ruolo)) {
@@ -163,7 +163,7 @@ public class Login {
 
 	            // Cambia pannello
 	            BackgroundPanel.showPanel("main");
-	            loggedUser=""; //toglie utente
+	            Sessione.logout();
 	        },
 	        new Dimension(120, 30) // Dimensione del pulsante
 	    );
@@ -176,7 +176,16 @@ public class Login {
 	    return backButton;
 	}
 
-
+	public static void login(String username, String tipologia) {
+        try {
+            Sessione.login(username, tipologia);  // Esegui il login
+            ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
+            BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
+           } 
+        catch (SQLException e) {
+        	CustomMessage.show("Errore di login", "Errore", false);
+        }
+    }
 	
 	// Metodo validateCredentials con accesso al database
 	private static boolean validateCredentials(String username, String password) {
@@ -209,8 +218,4 @@ public class Login {
 	    return false; // False se le credenziali non sono valide o si verifica un errore
 	}
 	
-	public static String getLoggedUser() {
-		return loggedUser;
-	}
-
 }
