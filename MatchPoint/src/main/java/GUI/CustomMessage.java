@@ -16,12 +16,15 @@ public class CustomMessage {
         // Percorso del logo
         String logoPath = "/GUI/immagini/icona.png";
 
-        JDialog dialog = new JDialog();
+        JDialog dialog = new JDialog((Frame) null, title, true); // Il terzo parametro `true` lo rende modale
         dialog.setTitle(title);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.setSize(400, 250); // Dimensione del dialogo
         dialog.setLocationRelativeTo(null); // Centra la finestra
         dialog.setLayout(new BorderLayout());
+        dialog.setAlwaysOnTop(true); // Lo rende sempre visibile sopra tutte le finestre
+        dialog.toFront();           // Porta la finestra in primo piano
+        dialog.repaint();           // Forza un aggiornamento grafico
 
         // Imposta l'icona della finestra
         if (logoPath != null) {
