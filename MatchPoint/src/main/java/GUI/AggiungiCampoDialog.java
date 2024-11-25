@@ -67,13 +67,36 @@ public class AggiungiCampoDialog extends JDialog {
 
 		}
 
-		// Checkbox per coperto
-		JCheckBox copertoCheckBox = new JCheckBox("Coperto");
-		copertoCheckBox.setFont(new Font("Arial", Font.PLAIN, 14));
+		// Coperto
+		JToggleButton switchButton = new JToggleButton();
+		switchButton.setText(""); // Rimuovi il testo
+		switchButton.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		// Dimensione dello switch
+		switchButton.setPreferredSize(new Dimension(50, 25));
+		switchButton.setFocusPainted(false);
+		switchButton.setBorder(BorderFactory.createEmptyBorder());
+		switchButton.setBackground(new Color(200, 200, 200));
+		switchButton.setOpaque(true);
+
+		// Modifica lo stile in base allo stato
+		switchButton.addChangeListener(e -> {
+		    if (switchButton.isSelected()) {
+		        switchButton.setBackground(new Color(50, 200, 50)); // Verde acceso
+		        switchButton.setText("⦿"); // Pallino spostato
+		        switchButton.setHorizontalAlignment(SwingConstants.RIGHT);
+		    } else {
+		        switchButton.setBackground(new Color(200, 200, 200)); // Grigio
+		        switchButton.setText("⦿"); // Pallino spostato
+		        switchButton.setHorizontalAlignment(SwingConstants.LEFT);
+		    }
+		});
+
+		// Aggiungi il bottone alla GUI
 		gbc.gridx = 0;
 		gbc.gridy = row;
-		gbc.gridwidth = 2;
-		add(copertoCheckBox, gbc);
+		gbc.gridwidth = 2; // Puoi modificarlo per occupare più spazio
+		add(switchButton, gbc);
 
 		// Bottone Salva
 		// Creazione del pulsante Salva con lo stile FlatButton
@@ -83,7 +106,7 @@ public class AggiungiCampoDialog extends JDialog {
 		        // Recupera i dati dalla JComboBox (TipologiaCampo)
 		        String tipologia = ((TipologiaCampo) tipoComboBox.getSelectedItem()).name();
 		        // Recupera il valore della JCheckBox per Coperto
-		        isCoperto = copertoCheckBox.isSelected();  // Aggiorna isCoperto con il valore della checkbox
+		        isCoperto = switchButton.isSelected(); // Aggiorna isCoperto con il valore del pulsante toggle
 		        
 		        // Costruisce il riepilogo
 		        StringBuilder riepilogo = new StringBuilder("Tipologia Campo: ").append(tipologia).append("\n");
@@ -138,13 +161,14 @@ public class AggiungiCampoDialog extends JDialog {
 		);
 
 
-
+		row++;
 		
 		salvaButton.setFont(new Font("Arial", Font.BOLD, 16));
-		gbc.gridy = row+1;
+		gbc.gridy = row;
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(salvaButton, gbc);
-
+		
+		row++;
 
 		pack();  // Adatta la finestra ai componenti
 		setLocationRelativeTo(owner);  // Posiziona la finestra rispetto alla finestra principale

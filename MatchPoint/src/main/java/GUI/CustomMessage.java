@@ -10,7 +10,7 @@ public class CustomMessage {
      * Mostra un messaggio personalizzato in una finestra di dialogo.
      * @param message il messaggio da visualizzare
      * @param title il titolo della finestra di dialogo
-     * @param success true per un messaggio di successo (verde acqua), false per errore (rosso)
+     * @param success true per un messaggio di successo (verde), false per errore (rosso)
      */
     public static void show(String message, String title, boolean success) {
         // Percorso del logo
