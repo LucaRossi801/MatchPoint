@@ -67,36 +67,88 @@ public class AggiungiCampoDialog extends JDialog {
 
 		}
 
-		// Coperto
-		JToggleButton switchButton = new JToggleButton();
-		switchButton.setText(""); // Rimuovi il testo
-		switchButton.setFont(new Font("Arial", Font.PLAIN, 14));
+		// Switch per Coperto
+		// Crea un pannello orizzontale per la scritta e lo switch
+		JPanel copertoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 55, 0)); // Layout orizzontale con spazio tra i componenti
+		copertoPanel.setBackground(Color.WHITE); // Sfondo bianco come richiesto
 
-		// Dimensione dello switch
+		// Etichetta "Coperto:"
+		JLabel copertoLabel = new OutlinedLabel("Coperto:", Color.BLACK);
+		copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		copertoPanel.add(copertoLabel); // Aggiungi la scritta al pannello
+
+		// Switch per Coperto
+		JToggleButton switchButton = new JToggleButton();
 		switchButton.setPreferredSize(new Dimension(50, 25));
 		switchButton.setFocusPainted(false);
 		switchButton.setBorder(BorderFactory.createEmptyBorder());
-		switchButton.setBackground(new Color(200, 200, 200));
+		switchButton.setBackground(Color.WHITE); // Sfondo bianco
 		switchButton.setOpaque(true);
 
-		// Modifica lo stile in base allo stato
-		switchButton.addChangeListener(e -> {
-		    if (switchButton.isSelected()) {
-		        switchButton.setBackground(new Color(50, 200, 50)); // Verde acceso
-		        switchButton.setText("⦿"); // Pallino spostato
-		        switchButton.setHorizontalAlignment(SwingConstants.RIGHT);
-		    } else {
-		        switchButton.setBackground(new Color(200, 200, 200)); // Grigio
-		        switchButton.setText("⦿"); // Pallino spostato
-		        switchButton.setHorizontalAlignment(SwingConstants.LEFT);
+		// Creazione delle icone per gli stati
+		Icon offIcon = new Icon() {
+		    @Override
+		    public void paintIcon(Component c, Graphics g, int x, int y) {
+		        Graphics2D g2d = (Graphics2D) g;
+		        g2d.setColor(Color.LIGHT_GRAY); // Sfondo spento
+		        g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);
+
+		        g2d.setColor(Color.WHITE); // Pallino
+		        g2d.fillOval(x + 2, y + 2, 21, 21);
 		    }
+
+		    @Override
+		    public int getIconWidth() {
+		        return 50;
+		    }
+
+		    @Override
+		    public int getIconHeight() {
+		        return 25;
+		    }
+		};
+
+		Icon onIcon = new Icon() {
+		    @Override
+		    public void paintIcon(Component c, Graphics g, int x, int y) {
+		        Graphics2D g2d = (Graphics2D) g;
+		        g2d.setColor(new Color(50, 200, 50)); // Sfondo acceso
+		        g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);
+
+		        g2d.setColor(Color.WHITE); // Pallino
+		        g2d.fillOval(x + 26, y + 2, 21, 21);
+		    }
+
+		    @Override
+		    public int getIconWidth() {
+		        return 50;
+		    }
+
+		    @Override
+		    public int getIconHeight() {
+		        return 25;
+		    }
+		};
+
+		// Assegna le icone agli stati
+		switchButton.setIcon(offIcon); // Stato non selezionato
+		switchButton.setSelectedIcon(onIcon); // Stato selezionato
+
+		// Aggiorna il valore di isCoperto in base allo stato
+		switchButton.addActionListener(e -> {
+		    isCoperto = switchButton.isSelected();
 		});
 
-		// Aggiungi il bottone alla GUI
+		// Aggiungi lo switch al pannello
+		copertoPanel.add(switchButton);
+
+		// Aggiungi il pannello alla GUI
 		gbc.gridx = 0;
 		gbc.gridy = row;
-		gbc.gridwidth = 2; // Puoi modificarlo per occupare più spazio
-		add(switchButton, gbc);
+		gbc.gridwidth = 2; // Il pannello occupa due colonne
+		add(copertoPanel, gbc);
+
+
 
 		// Bottone Salva
 		// Creazione del pulsante Salva con lo stile FlatButton
