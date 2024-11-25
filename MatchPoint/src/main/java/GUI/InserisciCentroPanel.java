@@ -125,6 +125,23 @@ public class InserisciCentroPanel extends JPanel {
 
         gbc.gridy = row + 2;
         add(inserisciCentroButton, gbc);
+        
+     // Bottone Indietro
+        JButton backButton = BackgroundPanel.createFlatButton(
+            "Back",
+            e -> {
+                // Cambia schermata
+                cardLayout.show(cardPanel, "createGestore");
+            },
+            new Dimension(120, 30)
+        );
+        backButton.setFont(new Font("Arial", Font.BOLD, 18));
+        backButton.setForeground(Color.GRAY);
+        backButton.setBackground(Color.DARK_GRAY);
+
+        gbc.gridy = row + 3;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(backButton, gbc);
     }
 
     @Override
