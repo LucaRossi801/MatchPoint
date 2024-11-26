@@ -5,6 +5,7 @@
 package components;
 
 import java.util.Date;
+import java.util.Objects;
 
 import individui.Giocatore;
 
@@ -18,6 +19,13 @@ public class Campo {
 	public boolean coperto;
 	public Giocatore[] giocatore;
 
+	@Override
+	public String toString() {
+		return "Campo [tipologiaCampo=" + tipologiaCampo + ", costoOraNotturna=" + costoOraNotturna
+				+ ", costoOraDiurna=" + costoOraDiurna + ", lunghezza=" + lunghezza + ", larghezza=" + larghezza
+				+ ", coperto=" + coperto + "]";
+	}
+
 	/**
 	 * 
 	 * @param inizio 
@@ -25,4 +33,41 @@ public class Campo {
 	 */
 	public void libero(Date inizio, Date fine) {
 	}
+
+	public Campo(TipologiaCampo tipologiaCampo, int costoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza,
+			boolean coperto) {
+		super();
+		this.tipologiaCampo = tipologiaCampo;
+		this.costoOraNotturna = costoOraNotturna;
+		this.costoOraDiurna = costoOraDiurna;
+		this.lunghezza = lunghezza;
+		this.larghezza = larghezza;
+		this.coperto = coperto;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+
+	    Campo other = (Campo) obj;
+	    return tipologiaCampo == other.tipologiaCampo &&
+	           costoOraNotturna == other.costoOraNotturna &&
+	           costoOraDiurna == other.costoOraDiurna &&
+	           lunghezza == other.lunghezza &&
+	           larghezza == other.larghezza &&
+	           coperto == other.coperto;
+	}
+
+	@Override
+	public int hashCode() {
+	    return Objects.hash(tipologiaCampo, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto);
+	}
+	
+	@Override
+	public Campo clone() {
+	    return new Campo(this.tipologiaCampo, this.costoOraDiurna, this.costoOraNotturna, this.lunghezza, this.larghezza, this.coperto);
+	}
+
+
 }
