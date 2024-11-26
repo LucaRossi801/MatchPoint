@@ -138,7 +138,7 @@ public class DataBase {
 	        return centri;
 	    }
 	 
-	 public boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
+	 public static boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
 		    String query = "UPDATE CentroSportivo SET Nome = ?, Provincia = ?, Comune = ? WHERE ID = ?";
 		    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);

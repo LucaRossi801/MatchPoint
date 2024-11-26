@@ -191,7 +191,7 @@ public class ModificaCentroPanel extends JPanel {
 			String nuovaProvincia = provinciaField.getText();
 			String nuovoComune = comuneField.getText();
 
-			boolean success = dataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
+			boolean success = DataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
 
 			if (success) {
 				JOptionPane.showMessageDialog(this, "Modifiche salvate con successo!", "Successo",
