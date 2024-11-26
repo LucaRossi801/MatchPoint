@@ -49,20 +49,20 @@ public class Campo {
 	public boolean equals(Object obj) {
 	    if (this == obj) return true;
 	    if (obj == null || getClass() != obj.getClass()) return false;
-
-	    Campo other = (Campo) obj;
-	    return tipologiaCampo == other.tipologiaCampo &&
-	           costoOraNotturna == other.costoOraNotturna &&
-	           costoOraDiurna == other.costoOraDiurna &&
-	           lunghezza == other.lunghezza &&
-	           larghezza == other.larghezza &&
-	           coperto == other.coperto;
+	    Campo campo = (Campo) obj;
+	    return costoOraDiurna == campo.costoOraDiurna &&
+	           costoOraNotturna == campo.costoOraNotturna &&
+	           lunghezza == campo.lunghezza &&
+	           larghezza == campo.larghezza &&
+	           coperto == campo.coperto &&
+	           tipologiaCampo == campo.tipologiaCampo;
 	}
 
 	@Override
 	public int hashCode() {
-	    return Objects.hash(tipologiaCampo, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto);
+	    return Objects.hash(tipologiaCampo, costoOraDiurna, costoOraNotturna, lunghezza, larghezza, coperto);
 	}
+
 	
 	@Override
 	public Campo clone() {

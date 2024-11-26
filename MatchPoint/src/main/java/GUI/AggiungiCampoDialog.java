@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 
 public class AggiungiCampoDialog extends JDialog {
-	private ArrayList<Campo> campiSalvati = new ArrayList<>();
+	private static ArrayList<Campo> campiSalvati = new ArrayList<>();
 	private boolean isCoperto = false;  // Variabile di istanza per gestire lo stato "Coperto"
 	public AggiungiCampoDialog(Window owner, JPanel riepilogoPanel) {
 		super(owner, "Aggiungi Campo", ModalityType.APPLICATION_MODAL);
@@ -158,32 +158,20 @@ public class AggiungiCampoDialog extends JDialog {
 		gbc.gridwidth = 2; // Il pannello occupa due colonne
 		add(copertoPanel, gbc);
 
-
-
+		// Recupera i dati dalla JComboBox (TipologiaCampo)
+        String tipologia = ((TipologiaCampo) tipoComboBox.getSelectedItem()).name();
+		 // Costruisce il riepilogo
+        StringBuilder riepilogo = new StringBuilder("Tipologia Campo: ").append(tipologia).append("\n");
 
 		// Bottone Salva
 		// Creazione del pulsante Salva con lo stile FlatButton
+		// Ciclo sui campi numerici attraverso la HashMap
+        
+ 
 		JButton salvaButton = BackgroundPanel.createFlatButton(
 		    "Salva",
 		    e -> {
-		    	
-		        // Recupera i dati dalla JComboBox (TipologiaCampo)
-		        String tipologia = ((TipologiaCampo) tipoComboBox.getSelectedItem()).name();
-		        // Recupera il valore della JCheckBox per Coperto
-		        isCoperto = switchButton.isSelected(); // Aggiorna isCoperto con il valore del pulsante toggle
-		        TipologiaCampo tipologiaCampo = (TipologiaCampo) tipoComboBox.getSelectedItem();
-                int costoOraDiurna = Integer.parseInt(fields.get("CostoOraDiurna").getText());
-                int costoOraNotturna = Integer.parseInt(fields.get("CostoOraNotturna").getText());
-                int lunghezza = Integer.parseInt(fields.get("Lunghezza").getText());
-                int larghezza = Integer.parseInt(fields.get("Larghezza").getText());
-                
-                Campo nuovoCampo = new Campo(tipologiaCampo, costoOraDiurna, costoOraNotturna, lunghezza, larghezza, isCoperto);
-                campiSalvati.add(nuovoCampo.clone());
-		        // Costruisce il riepilogo
-		        StringBuilder riepilogo = new StringBuilder("Tipologia Campo: ").append(tipologia).append("\n");
-
-		        // Ciclo sui campi numerici attraverso la HashMap
-		        for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
+		    	for (Map.Entry<String, JTextField> entry : fields.entrySet()) {
 		            String campo = entry.getKey();  // Nome del campo (es. "CostoOraNotturna")
 		            JTextField field = entry.getValue();  // JTextField corrispondente
 
@@ -195,7 +183,18 @@ public class AggiungiCampoDialog extends JDialog {
 		            riepilogo.append(campo).append(": ").append(valore).append("\n");
 		        }
 		        
-		        System.out.println("Campi salvati dopo aggiunta: " + campiSalvati);  //debug
+		        // Recupera il valore della JCheckBox per Coperto
+		        isCoperto = switchButton.isSelected(); // Aggiorna isCoperto con il valore del pulsante toggle
+		        TipologiaCampo tipologiaCampo = (TipologiaCampo) tipoComboBox.getSelectedItem();
+                int costoOraDiurna = Integer.parseInt(fields.get("CostoOraDiurna").getText());
+                int costoOraNotturna = Integer.parseInt(fields.get("CostoOraNotturna").getText());
+                int lunghezza = Integer.parseInt(fields.get("Lunghezza").getText());
+                int larghezza = Integer.parseInt(fields.get("Larghezza").getText());
+                
+                Campo nuovoCampo = new Campo(tipologiaCampo, costoOraDiurna, costoOraNotturna, lunghezza, larghezza, isCoperto);
+                campiSalvati.add(nuovoCampo);
+
+		       
 
 		        // Aggiungi il valore di Coperto al riepilogo
 		        riepilogo.append("Coperto: ").append(isCoperto ? "Sì" : "No").append("\n");
@@ -214,15 +213,14 @@ public class AggiungiCampoDialog extends JDialog {
 		            "X",
 		            event -> {
 		            	campiSalvati.remove(nuovoCampo); // Rimuovi dalla lista principale
-		            	System.out.println(campiSalvati.toString());
+		            	campiSalvati.remove(nuovoCampo); // Rimuovi dalla lista
 		                riepilogoPanel.remove(campoPanel);
 		                riepilogoPanel.revalidate();
 		                riepilogoPanel.repaint();
-		                System.out.println("Campi salvati dopo rimozione: " + campiSalvati);  //debug
 		            },
 		            new Dimension(40, 40)
 		        );
-		        rimuoviButton.setForeground(Color.RED); // Colore rosso per la "X"
+		        rimuoviButton.setForeground(Color.BLACK); // Colore rosso per la "X"
 		        campoPanel.add(rimuoviButton, BorderLayout.EAST);
 
 		        // Aggiungi il pannello al riepilogo
