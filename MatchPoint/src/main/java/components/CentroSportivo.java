@@ -4,6 +4,11 @@
 
 package components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import dataBase.DataBase;
 import individui.Gestore;
 
 public class CentroSportivo
@@ -23,5 +28,13 @@ public class CentroSportivo
 		this.comune = comune;
 	}
 	
+	public static void inserisci(String nome, String provincia, String comune) {
+			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
+			try  (Connection conn = DriverManager.getConnection(url)){
+				DataBase.insert(conn, nome, provincia, comune);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+	}
 	
 }

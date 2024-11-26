@@ -194,8 +194,6 @@ public class AggiungiCampoDialog extends JDialog {
                 Campo nuovoCampo = new Campo(tipologiaCampo, costoOraDiurna, costoOraNotturna, lunghezza, larghezza, isCoperto);
                 campiSalvati.add(nuovoCampo);
 
-		       
-
 		        // Aggiungi il valore di Coperto al riepilogo
 		        riepilogo.append("Coperto: ").append(isCoperto ? "Sì" : "No").append("\n");
 
