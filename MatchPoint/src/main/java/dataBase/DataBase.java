@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GUI.CustomMessage;
 import components.CentroSportivo;
 
 public class DataBase {
@@ -223,30 +224,33 @@ public class DataBase {
 	        return campi;
 	    }
 
-		public static void insert(Connection conn, String nome, String provincia, String comune) {
-			String sql = "INSERT INTO CentroSportivo(Nome, Provincia, Comune) VALUES (?, ?, ?)";
-			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-				pstmt.setString(1, nome);
-				pstmt.setString(2, provincia);
-				pstmt.setString(3, comune);
-				pstmt.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		public static void insert(Connection conn, String tipologia, int CostoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza, boolean coperto,int centro) {
-			String sql = "INSERT INTO Campo(Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-				pstmt.setString(1, tipologia);
-				pstmt.setInt(2, CostoOraNotturna);
-				pstmt.setInt(3, costoOraDiurna);
-				pstmt.setInt(4, lunghezza);
-				pstmt.setInt(5, larghezza);
-				pstmt.setBoolean(6, coperto);
-				pstmt.setInt(7, centro);
-				pstmt.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	    public static void insert(Connection conn, String nome, String provincia, String comune, int gestore) {
+	        String sql = "INSERT INTO CentroSportivo(Nome, Provincia, Comune, Gestore) VALUES (?, ?, ?, ?)";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, nome);
+	            pstmt.setString(2, provincia);
+	            pstmt.setString(3, comune);
+	            pstmt.setInt(4, gestore);
+	            pstmt.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    public static void insert(Connection conn, String tipologia, int CostoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza, boolean coperto, int centro) {
+	        String sql = "INSERT INTO Campo(Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	            pstmt.setString(1, tipologia);
+	            pstmt.setInt(2, CostoOraNotturna);
+	            pstmt.setInt(3, costoOraDiurna);
+	            pstmt.setInt(4, lunghezza);
+	            pstmt.setInt(5, larghezza);
+	            pstmt.setBoolean(6, coperto);
+	            pstmt.setInt(7, centro);
+	            pstmt.executeUpdate();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+
 }

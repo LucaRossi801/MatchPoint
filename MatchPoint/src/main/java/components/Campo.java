@@ -4,9 +4,13 @@
 
 package components;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Objects;
 
+import dataBase.DataBase;
 import individui.Giocatore;
 
 public class Campo {
@@ -69,5 +73,61 @@ public class Campo {
 	    return new Campo(this.tipologiaCampo, this.costoOraDiurna, this.costoOraNotturna, this.lunghezza, this.larghezza, this.coperto);
 	}
 
+	public static void inserisci(String tipologia, int CostoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza, boolean coperto, int centro) {
+		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
+		try  (Connection conn = DriverManager.getConnection(url)){
+			DataBase.insert(conn, tipologia, CostoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto, centro);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+}
+
+	public String getTipologiaCampo() {
+		return tipologiaCampo.toString();
+	}
+
+	public void setTipologiaCampo(TipologiaCampo tipologiaCampo) {
+		this.tipologiaCampo = tipologiaCampo;
+	}
+
+	public int getCostoOraNotturna() {
+		return costoOraNotturna;
+	}
+
+	public void setCostoOraNotturna(int costoOraNotturna) {
+		this.costoOraNotturna = costoOraNotturna;
+	}
+
+	public int getCostoOraDiurna() {
+		return costoOraDiurna;
+	}
+
+	public void setCostoOraDiurna(int costoOraDiurna) {
+		this.costoOraDiurna = costoOraDiurna;
+	}
+
+	public int getLunghezza() {
+		return lunghezza;
+	}
+
+	public void setLunghezza(int lunghezza) {
+		this.lunghezza = lunghezza;
+	}
+
+	public int getLarghezza() {
+		return larghezza;
+	}
+
+	public void setLarghezza(int larghezza) {
+		this.larghezza = larghezza;
+	}
+
+	public boolean isCoperto() {
+		return coperto;
+	}
+
+	public void setCoperto(boolean coperto) {
+		this.coperto = coperto;
+	}
 
 }
