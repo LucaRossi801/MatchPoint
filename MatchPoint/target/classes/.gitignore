@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream
 /GUI/
-=======
-/META-INF/
-/GUI/
-/dataBase/
 /components/
->>>>>>> Stashed changes
+/dataBase/
+/individui/
+/META-INF/

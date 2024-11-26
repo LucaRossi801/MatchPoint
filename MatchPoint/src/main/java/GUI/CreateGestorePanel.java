@@ -114,11 +114,11 @@ public class CreateGestorePanel extends JPanel {
             }
         }
 
-    @Override
+        @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (clearImage != null) {
             g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
         }
-    }
+        }
 }
