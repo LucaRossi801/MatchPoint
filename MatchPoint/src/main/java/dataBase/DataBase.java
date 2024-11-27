@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import GUI.CustomMessage;
+import components.Campo;
 import components.CentroSportivo;
+import components.TipologiaCampo;
 
 public class DataBase {
 	// Metodo per creare la tabella Utente se non esiste
@@ -128,7 +130,7 @@ public class DataBase {
 	                String comune = rs.getString("Comune");
 
 	                // Crea l'oggetto CentroSportivo
-	                CentroSportivo centro = new CentroSportivo(null, id, nome, provincia, comune); // Gestore può essere impostato successivamente
+	                CentroSportivo centro = new CentroSportivo(id, nome, provincia, comune); // Gestore può essere impostato successivamente
 	                centri.put(nome, centro); // Usa il nome come chiave
 	            }
 
@@ -136,6 +138,37 @@ public class DataBase {
 	            e.printStackTrace();
 	        }
 	        return centri;
+	    }
+	 
+	 public static List<Campo> getCampiById(int centroId) {
+	        List<Campo> campi = new ArrayList<>();
+	        String query = "SELECT * FROM Campo WHERE CentroSportivo = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setInt(1, centroId);
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                int id = rs.getInt("ID");
+	                String tipologia = rs.getString("Tipologia");
+	                int costoOraNotturna = rs.getInt("CostoOraNotturna");
+	                int costoOraDiurna = rs.getInt("CostoOraDiurna");
+	                int lunghezza = rs.getInt("Lunghezza");
+	                int larghezza = rs.getInt("Larghezza");
+	                boolean coperto = rs.getBoolean("Coperto");
+
+
+	                // Crea l'oggetto CentroSportivo
+	               Campo campo = new Campo(id,TipologiaCampo.valueOf(tipologia), costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto);// Gestore può essere impostato successivamente
+	                campi.add(campo); // Usa il nome come chiave
+	            }
+
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        return campi;
 	    }
 	 
 	 public static boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
@@ -252,5 +285,32 @@ public class DataBase {
 	        }
 	    }
 
+	    public static boolean updateCampo(Campo campo) {
+	        // Query per aggiornare i dettagli del campo
+	        String query = "UPDATE Campo SET Tipologia = ?, CostoOraNotturna = ?, CostoOraDiurna = ?, " +
+	                       "Lunghezza = ?, Larghezza = ?, Coperto = ? WHERE ID = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            // Imposta i parametri della query
+	            stmt.setString(1, campo.getTipologiaCampo().toString()); // Tipologia come stringa
+	            stmt.setInt(2, campo.getCostoOraNotturna());             // Costo ora notturna
+	            stmt.setInt(3, campo.getCostoOraDiurna());               // Costo ora diurna
+	            stmt.setInt(4, campo.getLunghezza());                    // Lunghezza
+	            stmt.setInt(5, campo.getLarghezza());                    // Larghezza
+	            stmt.setBoolean(6, campo.isCoperto());                   // Coperto (booleano)
+	            stmt.setInt(7, campo.getId());                           // ID del campo
+
+	            // Esegui l'update e verifica il numero di righe aggiornate
+	            int rowsUpdated = stmt.executeUpdate();
+	            return rowsUpdated > 0; // True se almeno una riga è stata aggiornata
+
+	        } catch (SQLException e) {
+	            e.printStackTrace(); // Stampa l'errore per il debug
+	            return false;
+	        }
+	    }
 }
+

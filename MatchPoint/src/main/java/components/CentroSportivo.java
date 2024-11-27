@@ -19,15 +19,46 @@ public class CentroSportivo
 	public String provincia;	
 	public String comune;
 	
-	public CentroSportivo(Gestore gestore, int iD, String nome, String provincia, String comune) {
+	public CentroSportivo(int iD, String nome, String provincia, String comune) {
 		super();
-		this.gestore = gestore;
 		ID = iD;
 		this.nome = nome;
 		this.provincia = provincia;
 		this.comune = comune;
 	}
 	
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
+	}
+
+	public String getComune() {
+		return comune;
+	}
+
+	public void setComune(String comune) {
+		this.comune = comune;
+	}
+
 	public static void inserisci(String nome, String provincia, String comune) {
 			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
 			try  (Connection conn = DriverManager.getConnection(url)){

@@ -211,10 +211,10 @@ public class ModificaCentroPanel extends JPanel {
 		String centroSelezionato = (String) centriComboBox.getSelectedItem();
 		if (centroSelezionato != null && centriGestiti != null) {
 			CentroSportivo centro = centriGestiti.get(centroSelezionato);
-
-			ModificaCampiDialog modificaCampiDialog = new ModificaCampiDialog(SwingUtilities.getWindowAncestor(this),
-					centro, dataBase);
-			modificaCampiDialog.setVisible(true);
+			ModificaCampoPanel modificaCampoPanel = new ModificaCampoPanel(centro.getID());
+			BackgroundPanel.cardPanel.add(modificaCampoPanel, "modificaCampi");		
+			BackgroundPanel.showPanel("modificaCampi");
+			
 		} else {
 			JOptionPane.showMessageDialog(this, "Seleziona un centro sportivo per modificarne i campi.", "Attenzione",
 					JOptionPane.WARNING_MESSAGE);

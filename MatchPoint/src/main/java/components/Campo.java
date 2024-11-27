@@ -49,6 +49,18 @@ public class Campo {
 		this.coperto = coperto;
 	}
 	
+	public Campo(int id, TipologiaCampo tipologiaCampo, int costoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza,
+			boolean coperto) {
+		super();
+		this.ID=id;
+		this.tipologiaCampo = tipologiaCampo;
+		this.costoOraNotturna = costoOraNotturna;
+		this.costoOraDiurna = costoOraDiurna;
+		this.lunghezza = lunghezza;
+		this.larghezza = larghezza;
+		this.coperto = coperto;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 	    if (this == obj) return true;
@@ -97,7 +109,9 @@ public class Campo {
 	public void setCostoOraNotturna(int costoOraNotturna) {
 		this.costoOraNotturna = costoOraNotturna;
 	}
-
+	public int getId() {
+		return ID;
+	}
 	public int getCostoOraDiurna() {
 		return costoOraDiurna;
 	}
