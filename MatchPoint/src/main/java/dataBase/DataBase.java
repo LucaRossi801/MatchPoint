@@ -206,6 +206,20 @@ public class DataBase {
 	            return false; // In caso di errore
 	        }
 	    }
+	 
+	 public static boolean eliminaCentro(int centroID) {
+	        String query = "DELETE FROM CentroSportivo WHERE ID = ?";
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+	            stmt.setInt(1, centroID);
+	            int rowsAffected = stmt.executeUpdate();
+	            return rowsAffected > 0; // True se almeno una riga è stata eliminata
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return false; // In caso di errore
+	        }
+	    }
 
 	    public boolean modificaCampo(int centroID, String campoSelezionato, String nuovoNome) {
 	        String query = "UPDATE Campo SET Nome = ? WHERE CentroSportivo = ? AND Nome = ?";

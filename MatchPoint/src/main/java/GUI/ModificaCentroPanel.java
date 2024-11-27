@@ -142,12 +142,22 @@ public class ModificaCentroPanel extends JPanel {
        gbc.gridwidth = 2;
        add(aggiungiCampoButton, gbc);
        
+       JButton eliminaCampoButton = BackgroundPanel.createFlatButton("Elimina centro selezionato", e-> {
+       	eliminaCentro();
+      	 
+      }, new Dimension(150, 40));
+      gbc.gridx = 0;
+      gbc.gridy = 7;
+      gbc.gridwidth = 2;
+      eliminaCampoButton.setBackground(Color.RED); // Sfondo al passaggio del mouse
+      add(eliminaCampoButton, gbc);
+       
 		
 // Pulsante Salva Modifiche
 		salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
 				new Dimension(200, 50));
 		gbc.gridx = 0;
-		gbc.gridy = 7;
+		gbc.gridy = 8;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		salvaButton.setBackground(new Color(0, 128, 128));
@@ -161,7 +171,7 @@ public class ModificaCentroPanel extends JPanel {
 		backButton.setForeground(Color.GRAY); // Sfondo grigio
 		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
 		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
-		gbc.gridy = 8; // Quarta riga
+		gbc.gridy = 9; // Quarta riga
 		add(backButton, gbc);
 
 		// Carica i centri sportivi gestiti
@@ -260,6 +270,42 @@ public class ModificaCentroPanel extends JPanel {
 	    } else {
 	        // Torna al pannello di modifica centro
 	        BackgroundPanel.showPanel("modificaCentro");
+	    }
+	}
+	private void eliminaCentro() {
+	    // Recupera il nome del centro selezionato dalla ComboBox
+	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
+
+	    if (centroSelezionato != null && centriGestiti.containsKey(centroSelezionato)) {
+	        CentroSportivo centro = centriGestiti.get(centroSelezionato);
+
+	        // Chiedi conferma all'utente
+	        int conferma = JOptionPane.showConfirmDialog(this,
+	                "Sei sicuro di voler eliminare il centro \"" + centro.nome + "\"?",
+	                "Conferma eliminazione",
+	                JOptionPane.YES_NO_OPTION);
+
+	        if (conferma == JOptionPane.YES_OPTION) {
+	            // Elimina il centro dal database
+	            boolean success = DataBase.eliminaCentro(centro.getID());
+
+	            if (success) {
+	                CustomMessage.show("Centro eliminato con successo!", "Successo", true);
+
+	                // Rimuovi il centro dalla mappa e aggiorna la ComboBox
+	                centriGestiti.remove(centroSelezionato);
+	                centriComboBox.removeItem(centroSelezionato);
+
+	                // Eventuali ulteriori aggiornamenti dell'interfaccia
+	                nomeField.setText("");
+	                provinciaField.setText("");
+	                comuneField.setText("");
+	            } else {
+	                CustomMessage.show("Errore durante l'eliminazione del centro.", "Errore", false);
+	            }
+	        }
+	    } else {
+	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
 	    }
 	}
 
