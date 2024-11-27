@@ -2,6 +2,7 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,30 +18,39 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private JComboBox<Campo> campiComboBox;  // ComboBox per i campi sportivi
     private JTextArea prenotazioniArea;      // Area per mostrare le prenotazioni
     private Map<String, CentroSportivo> centriSportivi; // Mappa per memorizzare i centri sportivi
-
+    private Image clearImage;
+    
     public VediPrenotazioniGestorePanel() {
-        setLayout(new GridBagLayout());
-        setBackground(Color.decode("#F0F0F0")); // Colore di base
+    
+        URL clearImageUrl = getClass().getResource("/GUI/immagini/sfondohome.png");
+        if (clearImageUrl != null) {
+            clearImage = new ImageIcon(clearImageUrl).getImage();
+        } else {
+            System.out.println("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png");
+        }
         
         // Configura layout e componenti
+        setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Etichetta e ComboBox per i centri sportivi
         JLabel centriLabel = new JLabel("Seleziona Centro Sportivo:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.2;
-        gbc.weighty = 0.1;
+        gbc.anchor = GridBagConstraints.WEST;  // Allinea a sinistra
         add(centriLabel, gbc);
 
         centriComboBox = new JComboBox<>();
         caricaCentriSportivi();
         centriComboBox.addActionListener(e -> aggiornaCampi());
+        centriComboBox.setPreferredSize(new Dimension(120, 25)); // Ridotto in larghezza
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.weightx = 0.8;
+        gbc.weightx = 0.0; // Non espandere orizzontalmente
+        gbc.fill = GridBagConstraints.NONE; // Non espandere
         add(centriComboBox, gbc);
 
         // Etichetta e ComboBox per i campi sportivi
@@ -48,13 +58,16 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0.2;
+        gbc.anchor = GridBagConstraints.WEST; // Allinea a sinistra
         add(campiLabel, gbc);
 
         campiComboBox = new JComboBox<>();
         campiComboBox.addActionListener(e -> aggiornaPrenotazioni());
+        campiComboBox.setPreferredSize(new Dimension(120, 25)); // Ridotto in larghezza
         gbc.gridx = 1;
         gbc.gridy = 1;
-        gbc.weightx = 0.8;
+        gbc.weightx = 0.0; // Non espandere orizzontalmente
+        gbc.fill = GridBagConstraints.NONE; // Non espandere
         add(campiComboBox, gbc);
 
         // Area per visualizzare le prenotazioni
@@ -64,7 +77,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         prenotazioniArea.setLineWrap(true); // Abilita l'andata a capo automatica
         JScrollPane scrollPane = new JScrollPane(prenotazioniArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(350, 200));
+        scrollPane.setPreferredSize(new Dimension(300, 150));
         scrollPane.setBorder(BorderFactory.createTitledBorder("Prenotazioni Giorno per Giorno"));
 
         gbc.gridx = 0;
@@ -125,7 +138,6 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     /**
      * Aggiorna l'area delle prenotazioni in base al campo selezionato.
      */
-
     private void aggiornaPrenotazioni() {
         prenotazioniArea.setText(""); // Pulisce l'area di testo
 
@@ -159,9 +171,14 @@ public class VediPrenotazioniGestorePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             }
         }
+
     }
 
-    	    
-
-
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (clearImage != null) {
+            g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
 }
