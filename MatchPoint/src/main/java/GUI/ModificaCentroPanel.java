@@ -21,10 +21,11 @@ public class ModificaCentroPanel extends JPanel {
 	private Integer utenteId; // ID dell'utente loggato
 	private DataBase dataBase; // Database di riferimento
 	private Image clearImage;
+	private JPanel riepilogoPanel; // Rendi riepilogoPanel una variabile di istanza
 
 	public ModificaCentroPanel() {
 		// Carica l'immagine di sfondo
-		JPanel riepilogoPanel = new JPanel();
+		riepilogoPanel = new JPanel();
 		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
 		riepilogoPanel.setBackground(Color.WHITE);
 
@@ -153,7 +154,7 @@ public class ModificaCentroPanel extends JPanel {
       add(eliminaCampoButton, gbc);
        
 		
-// Pulsante Salva Modifiche
+       // Pulsante Salva Modifiche
 		salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
 				new Dimension(200, 50));
 		gbc.gridx = 0;
@@ -163,8 +164,11 @@ public class ModificaCentroPanel extends JPanel {
 		salvaButton.setBackground(new Color(0, 128, 128));
 		salvaButton.setForeground(Color.WHITE);
 		add(salvaButton, gbc);
+		
+		//pulsante Back
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
 			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
+			resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo
 		}, new Dimension(150, 30) // Dimensione personalizzata del bottone
 		);
 		// Personalizza colore per il pulsante "Back"
@@ -242,6 +246,7 @@ public class ModificaCentroPanel extends JPanel {
 				centro.comune = nuovoComune;
 				aggiornaDettagliCentro();
 				caricaCentriGestiti();
+				resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo
 				BackgroundPanel.showPanel("createGestore");
 			} else {
 				CustomMessage.show( "Errore nel salvataggio delle modifiche.", "Errore", false);
@@ -272,6 +277,7 @@ public class ModificaCentroPanel extends JPanel {
 	        BackgroundPanel.showPanel("modificaCentro");
 	    }
 	}
+<<<<<<< Updated upstream
 	private void eliminaCentro() {
 	    // Recupera il nome del centro selezionato dalla ComboBox
 	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
@@ -308,5 +314,23 @@ public class ModificaCentroPanel extends JPanel {
 	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
 	    }
 	}
+=======
+	
+	private void resetForm(JPanel riepilogoPanel) {
+	    // Svuota i campi di input
+	    nomeField.setText("");
+	    provinciaField.setText("");
+	    comuneField.setText("");
+
+	    // Rimuovi tutti i componenti dal riepilogoPanel
+	    riepilogoPanel.removeAll();
+	    riepilogoPanel.revalidate();
+	    riepilogoPanel.repaint();
+
+	    // Resetta i campi aggiunti tramite AggiungiCampoDialog
+	    AggiungiCampoDialog.getCampi().clear();
+	}
+
+>>>>>>> Stashed changes
 
 }
