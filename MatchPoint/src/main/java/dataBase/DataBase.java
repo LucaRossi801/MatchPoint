@@ -10,11 +10,9 @@ import java.util.Map;
 import GUI.CustomMessage;
 import components.Campo;
 import components.CentroSportivo;
-<<<<<<< Updated upstream
-import components.TipologiaCampo;
-=======
 import components.Prenotazione;
->>>>>>> Stashed changes
+import components.TipologiaCampo;
+
 
 public class DataBase {
 	// Metodo per creare la tabella Utente se non esiste
@@ -241,8 +239,8 @@ public class DataBase {
 	        }
 	    }
 	    
-	    public static List<String> getCampiByCentro(int centroID) {
-	        String query = "SELECT nome FROM Campo WHERE CentroSportivo = ?";
+	    /*ublic static List<Campo> getCampiByCentro(int centroID) {
+	        String query = "SELECT * FROM Campo WHERE CentroSportivo = ?";
 	        List<String> campi = new ArrayList<>();
 
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -251,7 +249,7 @@ public class DataBase {
 	            stmt.setInt(1, centroID);
 	            try (ResultSet rs = stmt.executeQuery()) {
 	                while (rs.next()) {
-	                    campi.add(rs.getString("Nome"));
+	                    campi.add(rs.getString("ID"));
 	                }
 	            }
 	        } catch (SQLException e) {
@@ -259,8 +257,8 @@ public class DataBase {
 	        }
 
 	        return campi;
-	    }
-
+	    }*/
+	    
 	    public static void insert(Connection conn, String nome, String provincia, String comune, int gestore) {
 	        String sql = "INSERT INTO CentroSportivo(Nome, Provincia, Comune, Gestore) VALUES (?, ?, ?, ?)";
 	        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -316,10 +314,8 @@ public class DataBase {
 	            return false;
 	        }
 	    }
-}
 
-<<<<<<< Updated upstream
-=======
+
 
 
 		public static List<Prenotazione> getPrenotazioniByCampo(int iD, String campoSelezionato) {
@@ -327,6 +323,36 @@ public class DataBase {
 			return null;
 		}
 
+		
+		
+		public static CentroSportivo getCentroByName(String nome) {
+	        if (nome == null || nome.trim().isEmpty()) {
+	            return null; // Nome non valido
+	        }
+
+	        CentroSportivo centro = null;
+	        try {
+	            // Query per trovare il centro sportivo con il nome specificato
+	            String query = "SELECT * FROM CentroSportivo WHERE Nome = ?";
+		        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	            Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query);
+	            ResultSet resultSet = stmt.executeQuery();
+
+	            if (resultSet.next()) {
+	                // Crea un oggetto CentroSportivo dal risultato della query
+	                centro = new CentroSportivo(
+	                    resultSet.getInt("id"), // Supponendo che l'ID sia un intero
+	                    resultSet.getString("nome"),
+	                    resultSet.getString("indirizzo"),
+	                    resultSet.getString("telefono")
+	                );
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace(); // Log dell'errore
+	        }
+
+	        return centro; // Restituisce il centro o null se non trovato
+	    }
 
 }
->>>>>>> Stashed changes

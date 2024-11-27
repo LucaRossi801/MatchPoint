@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import components.Campo;
 import components.CentroSportivo;
 import dataBase.DataBase;
 import components.Prenotazione;
@@ -15,6 +16,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private JComboBox<String> centriComboBox; // ComboBox per i centri sportivi
     private JComboBox<String> campiComboBox;  // ComboBox per i campi sportivi
     private JTextArea prenotazioniArea;      // Area per mostrare le prenotazioni
+    private Map<String, CentroSportivo> centriSportivi; // Mappa per memorizzare i centri sportivi
+
 
     public VediPrenotazioniGestorePanel() {
         setLayout(new GridBagLayout());
@@ -87,43 +90,59 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     /**
      * Carica i centri sportivi nel JComboBox.
      */
-    private void caricaCentriSportivi() {
-    	 Map<String, CentroSportivo> centriSportivi = new HashMap<>();
-    		centriSportivi = DataBase.getCentriSportiviGestiti(Sessione.getId()); // Recupera i dati in modo statico
-        centriComboBox.removeAllItems();
-        for (CentroSportivo centro : centriSportivi.values()) {
-            centriComboBox.addItem(centro.getNome()); // Supponendo che "nome" sia accessibile tramite un getter
-        }
+    	private void caricaCentriSportivi() {
+    	    centriSportivi = DataBase.getCentriSportiviGestiti(Sessione.getId()); // Ottieni i dati dalla sessione
+    	    centriComboBox.removeAllItems();
+    	    for (CentroSportivo centro : centriSportivi.values()) {
+    	        centriComboBox.addItem(centro.getNome());
+    	    }
+    	}
 
-    }
 
     /**
      * Aggiorna i campi sportivi in base al centro selezionato.
      */
-    private void aggiornaCampi() {
-        String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        if (centroSelezionato != null) {
-<<<<<<< Updated upstream
-            CentroSportivo centro = DataBase.getCampiByCentro(); // Ottieni il centro sportivo dal nome
-=======
-            CentroSportivo centro = DataBase.getCentroByName(centroSelezionato); // Ottieni il centro sportivo dal nome
->>>>>>> Stashed changes
-            if (centro != null) {
-                List<String> campi = null;
-				try {
-					campi = DataBase.getCampiByCentro(centro.ID);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-                campiComboBox.removeAllItems();
-                for (String campo : campi) {
-                    campiComboBox.addItem(campo);
-                }
-            }
-        }
-        aggiornaPrenotazioni();
-    }
+    	private void aggiornaCampi() {
+    	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
+
+    	    if (centroSelezionato != null) {
+    	        CentroSportivo centro = centriSportivi.values().stream()
+    	            .filter(c -> c.getNome().equals(centroSelezionato))
+    	            .findFirst()
+    	            .orElse(null); // Trova il centro corrispondente al nome selezionato
+
+    	        if (centro != null) {
+    	            try {
+    	                // Recupera i campi per il centro selezionato
+    	                List<Campo> campi = DataBase.getCampiById(centro.getID());
+    	                campiComboBox.removeAllItems();
+
+    	                // Aggiunge i campi al ComboBox
+    	                for (Campo campo : campi) {
+    	                    // Formattazione: "TipologiaCampo (LunghezzaxLarghezza)"
+    	                    String item = String.format("%s (%dx%d)",
+    	                                                campo.getTipologiaCampo().toString(),
+    	                                                campo.getLunghezza(),
+    	                                                campo.getLarghezza());
+    	                    campiComboBox.addItem(item);
+    	                }
+    	            } catch (Exception e) {
+    	                e.printStackTrace(); // Log dell'errore per il debug
+    	                JOptionPane.showMessageDialog(this, 
+    	                    "Errore durante il caricamento dei campi. Riprovare.", 
+    	                    "Errore", 
+    	                    JOptionPane.ERROR_MESSAGE);
+    	            }
+    	        }
+    	    } else {
+    	        campiComboBox.removeAllItems(); // Resetta il ComboBox se non è selezionato alcun centro
+    	    }
+
+    	    aggiornaPrenotazioni(); // Aggiorna le prenotazioni per il campo selezionato
+    	}
+
+ 
+
 
     /**
      * Aggiorna l'area delle prenotazioni in base al campo selezionato.
