@@ -14,10 +14,12 @@ public class ModificaCampoPanel extends JPanel {
     private JComboBox<String> campiComboBox;
     private  JComboBox<TipologiaCampo>  tipologiaField;
     private JTextField costoOraNotturnaField, costoOraDiurnaField, lunghezzaField, larghezzaField;
-    private JCheckBox copertoCheckBox;
+    private JToggleButton switchButton = new JToggleButton();
     private JButton salvaCampoButton;
     private Integer centroId;
     private static List<Campo> campi; // Lista dei campi del centro
+    private boolean isCoperto = false; // Variabile di istanza per gestire lo stato "Coperto"
+
 
     public ModificaCampoPanel(Integer centroId) {
         this.centroId = centroId;
@@ -85,17 +87,92 @@ public class ModificaCampoPanel extends JPanel {
         lunghezzaField = creaCampo("Lunghezza:", 4, gbc, Color.BLACK);
         larghezzaField = creaCampo("Larghezza:", 5, gbc, Color.BLACK);
 
-        // CheckBox per il campo "Coperto"
-        JLabel copertoLabel = new OutlinedLabel("Coperto:", Color.BLACK);
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        add(copertoLabel, gbc);
+     // Pannello per Coperto
+     		JPanel copertoPanel = new JPanel(new GridBagLayout());
+     		copertoPanel.setBackground(getBackground()); // Sfondo uguale alla finestra principale
 
-        copertoCheckBox = new JCheckBox();
-        gbc.gridx = 1;
-        add(copertoCheckBox, gbc);
+     		// Etichetta "Coperto:"
+     		JLabel copertoLabel = new JLabel("Coperto:");
+     		copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+     		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo
+     		copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità
 
-        
+     		// Configura GridBagConstraints per il pannello Coperto
+     		GridBagConstraints copertoGbc = new GridBagConstraints();
+     		copertoGbc.insets = new Insets(0, 10, 0, 10); // Margini uniformi
+     		copertoGbc.anchor = GridBagConstraints.WEST; // Allineamento sinistra
+     		copertoGbc.gridx = 0; // Colonna 0
+     		copertoGbc.gridy = 0; // Riga 0
+     		copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta
+
+     		// Switch per Coperto
+     		switchButton.setPreferredSize(new Dimension(50, 25));
+     		switchButton.setFocusPainted(false);
+     		switchButton.setBorder(BorderFactory.createEmptyBorder());
+     		switchButton.setBackground(getBackground()); // Sfondo uguale alla finestra
+     		switchButton.setContentAreaFilled(false); // Disabilita l'area predefinita del contenuto
+     		switchButton.setOpaque(false); // Assicurati che lo sfondo non sia dipinto
+     	// Creazione delle icone per gli stati
+    		Icon offIcon = new Icon() {
+    			@Override
+    			public void paintIcon(Component c, Graphics g, int x, int y) {
+    				Graphics2D g2d = (Graphics2D) g;
+    				g2d.setColor(Color.LIGHT_GRAY); // Sfondo spento
+    				g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);
+
+    				g2d.setColor(Color.WHITE); // Pallino
+    				g2d.fillOval(x + 2, y + 2, 21, 21);
+    			}
+
+    			@Override
+    			public int getIconWidth() {
+    				return 50;
+    			}
+
+    			@Override
+    			public int getIconHeight() {
+    				return 25;
+    			}
+    		};
+
+    		Icon onIcon = new Icon() {
+    			@Override
+    			public void paintIcon(Component c, Graphics g, int x, int y) {
+    				Graphics2D g2d = (Graphics2D) g;
+    				g2d.setColor(new Color(50, 200, 50)); // Sfondo acceso
+    				g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);
+
+    				g2d.setColor(Color.WHITE); // Pallino
+    				g2d.fillOval(x + 26, y + 2, 21, 21);
+    			}
+
+    			@Override
+    			public int getIconWidth() {
+    				return 50;
+    			}
+
+    			@Override
+    			public int getIconHeight() {
+    				return 25;
+    			}
+    		};
+
+    		// Assegna le icone agli stati
+    		switchButton.setIcon(offIcon); // Stato non selezionato
+    		switchButton.setSelectedIcon(onIcon); // Stato selezionato
+
+    		// Aggiorna il valore di isCoperto in base allo stato
+    		switchButton.addActionListener(e -> isCoperto = switchButton.isSelected());
+
+    		// Aggiungi lo switch al pannello
+    		copertoGbc.gridx = 1; // Colonna 1
+    		copertoPanel.add(switchButton, copertoGbc);
+
+    		// Aggiungi il pannello Coperto alla finestra principale
+    		gbc.gridx = 0;
+    		gbc.gridy = 6;
+    		gbc.gridwidth = 2; // Il pannello occupa due colonne
+    		add(copertoPanel, gbc);
  
         
         JButton eliminaCampoButton = BackgroundPanel.createFlatButton("Elimina campo selezionato", e-> {
@@ -207,9 +284,13 @@ public class ModificaCampoPanel extends JPanel {
             costoOraDiurnaField.setText(String.valueOf(campo.getCostoOraDiurna()));
             lunghezzaField.setText(String.valueOf(campo.getLunghezza()));
             larghezzaField.setText(String.valueOf(campo.getLarghezza()));
-            copertoCheckBox.setSelected(campo.isCoperto());
+            
+            // Aggiorna lo stato dello switch
+            isCoperto = campo.isCoperto();
+            switchButton.setSelected(isCoperto); // Imposta lo stato dello switch
         }
     }
+
     
     private void eliminaCampo() {
         int index = campiComboBox.getSelectedIndex();
@@ -244,7 +325,7 @@ public class ModificaCampoPanel extends JPanel {
                 campo.setCostoOraDiurna(Integer.parseInt(costoOraDiurnaField.getText()));
                 campo.setLunghezza(Integer.parseInt(lunghezzaField.getText()));
                 campo.setLarghezza(Integer.parseInt(larghezzaField.getText()));
-                campo.setCoperto(copertoCheckBox.isSelected());
+                campo.setCoperto(isCoperto); // Passa il valore dello slider
 
                 // Salva le modifiche nel database
                 boolean success = DataBase.updateCampo(campo);
@@ -261,6 +342,7 @@ public class ModificaCampoPanel extends JPanel {
             }
         }
     }
+
     @Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
