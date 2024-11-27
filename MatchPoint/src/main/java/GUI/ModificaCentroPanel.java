@@ -124,7 +124,7 @@ public class ModificaCentroPanel extends JPanel {
 		add(comuneField, gbc);
 
 		// Pulsante Modifica Campi
-		modificaCampiButton = BackgroundPanel.createFlatButton("Modifica Campi", e -> modificaCampi(),
+		modificaCampiButton = BackgroundPanel.createFlatButton("Modifica campi", e -> modificaCampi(),
 				new Dimension(200, 40));
 		gbc.gridx = 0;
 		gbc.gridy = 4;
@@ -132,14 +132,14 @@ public class ModificaCentroPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.EAST;
 		add(modificaCampiButton, gbc);
 		
-		gbc.gridy = 5;
+		gbc.gridy = 6;
 		gbc.gridwidth = 2;
 		add(scrollPane, gbc);
 		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi campo", e-> {// Passa riepilogoPanel invece di riepilogoArea
 			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);
-		}, new Dimension(300, 50));
+		}, new Dimension(200, 40));
        gbc.gridx = 0;
-       gbc.gridy = 6;
+       gbc.gridy = 5;
        gbc.gridwidth = 2;
        add(aggiungiCampoButton, gbc);
        
@@ -277,7 +277,6 @@ public class ModificaCentroPanel extends JPanel {
 	        BackgroundPanel.showPanel("modificaCentro");
 	    }
 	}
-<<<<<<< Updated upstream
 	private void eliminaCentro() {
 	    // Recupera il nome del centro selezionato dalla ComboBox
 	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
@@ -314,13 +313,10 @@ public class ModificaCentroPanel extends JPanel {
 	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
 	    }
 	}
-=======
 	
 	private void resetForm(JPanel riepilogoPanel) {
 	    // Svuota i campi di input
-	    nomeField.setText("");
-	    provinciaField.setText("");
-	    comuneField.setText("");
+	    aggiornaDettagliCentro();
 
 	    // Rimuovi tutti i componenti dal riepilogoPanel
 	    riepilogoPanel.removeAll();
@@ -330,7 +326,5 @@ public class ModificaCentroPanel extends JPanel {
 	    // Resetta i campi aggiunti tramite AggiungiCampoDialog
 	    AggiungiCampoDialog.getCampi().clear();
 	}
-
->>>>>>> Stashed changes
 
 }
