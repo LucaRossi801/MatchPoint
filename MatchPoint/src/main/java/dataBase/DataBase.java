@@ -193,13 +193,13 @@ public class DataBase {
 		    }
 	 	}
 
-	 public boolean eliminaCampo(int centroID, String campoSelezionato) {
-	        String query = "DELETE FROM Campo WHERE CentroSportivo = ? AND Nome = ?";
+	 public static boolean eliminaCampo(int centroID, int campoSelezionato) {
+	        String query = "DELETE FROM Campo WHERE CentroSportivo = ? AND ID = ?";
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		    try (Connection conn = DriverManager.getConnection(url);
 		         PreparedStatement stmt = conn.prepareStatement(query)) {
 	            stmt.setInt(1, centroID);
-	            stmt.setString(2, campoSelezionato);
+	            stmt.setInt(2, campoSelezionato);
 	            int rowsAffected = stmt.executeUpdate();
 	            return rowsAffected > 0; // True se almeno una riga è stata eliminata
 	        } catch (SQLException e) {

@@ -17,7 +17,7 @@ public class ModificaCampoPanel extends JPanel {
     private JCheckBox copertoCheckBox;
     private JButton salvaCampoButton;
     private Integer centroId;
-    private List<Campo> campi; // Lista dei campi del centro
+    private static List<Campo> campi; // Lista dei campi del centro
 
     public ModificaCampoPanel(Integer centroId) {
         this.centroId = centroId;
@@ -41,7 +41,7 @@ public class ModificaCampoPanel extends JPanel {
 
         // Carica i campi del centro
         caricaCampi();
-
+        
      // Pannello superiore per selezione del campo
         JPanel selezioneCampoPanel = new JPanel(new FlowLayout());
         selezioneCampoPanel.setBackground(new Color(32, 178, 170)); // Sfondo verde
@@ -96,19 +96,14 @@ public class ModificaCampoPanel extends JPanel {
         add(copertoCheckBox, gbc);
 
         
-        JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi campi", e-> {
-        	 salvaModificheCampo();
-        }, new Dimension(150, 40));
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 2;
-        add(aggiungiCampoButton, gbc);
+ 
         
         JButton eliminaCampoButton = BackgroundPanel.createFlatButton("Elimina campo selezionato", e-> {
-       	 salvaModificheCampo();
+        	eliminaCampo();
+       	 
        }, new Dimension(150, 40));
        gbc.gridx = 0;
-       gbc.gridy = 8;
+       gbc.gridy = 7;
        gbc.gridwidth = 2;
        eliminaCampoButton.setBackground(Color.RED); // Sfondo al passaggio del mouse
        add(eliminaCampoButton, gbc);
@@ -117,7 +112,7 @@ public class ModificaCampoPanel extends JPanel {
       	 salvaModificheCampo();
       }, new Dimension(150, 50));
       gbc.gridx = 0;
-      gbc.gridy = 9;
+      gbc.gridy = 8;
       gbc.gridwidth = 2;
       add(salvaCampoButton, gbc);
         
@@ -138,7 +133,9 @@ public class ModificaCampoPanel extends JPanel {
         aggiornaDettagliCampo();
     }
 
-    // Metodo aggiornato per creare campi con le OutlinedLabel
+    
+
+	// Metodo aggiornato per creare campi con le OutlinedLabel
     private JTextField creaCampo(String labelText, int gridY, GridBagConstraints gbc, Color labelColor) {
         JLabel label = new OutlinedLabel(labelText, labelColor); // Usa OutlinedLabel con il colore specificato
         gbc.gridx = 0;
@@ -169,11 +166,37 @@ public class ModificaCampoPanel extends JPanel {
     private void caricaCampi() {
         // Recupera i campi associati al centro dal database
         campi = DataBase.getCampiById(centroId);
+        
+        // Controllo se la lista dei campi è vuota
         if (campi == null || campi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nessun campo trovato per il centro selezionato.", "Errore",
-                    JOptionPane.ERROR_MESSAGE);
+            CustomMessage.show("Nessun campo trovato per il centro selezionato.", "Informazione", false);
+            BackgroundPanel.showPanel("modificaCentro");
+            return; // Interrompi il caricamento se non ci sono campi
         }
     }
+
+    private void aggiornaComboBox() {
+        campiComboBox.removeAllItems(); // Svuota la ComboBox
+        
+        // Aggiungi i campi alla ComboBox
+        for (Campo campo : campi) {
+            String item = String.format("%s (%dx%d)",
+                                        campo.getTipologiaCampo().toString(),
+                                        campo.getLunghezza(),
+                                        campo.getLarghezza());
+            campiComboBox.addItem(item);
+        }
+
+        // Controllo se la lista dei campi è vuota
+        if (campi.isEmpty()) {
+            //CustomMessage.show("Nessun campo disponibile. Torna alla schermata precedente.", "Informazione", false);
+            BackgroundPanel.showPanel("modificaCentro");
+        } else {
+            // Aggiorna i dettagli del primo campo
+            aggiornaDettagliCampo();
+        }
+    }
+
 
     private void aggiornaDettagliCampo() {
         int index = campiComboBox.getSelectedIndex();
@@ -187,6 +210,27 @@ public class ModificaCampoPanel extends JPanel {
             copertoCheckBox.setSelected(campo.isCoperto());
         }
     }
+    
+    private void eliminaCampo() {
+        int index = campiComboBox.getSelectedIndex();
+        if (index >= 0) {
+            Campo campo = campi.get(index);
+            if (DataBase.eliminaCampo(centroId, campo.getId())) {
+                CustomMessage.show("Campo Eliminato Correttamente!", "Successo", true);
+
+                // Aggiorna la lista dei campi
+                caricaCampi();
+
+                // Aggiorna la JComboBox
+                aggiornaComboBox();
+            } else {
+                CustomMessage.show("Errore durante l'eliminazione", "Errore", false);
+            }
+        } else {
+            CustomMessage.show("Nessun campo selezionato per l'eliminazione.", "Errore", false);
+        }
+    }
+
 
     private void salvaModificheCampo() {
         int index = campiComboBox.getSelectedIndex();

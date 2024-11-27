@@ -1,6 +1,8 @@
 package GUI;
 
 import javax.swing.*;
+
+import components.Campo;
 import components.CentroSportivo;
 import components.Sessione;
 import dataBase.DataBase;
@@ -8,6 +10,8 @@ import dataBase.DataBase;
 import java.awt.*;
 import java.net.URL;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModificaCentroPanel extends JPanel {
 	private JComboBox<String> centriComboBox; // ComboBox per selezione centri
@@ -20,6 +24,14 @@ public class ModificaCentroPanel extends JPanel {
 
 	public ModificaCentroPanel() {
 		// Carica l'immagine di sfondo
+		JPanel riepilogoPanel = new JPanel();
+		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
+		riepilogoPanel.setBackground(Color.WHITE);
+
+		JScrollPane scrollPane = new JScrollPane(riepilogoPanel);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setPreferredSize(new Dimension(350, 200));
+
 		try {
 			URL clearImageUrl = getClass().getResource("/GUI/immagini/sfondohome.png");
 			if (clearImageUrl != null) {
@@ -110,26 +122,37 @@ public class ModificaCentroPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.EAST;
 		add(comuneField, gbc);
 
-		// Pulsante Salva Modifiche
-		salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
-				new Dimension(200, 50));
-		gbc.gridx = 0;
-		gbc.gridy = 5;
-		gbc.gridwidth = 2;
-		gbc.anchor = GridBagConstraints.EAST;
-		salvaButton.setBackground(new Color(0, 128, 128));
-		salvaButton.setForeground(Color.WHITE);
-		add(salvaButton, gbc);
-
 		// Pulsante Modifica Campi
 		modificaCampiButton = BackgroundPanel.createFlatButton("Modifica Campi", e -> modificaCampi(),
-				new Dimension(200, 50));
+				new Dimension(200, 40));
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.EAST;
 		add(modificaCampiButton, gbc);
-
+		
+		gbc.gridy = 5;
+		gbc.gridwidth = 2;
+		add(scrollPane, gbc);
+		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi campo", e-> {// Passa riepilogoPanel invece di riepilogoArea
+			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);
+		}, new Dimension(300, 50));
+       gbc.gridx = 0;
+       gbc.gridy = 6;
+       gbc.gridwidth = 2;
+       add(aggiungiCampoButton, gbc);
+       
+		
+// Pulsante Salva Modifiche
+		salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
+				new Dimension(200, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 7;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.EAST;
+		salvaButton.setBackground(new Color(0, 128, 128));
+		salvaButton.setForeground(Color.WHITE);
+		add(salvaButton, gbc);
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
 			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
 		}, new Dimension(150, 30) // Dimensione personalizzata del bottone
@@ -138,7 +161,7 @@ public class ModificaCentroPanel extends JPanel {
 		backButton.setForeground(Color.GRAY); // Sfondo grigio
 		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
 		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
-		gbc.gridy = 6; // Quarta riga
+		gbc.gridy = 8; // Quarta riga
 		add(backButton, gbc);
 
 		// Carica i centri sportivi gestiti
@@ -192,7 +215,16 @@ public class ModificaCentroPanel extends JPanel {
 			String nuovoComune = comuneField.getText();
 
 			boolean success = DataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
-
+			
+			// aggiungi anche i campi al DB (se ci sono)
+			
+			ArrayList<Campo> campiSelezionati = AggiungiCampoDialog.getCampi();
+			for (Campo c : campiSelezionati) {
+				Campo.inserisci(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
+						c.larghezza, c.isCoperto(), centro.getID());
+			}
+			CustomMessage.show("Campo inserito con successo!", "Successo", true);
+			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
 			if (success) {
 				CustomMessage.show("Modifiche salvate con successo!", "Successo", true);
 				centro.nome = nuovoNome;
@@ -208,16 +240,27 @@ public class ModificaCentroPanel extends JPanel {
 	}
 
 	private void modificaCampi() {
-		String centroSelezionato = (String) centriComboBox.getSelectedItem();
-		if (centroSelezionato != null && centriGestiti != null) {
-			CentroSportivo centro = centriGestiti.get(centroSelezionato);
-			ModificaCampoPanel modificaCampoPanel = new ModificaCampoPanel(centro.getID());
-			BackgroundPanel.cardPanel.add(modificaCampoPanel, "modificaCampi");		
-			BackgroundPanel.showPanel("modificaCampi");
-			
-		} else {
-			JOptionPane.showMessageDialog(this, "Seleziona un centro sportivo per modificarne i campi.", "Attenzione",
-					JOptionPane.WARNING_MESSAGE);
-		}
+	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
+	    if (centroSelezionato != null && centriGestiti != null) {
+	        CentroSportivo centro = centriGestiti.get(centroSelezionato);
+
+	        // Verifica se il centro ha campi associati
+	        List<Campo> campi = DataBase.getCampiById(centro.getID());
+	        if (campi == null || campi.isEmpty()) {
+	            // Mostra messaggio di errore e resta sul pannello corrente
+	            CustomMessage.show("Nessun campo disponibile per il centro selezionato.", "Errore", false);
+	            BackgroundPanel.showPanel("modificaCentro");
+	            return;
+	        }
+
+	        // Carica il pannello di modifica campi
+	        ModificaCampoPanel modificaCampoPanel = new ModificaCampoPanel(centro.getID());
+	        BackgroundPanel.cardPanel.add(modificaCampoPanel, "modificaCampi");
+	        BackgroundPanel.showPanel("modificaCampi");
+	    } else {
+	        // Torna al pannello di modifica centro
+	        BackgroundPanel.showPanel("modificaCentro");
+	    }
 	}
+
 }

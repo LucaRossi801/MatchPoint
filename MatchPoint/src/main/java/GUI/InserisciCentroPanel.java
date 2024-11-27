@@ -126,7 +126,7 @@ public class InserisciCentroPanel extends JPanel {
 				ris = DataBase.eseguiSelect(conn, sql);
 			} catch (SQLException ex) {
 				ex.printStackTrace();
-				CustomMessage.show("Errore di connessione al DataBase QELLA DI SELECT", "Errore", false);
+				CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
 				return;
 			}
 			int idGestore = Integer.parseInt(ris);
