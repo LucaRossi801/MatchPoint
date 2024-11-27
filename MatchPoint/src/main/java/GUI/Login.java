@@ -181,6 +181,8 @@ public class Login {
             Sessione.login(username, tipologia);  // Esegui il login
             ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
             BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
+            VediPrenotazioniGestorePanel vediPrenotazioniGestorePanel = new VediPrenotazioniGestorePanel();
+            BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(), "vediPrenotazioniGestore");
            } 
         catch (SQLException e) {
         	CustomMessage.show("Errore di login", "Errore", false);

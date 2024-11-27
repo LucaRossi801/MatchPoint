@@ -67,5 +67,10 @@ public class CentroSportivo
 				e.printStackTrace();
 			} 
 	}
+
+	public String getNome() {
+		// TODO Auto-generated method stub
+		return nome;
+	}
 	
 }

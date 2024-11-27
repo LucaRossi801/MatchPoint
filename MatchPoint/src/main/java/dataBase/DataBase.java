@@ -10,7 +10,11 @@ import java.util.Map;
 import GUI.CustomMessage;
 import components.Campo;
 import components.CentroSportivo;
+<<<<<<< Updated upstream
 import components.TipologiaCampo;
+=======
+import components.Prenotazione;
+>>>>>>> Stashed changes
 
 public class DataBase {
 	// Metodo per creare la tabella Utente se non esiste
@@ -237,7 +241,7 @@ public class DataBase {
 	        }
 	    }
 	    
-	    public List<String> getCampiByCentro(int centroID) {
+	    public static List<String> getCampiByCentro(int centroID) {
 	        String query = "SELECT nome FROM Campo WHERE CentroSportivo = ?";
 	        List<String> campi = new ArrayList<>();
 
@@ -314,3 +318,15 @@ public class DataBase {
 	    }
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+		public static List<Prenotazione> getPrenotazioniByCampo(int iD, String campoSelezionato) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+}
+>>>>>>> Stashed changes

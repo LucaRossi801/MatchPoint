@@ -103,7 +103,11 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private void aggiornaCampi() {
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
         if (centroSelezionato != null) {
+<<<<<<< Updated upstream
             CentroSportivo centro = DataBase.getCampiByCentro(); // Ottieni il centro sportivo dal nome
+=======
+            CentroSportivo centro = DataBase.getCentroByName(centroSelezionato); // Ottieni il centro sportivo dal nome
+>>>>>>> Stashed changes
             if (centro != null) {
                 List<String> campi = null;
 				try {

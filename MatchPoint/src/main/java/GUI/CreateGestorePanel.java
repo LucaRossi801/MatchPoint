@@ -66,8 +66,9 @@ public class CreateGestorePanel extends JPanel {
         // Crea il terzo pulsante "VediPrenotazioni"
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
-            e -> cardLayout.show(cardPanel, "vediPrenotazioniRicevute"),
+            e -> cardLayout.show(cardPanel, "vediPrenotazioniGestore"),
             buttonSize
+            
         );
         vediPrenotazioniButton.setForeground(new Color(220, 250, 245));
         
