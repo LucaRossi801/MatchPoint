@@ -2,7 +2,6 @@ package dataBase;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -318,10 +317,37 @@ public class DataBase {
 
 
 
-		public static List<Prenotazione> getPrenotazioniByCampo(int iD, String campoSelezionato) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+	    public static List<Prenotazione> getPrenotazioniByCampo(int centroId, int campoId) {
+	        List<Prenotazione> prenotazioni = new ArrayList<>();
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	        String query = "SELECT p.OraInizio, p.OraFine, p.Utente, p.Campo " +
+	                       "FROM Prenotazione p " +
+	                       "JOIN Campo c ON p.Campo = c.ID " +
+	                       "WHERE c.ID = ? AND c.CentroSportivo = ?";
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setInt(1, campoId);
+	            stmt.setInt(2, centroId);
+
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                Time oraInizio = Time.valueOf(rs.getString("OraInizio"));
+	                Time oraFine = Time.valueOf(rs.getString("OraInizio"));
+	                int utenteID = rs.getInt("Utente");
+	                int campoID = rs.getInt("Campo");
+
+	                Prenotazione prenotazione = new Prenotazione(oraInizio, oraFine, utenteID, campoID);
+	                prenotazioni.add(prenotazione);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return prenotazioni;
+	    }
 
 		
 		
@@ -346,6 +372,8 @@ public class DataBase {
 	                    resultSet.getString("nome"),
 	                    resultSet.getString("indirizzo"),
 	                    resultSet.getString("telefono")
+	                    
+	                 
 	                );
 	            }
 	        } catch (Exception e) {

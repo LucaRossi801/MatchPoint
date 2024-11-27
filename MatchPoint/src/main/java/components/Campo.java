@@ -143,5 +143,4 @@ public class Campo {
 	public void setCoperto(boolean coperto) {
 		this.coperto = coperto;
 	}
-
 }
