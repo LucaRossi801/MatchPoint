@@ -194,14 +194,15 @@ public class ModificaCentroPanel extends JPanel {
 			boolean success = DataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
 
 			if (success) {
-				JOptionPane.showMessageDialog(this, "Modifiche salvate con successo!", "Successo",
-						JOptionPane.INFORMATION_MESSAGE);
+				CustomMessage.show("Modifiche salvate con successo!", "Successo", true);
 				centro.nome = nuovoNome;
 				centro.provincia = nuovaProvincia;
 				centro.comune = nuovoComune;
+				aggiornaDettagliCentro();
+				caricaCentriGestiti();
+				BackgroundPanel.showPanel("createGestore");
 			} else {
-				JOptionPane.showMessageDialog(this, "Errore nel salvataggio delle modifiche.", "Errore",
-						JOptionPane.ERROR_MESSAGE);
+				CustomMessage.show( "Errore nel salvataggio delle modifiche.", "Errore", false);
 			}
 		}
 	}
