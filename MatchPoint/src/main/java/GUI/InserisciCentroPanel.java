@@ -167,6 +167,8 @@ public class InserisciCentroPanel extends JPanel {
 			// aggiunge il centro sportivo al DB
 			CentroSportivo.inserisci(nomeCentro, provincia, comune);
 			CustomMessage.show("Centro inserito con successo!", "Successo", true);
+			// Cambia schermata
+		    cardLayout.show(cardPanel, "createGestore");
 
 			// Seleziona ID del centro sportivo creato
 			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -186,7 +188,7 @@ public class InserisciCentroPanel extends JPanel {
 				Campo.inserisci(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), idGestore);
 			}
-			CustomMessage.show("Campo inserito con successo!", "Successo", true);
+			//CustomMessage.show("Campo inserito con successo!", "Successo", true);
 
 		}, new Dimension(300, 50));
 
