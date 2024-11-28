@@ -5,8 +5,10 @@ import javax.swing.*;
 import components.Campo;
 import components.CentroSportivo;
 import dataBase.DataBase;
+import localizzazione.FileReaderUtils;
 
 import java.awt.*;
+import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,11 +16,37 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class InserisciCentroPanel extends JPanel {
 	private Image background;
-
+	private JComboBox<String> provinciaComboBox;
+    private JComboBox<String> comuneComboBox;
+    
 	public InserisciCentroPanel(CardLayout cardLayout, JPanel cardPanel) {
+		// Carica dati dal file CSV
+        String filePath = "src/main/java/localizzazione/comuni.csv"; // Sostituisci con il percorso corretto
+        Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
+
+        // Inizializza ComboBox
+        provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
+        provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+        comuneComboBox = new JComboBox<>();
+        comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+
+        provinciaComboBox.addActionListener(e -> {
+            String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
+            comuneComboBox.removeAllItems();
+            if (provinciaSelezionata != null) {
+                List<String> comuni = provinceComuni.get(provinciaSelezionata);
+                if (comuni != null) {
+                    for (String comune : comuni) {
+                        comuneComboBox.addItem(comune);
+                    }
+                }
+            }
+        });
+        
 		JPanel riepilogoPanel = new JPanel();
 		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
 		riepilogoPanel.setBackground(Color.WHITE);
@@ -55,7 +83,7 @@ public class InserisciCentroPanel extends JPanel {
 		Map<String, JTextField> fields = new HashMap<>();
 
 		// Campi di testo
-		String[] campi = { "NomeCentro", "Provincia", "Comune" };
+		String[] campi = { "NomeCentro"};
 		int row = 1; // Riga di partenza
 
 		for (String campo : campi) {
@@ -79,6 +107,27 @@ public class InserisciCentroPanel extends JPanel {
 
 			row++;
 		}
+		// Provincia
+        JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
+        provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        add(provinciaLabel, gbc);
+
+        gbc.gridx = 1;
+        add(provinciaComboBox, gbc);
+        row++;
+        
+        // Comune
+        JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
+        comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        add(comuneLabel, gbc);
+
+        gbc.gridx = 1;
+        add(comuneComboBox, gbc);
+        row++;
 
 		// Bottone per aggiungere campo
 		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi Campo", e -> {
@@ -96,9 +145,10 @@ public class InserisciCentroPanel extends JPanel {
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(aggiungiCampoButton, gbc);
-
+		row++;
+		
 		// Aggiungi il JTextArea per il riepilogo
-		gbc.gridy = row + 1;
+		gbc.gridy = row;
 		gbc.gridwidth = 2;
 		add(scrollPane, gbc);
 
@@ -106,12 +156,12 @@ public class InserisciCentroPanel extends JPanel {
 		JButton inserisciCentroButton = BackgroundPanel.createFlatButton("Inserisci Centro", e -> {
 			// Recupera i dati inseriti e fai l'inserimento
 			String nomeCentro = fields.get("NomeCentro").getText();
-			String provincia = fields.get("Provincia").getText();
-			String comune = fields.get("Comune").getText();
+            String provincia = (String) provinciaComboBox.getSelectedItem();
+            String comune = (String) comuneComboBox.getSelectedItem();
 
 			// Controlla se tutti i campi sono stati compilati
 			if (nomeCentro.isEmpty() || provincia.isEmpty() || comune.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Compila tutti i campi!", "Errore", JOptionPane.ERROR_MESSAGE);
+				CustomMessage.show("Compila tutti i campi!", "Errore", false);
 				return;
 			}
 			// aggiunge il centro sportivo al DB

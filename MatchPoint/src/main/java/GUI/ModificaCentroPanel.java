@@ -6,15 +6,22 @@ import components.Campo;
 import components.CentroSportivo;
 import components.Sessione;
 import dataBase.DataBase;
+import localizzazione.FileReaderUtils;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ModificaCentroPanel extends JPanel {
 	private JComboBox<String> centriComboBox; // ComboBox per selezione centri
+	private JComboBox<String> provinciaComboBox; // ComboBox per selezione centri
+	private JComboBox<String> comuneComboBox; // ComboBox per selezione centri
 	private JTextField nomeField, provinciaField, comuneField;
 	private JButton salvaButton, modificaCampiButton;
 	private Map<String, CentroSportivo> centriGestiti; // Mappa nome-centro
@@ -22,8 +29,17 @@ public class ModificaCentroPanel extends JPanel {
 	private DataBase dataBase; // Database di riferimento
 	private Image clearImage;
 	private JPanel riepilogoPanel; // Rendi riepilogoPanel una variabile di istanza
+	private Map<String, List<String>> provinceComuni; // Mappa province -> comuni
 
 	public ModificaCentroPanel() {
+		// Carica i dati delle province e comuni
+		String filePath = "src/main/java/localizzazione/comuni.csv"; // Sostituisci con il percorso corretto
+        provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
+        if (provinceComuni == null || provinceComuni.isEmpty()) {
+            System.err.println("Errore: la mappa provinceComuni è vuota o null.");
+            provinceComuni = new HashMap<>(); // Prevenire errori futuri
+        }
+		
 		// Carica l'immagine di sfondo
 		riepilogoPanel = new JPanel();
 		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
@@ -60,7 +76,7 @@ public class ModificaCentroPanel extends JPanel {
 		selezionaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
 		selezionaLabel.setForeground(Color.WHITE);
 		selezionePanel.add(selezionaLabel);
-
+		
 		centriComboBox = new JComboBox<>();
 		centriComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
 		centriComboBox.addActionListener(e -> aggiornaDettagliCentro());
@@ -90,38 +106,29 @@ public class ModificaCentroPanel extends JPanel {
 		add(nomeField, gbc);
 
 		// Campo Provincia
-		JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
-		provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		add(provinciaLabel, gbc);
+        JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
+        provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(provinciaLabel, gbc);
 
-		provinciaField = new JTextField(20);
-		provinciaField.setFont(new Font("Arial", Font.PLAIN, 18));
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.EAST;
-		add(provinciaField, gbc);
+        provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
+        provinciaComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
+        provinciaComboBox.addActionListener(e -> aggiornaComuni());
+        gbc.gridx = 1;
+        add(provinciaComboBox, gbc);
 
-		// Campo Comune
-		JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
-		comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		add(comuneLabel, gbc);
+        // Campo Comune
+        JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
+        comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        add(comuneLabel, gbc);
 
-		comuneField = new JTextField(20);
-		comuneField.setFont(new Font("Arial", Font.PLAIN, 18));
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		gbc.anchor = GridBagConstraints.EAST;
-		add(comuneField, gbc);
+        comuneComboBox = new JComboBox<>();
+        comuneComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
+        gbc.gridx = 1;
+        add(comuneComboBox, gbc);
 
 		// Pulsante Modifica Campi
 		modificaCampiButton = BackgroundPanel.createFlatButton("Modifica campi", e -> modificaCampi(),
@@ -213,8 +220,8 @@ public class ModificaCentroPanel extends JPanel {
 			CentroSportivo centro = centriGestiti.get(centroSelezionato);
 			if (centro != null) {
 				nomeField.setText(centro.nome);
-				provinciaField.setText(centro.provincia);
-				comuneField.setText(centro.comune);
+				provinciaComboBox.setSelectedItem(centro.provincia);
+                comuneComboBox.setSelectedItem(centro.comune);
 			}
 		}
 	}
@@ -224,9 +231,9 @@ public class ModificaCentroPanel extends JPanel {
 		if (centroSelezionato != null && centriGestiti != null) {
 			CentroSportivo centro = centriGestiti.get(centroSelezionato);
 
-			String nuovoNome = nomeField.getText();
-			String nuovaProvincia = provinciaField.getText();
-			String nuovoComune = comuneField.getText();
+			String nuovoNome = nomeField.getText(); // Questo è corretto, poiché il nome è un JTextField
+			String nuovaProvincia = (String) provinciaComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox
+			String nuovoComune = (String) comuneComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox
 
 			boolean success = DataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
 			
@@ -296,15 +303,13 @@ public class ModificaCentroPanel extends JPanel {
 
 	            if (success) {
 	                CustomMessage.show("Centro eliminato con successo!", "Successo", true);
-
+	                nomeField.setText("");
 	                // Rimuovi il centro dalla mappa e aggiorna la ComboBox
 	                centriGestiti.remove(centroSelezionato);
 	                centriComboBox.removeItem(centroSelezionato);
 
 	                // Eventuali ulteriori aggiornamenti dell'interfaccia
-	                nomeField.setText("");
-	                provinciaField.setText("");
-	                comuneField.setText("");
+	                
 	            } else {
 	                CustomMessage.show("Errore durante l'eliminazione del centro.", "Errore", false);
 	            }
@@ -313,6 +318,41 @@ public class ModificaCentroPanel extends JPanel {
 	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
 	    }
 	}
+	    private Map<String, List<String>> caricaProvinceEComuni(String filePath) {
+	        Map<String, List<String>> provinceComuni = new HashMap<>();
+	        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+	            String line;
+	            while ((line = br.readLine()) != null) {
+	                String[] parts = line.split(";");
+	                if (parts.length >= 2) {
+	                    String provincia = parts[0].trim();
+	                    String comune = parts[1].trim();
+	                    provinceComuni.putIfAbsent(provincia, new ArrayList<>());
+	                    provinceComuni.get(provincia).add(comune);
+	                }
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        return provinceComuni;
+	    }
+
+	    private void aggiornaComuni() {
+	        if (provinceComuni == null) {
+	            System.err.println("La mappa provinceComuni è null.");
+	            return; // Prevenire eccezioni
+	        }
+
+	        String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
+	        comuneComboBox.removeAllItems();
+
+	        if (provinciaSelezionata != null && provinceComuni.containsKey(provinciaSelezionata)) {
+	            for (String comune : provinceComuni.get(provinciaSelezionata)) {
+	                comuneComboBox.addItem(comune);
+	            }
+	        }
+	    }
+
 	
 	private void resetForm(JPanel riepilogoPanel) {
 	    // Svuota i campi di input
@@ -326,5 +366,6 @@ public class ModificaCentroPanel extends JPanel {
 	    // Resetta i campi aggiunti tramite AggiungiCampoDialog
 	    AggiungiCampoDialog.getCampi().clear();
 	}
+	
 
 }
