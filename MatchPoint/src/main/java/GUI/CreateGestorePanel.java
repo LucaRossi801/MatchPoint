@@ -48,7 +48,12 @@ public class CreateGestorePanel extends JPanel {
         // Crea il secondo pulsante "Modifica Centro"
         JButton ModificaCentroButton = BackgroundPanel.createFlatButton(
             "Modifica Centro",
-            e -> cardLayout.show(cardPanel, "modificaCentro"),
+            e -> {
+            ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
+            BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
+            cardLayout.show(cardPanel, "modificaCentro");  
+            },
+            
             buttonSize
         );
         ModificaCentroButton.setForeground(new Color(220, 250, 245));
@@ -66,7 +71,10 @@ public class CreateGestorePanel extends JPanel {
         // Crea il terzo pulsante "VediPrenotazioni"
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
-            e -> cardLayout.show(cardPanel, "vediPrenotazioniGestore"),
+            e -> {
+            	VediPrenotazioniGestorePanel vediPrenotazioniGestorePanel = new VediPrenotazioniGestorePanel();
+                BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(), "vediPrenotazioniGestore");
+            	cardLayout.show(cardPanel, "vediPrenotazioniGestore");},
             buttonSize
             
         );

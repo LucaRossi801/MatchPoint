@@ -59,7 +59,6 @@ public class Login {
 	                    
 	                    login(username, ruolo);
 	                    Utente.login(username, password);
-	                    //ModificaCentroPanel.aggiornaDopoLogin();
 	                    if ("Gestore".equalsIgnoreCase(ruolo)) {
 	                        BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
 	                    } else if ("Giocatore".equalsIgnoreCase(ruolo)) {
@@ -179,10 +178,6 @@ public class Login {
 	public static void login(String username, String tipologia) {
         try {
             Sessione.login(username, tipologia);  // Esegui il login
-            ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
-            BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
-            VediPrenotazioniGestorePanel vediPrenotazioniGestorePanel = new VediPrenotazioniGestorePanel();
-            BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(), "vediPrenotazioniGestore");
            } 
         catch (SQLException e) {
         	CustomMessage.show("Errore di login", "Errore", false);
