@@ -72,8 +72,8 @@ public class CreateGestorePanel extends JPanel {
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
             e -> {
-            	VediPrenotazioniGestorePanel vediPrenotazioniGestorePanel = new VediPrenotazioniGestorePanel();
-                BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(), "vediPrenotazioniGestore");
+            	VediPrenotazioniGestorePanel panel = new VediPrenotazioniGestorePanel(cardLayout, cardPanel);
+                BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(cardLayout, cardPanel), "vediPrenotazioniGestore");
             	cardLayout.show(cardPanel, "vediPrenotazioniGestore");},
             buttonSize
             

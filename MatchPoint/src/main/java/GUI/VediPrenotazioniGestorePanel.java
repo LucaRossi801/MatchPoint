@@ -14,13 +14,19 @@ import components.Prenotazione;
 import components.Sessione;
 
 public class VediPrenotazioniGestorePanel extends JPanel {
-    private JComboBox<String> centriComboBox; // ComboBox per i centri sportivi
-    private JComboBox<Campo> campiComboBox;  // ComboBox per i campi sportivi
-    private JTextArea prenotazioniArea;      // Area per mostrare le prenotazioni
-    private Map<String, CentroSportivo> centriSportivi; // Mappa per memorizzare i centri sportivi
+    private JComboBox<String> centriComboBox;
+    private JComboBox<Campo> campiComboBox;
+    private JTextArea prenotazioniArea;
+    private Map<String, CentroSportivo> centriSportivi;
     private Image clearImage;
-    
-    public VediPrenotazioniGestorePanel() {
+
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+
+    public VediPrenotazioniGestorePanel(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+
         // Caricamento dello sfondo
         URL clearImageUrl = getClass().getResource("/GUI/immagini/sfondohome.png");
         if (clearImageUrl != null) {
@@ -40,12 +46,12 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         topPanel.setOpaque(false);
 
         // Caricamento delle icone ridimensionate
-        ImageIcon centroIcon = loadScaledIcon("/GUI/immagini/centroIcon.png", 70, 70); // Icone leggermente più grandi
+        ImageIcon centroIcon = loadScaledIcon("/GUI/immagini/centroIcon.png", 70, 70);
         ImageIcon campoIcon = loadScaledIcon("/GUI/immagini/campoIcon.png", 70, 70);
 
-     // Etichetta per il centro sportivo
+        // Etichetta per il centro sportivo
         JPanel centriPanel = new JPanel(new BorderLayout());
-        centriPanel.setOpaque(false); // Per mantenere la trasparenza dello sfondo
+        centriPanel.setOpaque(false);
         JLabel centriLabel = new JLabel("Seleziona Centro Sportivo:", centroIcon, JLabel.LEFT);
         centriLabel.setFont(new Font("Arial", Font.BOLD, 16));
         centriPanel.add(centriLabel, BorderLayout.WEST);
@@ -65,7 +71,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 
         // Etichetta per il campo sportivo
         JPanel campiPanel = new JPanel(new BorderLayout());
-        campiPanel.setOpaque(false); // Per mantenere la trasparenza dello sfondo
+        campiPanel.setOpaque(false);
         JLabel campiLabel = new JLabel("Seleziona Campo:", campoIcon, JLabel.LEFT);
         campiLabel.setFont(new Font("Arial", Font.BOLD, 16));
         campiPanel.add(campiLabel, BorderLayout.WEST);
@@ -82,7 +88,6 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         gbc.gridx = 1;
         topPanel.add(campiComboBox, gbc);
 
-
         // Aggiungi il pannello superiore al layout principale
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -98,10 +103,10 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         prenotazioniArea.setBackground(new Color(245, 245, 245));
         prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Barra di scorrimento personalizzata
         JScrollPane scrollPane = new JScrollPane(prenotazioniArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(250, 150)); // Ridotta larghezza
+        scrollPane.setPreferredSize(new Dimension(900, 400));
+        scrollPane.setMinimumSize(new Dimension(150, 80));
         scrollPane.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
             "Prenotazioni Giorno per Giorno",
@@ -113,13 +118,32 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
         add(scrollPane, gbc);
+
+        // Bottone Indietro
+        JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
+            // Resetta i campi del pannello
+            centriComboBox.setSelectedIndex(-1);
+            campiComboBox.removeAllItems();
+            prenotazioniArea.setText("");
+
+            // Cambia schermata al card layout
+            cardLayout.show(cardPanel, "createGestore");
+        }, new Dimension(120, 30));
+        backButton.setFont(new Font("Arial", Font.BOLD, 18));
+        backButton.setForeground(Color.GRAY);
+        backButton.setBackground(Color.DARK_GRAY);
+
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(backButton, gbc);
 
         aggiornaCampi();
     }
+
 
     /**
      * Metodo per caricare e ridimensionare un'icona.
