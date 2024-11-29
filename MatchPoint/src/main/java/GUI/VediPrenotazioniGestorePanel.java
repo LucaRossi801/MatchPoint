@@ -94,27 +94,46 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         gbc.gridwidth = 2;
         add(topPanel, gbc);
 
-        // Area per visualizzare le prenotazioni
+     // Area per visualizzare le prenotazioni
         prenotazioniArea = new JTextArea();
-        prenotazioniArea.setEditable(false);
-        prenotazioniArea.setWrapStyleWord(true);
-        prenotazioniArea.setLineWrap(true);
-        prenotazioniArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        prenotazioniArea.setBackground(new Color(245, 245, 245));
+        prenotazioniArea.setOpaque(false); // Rendi completamente trasparente
+        prenotazioniArea.setBackground(new Color(255, 255, 255, 180)); // Sfondo semitrasparente
+        prenotazioniArea.setForeground(Color.BLACK); // Colore del testo
         prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JScrollPane scrollPane = new JScrollPane(prenotazioniArea);
+     // Configurazione dello JScrollPane
+        JScrollPane scrollPane = new JScrollPane(prenotazioniArea) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                // Colore per il contorno (più chiaro)
+                g2d.setColor(new Color(180, 180, 180, 150)); // Grigio chiaro semitrasparente
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+                g2d.dispose();
+                super.paintComponent(g);
+            }
+        };
+
+        // Imposta lo sfondo del viewport (interno)
+        scrollPane.getViewport().setOpaque(true);
+        scrollPane.getViewport().setBackground(new Color(230, 230, 230, 180)); // Grigio molto chiaro semitrasparente
+
+        // Rendi il `JScrollPane` opaco
+        scrollPane.setOpaque(false);
+
+        // Configurazione dei bordi e della dimensione
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setPreferredSize(new Dimension(900, 400));
-        scrollPane.setMinimumSize(new Dimension(150, 80));
         scrollPane.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
+            BorderFactory.createLineBorder(Color.GRAY , 2), // Colore del bordo grigio scuro
             "Prenotazioni Giorno per Giorno",
             0,
             0,
             new Font("Arial", Font.BOLD, 14),
             Color.GRAY
         ));
+
+        // Aggiungi lo JScrollPane al layout
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
@@ -122,6 +141,9 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         gbc.weighty = 0;
         gbc.fill = GridBagConstraints.NONE;
         add(scrollPane, gbc);
+
+
+
 
         // Bottone Indietro
         JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
@@ -281,8 +303,22 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        // Colore verde acqua semitrasparente
+        Color semiTransparentAqua = new Color(16, 139, 135, 128); // RGB (16, 139, 135) con trasparenza (128)
+
+
+        // Disegna un rettangolo trasparente sopra lo sfondo
+        g2d.setColor(semiTransparentAqua);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        // Disegna l'immagine di sfondo
         if (clearImage != null) {
-            g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+            g2d.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
         }
+
+        g2d.dispose();
     }
+
 }
