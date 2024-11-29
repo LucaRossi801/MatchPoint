@@ -66,7 +66,7 @@ public class Register {
 
 	    for (String campo : campi) {
 	        // Crea l'etichetta
-	        JLabel label = new JLabel(campo + ":");
+	        JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 24));
 	        gbc.gridx = 0; // Colonna 0 (sinistra)
 	        gbc.gridy = row;

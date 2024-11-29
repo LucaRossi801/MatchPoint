@@ -26,8 +26,8 @@ public class CreateGiocatorePanel extends JPanel {
 
      // Crea il primo pulsante "Prenota"
         JButton prenotaButton = BackgroundPanel.createFlatButton(
-            "Prenota",
-            e -> cardLayout.show(cardPanel, "prenota"),
+            "Inserisci Prenotazione",
+            e -> cardLayout.show(cardPanel, "inserisciPrenotazione"),
             buttonSize
         );
         prenotaButton.setForeground(new Color(220, 250, 245));

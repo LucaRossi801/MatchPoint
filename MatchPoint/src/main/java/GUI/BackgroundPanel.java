@@ -62,6 +62,7 @@ public class BackgroundPanel extends JPanel {
 		cardPanel.add(playerRegisterPanel, "playerRegister");
 		cardPanel.add(managerRegisterPanel, "managerRegister");
 		cardPanel.add(new CreateGestorePanel(cardLayout, cardPanel), "createGestore");
+		cardPanel.add(new InserisciPrenotazionePanel(cardLayout, cardPanel), "inserisciPrenotazione");
 		cardPanel.add(new CreateGiocatorePanel(cardLayout, cardPanel), "createGiocatore");
 		cardPanel.add(new InserisciCentroPanel(cardLayout, cardPanel), "inserisciCentro");
 		//cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
