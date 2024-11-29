@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -268,7 +269,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         prenotazioniArea.setText(""); // Pulisce l'area di testo
 
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem(); // Assumendo che campiComboBox contenga oggetti `Campo`
+        Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem(); // Assumiamo che campiComboBox contenga oggetti `Campo`
 
         if (centroSelezionato != null && campoSelezionato != null) {
             try {
@@ -277,7 +278,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
                 int centroId = centro.getID();
 
                 // Recupera l'ID del campo
-                int campoId = campoSelezionato.getId(); // Assumendo che `Campo` abbia un metodo `getId()`
+                int campoId = campoSelezionato.getId(); // Assumiamo che `Campo` abbia un metodo `getId()`
 
                 // Chiamata al metodo aggiornato
                 List<Prenotazione> prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);
@@ -285,8 +286,29 @@ public class VediPrenotazioniGestorePanel extends JPanel {
                 if (prenotazioni.isEmpty()) {
                     prenotazioniArea.setText("Nessuna prenotazione per questo campo.");
                 } else {
+                    // Raggruppa le prenotazioni per data
+                    Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
                     for (Prenotazione prenotazione : prenotazioni) {
-                        prenotazioniArea.append(prenotazione.toString() + "\n");
+                        String giorno = prenotazione.getData().toString(); // Supponiamo che Prenotazione abbia un metodo getData() che restituisce la data
+                        prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
+                    }
+
+                    // Mostra le prenotazioni per giorno
+                    for (Map.Entry<String, List<Prenotazione>> entry : prenotazioniPerGiorno.entrySet()) {
+                        String giorno = entry.getKey();
+                        List<Prenotazione> prenotazioniGiorno = entry.getValue();
+
+                        prenotazioniArea.append("Prenotazioni per il giorno: " + giorno + "\n");
+
+                        // Disegna un rettangolo per ogni prenotazione
+                        for (Prenotazione prenotazione : prenotazioniGiorno) {
+                            // Aggiungi la prenotazione al testo
+                            prenotazioniArea.append(prenotazione.toString() + "\n");
+
+                            // Puoi usare Graphics per disegnare il rettangolo attorno a ogni prenotazione, se necessario
+                        }
+
+                        prenotazioniArea.append("\n"); // Separazione tra i giorni
                     }
                 }
             } catch (Exception e) {
@@ -297,8 +319,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
                     JOptionPane.ERROR_MESSAGE);
             }
         }
-
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -316,6 +338,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         // Disegna l'immagine di sfondo
         if (clearImage != null) {
             g2d.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+            
         }
 
         g2d.dispose();

@@ -335,7 +335,7 @@ public class DataBase {
 	        List<Prenotazione> prenotazioni = new ArrayList<>();
 	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
-	        String query = "SELECT p.OraInizio, p.OraFine, p.Utente, p.Campo " +
+	        String query = "SELECT p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " +
 	                       "FROM Prenotazione p " +
 	                       "JOIN Campo c ON p.Campo = c.ID " +
 	                       "WHERE c.ID = ? AND c.CentroSportivo = ?";
@@ -348,12 +348,13 @@ public class DataBase {
 	            ResultSet rs = stmt.executeQuery();
 
 	            while (rs.next()) {
+	            	Date data =Date.valueOf("Data");
 	                Time oraInizio = Time.valueOf(rs.getString("OraInizio"));
 	                Time oraFine = Time.valueOf(rs.getString("OraInizio"));
 	                int utenteID = rs.getInt("Utente");
 	                int campoID = rs.getInt("Campo");
 
-	                Prenotazione prenotazione = new Prenotazione(oraInizio, oraFine, utenteID, campoID);
+	                Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
 	                prenotazioni.add(prenotazione);
 	            }
 	        } catch (SQLException e) {
