@@ -21,75 +21,155 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private Image clearImage;
     
     public VediPrenotazioniGestorePanel() {
-    
+        // Caricamento dello sfondo
         URL clearImageUrl = getClass().getResource("/GUI/immagini/sfondohome.png");
         if (clearImageUrl != null) {
             clearImage = new ImageIcon(clearImageUrl).getImage();
         } else {
             System.out.println("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png");
         }
-        
+
         // Configura layout e componenti
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Etichetta e ComboBox per i centri sportivi
-        JLabel centriLabel = new JLabel("Seleziona Centro Sportivo:");
+        // Pannello superiore
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setOpaque(false);
+
+        // Caricamento delle icone ridimensionate
+        ImageIcon centroIcon = loadScaledIcon("/GUI/immagini/centroIcon.png", 70, 70); // Icone leggermente più grandi
+        ImageIcon campoIcon = loadScaledIcon("/GUI/immagini/campoIcon.png", 70, 70);
+
+     // Etichetta per il centro sportivo
+        JPanel centriPanel = new JPanel(new BorderLayout());
+        centriPanel.setOpaque(false); // Per mantenere la trasparenza dello sfondo
+        JLabel centriLabel = new JLabel("Seleziona Centro Sportivo:", centroIcon, JLabel.LEFT);
+        centriLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        centriPanel.add(centriLabel, BorderLayout.WEST);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.weightx = 0.2;
-        gbc.anchor = GridBagConstraints.WEST;  // Allinea a sinistra
-        add(centriLabel, gbc);
+        topPanel.add(centriPanel, gbc);
 
+        // ComboBox per i centri sportivi
         centriComboBox = new JComboBox<>();
         caricaCentriSportivi();
         centriComboBox.addActionListener(e -> aggiornaCampi());
-        centriComboBox.setPreferredSize(new Dimension(120, 25)); // Ridotto in larghezza
+        centriComboBox.setPreferredSize(new Dimension(200, 30));
+        centriComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+        centriComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 0.0; // Non espandere orizzontalmente
-        gbc.fill = GridBagConstraints.NONE; // Non espandere
-        add(centriComboBox, gbc);
+        topPanel.add(centriComboBox, gbc);
 
-        // Etichetta e ComboBox per i campi sportivi
-        JLabel campiLabel = new JLabel("Seleziona Campo:");
+        // Etichetta per il campo sportivo
+        JPanel campiPanel = new JPanel(new BorderLayout());
+        campiPanel.setOpaque(false); // Per mantenere la trasparenza dello sfondo
+        JLabel campiLabel = new JLabel("Seleziona Campo:", campoIcon, JLabel.LEFT);
+        campiLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        campiPanel.add(campiLabel, BorderLayout.WEST);
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.weightx = 0.2;
-        gbc.anchor = GridBagConstraints.WEST; // Allinea a sinistra
-        add(campiLabel, gbc);
+        topPanel.add(campiPanel, gbc);
 
+        // ComboBox per i campi sportivi
         campiComboBox = new JComboBox<>();
         campiComboBox.addActionListener(e -> aggiornaPrenotazioni());
-        campiComboBox.setPreferredSize(new Dimension(120, 25)); // Ridotto in larghezza
+        campiComboBox.setPreferredSize(new Dimension(200, 30));
+        campiComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+        campiComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weightx = 0.0; // Non espandere orizzontalmente
-        gbc.fill = GridBagConstraints.NONE; // Non espandere
-        add(campiComboBox, gbc);
+        topPanel.add(campiComboBox, gbc);
+
+
+        // Aggiungi il pannello superiore al layout principale
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        add(topPanel, gbc);
 
         // Area per visualizzare le prenotazioni
         prenotazioniArea = new JTextArea();
-        prenotazioniArea.setEditable(false); // Rendi il JTextArea di sola lettura
-        prenotazioniArea.setWrapStyleWord(true); // Parola intera su nuova riga
-        prenotazioniArea.setLineWrap(true); // Abilita l'andata a capo automatica
+        prenotazioniArea.setEditable(false);
+        prenotazioniArea.setWrapStyleWord(true);
+        prenotazioniArea.setLineWrap(true);
+        prenotazioniArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        prenotazioniArea.setBackground(new Color(245, 245, 245));
+        prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Barra di scorrimento personalizzata
         JScrollPane scrollPane = new JScrollPane(prenotazioniArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(300, 150));
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Prenotazioni Giorno per Giorno"));
-
+        scrollPane.setPreferredSize(new Dimension(250, 150)); // Ridotta larghezza
+        scrollPane.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 2),
+            "Prenotazioni Giorno per Giorno",
+            0,
+            0,
+            new Font("Arial", Font.BOLD, 14),
+            Color.GRAY
+        ));
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
-        gbc.weightx = 1.0; // Lo scrollpane si espande orizzontalmente
-        gbc.weighty = 1.0; // Lo scrollpane si espande verticalmente
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         add(scrollPane, gbc);
 
         aggiornaCampi();
     }
+
+    /**
+     * Metodo per caricare e ridimensionare un'icona.
+     * 
+     * @param path il percorso dell'immagine
+     * @param width larghezza desiderata
+     * @param height altezza desiderata
+     * @return un oggetto ImageIcon ridimensionato
+     */
+    private ImageIcon loadScaledIcon(String path, int width, int height) {
+        URL imageUrl = getClass().getResource(path);
+        if (imageUrl != null) {
+            ImageIcon icon = new ImageIcon(imageUrl);
+            Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImage);
+        } else {
+            System.out.println("Errore nel caricamento dell'immagine: " + path);
+            return null;
+        }
+    }
+
+
+    /**
+     * Classe per personalizzare la barra di scorrimento.
+     */
+    class ModernScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
+        @Override
+        protected void configureScrollBarColors() {
+            this.thumbColor = new Color(200, 200, 200);
+        }
+
+        @Override
+        protected JButton createDecreaseButton(int orientation) {
+            return createInvisibleButton();
+        }
+
+        @Override
+        protected JButton createIncreaseButton(int orientation) {
+            return createInvisibleButton();
+        }
+
+        private JButton createInvisibleButton() {
+            JButton button = new JButton();
+            button.setPreferredSize(new Dimension(0, 0));
+            button.setMinimumSize(new Dimension(0, 0));
+            button.setMaximumSize(new Dimension(0, 0));
+            return button;
+        }
+    }
+
 
     /**
      * Carica i centri sportivi nel JComboBox.
