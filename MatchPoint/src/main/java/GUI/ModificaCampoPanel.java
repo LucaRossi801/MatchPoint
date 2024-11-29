@@ -92,7 +92,7 @@ public class ModificaCampoPanel extends JPanel {
         copertoPanel.setOpaque(false); // Rendi trasparente il pannello
 
         // Etichetta "Coperto:"
-        JLabel copertoLabel = new JLabel("Coperto:");
+        JLabel copertoLabel = new OutlinedLabel("Coperto:", Color.BLACK);
         copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
         copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo
         copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità
