@@ -87,32 +87,38 @@ public class ModificaCampoPanel extends JPanel {
         lunghezzaField = creaCampo("Lunghezza:", 4, gbc, Color.BLACK);
         larghezzaField = creaCampo("Larghezza:", 5, gbc, Color.BLACK);
 
-     // Pannello per Coperto
-     		JPanel copertoPanel = new JPanel(new GridBagLayout());
-     		copertoPanel.setBackground(getBackground()); // Sfondo uguale alla finestra principale
+        // Pannello per Coperto
+        JPanel copertoPanel = new JPanel(new GridBagLayout());
+        copertoPanel.setOpaque(false); // Rendi trasparente il pannello
 
-     		// Etichetta "Coperto:"
-     		JLabel copertoLabel = new JLabel("Coperto:");
-     		copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
-     		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo
-     		copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità
+        // Etichetta "Coperto:"
+        JLabel copertoLabel = new JLabel("Coperto:");
+        copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo
+        copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità
 
-     		// Configura GridBagConstraints per il pannello Coperto
-     		GridBagConstraints copertoGbc = new GridBagConstraints();
-     		copertoGbc.insets = new Insets(0, 10, 0, 10); // Margini uniformi
-     		copertoGbc.anchor = GridBagConstraints.WEST; // Allineamento sinistra
-     		copertoGbc.gridx = 0; // Colonna 0
-     		copertoGbc.gridy = 0; // Riga 0
-     		copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta
+        // Configura GridBagConstraints per il pannello Coperto
+        GridBagConstraints copertoGbc = new GridBagConstraints();
+        copertoGbc.insets = new Insets(0, 10, 0, 10); // Margini uniformi
+        copertoGbc.anchor = GridBagConstraints.WEST; // Allineamento sinistra
+        copertoGbc.gridx = 0; // Colonna 0
+        copertoGbc.gridy = 0;
+        copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta
 
-     		// Switch per Coperto
-     		switchButton.setPreferredSize(new Dimension(50, 25));
-     		switchButton.setFocusPainted(false);
-     		switchButton.setBorder(BorderFactory.createEmptyBorder());
-     		switchButton.setBackground(getBackground()); // Sfondo uguale alla finestra
-     		switchButton.setContentAreaFilled(false); // Disabilita l'area predefinita del contenuto
-     		switchButton.setOpaque(false); // Assicurati che lo sfondo non sia dipinto
-     	// Creazione delle icone per gli stati
+        // Switch per Coperto
+        switchButton.setPreferredSize(new Dimension(50, 25));
+        switchButton.setFocusPainted(false);
+        switchButton.setBorder(BorderFactory.createEmptyBorder()); // Rimuovi bordi
+        switchButton.setBackground(null); // Rimuovi lo sfondo
+        switchButton.setContentAreaFilled(false); // Disabilita l'area di contenuto
+        switchButton.setOpaque(false); // Rendi trasparente il bottone
+
+        // Aggiungi il pulsante al pannello con le stesse impostazioni
+        copertoGbc.gridx = 1; // Colonna 1 per lo switch
+        copertoPanel.add(switchButton, copertoGbc);
+
+     		
+     		// Creazione delle icone per gli stati
     		Icon offIcon = new Icon() {
     			@Override
     			public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -220,6 +226,7 @@ public class ModificaCampoPanel extends JPanel {
         add(label, gbc);
 
         JTextField textField = new JTextField(15);
+        textField.setFont(new Font("Arial", Font.PLAIN, 18));
         gbc.gridx = 1;
         add(textField, gbc);
 
