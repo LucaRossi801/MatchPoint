@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import GUI.CustomMessage;
 import components.Campo;
@@ -348,14 +350,43 @@ public class DataBase {
 	            ResultSet rs = stmt.executeQuery();
 
 	            while (rs.next()) {
-	            	Date data =Date.valueOf("Data");
-	                Time oraInizio = Time.valueOf(rs.getString("OraInizio"));
-	                Time oraFine = Time.valueOf(rs.getString("OraInizio"));
-	                int utenteID = rs.getInt("Utente");
-	                int campoID = rs.getInt("Campo");
+	                String dataString = rs.getString("Data");  // Ottieni la stringa della data
 
-	                Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
-	                prenotazioni.add(prenotazione);
+	                // Definisci il formato del database (dd-MM-yyyy)
+	                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	                try {
+	                    // Parse la stringa nella data
+	                    Date parsedDate = sdf.parse(dataString);
+	                    
+	                    // Converti la data in java.sql.Date
+	                    java.sql.Date data = new java.sql.Date(parsedDate.getTime());
+	                    
+	                    // Ora puoi utilizzare data
+	                    System.out.println(data);  // Mostra la data nel formato corretto
+
+	                    String oraInizioString = rs.getString("OraInizio");
+	                    String oraFineString = rs.getString("OraFine");
+
+	                    // Aggiungi i secondi se non ci sono
+	                    if (oraInizioString.length() == 5) {
+	                        oraInizioString += ":00";  // Aggiungi ":00" per i secondi
+	                    }
+	                    if (oraFineString.length() == 5) {
+	                        oraFineString += ":00";  // Aggiungi ":00" per i secondi
+	                    }
+
+	                    Time oraInizio = Time.valueOf(oraInizioString);
+	                    Time oraFine = Time.valueOf(oraFineString);
+
+	                    int utenteID = rs.getInt("Utente");
+	                    int campoID = rs.getInt("Campo");
+
+	                    // Crea l'oggetto Prenotazione
+	                    Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
+	                    prenotazioni.add(prenotazione);
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
@@ -363,6 +394,8 @@ public class DataBase {
 
 	        return prenotazioni;
 	    }
+
+
 
 		
 		
