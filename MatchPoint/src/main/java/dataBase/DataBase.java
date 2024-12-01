@@ -431,4 +431,34 @@ public class DataBase {
 	        return centro; // Restituisce il centro o null se non trovato
 	    }
 
+
+
+		 public static Map<String, CentroSportivo> getCentriSportiviPerProvincia(String provinciaS) {
+		        Map<String, CentroSportivo> centri = new HashMap<>();
+		        String query = "SELECT ID, Nome, Provincia, Comune FROM CentroSportivo WHERE Provincia = ?";
+		        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		        try (Connection conn = DriverManager.getConnection(url);
+		             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+		            stmt.setString(1, provinciaS);
+		            ResultSet rs = stmt.executeQuery();
+
+		            while (rs.next()) {
+		                int id = rs.getInt("ID");
+		                String nome = rs.getString("Nome");
+		                String provincia = rs.getString("Provincia");
+		                String comune = rs.getString("Comune");
+
+		                // Crea l'oggetto CentroSportivo
+		                CentroSportivo centro = new CentroSportivo(id, nome, provincia, comune); // Gestore può essere impostato successivamente
+		                centri.put(nome, centro); // Usa il nome come chiave
+		            }
+
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		        return centri;
+		    }
+		 
+
 }
