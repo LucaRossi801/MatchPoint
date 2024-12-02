@@ -459,6 +459,42 @@ public class DataBase {
 		        }
 		        return centri;
 		    }
-		 
+		 	
+		 public static Campo getCampoById (int campoId) {
+			 Campo campo = null;
+			 String query = "SELECT ID, Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto FROM Campo c WHERE c.ID = ?";
+		        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		        try (Connection conn = DriverManager.getConnection(url);
+		             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+		            stmt.setInt(1, campoId);
+		            ResultSet rs = stmt.executeQuery();
+
+		            while (rs.next()) {
+		                int id = rs.getInt("ID");
+		                String tipologiaString = rs.getString("Tipologia");
+		                int costoOraNotturna = rs.getInt("CostoOraNotturna");
+		                int costoOraDiurna = rs.getInt("CostoOraDiurna");
+		                int lunghezza = rs.getInt("Lunghezza");
+		                int larghezza = rs.getInt("Larghezza");
+		                boolean coperto = rs.getBoolean("Coperto");
+		                
+		                // Converti la stringa in TipologiaCampo
+		                TipologiaCampo tipologia;
+		                try {
+		                    tipologia = TipologiaCampo.valueOf(tipologiaString);
+		                } catch (IllegalArgumentException e) {
+		                    throw new RuntimeException("Tipologia non valida: " + tipologiaString, e);
+		                }
+		                
+		                // Crea l'oggetto Campo
+		                campo = new Campo(id, tipologia, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto);
+		            }
+
+		        } catch (SQLException e) {
+		            e.printStackTrace();
+		        }
+		        return campo;
+		    }
 
 }

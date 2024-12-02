@@ -266,59 +266,74 @@ public class VediPrenotazioniGestorePanel extends JPanel {
      * Aggiorna l'area delle prenotazioni in base al campo selezionato.
      */
     private void aggiornaPrenotazioni() {
-        prenotazioniArea.setText(""); // Pulisce l'area di testo
-
+        // Recupera il centro selezionato e il campo selezionato
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
-        Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem(); // Assumiamo che campiComboBox contenga oggetti `Campo`
+        Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem();
 
-        if (centroSelezionato != null && campoSelezionato != null) {
-            try {
-                // Recupera l'ID del centro selezionato
-                CentroSportivo centro = centriSportivi.get(centroSelezionato);
-                int centroId = centro.getID();
+        // Ripulisci l'area di testo
+        prenotazioniArea.setText("");
 
-                // Recupera l'ID del campo
-                int campoId = campoSelezionato.getId(); // Assumiamo che `Campo` abbia un metodo `getId()`
-
-                // Chiamata al metodo aggiornato
-                List<Prenotazione> prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);
-
-                if (prenotazioni.isEmpty()) {
-                    prenotazioniArea.setText("Nessuna prenotazione per questo campo.");
-                } else {
-                    // Raggruppa le prenotazioni per data
-                    Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
-                    for (Prenotazione prenotazione : prenotazioni) {
-                        String giorno = prenotazione.getData().toString(); // Supponiamo che Prenotazione abbia un metodo getData() che restituisce la data
-                        prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
-                    }
-
-                    // Mostra le prenotazioni per giorno
-                    for (Map.Entry<String, List<Prenotazione>> entry : prenotazioniPerGiorno.entrySet()) {
-                        String giorno = entry.getKey();
-                        List<Prenotazione> prenotazioniGiorno = entry.getValue();
-
-                        prenotazioniArea.append("Prenotazioni per il giorno: " + giorno + "\n");
-
-                        // Disegna un rettangolo per ogni prenotazione
-                        for (Prenotazione prenotazione : prenotazioniGiorno) {
-                            // Aggiungi la prenotazione al testo
-                            prenotazioniArea.append(prenotazione.toString() + "\n");
-
-                            // Puoi usare Graphics per disegnare il rettangolo attorno a ogni prenotazione, se necessario
-                        }
-
-                        prenotazioniArea.append("\n"); // Separazione tra i giorni
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, 
-                    "Errore durante il caricamento delle prenotazioni.", 
-                    "Errore", 
-                    JOptionPane.ERROR_MESSAGE);
-            }
+        if (centroSelezionato == null || campoSelezionato == null) {
+            prenotazioniArea.setText("Seleziona un centro sportivo e un campo per visualizzare le prenotazioni.");
+            return;
         }
+
+        try {
+            // Ottieni gli ID del centro e del campo
+            int centroId = centriSportivi.get(centroSelezionato).getID();
+            int campoId = campoSelezionato.getId();
+
+            // Recupera le prenotazioni dal database
+            List<Prenotazione> prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);
+
+            if (prenotazioni.isEmpty()) {
+                prenotazioniArea.setText("Nessuna prenotazione per questo campo.");
+                return;
+            }
+
+            StringBuilder builder = new StringBuilder();
+            Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
+
+            for (Map.Entry<String, List<Prenotazione>> entry : prenotazioniPerGiorno.entrySet()) {
+                String giorno = entry.getKey();
+                builder.append("Prenotazioni per il giorno: ").append(giorno).append("\n");
+
+                for (Prenotazione prenotazione : entry.getValue()) {
+                    builder.append(" - Ora inizio: ").append(prenotazione.getOraInizio())
+                            .append(", Ora fine: ").append(prenotazione.getOraFine())
+                            .append(", Durata: ").append(prenotazione.getDurataInFormatoOreMinuti())
+                            .append(" h, Costo: €").append(prenotazione.calcolaCosto()).append("\n");
+                }
+                builder.append("\n");
+            }
+
+            prenotazioniArea.setText(builder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            prenotazioniArea.setText("Errore durante il caricamento delle prenotazioni.");
+        }
+    }
+
+
+   
+    /**
+     * Raggruppa le prenotazioni per giorno.
+     */
+    private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
+        Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
+        for (Prenotazione prenotazione : prenotazioni) {
+            String giorno = prenotazione.getData().toString(); // Adatta se necessario
+            prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
+        }
+        return prenotazioniPerGiorno;
+    }
+
+
+    /**
+     * Mostra un messaggio di errore all'utente.
+     */
+    private void mostraErrore(String messaggio) {
+        JOptionPane.showMessageDialog(this, messaggio, "Errore", JOptionPane.ERROR_MESSAGE);
     }
 
 

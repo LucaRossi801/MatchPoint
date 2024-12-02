@@ -15,4 +15,7 @@ public enum TipologiaCampo {
 	volley,
 	golf,
 	badminton;
+	
 }
+
+
