@@ -45,8 +45,12 @@ public class CreateGiocatorePanel extends JPanel {
         // Crea il secondo pulsante "Vedi Prenotazioni"
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
-            e -> cardLayout.show(cardPanel, "vediPrenotazioniFatte"),
+            e -> {
+            	VediPrenotazioniGiocatorePanel panel = new VediPrenotazioniGiocatorePanel(cardLayout, cardPanel);
+                BackgroundPanel.cardPanel.add(new VediPrenotazioniGiocatorePanel(cardLayout, cardPanel), "vediPrenotazioniGiocatore");
+            	cardLayout.show(cardPanel, "vediPrenotazioniGiocatore");},
             buttonSize
+            
         );
         vediPrenotazioniButton.setForeground(new Color(220, 250, 245));
         

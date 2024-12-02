@@ -219,9 +219,9 @@ public class ModificaCentroPanel extends JPanel {
 		if (centroSelezionato != null && centriGestiti != null) {
 			CentroSportivo centro = centriGestiti.get(centroSelezionato);
 			if (centro != null) {
-				nomeField.setText(centro.nome);
-				provinciaComboBox.setSelectedItem(centro.provincia);
-                comuneComboBox.setSelectedItem(centro.comune);
+				nomeField.setText(centro.getNome());
+				provinciaComboBox.setSelectedItem(centro.getProvincia());
+                comuneComboBox.setSelectedItem(centro.getComune());
 			}
 		}
 	}
@@ -235,7 +235,7 @@ public class ModificaCentroPanel extends JPanel {
 			String nuovaProvincia = (String) provinciaComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox
 			String nuovoComune = (String) comuneComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox
 
-			boolean success = DataBase.updateCentroSportivo(centro.ID, nuovoNome, nuovaProvincia, nuovoComune);
+			boolean success = DataBase.updateCentroSportivo(centro.getID(), nuovoNome, nuovaProvincia, nuovoComune);
 			
 			// aggiungi anche i campi al DB (se ci sono)
 			
@@ -248,9 +248,9 @@ public class ModificaCentroPanel extends JPanel {
 			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
 			if (success) {
 				CustomMessage.show("Modifiche salvate con successo!", "Successo", true);
-				centro.nome = nuovoNome;
-				centro.provincia = nuovaProvincia;
-				centro.comune = nuovoComune;
+				nuovoNome = centro.getNome();
+				nuovaProvincia = centro.getProvincia();
+				nuovoComune = centro.getComune();
 				aggiornaDettagliCentro();
 				caricaCentriGestiti();
 				resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo
@@ -293,7 +293,7 @@ public class ModificaCentroPanel extends JPanel {
 
 	        // Chiedi conferma all'utente
 	        int conferma = JOptionPane.showConfirmDialog(this,
-	                "Sei sicuro di voler eliminare il centro \"" + centro.nome + "\"?",
+	                "Sei sicuro di voler eliminare il centro \"" + centro.getNome() + "\"?",
 	                "Conferma eliminazione",
 	                JOptionPane.YES_NO_OPTION);
 

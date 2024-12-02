@@ -57,6 +57,10 @@ public class Prenotazione {
         return String.format("%02d:%02d", ore, minuti);
     }
     
+    public int getCampoId () {
+    	return campoID;
+    }
+    
     public double calcolaCosto() {
     	//recupera il campo a cui è stata effettuata la prenotazione
     	Campo campo = DataBase.getCampoById(campoID);

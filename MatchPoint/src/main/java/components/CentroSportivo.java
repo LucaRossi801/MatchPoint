@@ -13,11 +13,11 @@ import individui.Gestore;
 
 public class CentroSportivo
 {
-	public Gestore gestore;
-	public int ID;
-	public String nome;
-	public String provincia;	
-	public String comune;
+	private Gestore gestore;
+	private int ID;
+	private String nome;
+	private String provincia;	
+	private String comune;
 	
 	public CentroSportivo(int iD, String nome, String provincia, String comune) {
 		super();

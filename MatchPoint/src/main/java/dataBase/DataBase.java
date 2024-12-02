@@ -426,7 +426,92 @@ public class DataBase {
 
 	        return prenotazioni;
 	    }
+	    
+	    public static List<Prenotazione> getAllPrenotazioni(int utenteID) {
+	        List<Prenotazione> prenotazioni = new ArrayList<>();
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
+	        String query = "SELECT p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " +
+	                       "FROM Prenotazione p " +
+	                       "WHERE p.Utente = ?";
+
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setInt(1, utenteID);
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                String dataString = rs.getString("Data");
+
+	                // Definisci il formato della data
+	                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	                try {
+	                    Date parsedDate = sdf.parse(dataString);
+	                    java.sql.Date data = new java.sql.Date(parsedDate.getTime());
+
+	                    String oraInizioString = rs.getString("OraInizio");
+	                    String oraFineString = rs.getString("OraFine");
+
+	                    if (oraInizioString.length() == 5) {
+	                        oraInizioString += ":00";
+	                    }
+	                    if (oraFineString.length() == 5) {
+	                        oraFineString += ":00";
+	                    }
+
+	                    Time oraInizio = Time.valueOf(oraInizioString);
+	                    Time oraFine = Time.valueOf(oraFineString);
+
+	                    int campoID = rs.getInt("Campo");
+
+	                    // Crea l'oggetto Prenotazione
+	                    Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
+	                    prenotazioni.add(prenotazione);
+	                } catch (Exception e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        return prenotazioni;
+	    }
+
+	    public static CentroSportivo getCentroByCampo(int campoId) {
+	        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	        String query = "SELECT c.ID, c.Nome, c.Provincia, c.Comune " +
+	                       "FROM CentroSportivo c " +
+	                       "JOIN Campo ca ON c.ID = ca.CentroSportivo " +
+	                       "WHERE ca.ID = ?";
+
+	        try (Connection conn = DriverManager.getConnection(url);
+	             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	            stmt.setInt(1, campoId);
+	            ResultSet rs = stmt.executeQuery();
+
+	            if (rs.next()) {
+	                int centroID = rs.getInt("ID");
+	                String nome = rs.getString("Nome");
+	                String provincia = rs.getString("Provincia");
+	                String comune = rs.getString("Comune");
+
+	                // Crea e restituisce un oggetto CentroSportivo
+	                return new CentroSportivo(centroID, nome, provincia, comune);
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+
+	        // Se il campo non è associato a un centro sportivo, restituisci null
+	        return null;
+	    }
+
+
+	    
 	    public static CentroSportivo getCentroByName(String nome) {
 	        CentroSportivo centro = null;
 	        Connection conn = null;
