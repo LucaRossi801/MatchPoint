@@ -395,9 +395,6 @@ public class DataBase {
 	                    
 	                    // Converti la data in java.sql.Date
 	                    java.sql.Date data = new java.sql.Date(parsedDate.getTime());
-	                    
-	                    // Ora puoi utilizzare data
-	                    System.out.println(data);  // Mostra la data nel formato corretto
 
 	                    String oraInizioString = rs.getString("OraInizio");
 	                    String oraFineString = rs.getString("OraFine");
