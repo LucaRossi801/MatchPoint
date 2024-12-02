@@ -3,7 +3,14 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -269,6 +276,10 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         // Recupera il centro selezionato e il campo selezionato
         String centroSelezionato = (String) centriComboBox.getSelectedItem();
         Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem();
+        
+        JPanel contenitorePrenotazioni = new JPanel();
+        contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));
+        contenitorePrenotazioni.setOpaque(false); // Trasparente per vedere lo sfondo
 
         // Ripulisci l'area di testo
         prenotazioniArea.setText("");
@@ -294,18 +305,46 @@ public class VediPrenotazioniGestorePanel extends JPanel {
             StringBuilder builder = new StringBuilder();
             Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
 
-            for (Map.Entry<String, List<Prenotazione>> entry : prenotazioniPerGiorno.entrySet()) {
-                String giorno = entry.getKey();
-                builder.append("Prenotazioni per il giorno: ").append(giorno).append("\n");
+            // Ordina le date in ordine decrescente (più recente in cima)
+            List<String> giorniOrdinati = new ArrayList<>(prenotazioniPerGiorno.keySet());
+            Collections.sort(giorniOrdinati, Collections.reverseOrder()); // Ordina in ordine decrescente
 
-                for (Prenotazione prenotazione : entry.getValue()) {
-                    builder.append(" - Ora inizio: ").append(prenotazione.getOraInizio())
-                            .append(", Ora fine: ").append(prenotazione.getOraFine())
-                            .append(", Durata: ").append(prenotazione.getDurataInFormatoOreMinuti())
-                            .append(" h, Costo: €").append(prenotazione.calcolaCosto()).append("\n");
+            for (String giorno : giorniOrdinati) {
+                List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
+
+                // Header per il giorno
+                JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
+                headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
+                headerGiorno.setForeground(new Color(16, 139, 135));
+                headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);  // Centra il testo
+                contenitorePrenotazioni.add(headerGiorno);
+
+                // Linea divisoria tra giorno e prenotazioni (linea originale)
+                contenitorePrenotazioni.add(creaLineaSeparatrice());
+
+                // Spazio tra la riga del giorno e la prima prenotazione
+                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));
+
+                for (Prenotazione prenotazione : prenotazioniDelGiorno) {
+                    // Crea il pannello per ogni prenotazione
+                    JPanel cardPrenotazione = creaCardPrenotazione(prenotazione);
+                    cardPrenotazione.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra la prenotazione
+                    contenitorePrenotazioni.add(cardPrenotazione);
                 }
-                builder.append("\n");
+
+                // Aggiungi spazio tra l'ultima prenotazione e la linea separatrice spessa
+                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio aggiuntivo
+
+                // Linea separatrice più spessa tra il gruppo di prenotazioni e il prossimo giorno
+                contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());
+
+                // Spaziatura tra giorni
+                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));
             }
+
+            // Aggiunge il contenitore al pannello con lo scroll
+            JScrollPane scrollPane = (JScrollPane) getComponent(1); // Assumendo che sia il secondo componente
+            scrollPane.setViewportView(contenitorePrenotazioni);
 
             prenotazioniArea.setText(builder.toString());
         } catch (Exception e) {
@@ -314,6 +353,86 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         }
     }
 
+
+    /**
+     * Crea una linea separatrice originale tra i giorni.
+     */
+    private JSeparator creaLineaSeparatrice() {
+        JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
+        separatore.setForeground(new Color(16, 139, 135));
+        separatore.setPreferredSize(new Dimension(800, 3)); // Linea sottile
+        return separatore;
+    }
+
+    /**
+     * Crea una linea separatrice più spessa tra i gruppi di prenotazioni.
+     */
+    private JPanel creaLineaSeparatriceSpessa() {
+        JPanel separatore = new JPanel();
+        separatore.setPreferredSize(new Dimension(800, 5)); // Altezza maggiore per una linea più evidente
+        separatore.setBackground(new Color(16, 139, 135)); // Colore della linea
+        return separatore;
+    }
+
+
+
+
+    /**
+     * Crea un pannello per rappresentare una prenotazione.
+     */
+    private JPanel creaCardPrenotazione(Prenotazione prenotazione) {
+        JPanel card = new JPanel(new GridBagLayout());
+
+        // Recupera la data e l'orario di fine della prenotazione
+        Date dataPrenotazione = prenotazione.getData();
+        Time oraInizio = prenotazione.getOraInizio();
+        Time oraFine = prenotazione.getOraFine();
+
+        // Converte java.sql.Date in LocalDate
+        LocalDate localDate = dataPrenotazione.toLocalDate();
+
+        // Converte Time in LocalTime
+        LocalTime localTimeInizio = oraInizio.toLocalTime();
+        LocalTime localTimeFine = oraFine.toLocalTime();
+
+        // Combina LocalDate e LocalTime per ottenere un LocalDateTime
+        LocalDateTime inizioPrenotazione = localDate.atTime(localTimeInizio);
+        LocalDateTime finePrenotazione = localDate.atTime(localTimeFine);
+
+        // Controlla se la prenotazione è passata
+        LocalDateTime oraCorrente = LocalDateTime.now();
+        boolean prenotazionePassata = finePrenotazione.isBefore(oraCorrente);
+
+        // Crea la card con un colore di sfondo a seconda dello stato della prenotazione
+        card.setBackground(prenotazionePassata ? new Color(200, 200, 200) : new Color(230, 240, 250));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(16, 139, 135), 2),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        
+        // Ridotto la larghezza massima del rettangolo
+        card.setMaximumSize(new Dimension(750, 100));  // Modificato da 900 a 750
+
+        // Configurazione layout della card
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Ora inizio - Ora fine
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        card.add(new JLabel("⏰ Orario: " + prenotazione.getOraInizio() + " - " + prenotazione.getOraFine()), gbc);
+
+        // Durata
+        gbc.gridx = 1;
+        card.add(new JLabel("🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti() + " h"), gbc);
+
+        // Costo
+        gbc.gridx = 2;
+        card.add(new JLabel("💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+
+        return card;
+    }
 
    
     /**
