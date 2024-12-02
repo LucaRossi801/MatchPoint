@@ -11,11 +11,8 @@ import javax.swing.JSpinner.DefaultEditor;
 import java.awt.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class InserisciPrenotazionePanel extends JPanel {
     private Image clearImage;
@@ -49,12 +46,7 @@ public class InserisciPrenotazionePanel extends JPanel {
         gbc.gridwidth = 1;
 
         // Bottone per selezionare il centro
-        JButton selezionaCentroButton = BackgroundPanel.createFlatButton(
-            "Seleziona Centro",
-            e -> apriSelezionaCentroDialog(),
-            new Dimension(250, 50)
-        );
-        selezionaCentroButton.setForeground(Color.WHITE);
+        JButton selezionaCentroButton = creaFlatButton("Seleziona Centro", e -> apriSelezionaCentroDialog());
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(selezionaCentroButton, gbc);
@@ -66,12 +58,7 @@ public class InserisciPrenotazionePanel extends JPanel {
         add(centroSelezionatoLabel, gbc);
 
         // Bottone per selezionare il campo
-        JButton selezionaCampoButton = BackgroundPanel.createFlatButton(
-            "Seleziona Campo",
-            e -> apriSelezionaCampoDialog(),
-            new Dimension(250, 50)
-        );
-        selezionaCampoButton.setForeground(Color.WHITE);
+        JButton selezionaCampoButton = creaFlatButton("Seleziona Campo", e -> apriSelezionaCampoDialog());
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(selezionaCampoButton, gbc);
@@ -106,28 +93,24 @@ public class InserisciPrenotazionePanel extends JPanel {
         add(createCustomTimeSpinner(), gbc);
 
         // Bottone "Riepilogo"
-        JButton riepilogoButton = BackgroundPanel.createFlatButton(
-            "Mostra Riepilogo",
-            e -> mostraRiepilogo(datePicker),
-            new Dimension(250, 50)
-        );
-        riepilogoButton.setForeground(Color.WHITE);
+        JButton riepilogoButton = creaFlatButton("Mostra Riepilogo", e -> mostraRiepilogo(datePicker));
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;
         add(riepilogoButton, gbc);
 
         // Bottone "Torna Indietro"
-        JButton backButton = BackgroundPanel.createFlatButton(
-            "Torna Indietro",
-            e -> cardLayout.show(cardPanel, "menuPrincipale"),
-            new Dimension(250, 50)
-        );
-        backButton.setForeground(Color.WHITE);
+        JButton backButton = creaFlatButton("Torna Indietro", e -> cardLayout.show(cardPanel, "menuPrincipale"));
         gbc.gridx = 0;
         gbc.gridy = 7;
         gbc.gridwidth = 2;
         add(backButton, gbc);
+    }
+
+    private JButton creaFlatButton(String testo, java.awt.event.ActionListener azione) {
+        JButton button = BackgroundPanel.createFlatButton(testo, azione, new Dimension(250, 50));
+        button.setForeground(Color.WHITE);
+        return button;
     }
 
     private void apriSelezionaCentroDialog() {
@@ -139,70 +122,76 @@ public class InserisciPrenotazionePanel extends JPanel {
             return;
         }
 
-        // Crea il pannello con la ComboBox per la provincia
-        JPanel selezionePanel = new JPanel(new FlowLayout());
-        selezionePanel.add(new JLabel("Provincia:"));
+        // Seleziona la provincia
+        Map<String, String> provinceMap = new HashMap<>();
+        for (String provincia : provinceComuni.keySet()) {
+            provinceMap.put(provincia, provincia); // Mappa Provincia -> Provincia
+        }
 
-        JComboBox<String> provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
-        provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
-        selezionePanel.add(provinciaComboBox);
+        // Usa il dialogo per selezionare la provincia
+        SelezionaDialog selezionaProvinciaDialog = new SelezionaDialog("Seleziona Provincia", provinceMap);
+        selezionaProvinciaDialog.setVisible(true);
 
-        // Mostra una finestra di dialogo per selezionare la provincia
-        int risultato = JOptionPane.showConfirmDialog(
-            this,
-            selezionePanel,
-            "Seleziona Provincia",
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.PLAIN_MESSAGE
-        );
+        String provinciaSelezionata = selezionaProvinciaDialog.getSelezione();
+        if (provinciaSelezionata == null) {
+            JOptionPane.showMessageDialog(this, "Nessuna provincia selezionata.", "Errore", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        if (risultato == JOptionPane.OK_OPTION) {
-            String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
-            if (provinciaSelezionata != null) {
-                // Ottieni i centri per la provincia selezionata
-                Map<String, CentroSportivo> centriDisponibili = DataBase.getCentriSportiviPerProvincia(provinciaSelezionata);
-                if (centriDisponibili.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Nessun centro disponibile per la provincia selezionata.", "Avviso", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+        // Usa il database per ottenere una mappa Nome->ID per i centri della provincia selezionata
+        Map<String, CentroSportivo> centriMap = DataBase.getCentriSportiviPerProvincia(provinciaSelezionata);
+        Map<String, String> centriNomiID = new HashMap<>();
+        for (Map.Entry<String, CentroSportivo> entry : centriMap.entrySet()) {
+            centriNomiID.put(entry.getValue().getNome(), entry.getKey()); // Nome come chiave, ID come valore
+        }
 
-              /*  // Crea il dialogo per selezionare il centro
-                SelezionaDialog selezionaCentroDialog = new SelezionaDialog(
-                    "Seleziona Centro",
-                    centriDisponibili
-                );
-                selezionaCentroDialog.setVisible(true);
+        // Mostra il dialogo per i centri sportivi
+        SelezionaDialog selezionaCentroDialog = new SelezionaDialog("Seleziona Centro Sportivo", centriNomiID);
+        selezionaCentroDialog.setVisible(true);
 
-                // Ottieni la selezione e aggiorna la label
-                String centroSelezionato = selezionaCentroDialog.getSelezione();
-                if (centroSelezionato != null) {
-                    centroSelezionatoLabel.setText("Centro: " + centroSelezionato);*/
-            }
+        String centroSelezionato = selezionaCentroDialog.getSelezione();
+        String centroID = (String) selezionaCentroDialog.getSelezioneID(); // Seleziona l'ID corretto
+
+        if (centroSelezionato != null) {
+            centroSelezionatoLabel.setText(centroSelezionato);
+        } else {
+            centroSelezionatoLabel.setText("Non selezionato");
         }
     }
 
-
     private void apriSelezionaCampoDialog() {
-        String centroCorrente = centroSelezionatoLabel.getText().replace("Centro: ", "").trim();
+        String centroCorrente = centroSelezionatoLabel.getText().trim();
+
         if (centroCorrente.equals("Non selezionato")) {
             JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
-    }
-       /* List<String> campi = DataBase.getCampiPerCentro(centroCorrente);
-        if (campi == null || campi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nessun campo disponibile.", "Errore", JOptionPane.ERROR_MESSAGE);
+        System.out.println("Centro :  "+centroCorrente);
+        CentroSportivo c = DataBase.getCentroByName(centroCorrente);
+        int centroId = c.getID();
+
+        if (centroId == -1) {
+            JOptionPane.showMessageDialog(this, "Centro non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        SelezionaDialog dialog = new SelezionaDialog("Seleziona Campo", null, campi);
-        dialog.setVisible(true);
+        Map<String, Integer> campiMap = DataBase.getCampiCentroMappa(centroId);
 
-        String selezione = dialog.getSelezione();
-        if (selezione != null) {
-            campoSelezionatoLabel.setText("Campo: " + selezione);
+        if (campiMap.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }*/
+
+        SelezionaDialog selezionaCampoDialog = new SelezionaDialog("Seleziona Campo", campiMap);
+        selezionaCampoDialog.setVisible(true);
+
+        String campoSelezionato = selezionaCampoDialog.getSelezione();
+        if (campoSelezionato != null) {
+            campoSelezionatoLabel.setText("Campo: " + campoSelezionato);
+        } else {
+            campoSelezionatoLabel.setText("Campo: Non selezionato");
+        }
+    }
 
     private void mostraRiepilogo(JXDatePicker datePicker) {
         JOptionPane.showMessageDialog(this,

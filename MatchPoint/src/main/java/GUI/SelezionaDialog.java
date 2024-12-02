@@ -1,70 +1,59 @@
 package GUI;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Map;
 
 public class SelezionaDialog extends JDialog {
-    private JList<String> listaElementi;
     private String selezione = null;
+    private Object selezioneID = null;  // Utilizza Object per poter memorizzare sia String che Integer
 
-    public SelezionaDialog(String titolo, List<String> province, Function<String, List<String>> fetchItemsByProvince) {
+    // Costruttore generico per Map<String, Object> (String o Integer)
+    public SelezionaDialog(String titolo, Map<String, ?> itemsMap) {
         setTitle(titolo);
         setModal(true);
         setSize(400, 300);
         setLayout(new BorderLayout());
 
-        // ComboBox per la selezione della provincia
-        JComboBox<String> comboProvince = new JComboBox<>();
-        comboProvince.addItem("Seleziona Provincia");
-        for (String provincia : province) {
-            comboProvince.addItem(provincia);
-        }
+        // Crea la lista dei nomi da visualizzare
+        List<String> itemList = new ArrayList<>(itemsMap.keySet());
 
-        // Lista degli elementi
-        listaElementi = new JList<>();
-        JScrollPane scrollPane = new JScrollPane(listaElementi);
-
-        // Aggiorna la lista in base alla provincia selezionata
-        comboProvince.addActionListener(e -> {
-            String provinciaSelezionata = (String) comboProvince.getSelectedItem();
-            if (!provinciaSelezionata.equals("Seleziona Provincia")) {
-                List<String> items = fetchItemsByProvince.apply(provinciaSelezionata);
-                if (items != null) {
-                    listaElementi.setListData(items.toArray(new String[0]));
-                } else {
-                    listaElementi.setListData(new String[0]);
+        // Crea una JList per visualizzare i nomi
+        JList<String> list = new JList<>(itemList.toArray(new String[0]));
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                selezione = list.getSelectedValue(); // Salva la selezione
+                if (selezione != null) {
+                    selezioneID = itemsMap.get(selezione); // Ottieni il valore
                 }
-            } else {
-                listaElementi.setListData(new String[0]); // Svuota la lista
             }
         });
 
-        // Pulsanti
-        JPanel buttonPanel = new JPanel();
-        JButton btnOk = new JButton("Seleziona");
-        JButton btnCancel = new JButton("Annulla");
-
-        btnOk.addActionListener(e -> {
-            selezione = listaElementi.getSelectedValue();
-            dispose();
-        });
-
-        btnCancel.addActionListener(e -> {
-            selezione = null;
-            dispose();
-        });
-
-        buttonPanel.add(btnOk);
-        buttonPanel.add(btnCancel);
-
-        // Aggiungi componenti alla dialog
-        add(comboProvince, BorderLayout.NORTH);
+        // Layout e componenti del dialogo
+        JScrollPane scrollPane = new JScrollPane(list);
         add(scrollPane, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+
+        // Bottone per confermare la selezione
+        JButton confirmButton = new JButton("Conferma");
+        confirmButton.addActionListener(e -> dispose()); // Chiude il dialogo
+        add(confirmButton, BorderLayout.SOUTH);
+
+        setSize(300, 200); // Imposta la dimensione del dialogo
+        setLocationRelativeTo(null); // Centra il dialogo
     }
 
+
+    // Metodo per ottenere la selezione effettuata (nome)
     public String getSelezione() {
         return selezione;
+    }
+
+    // Metodo per ottenere l'ID selezionato (String o Integer)
+    public Object getSelezioneID() {
+    	System.out.println(selezioneID);
+        return selezioneID;
     }
 }

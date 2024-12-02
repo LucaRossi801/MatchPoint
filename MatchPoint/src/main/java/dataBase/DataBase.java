@@ -174,6 +174,41 @@ public class DataBase {
 	        return campi;
 	    }
 	 
+	 public static Map<String, Integer> getCampiCentroMappa(int centroId) {
+		    Map<String, Integer> campiMappa = new HashMap<>();
+		    String query = "SELECT ID, Tipologia, Lunghezza, Larghezza FROM Campo WHERE CentroSportivo = ?";
+		    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+		    try (Connection conn = DriverManager.getConnection(url);
+		         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+		        stmt.setInt(1, centroId); // Imposta l'ID del centro sportivo nella query
+		        ResultSet rs = stmt.executeQuery();
+
+		        // Elenco di campi recuperati dal database
+		        while (rs.next()) {
+		            int id = rs.getInt("ID");
+		            String tipologia = rs.getString("Tipologia");
+		            int lunghezza = rs.getInt("Lunghezza");
+		            int larghezza = rs.getInt("Larghezza");
+
+		            // Crea un nome descrittivo per il campo combinando la tipologia e le dimensioni
+		            String nome = String.format("%s (%dx%d)", tipologia, lunghezza, larghezza);
+
+		            // Aggiungi il nome del campo e l'ID alla mappa
+		            campiMappa.put(nome, id);
+		        }
+
+		    } catch (SQLException e) {
+		        e.printStackTrace();
+		    }
+
+		    // Ritorna la mappa con nome e ID dei campi
+		    return campiMappa;
+		}
+
+
+	 
 	 public static boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
 		    String query = "UPDATE CentroSportivo SET Nome = ?, Provincia = ?, Comune = ? WHERE ID = ?";
 		    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -395,41 +430,53 @@ public class DataBase {
 	        return prenotazioni;
 	    }
 
-
-
-		
-		
-		public static CentroSportivo getCentroByName(String nome) {
-	        if (nome == null || nome.trim().isEmpty()) {
-	            return null; // Nome non valido
-	        }
-
+	    public static CentroSportivo getCentroByName(String nome) {
 	        CentroSportivo centro = null;
+	        Connection conn = null;
+	        PreparedStatement stmt = null;
+	        ResultSet resultSet = null;
+
 	        try {
+	            System.out.println("sono nel try");
 	            // Query per trovare il centro sportivo con il nome specificato
 	            String query = "SELECT * FROM CentroSportivo WHERE Nome = ?";
-		        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
-	            Connection conn = DriverManager.getConnection(url);
-	             PreparedStatement stmt = conn.prepareStatement(query);
-	            ResultSet resultSet = stmt.executeQuery();
+	            String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	            
+	            // Crea la connessione al database
+	            conn = DriverManager.getConnection(url);
+	            
+	            // Prepara la query
+	            stmt = conn.prepareStatement(query);
+	            stmt.setString(1, nome); // Imposta il parametro per il nome
+
+	            // Esegui la query
+	            resultSet = stmt.executeQuery();
 
 	            if (resultSet.next()) {
 	                // Crea un oggetto CentroSportivo dal risultato della query
 	                centro = new CentroSportivo(
-	                    resultSet.getInt("id"), // Supponendo che l'ID sia un intero
-	                    resultSet.getString("nome"),
-	                    resultSet.getString("indirizzo"),
-	                    resultSet.getString("telefono")
-	                    
-	                 
+	                    resultSet.getInt("ID"), // Supponendo che l'ID sia un intero
+	                    resultSet.getString("Nome"),
+	                    resultSet.getString("Provincia"),
+	                    resultSet.getString("Comune")
 	                );
+	                System.out.println("Centro trovato: " + centro.getID());
 	            }
 	        } catch (Exception e) {
 	            e.printStackTrace(); // Log dell'errore
+	        } finally {
+	            try {
+	                // Chiudi le risorse per evitare perdite
+	                if (resultSet != null) resultSet.close();
+	                if (stmt != null) stmt.close();
+	                if (conn != null) conn.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
 	        }
-
 	        return centro; // Restituisce il centro o null se non trovato
 	    }
+
 
 
 
