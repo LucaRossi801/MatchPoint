@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -411,7 +412,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
         ));
         
         // Ridotto la larghezza massima del rettangolo
-        card.setMaximumSize(new Dimension(750, 100));  // Modificato da 900 a 750
+        card.setMaximumSize(new Dimension(750, 100)); 
 
         // Configurazione layout della card
         GridBagConstraints gbc = new GridBagConstraints();
@@ -441,7 +442,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
         for (Prenotazione prenotazione : prenotazioni) {
-            String giorno = prenotazione.getData().toString(); // Adatta se necessario
+        	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        	String giorno = prenotazione.getData().toLocalDate().format(formatter);
             prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
         }
         return prenotazioniPerGiorno;
