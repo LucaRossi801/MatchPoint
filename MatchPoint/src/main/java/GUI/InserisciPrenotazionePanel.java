@@ -52,7 +52,7 @@ public class InserisciPrenotazionePanel extends JPanel {
         add(selezionaCentroButton, gbc);
 
         centroSelezionatoLabel = new JLabel("Centro: Non selezionato", JLabel.LEFT);
-        centroSelezionatoLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Font più grande
         centroSelezionatoLabel.setForeground(Color.WHITE);
         gbc.gridx = 1;
         add(centroSelezionatoLabel, gbc);
@@ -64,7 +64,7 @@ public class InserisciPrenotazionePanel extends JPanel {
         add(selezionaCampoButton, gbc);
 
         campoSelezionatoLabel = new JLabel("Campo: Non selezionato", JLabel.LEFT);
-        campoSelezionatoLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Font più grande
         campoSelezionatoLabel.setForeground(Color.WHITE);
         gbc.gridx = 1;
         add(campoSelezionatoLabel, gbc);
@@ -75,20 +75,20 @@ public class InserisciPrenotazionePanel extends JPanel {
         datePicker.setDate(new Date());
         gbc.gridx = 0;
         gbc.gridy = 3;
-        add(new JLabel("Data:", JLabel.RIGHT), gbc);
+        add(new OutlinedLabel("Data:", Color.BLACK), gbc); // OutlinedLabel
         gbc.gridx = 1;
         add(datePicker, gbc);
 
         // Spinner per orario di inizio e fine
         gbc.gridx = 0;
         gbc.gridy = 4;
-        add(new JLabel("Ora Inizio:", JLabel.RIGHT), gbc);
+        add(new OutlinedLabel("Ora Inizio:", Color.BLACK), gbc); // OutlinedLabel
         gbc.gridx = 1;
         add(createCustomTimeSpinner(), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        add(new JLabel("Ora Fine:", JLabel.RIGHT), gbc);
+        add(new OutlinedLabel("Ora Fine:", Color.BLACK), gbc); // OutlinedLabel
         gbc.gridx = 1;
         add(createCustomTimeSpinner(), gbc);
 
@@ -99,13 +99,22 @@ public class InserisciPrenotazionePanel extends JPanel {
         gbc.gridwidth = 2;
         add(riepilogoButton, gbc);
 
-        // Bottone "Torna Indietro"
-        JButton backButton = creaFlatButton("Torna Indietro", e -> cardLayout.show(cardPanel, "menuPrincipale"));
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 2;
+        JButton backButton = BackgroundPanel.createFlatButton(
+                "Back",
+                e -> {
+                    Login.resetFields(); // Svuota i campi di testo
+                    BackgroundPanel.showPanel("createGiocatore"); // Torna al pannello di login
+                },
+                new Dimension(150, 30) // Dimensione personalizzata del bottone
+        );
+        // Personalizza colore per il pulsante "Back"
+        backButton.setForeground(Color.GRAY); // Sfondo grigio
+        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
+        backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
+        gbc.gridy = 7; // Quarta riga
         add(backButton, gbc);
     }
+
 
     private JButton creaFlatButton(String testo, java.awt.event.ActionListener azione) {
         JButton button = BackgroundPanel.createFlatButton(testo, azione, new Dimension(250, 50));
