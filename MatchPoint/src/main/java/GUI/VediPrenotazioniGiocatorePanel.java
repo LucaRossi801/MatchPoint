@@ -255,35 +255,48 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Data e ora
+        // Orario (a sinistra, metà altezza)
         gbc.gridx = 0;
-        gbc.gridy = 0;
-        card.add(new JLabel("📅 Data: " + prenotazione.getData()), gbc);
-
-        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1;
         card.add(new JLabel("⏰ Orario: " + prenotazione.getOraInizio() + " - " + prenotazione.getOraFine()), gbc);
 
-        // Dettagli del campo
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        card.add(new JLabel("🏟️ Campo: " + campo.getTipologiaCampo()), gbc);
-
+        // Barra verticale (separator) spostata leggermente più a sinistra
         gbc.gridx = 1;
-        card.add(new JLabel("📏 Dimensioni: " + campo.getLunghezza() + " x " + campo.getLarghezza()), gbc);
+        gbc.gridy = 0;
+        gbc.gridheight = 3; // Occupa tre righe
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.weightx = 0;
+        gbc.insets = new Insets(0, 0, 0, 30); // Aggiunto un piccolo offset a sinistra
+        JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+        separator.setForeground(Color.GRAY);
+        card.add(separator, gbc);
 
-        // Località
+        // Località (a destra, metà altezza)
         gbc.gridx = 2;
         gbc.gridy = 1;
+        gbc.gridheight = 1; // Ripristina l'altezza a una riga
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.EAST;
         card.add(new JLabel("📍 Località: " + centro.getComune() + ", " + centro.getProvincia()), gbc);
 
-        // Durata
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        card.add(new JLabel("🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti()), gbc);
-
-        // Costo
+        // Durata (centrata)
         gbc.gridx = 1;
-        card.add(new JLabel("💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 0.5;
+        card.add(new JLabel("  🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti()), gbc);
+
+        // Tipo di campo (con dimensioni tra parentesi, sotto la durata)
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        card.add(new JLabel("  🏟️ " + campo.getTipologiaCampo() + " (" + campo.getLunghezza() + "x" + campo.getLarghezza() + ")"), gbc);
+
+        // Costo (in basso, centrato)
+        gbc.gridy = 2;
+        card.add(new JLabel("  💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
 
         // Aggiunge azione clic per mostrare i dettagli
         card.addMouseListener(new MouseAdapter() {
@@ -295,6 +308,9 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         return card;
     }
+
+
+
     
     private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
@@ -330,25 +346,9 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
      * Mostra una finestra di dialogo con i dettagli di una prenotazione.
      */
     private void mostraDettagliPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
-        String dettagli = String.format(
-            "Dettagli Prenotazione:\n\n" +
-            "Centro Sportivo:\n  Nome: %s\n  Comune: %s\n  Provincia: %s\n\n" +
-            "Campo:\n  Tipologia: %s\n  Dimensioni: %s x %s\n\n" +
-            "Prenotazione:\n  Data: %s\n  Ora: %s - %s\n\n" +
-            "Costo: €%.2f",
-            centro.getNome(),
-            centro.getComune(),
-            centro.getProvincia(),
-            campo.getTipologiaCampo(),
-            campo.getLunghezza(),
-            campo.getLarghezza(),
-            prenotazione.getData(),
-            prenotazione.getOraInizio(),
-            prenotazione.getOraFine(),
-            prenotazione.calcolaCosto()
-        );
-
-        JOptionPane.showMessageDialog(this, dettagli, "Dettagli Prenotazione", JOptionPane.INFORMATION_MESSAGE);
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        DettagliPrenotazioneDialog dialog = new DettagliPrenotazioneDialog(parentFrame, prenotazione, campo, centro);
+        dialog.setVisible(true);
     }
 
 
