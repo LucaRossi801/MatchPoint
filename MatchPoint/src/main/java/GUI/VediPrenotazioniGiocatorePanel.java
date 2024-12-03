@@ -129,17 +129,39 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         // Ordina le prenotazioni per data e ora
         prenotazioni.sort((p1, p2) -> {
+            LocalDateTime oraCorrente = LocalDateTime.now();
             LocalDateTime dt1 = LocalDateTime.of(p1.getData().toLocalDate(), p1.getOraInizio().toLocalTime());
             LocalDateTime dt2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());
+            
+            // Ordinamento cronologico puro
             return dt1.compareTo(dt2);
         });
+
+
 
         // Raggruppa le prenotazioni per giorno
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
 
         // Ordina le date in ordine cronologico
         List<String> giorniOrdinati = new ArrayList<>(prenotazioniPerGiorno.keySet());
-        Collections.sort(giorniOrdinati, Collections.reverseOrder()); // Ordine cronologico decrescente
+        
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+	     // Converti le date in LocalDate per ordinamento corretto
+	     List<LocalDate> dateOrdinabili = new ArrayList<>();
+	     for (String giorno : giorniOrdinati) {
+	         dateOrdinabili.add(LocalDate.parse(giorno, formatter));
+	     }
+	
+	     // Ordina le date in ordine cronologico decrescente
+	     dateOrdinabili.sort(Collections.reverseOrder());
+	
+	     // Riconverti le date in stringhe
+	     giorniOrdinati.clear();
+	     for (LocalDate data : dateOrdinabili) {
+	         giorniOrdinati.add(data.format(formatter));
+	     }
 
         // Crea il pannello contenitore per le prenotazioni
         JPanel contenitorePrenotazioni = new JPanel();
@@ -151,9 +173,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             return;
         }
 
-     // Ordina le date in ordine cronologico decrescente (più lontane in alto)
-        Collections.sort(giorniOrdinati, Collections.reverseOrder());
-
+        
         // Popola il contenitore con le prenotazioni
         for (String giorno : giorniOrdinati) {
             List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
@@ -172,7 +192,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             contenitorePrenotazioni.add(headerGiorno);
 
             // Ordina le prenotazioni del giorno in ordine crescente di orario
-            prenotazioniDelGiorno.sort((p1, p2) -> p1.getOraInizio().toLocalTime().compareTo(p2.getOraInizio().toLocalTime()));
             contenitorePrenotazioni.add(creaLineaSeparatrice());
 
             for (Prenotazione prenotazione : prenotazioniDelGiorno) {
@@ -205,16 +224,16 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         JPanel card = new JPanel(new GridBagLayout());
 
         // Configura data e orari della prenotazione
-        Date dataPrenotazione = prenotazione.getData();
         LocalDateTime oraCorrente = LocalDateTime.now();
-        LocalDateTime finePrenotazione = LocalDateTime.of(dataPrenotazione.toLocalDate(), prenotazione.getOraFine().toLocalTime());
-        LocalDateTime inizioPrenotazione = LocalDateTime.of(dataPrenotazione.toLocalDate(), prenotazione.getOraInizio().toLocalTime());
+        LocalDateTime inizioPrenotazione = LocalDateTime.of(prenotazione.getData().toLocalDate(), prenotazione.getOraInizio().toLocalTime());
+        LocalDateTime finePrenotazione = LocalDateTime.of(prenotazione.getData().toLocalDate(), prenotazione.getOraFine().toLocalTime());
+
         boolean prenotazionePassata = finePrenotazione.isBefore(oraCorrente);
         boolean menoDi24Ore = !prenotazionePassata &&
                               inizioPrenotazione.isAfter(oraCorrente) &&
                               inizioPrenotazione.isBefore(oraCorrente.plusHours(24));
 
-        // Applicazione sfondo
+        // Applicazione sfondo basata sullo stato della prenotazione
         if (prenotazionePassata) {
             card.setBackground(new Color(200, 200, 200)); // Grigio
         } else if (menoDi24Ore) {
@@ -222,8 +241,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         } else {
             card.setBackground(new Color(230, 240, 250)); // Blu chiaro
         }
-
-
 
         card.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(16, 139, 135), 2),
