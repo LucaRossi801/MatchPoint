@@ -123,84 +123,79 @@ public class InserisciPrenotazionePanel extends JPanel {
     }
 
     private void apriSelezionaCentroDialog() {
-        String filePath = "src/main/java/localizzazione/comuni.csv"; // Percorso del file CSV
-        Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
+        // Carica le province e i comuni dal file CSV
+        String filePathProvince = "src/main/java/localizzazione/comuni.csv"; // Assicurati che questo sia il percorso corretto
+        Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);
 
-        if (provinceComuni.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Errore: Nessuna provincia trovata nel file CSV.", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        // Mappa che conterrà i centri per provincia
+        Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
 
-        // Seleziona la provincia
-        Map<String, String> provinceMap = new HashMap<>();
+        // Per ogni provincia, otteniamo i centri dal database
         for (String provincia : provinceComuni.keySet()) {
-            provinceMap.put(provincia, provincia); // Mappa Provincia -> Provincia
+            Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
+            Map<String, Integer> centriMap = new HashMap<>();
+            for (CentroSportivo centro : centri.values()) {
+                // Qui mettiamo l'ID del centro come Integer
+                centriMap.put(centro.getNome(), centro.getID());
+            }
+            centriByProvince.put(provincia, centriMap);
         }
 
-        // Usa il dialogo per selezionare la provincia
-        SelezionaDialog selezionaProvinciaDialog = new SelezionaDialog("Seleziona Provincia", provinceMap);
-        selezionaProvinciaDialog.setVisible(true);
+        // Mostra il dialogo per selezionare la provincia e il centro sportivo
+        SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince);
+        selezionaDialog.setVisible(true);
 
-        String provinciaSelezionata = selezionaProvinciaDialog.getSelezione();
-        if (provinciaSelezionata == null) {
-            JOptionPane.showMessageDialog(this, "Nessuna provincia selezionata.", "Errore", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Usa il database per ottenere una mappa Nome->ID per i centri della provincia selezionata
-        Map<String, CentroSportivo> centriMap = DataBase.getCentriSportiviPerProvincia(provinciaSelezionata);
-        Map<String, String> centriNomiID = new HashMap<>();
-        for (Map.Entry<String, CentroSportivo> entry : centriMap.entrySet()) {
-            centriNomiID.put(entry.getValue().getNome(), entry.getKey()); // Nome come chiave, ID come valore
-        }
-
-        // Mostra il dialogo per i centri sportivi
-        SelezionaDialog selezionaCentroDialog = new SelezionaDialog("Seleziona Centro Sportivo", centriNomiID);
-        selezionaCentroDialog.setVisible(true);
-
-        String centroSelezionato = selezionaCentroDialog.getSelezione();
-        String centroID = (String) selezionaCentroDialog.getSelezioneID(); // Seleziona l'ID corretto
+        // Ottieni la selezione fatta dall'utente
+        String centroSelezionato = selezionaDialog.getSelezione();
+        Integer centroID = (Integer) selezionaDialog.getSelezioneID(); // ID come Integer
 
         if (centroSelezionato != null) {
             centroSelezionatoLabel.setText(centroSelezionato);
+            System.out.println("Centro ID selezionato: " + centroID);
         } else {
-            centroSelezionatoLabel.setText("Non selezionato");
+            centroSelezionatoLabel.setText("Centro: Non selezionato");
         }
     }
 
+
+
     private void apriSelezionaCampoDialog() {
-        String centroCorrente = centroSelezionatoLabel.getText().trim();
+        String centroCorrente = centroSelezionatoLabel.getText().replace("Centro: ", "").trim();
 
         if (centroCorrente.equals("Non selezionato")) {
             JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        System.out.println("Centro :  "+centroCorrente);
-        CentroSportivo c = DataBase.getCentroByName(centroCorrente);
-        int centroId = c.getID();
 
-        if (centroId == -1) {
+        // Recupera l'ID del centro
+        CentroSportivo centro = DataBase.getCentroByName(centroCorrente);
+        if (centro == null) {
             JOptionPane.showMessageDialog(this, "Centro non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Map<String, Integer> campiMap = DataBase.getCampiCentroMappa(centroId);
-
-        if (campiMap.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", "Errore", JOptionPane.ERROR_MESSAGE);
+        // Ottieni i campi del centro
+        Map<String, Integer> campi = DataBase.getCampiCentroMappa(centro.getID());
+        if (campi.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", 
+                "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        SelezionaDialog selezionaCampoDialog = new SelezionaDialog("Seleziona Campo", campiMap);
-        selezionaCampoDialog.setVisible(true);
+        // Mostra dialogo per selezionare il campo
+        Object[] opzioni = campi.keySet().toArray();
+        String campoSelezionato = (String) JOptionPane.showInputDialog(this, 
+            "Seleziona il campo:", "Campi disponibili", JOptionPane.PLAIN_MESSAGE, 
+            null, opzioni, opzioni[0]);
 
-        String campoSelezionato = selezionaCampoDialog.getSelezione();
         if (campoSelezionato != null) {
             campoSelezionatoLabel.setText("Campo: " + campoSelezionato);
+            System.out.println("Campo ID selezionato: " + campi.get(campoSelezionato));
         } else {
             campoSelezionatoLabel.setText("Campo: Non selezionato");
         }
     }
+
 
     private void mostraRiepilogo(JXDatePicker datePicker) {
         JOptionPane.showMessageDialog(this,
