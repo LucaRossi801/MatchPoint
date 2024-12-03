@@ -10,6 +10,8 @@ import javax.swing.JSpinner.DefaultEditor;
 import java.awt.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 
@@ -76,6 +78,8 @@ public class InserisciPrenotazionePanel extends JPanel {
         gbc.gridy = 3;
         add(new OutlinedLabel("Data:", Color.BLACK), gbc); // OutlinedLabel
         gbc.gridx = 1;
+        LocalDateTime oraCorrente = LocalDateTime.now().plusHours(24);
+        datePicker.getMonthView().setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
         add(datePicker, gbc);
 
         // Spinner per orario di inizio e fine
@@ -220,10 +224,16 @@ public class InserisciPrenotazionePanel extends JPanel {
     private JSpinner createCustomTimeSpinner() {
         List<String> times = generateTimeValues();
         JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));
-        timeSpinner.setValue(times.get(0));
+        
+        // Imposta il valore iniziale su "08:00"
+        timeSpinner.setValue("08:00");
+        
+        // Impedisce la modifica manuale del valore nel text field
         ((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);
+        
         return timeSpinner;
     }
+
 
     private List<String> generateTimeValues() {
         List<String> times = new ArrayList<>();
