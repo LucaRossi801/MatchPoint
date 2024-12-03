@@ -2,12 +2,15 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +24,8 @@ import components.Prenotazione;
 import components.Sessione;
 
 public class VediPrenotazioniGiocatorePanel extends JPanel {
-    private JTextArea prenotazioniArea;
+    private JScrollPane scrollPane;
+	private JTextArea prenotazioniArea;
     private Map<String, CentroSportivo> centriSportivi;
     private Image clearImage;
 
@@ -54,7 +58,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Configurazione dello JScrollPane
-        JScrollPane scrollPane = new JScrollPane(prenotazioniArea) {
+        scrollPane = new JScrollPane(prenotazioniArea) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
@@ -74,7 +78,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         // Configurazione dei bordi e della dimensione
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setPreferredSize(new Dimension(900, 400));
+        scrollPane.setPreferredSize(new Dimension(900, 600));
         scrollPane.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.GRAY, 2), // Colore del bordo grigio scuro
                 "Prenotazioni Giorno per Giorno",
@@ -96,7 +100,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         // Bottone Indietro
         JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
             prenotazioniArea.setText("");
-            cardLayout.show(cardPanel, "createGestore");
+            cardLayout.show(cardPanel, "createGiocatore");
         }, new Dimension(120, 30));
         backButton.setFont(new Font("Arial", Font.BOLD, 18));
         backButton.setForeground(Color.GRAY);
@@ -109,19 +113,18 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         aggiornaPrenotazioni();
     }
 
-
-
  
     /**
      * Aggiorna l'area delle prenotazioni in base al campo selezionato.
      */
     private void aggiornaPrenotazioni() {
-        prenotazioniArea.setText(""); // Pulisci l'area di testo
+        // Ripulisce l'area di prenotazioni
+        prenotazioniArea.setText("");
 
-        // Recupera la sessione corrente per ottenere l'utente loggato
+        // Recupera l'ID utente della sessione corrente
         int utenteID = Sessione.getId();
 
-        // Recupera tutte le prenotazioni dell'utente dal database
+        // Recupera tutte le prenotazioni dell'utente
         List<Prenotazione> prenotazioni = DataBase.getAllPrenotazioni(utenteID);
 
         // Ordina le prenotazioni per data e ora
@@ -130,67 +133,207 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             LocalDateTime dt2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());
             return dt1.compareTo(dt2);
         });
-        
-        
-        
-        // Visualizza ogni prenotazione
-        for (Prenotazione prenotazione : prenotazioni) {
-        	//crea l'oggetto campo e centro
-        	Campo campo = DataBase.getCampoById(prenotazione.getCampoId());
-        	CentroSportivo centro = DataBase.getCentroByCampo(prenotazione.getCampoId());
-        	
-        	String dettagliPrenotazione = String.format(
-        		    "Data: %s | Ora: %s - %s | Campo: %s | Dimensioni: %s x %s | Località: %s, %s",
-        		    prenotazione.getData(),
-        		    prenotazione.getOraInizio(),
-        		    prenotazione.getOraFine(),
-        		    campo.getTipologiaCampo(),
-        		    campo.getLunghezza(),
-        		    campo.getLarghezza(),
-        		    centro.getComune(),
-        		    centro.getProvincia()
-        		);
+
+        // Raggruppa le prenotazioni per giorno
+        Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
+
+        // Ordina le date in ordine cronologico
+        List<String> giorniOrdinati = new ArrayList<>(prenotazioniPerGiorno.keySet());
+        Collections.sort(giorniOrdinati, Collections.reverseOrder()); // Ordine cronologico decrescente
+
+        // Crea il pannello contenitore per le prenotazioni
+        JPanel contenitorePrenotazioni = new JPanel();
+        contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));
+        contenitorePrenotazioni.setOpaque(false);
+
+        if (prenotazioni.isEmpty()) {
+            prenotazioniArea.setText("Non ci sono prenotazioni per l'utente corrente.");
+            return;
+        }
+
+     // Ordina le date in ordine cronologico decrescente (più lontane in alto)
+        Collections.sort(giorniOrdinati, Collections.reverseOrder());
+
+        // Popola il contenitore con le prenotazioni
+        for (String giorno : giorniOrdinati) {
+            List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
+
+            // Debug per assicurarsi che l'ordine sia corretto
+            System.out.println("Giorno: " + giorno);
+            for (Prenotazione prenotazione : prenotazioniDelGiorno) {
+                System.out.println(" - Prenotazione: " + prenotazione.getData() + " " + prenotazione.getOraInizio());
+            }
+
+            // Header per il giorno
+            JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
+            headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
+            headerGiorno.setForeground(new Color(16, 139, 135));
+            headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);
+            contenitorePrenotazioni.add(headerGiorno);
+
+            // Ordina le prenotazioni del giorno in ordine crescente di orario
+            prenotazioniDelGiorno.sort((p1, p2) -> p1.getOraInizio().toLocalTime().compareTo(p2.getOraInizio().toLocalTime()));
+            contenitorePrenotazioni.add(creaLineaSeparatrice());
+
+            for (Prenotazione prenotazione : prenotazioniDelGiorno) {
+                Campo campo = DataBase.getCampoById(prenotazione.getCampoId());
+                CentroSportivo centro = DataBase.getCentroByCampo(prenotazione.getCampoId());
+                JPanel cardPrenotazione = creaCardPrenotazione(prenotazione, campo, centro);
+                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));
+                contenitorePrenotazioni.add(cardPrenotazione);
+            }
+
+            // Spazio e separatore tra i gruppi di giorni
+            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));
+            contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());
+        }
 
 
-            JButton prenotazioneButton = new JButton(dettagliPrenotazione);
-            prenotazioneButton.setFont(new Font("Arial", Font.PLAIN, 14));
-            prenotazioneButton.setBackground(new Color(200, 230, 250));
-            prenotazioneButton.setForeground(Color.DARK_GRAY);
-            prenotazioneButton.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-            prenotazioneButton.addActionListener(e -> {
-                // Mostra una schermata di dialogo con i dettagli della prenotazione
-                mostraDettagliPrenotazione(prenotazione);
-            });
-
-            // Aggiungi il pulsante all'area delle prenotazioni
-            prenotazioniArea.append(dettagliPrenotazione + "\n");
+        // Aggiorna la viewport dello scrollPane
+        if (scrollPane != null) {
+            scrollPane.setViewportView(contenitorePrenotazioni);
+        } else {
+            System.err.println("Errore: scrollPane non inizializzato correttamente.");
         }
     }
 
 
-    private void mostraDettagliPrenotazione(Prenotazione prenotazione) {
-    	//crea l'oggetto campo e centro
-    	Campo campo = DataBase.getCampoById(prenotazione.getCampoId());
-    	CentroSportivo centro = DataBase.getCentroByCampo(prenotazione.getCampoId());
+    /**
+     * Crea un pannello rettangolare per rappresentare una prenotazione.
+     */
+    private JPanel creaCardPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+        JPanel card = new JPanel(new GridBagLayout());
 
+        // Configura data e orari della prenotazione
+        Date dataPrenotazione = prenotazione.getData();
+        LocalDateTime oraCorrente = LocalDateTime.now();
+        LocalDateTime finePrenotazione = LocalDateTime.of(dataPrenotazione.toLocalDate(), prenotazione.getOraFine().toLocalTime());
+        LocalDateTime inizioPrenotazione = LocalDateTime.of(dataPrenotazione.toLocalDate(), prenotazione.getOraInizio().toLocalTime());
+        boolean prenotazionePassata = finePrenotazione.isBefore(oraCorrente);
+        boolean menoDi24Ore = !prenotazionePassata &&
+                              inizioPrenotazione.isAfter(oraCorrente) &&
+                              inizioPrenotazione.isBefore(oraCorrente.plusHours(24));
+
+        // Applicazione sfondo
+        if (prenotazionePassata) {
+            card.setBackground(new Color(200, 200, 200)); // Grigio
+        } else if (menoDi24Ore) {
+            card.setBackground(new Color(253, 218, 13)); // Giallo
+        } else {
+            card.setBackground(new Color(230, 240, 250)); // Blu chiaro
+        }
+
+
+
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(16, 139, 135), 2),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        // Imposta dimensione massima del pannello
+        card.setMaximumSize(new Dimension(750, 100));
+
+        // Layout e configurazione dei componenti
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Data e ora
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        card.add(new JLabel("📅 Data: " + prenotazione.getData()), gbc);
+
+        gbc.gridx = 1;
+        card.add(new JLabel("⏰ Orario: " + prenotazione.getOraInizio() + " - " + prenotazione.getOraFine()), gbc);
+
+        // Dettagli del campo
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        card.add(new JLabel("🏟️ Campo: " + campo.getTipologiaCampo()), gbc);
+
+        gbc.gridx = 1;
+        card.add(new JLabel("📏 Dimensioni: " + campo.getLunghezza() + " x " + campo.getLarghezza()), gbc);
+
+        // Località
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        card.add(new JLabel("📍 Località: " + centro.getComune() + ", " + centro.getProvincia()), gbc);
+
+        // Durata
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        card.add(new JLabel("🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti()), gbc);
+
+        // Costo
+        gbc.gridx = 1;
+        card.add(new JLabel("💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+
+        // Aggiunge azione clic per mostrare i dettagli
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mostraDettagliPrenotazione(prenotazione, campo, centro);
+            }
+        });
+
+        return card;
+    }
+    
+    private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
+        Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        for (Prenotazione prenotazione : prenotazioni) {
+            String giorno = prenotazione.getData().toLocalDate().format(formatter);
+            prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
+        }
+        return prenotazioniPerGiorno;
+    }
+
+    
+    private JSeparator creaLineaSeparatrice() {
+        JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
+        separatore.setForeground(new Color(16, 139, 135));
+        separatore.setPreferredSize(new Dimension(800, 2)); // Linea sottile
+        return separatore;
+    }
+
+    private JSeparator creaLineaSeparatriceSpessa() {
+        JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
+        separatore.setForeground(new Color(16, 139, 135)); // Colore della linea
+        separatore.setPreferredSize(new Dimension(800, 5)); // Altezza maggiore
+        return separatore;
+    }
+
+
+
+
+
+
+    /**
+     * Mostra una finestra di dialogo con i dettagli di una prenotazione.
+     */
+    private void mostraDettagliPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         String dettagli = String.format(
             "Dettagli Prenotazione:\n\n" +
             "Centro Sportivo:\n  Nome: %s\n  Comune: %s\n  Provincia: %s\n\n" +
-            "Campo:\n  Tipologia: %s\n  Dimensioni: %s\n\n" +
-            "Prenotazione:\n  Data: %s\n  Ora: %s\n\n" +
-            "Utente:\n",
+            "Campo:\n  Tipologia: %s\n  Dimensioni: %s x %s\n\n" +
+            "Prenotazione:\n  Data: %s\n  Ora: %s - %s\n\n" +
+            "Costo: €%.2f",
             centro.getNome(),
             centro.getComune(),
             centro.getProvincia(),
             campo.getTipologiaCampo(),
-            //campo.getDimensioni(),
+            campo.getLunghezza(),
+            campo.getLarghezza(),
             prenotazione.getData(),
-            prenotazione.getOraInizio()
+            prenotazione.getOraInizio(),
+            prenotazione.getOraFine(),
+            prenotazione.calcolaCosto()
         );
 
         JOptionPane.showMessageDialog(this, dettagli, "Dettagli Prenotazione", JOptionPane.INFORMATION_MESSAGE);
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {
