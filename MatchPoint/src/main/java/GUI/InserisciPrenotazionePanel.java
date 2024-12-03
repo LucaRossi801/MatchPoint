@@ -5,7 +5,6 @@ import org.jdesktop.swingx.JXDatePicker;
 import components.CentroSportivo;
 import dataBase.DataBase;
 import localizzazione.FileReaderUtils;
-
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
 import java.awt.*;
@@ -129,20 +128,28 @@ public class InserisciPrenotazionePanel extends JPanel {
 
         // Mappa che conterrà i centri per provincia
         Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
+        // Mappa che conterrà i comuni associati ai centri
+        Map<String, String> comuniByCentro = new HashMap<>();
 
         // Per ogni provincia, otteniamo i centri dal database
         for (String provincia : provinceComuni.keySet()) {
             Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
             Map<String, Integer> centriMap = new HashMap<>();
+            
+            // Associa ogni centro con il comune
             for (CentroSportivo centro : centri.values()) {
-                // Qui mettiamo l'ID del centro come Integer
                 centriMap.put(centro.getNome(), centro.getID());
+                
+                // Recupera il comune per il centro dal database
+                String comune = centro.getComune(); // Assicurati che CentroSportivo abbia un metodo getComune
+                comuniByCentro.put(centro.getNome(), comune);  // Aggiungi il comune associato al centro
             }
+
             centriByProvince.put(provincia, centriMap);
         }
 
         // Mostra il dialogo per selezionare la provincia e il centro sportivo
-        SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince);
+        SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince, comuniByCentro);
         selezionaDialog.setVisible(true);
 
         // Ottieni la selezione fatta dall'utente
@@ -156,6 +163,7 @@ public class InserisciPrenotazionePanel extends JPanel {
             centroSelezionatoLabel.setText("Centro: Non selezionato");
         }
     }
+
 
 
 
@@ -182,15 +190,17 @@ public class InserisciPrenotazionePanel extends JPanel {
             return;
         }
 
-        // Mostra dialogo per selezionare il campo
-        Object[] opzioni = campi.keySet().toArray();
-        String campoSelezionato = (String) JOptionPane.showInputDialog(this, 
-            "Seleziona il campo:", "Campi disponibili", JOptionPane.PLAIN_MESSAGE, 
-            null, opzioni, opzioni[0]);
+        // Mostra il dialogo per selezionare il campo
+        SelezionaCampoDialog selezionaCampoDialog = new SelezionaCampoDialog("Seleziona Campo", campi);
+        selezionaCampoDialog.setVisible(true);
+
+        // Ottieni la selezione fatta dall'utente
+        String campoSelezionato = selezionaCampoDialog.getSelezione();
+        Integer campoID = selezionaCampoDialog.getSelezioneID();
 
         if (campoSelezionato != null) {
             campoSelezionatoLabel.setText("Campo: " + campoSelezionato);
-            System.out.println("Campo ID selezionato: " + campi.get(campoSelezionato));
+            System.out.println("Campo ID selezionato: " + campoID);
         } else {
             campoSelezionatoLabel.setText("Campo: Non selezionato");
         }
@@ -231,4 +241,6 @@ public class InserisciPrenotazionePanel extends JPanel {
             g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
         }
     }
+    
+    
 }

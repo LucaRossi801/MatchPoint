@@ -13,7 +13,7 @@ public class SelezionaDialog extends JDialog {
     private String selezione = null;
     private Object selezioneID = null;
 
-    public SelezionaDialog(String titolo, String filePathProvince, Map<String, Map<String, Integer>> centriByProvince) {
+    public SelezionaDialog(String titolo, String filePathProvince, Map<String, Map<String, Integer>> centriByProvince, Map<String, String> comuniByCentro) {
         setTitle(titolo);
         setModal(true);
         setSize(500, 400);
@@ -46,7 +46,7 @@ public class SelezionaDialog extends JDialog {
             String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
             if (provinciaSelezionata != null) {
                 Map<String, Integer> centri = centriByProvince.get(provinciaSelezionata);
-                aggiornaCentriPanel(centriPanel, centri);
+                aggiornaCentriPanel(centriPanel, centri, comuniByCentro);
             }
         });
 
@@ -68,52 +68,60 @@ public class SelezionaDialog extends JDialog {
         setLocationRelativeTo(null); // Centra il dialogo
     }
 
-    // Metodo per aggiornare il pannello con i centri
-    private void aggiornaCentriPanel(JPanel centriPanel, Map<String, Integer> centri) {
+    private void aggiornaCentriPanel(JPanel centriPanel, Map<String, Integer> centri, Map<String, String> comuniByCentro) {
         centriPanel.removeAll();
 
         if (centri != null) {
-            // Controlla se c'è solo un centro per determinare la dimensione
-            int centerCount = centri.size();
-            int panelHeight = centerCount == 1 ? 50 : 200; // Se c'è un solo centro, il pannello sarà più stretto
+            // Configura un layout flessibile
+            centriPanel.setLayout(new BoxLayout(centriPanel, BoxLayout.Y_AXIS));
 
-            // Imposta la dimensione fissa per il pannello dei centri
-            centriPanel.setPreferredSize(new Dimension(centriPanel.getWidth(), panelHeight));
+            // Imposta un bordo vuoto per evitare che i contenuti tocchino i bordi dello scrollpane
+            centriPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-            // Crea un bordo per i centri
             Border border = BorderFactory.createLineBorder(Color.BLACK);
 
             for (Map.Entry<String, Integer> entry : centri.entrySet()) {
                 String centroNome = entry.getKey();
                 Integer centroID = entry.getValue();
 
+                // Crea un pannello singolo per il centro con larghezza dinamica
                 JPanel centroItemPanel = new JPanel(new BorderLayout());
-                centroItemPanel.setBorder(border);  // Aggiungi il bordo nero
-                centroItemPanel.setPreferredSize(new Dimension(centriPanel.getWidth(), 50));  // Distanziamento tra i centri
+                centroItemPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.BLACK), // Bordo nero esterno
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10) // Margini interni
+                ));
+                centroItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Larghezza flessibile
+                centroItemPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Allineamento a sinistra
 
-                JLabel centroLabel = new JLabel(centroNome);
+                JLabel centroLabel = new JLabel(centroNome + " (" + comuniByCentro.get(centroNome) + ")");
                 centroLabel.setFont(new Font("Montserrat", Font.PLAIN, 16));
 
-                // Creiamo un FlatButton per "Seleziona", con una larghezza più stretta e la scritta "V"
+                // Crea un FlatButton per "Seleziona"
                 JButton selezionaButton = BackgroundPanel.createFlatButton("V", e -> {
                     selezione = centroNome;
                     selezioneID = centroID;
                     dispose(); // Chiude il dialogo
-                }, new Dimension(50, 30)); // Modifica la dimensione per fare il pulsante più stretto
+                }, new Dimension(30, 25)); // Dimensioni ridotte
 
-                // Imposta il colore di sfondo del pulsante "Seleziona" su verde
                 selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
-                selezionaButton.setForeground(Color.WHITE); // Colore del testo bianco
+                selezionaButton.setForeground(Color.WHITE);
 
+                // Aggiungi i componenti al pannello
                 centroItemPanel.add(centroLabel, BorderLayout.CENTER);
                 centroItemPanel.add(selezionaButton, BorderLayout.EAST);
+
+                // Aggiungi il pannello al contenitore principale
                 centriPanel.add(centroItemPanel);
+
+                // Spazio tra i centri
+                centriPanel.add(Box.createVerticalStrut(10));
             }
         }
 
         centriPanel.revalidate();
         centriPanel.repaint();
     }
+
 
     // Metodo per ottenere la selezione effettuata
     public String getSelezione() {
@@ -124,4 +132,5 @@ public class SelezionaDialog extends JDialog {
     public Object getSelezioneID() {
         return selezioneID;
     }
+
 }
