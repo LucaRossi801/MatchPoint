@@ -391,7 +391,7 @@ public class DataBase {
 		List<Prenotazione> prenotazioni = new ArrayList<>();
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
-		String query = "SELECT p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + "FROM Prenotazione p "
+		String query = "SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + "FROM Prenotazione p "
 				+ "WHERE p.Utente = ?";
 
 		try (Connection conn = DriverManager.getConnection(url);
@@ -408,7 +408,8 @@ public class DataBase {
 				try {
 					Date parsedDate = sdf.parse(dataString);
 					java.sql.Date data = new java.sql.Date(parsedDate.getTime());
-
+					
+					int ID = rs.getInt("ID");
 					String oraInizioString = rs.getString("OraInizio");
 					String oraFineString = rs.getString("OraFine");
 
@@ -425,7 +426,7 @@ public class DataBase {
 					int campoID = rs.getInt("Campo");
 
 					// Crea l'oggetto Prenotazione
-					Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
+					Prenotazione prenotazione = new Prenotazione(ID, data, oraInizio, oraFine, utenteID, campoID);
 					prenotazioni.add(prenotazione);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -578,4 +579,23 @@ public class DataBase {
 		}
 		return campo;
 	}
+	
+	public static void savePrenotazione(Prenotazione prenotazione) throws SQLException {
+	    String sql = "UPDATE Prenotazione " +
+	                 "SET Data = ?, OraInizio = ?, OraFine = ?" +
+	                 "WHERE id = ?";
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+	        pstmt.setDate(1, prenotazione.getData());
+	        pstmt.setTime(2, prenotazione.getOraInizio());
+	        pstmt.setTime(3, prenotazione.getOraFine());
+	        pstmt.setInt(4, prenotazione.getUtenteId());
+	        pstmt.setInt(5, prenotazione.getCampoId());
+	        pstmt.setInt(6, prenotazione.getId()); 
+	        pstmt.executeUpdate();
+	    }
+	}
+
 }

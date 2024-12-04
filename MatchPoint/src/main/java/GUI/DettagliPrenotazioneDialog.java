@@ -5,6 +5,7 @@ import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
 import components.Sessione;
+import dataBase.DataBase;
 
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
@@ -17,10 +18,10 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DettagliPrenotazioneDialog extends JDialog {
-
     private JXDatePicker datePicker;
     private JSpinner oraInizioSpinner;
     private JSpinner oraFineSpinner;
@@ -160,13 +161,18 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
             // Verifica la disponibilità usando il metodo della classe Prenotazione
             if (nuovaPrenotazione.verificaDisponibilita()) {
-                // Logica di salvataggio della prenotazione
-                JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
-                dispose(); // Chiude la finestra dopo il salvataggio
+                try {
+                    DataBase.savePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
+                    JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
+                    dispose(); // Chiude la finestra dopo il salvataggio
+                } catch (SQLException exc) {
+                    exc.printStackTrace();
+                    CustomMessage.show("Errore durante il salvataggio della prenotazione.", "Errore", false);
+                }
             } else {
-                // Se la prenotazione non è disponibile, mostra un messaggio di avviso
                 CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
             }
+
 
         } catch (Exception ex) {
             // Mostra un messaggio di errore se qualcosa va storto

@@ -9,7 +9,8 @@ import GUI.CustomMessage;
 import dataBase.DataBase;
 
 public class Prenotazione {
-    private Date data;
+    private int ID;
+	private Date data;
     private Time oraInizio;
     private Time oraFine;
     private int utenteID;
@@ -21,6 +22,19 @@ public class Prenotazione {
         this.oraFine = oraFine;
         this.utenteID = utenteID; 
         this.campoID = campoID; 
+    }
+    
+    public Prenotazione(int ID, Date data, Time oraInizio, Time oraFine, int utenteID, int campoID) {
+        this.ID = ID;
+    	this.data = data;
+        this.oraInizio = oraInizio;
+        this.oraFine = oraFine;
+        this.utenteID = utenteID; 
+        this.campoID = campoID; 
+    }
+    
+    public int getId() {
+    	return ID;
     }
 
     public Date getData() {
