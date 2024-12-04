@@ -292,7 +292,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;
-        card.add(new JLabel("  🏟️ " + campo.getTipologiaCampo() + " (" + campo.getLunghezza() + "x" + campo.getLarghezza() + ")"), gbc);
+        card.add(new JLabel("  ⚽ " + campo.getTipologiaCampo() + " (" + campo.getLunghezza() + "x" + campo.getLarghezza() + ")"), gbc);
 
         // Costo (in basso, centrato)
         gbc.gridy = 2;
