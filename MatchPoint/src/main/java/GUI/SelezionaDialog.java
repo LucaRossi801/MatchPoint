@@ -102,7 +102,7 @@ public class SelezionaDialog extends JDialog {
                     selezioneID = centroID;
                     dispose(); // Chiude il dialogo
                 }, new Dimension(30, 25)); // Dimensioni ridotte
-
+                selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, 14));
                 selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
                 selezionaButton.setForeground(Color.WHITE);
 

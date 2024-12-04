@@ -3,12 +3,16 @@ package GUI;
 import org.jdesktop.swingx.JXDatePicker;
 
 import components.CentroSportivo;
+import components.Prenotazione;
+import components.Sessione;
 import dataBase.DataBase;
 import localizzazione.FileReaderUtils;
+
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
 import java.awt.*;
 import java.net.URL;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -16,241 +20,314 @@ import java.util.*;
 import java.util.List;
 
 public class InserisciPrenotazionePanel extends JPanel {
-    private Image clearImage;
+	private Image clearImage;
 
-    private JLabel centroSelezionatoLabel;
-    private JLabel campoSelezionatoLabel;
+	private JLabel centroSelezionatoLabel;
+	private JLabel campoSelezionatoLabel;
 
-    public InserisciPrenotazionePanel(CardLayout cardLayout, JPanel cardPanel) {
-        // Carica l'immagine di sfondo
-        URL clearImageUrl = getClass().getClassLoader().getResource("GUI/immagini/sfondohome.png");
-        if (clearImageUrl != null) {
-            clearImage = new ImageIcon(clearImageUrl).getImage();
-        } else {
-            System.out.println("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png");
-        }
+	private JSpinner oraInizioSpinner;
+	private JSpinner oraFineSpinner;
 
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(15, 15, 15, 15);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+	public InserisciPrenotazionePanel(CardLayout cardLayout, JPanel cardPanel) {
+		// Carica l'immagine di sfondo
+		URL clearImageUrl = getClass().getClassLoader().getResource("GUI/immagini/sfondohome.png");
+		if (clearImageUrl != null) {
+			clearImage = new ImageIcon(clearImageUrl).getImage();
+		} else {
+			System.out.println("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png");
+		}
 
-        // Titolo
-        JLabel titolo = new JLabel("Inserisci Prenotazione", JLabel.CENTER);
-        titolo.setFont(new Font("Arial", Font.BOLD, 28));
-        titolo.setForeground(Color.WHITE);
-        gbc.gridwidth = 3;
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(titolo, gbc);
+		setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(15, 15, 15, 15);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        gbc.gridwidth = 1;
+		// Titolo
+		JLabel titolo = new JLabel("Inserisci Prenotazione", JLabel.CENTER);
+		titolo.setFont(new Font("Arial", Font.BOLD, 28));
+		titolo.setForeground(Color.WHITE);
+		gbc.gridwidth = 3;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		add(titolo, gbc);
 
-        // Bottone per selezionare il centro
-        JButton selezionaCentroButton = creaFlatButton("Seleziona Centro", e -> apriSelezionaCentroDialog());
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(selezionaCentroButton, gbc);
+		gbc.gridwidth = 1;
 
-        centroSelezionatoLabel = new JLabel("Centro: Non selezionato", JLabel.LEFT);
-        centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Font più grande
-        centroSelezionatoLabel.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(centroSelezionatoLabel, gbc);
+		// Bottone per selezionare il centro
+		JButton selezionaCentroButton = BackgroundPanel.createFlatButton("Seleziona Centro",
+				e -> apriSelezionaCentroDialog(), new Dimension(300, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		add(selezionaCentroButton, gbc);
 
-        // Bottone per selezionare il campo
-        JButton selezionaCampoButton = creaFlatButton("Seleziona Campo", e -> apriSelezionaCampoDialog());
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        add(selezionaCampoButton, gbc);
+		centroSelezionatoLabel = new JLabel("Non selezionato", JLabel.LEFT);
+		centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		centroSelezionatoLabel.setForeground(Color.WHITE);
+		gbc.gridx = 1;
+		add(centroSelezionatoLabel, gbc);
 
-        campoSelezionatoLabel = new JLabel("Campo: Non selezionato", JLabel.LEFT);
-        campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Font più grande
-        campoSelezionatoLabel.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(campoSelezionatoLabel, gbc);
+		// Bottone per selezionare il campo
+		JButton selezionaCampoButton = BackgroundPanel.createFlatButton("Seleziona Campo",
+				e -> apriSelezionaCampoDialog(), new Dimension(300, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		add(selezionaCampoButton, gbc);
 
-        // Date Picker per la selezione della data
-        JXDatePicker datePicker = new JXDatePicker();
-        datePicker.setFormats(new SimpleDateFormat("dd-MM-yyyy"));
-        datePicker.setDate(new Date());
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        add(new OutlinedLabel("Data:", Color.BLACK), gbc); // OutlinedLabel
-        gbc.gridx = 1;
-        LocalDateTime oraCorrente = LocalDateTime.now().plusHours(24);
-        datePicker.getMonthView().setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
-        add(datePicker, gbc);
+		campoSelezionatoLabel = new JLabel("Non selezionato", JLabel.LEFT);
+		campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		campoSelezionatoLabel.setForeground(Color.WHITE);
+		gbc.gridx = 1;
+		add(campoSelezionatoLabel, gbc);
 
-        // Spinner per orario di inizio e fine
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        add(new OutlinedLabel("Ora Inizio:", Color.BLACK), gbc); // OutlinedLabel
-        gbc.gridx = 1;
-        add(createCustomTimeSpinner(), gbc);
+		// Date Picker per la selezione della data
+		JXDatePicker datePicker = new JXDatePicker();
+		datePicker.setFormats(new SimpleDateFormat("dd-MM-yyyy"));
+		datePicker.setDate(new Date());
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		add(new OutlinedLabel("Data:", Color.BLACK), gbc);
+		gbc.gridx = 1;
+		LocalDateTime oraCorrente = LocalDateTime.now().plusHours(24);
+		datePicker.getMonthView()
+				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
+		add(datePicker, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        add(new OutlinedLabel("Ora Fine:", Color.BLACK), gbc); // OutlinedLabel
-        gbc.gridx = 1;
-        add(createCustomTimeSpinner(), gbc);
+		// Spinner per orario di inizio e fine
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		add(new OutlinedLabel("Ora Inizio:", Color.BLACK), gbc);
+		gbc.gridx = 1;
+		oraInizioSpinner = createCustomTimeSpinner();
+		add(oraInizioSpinner, gbc);
 
-        // Bottone "Riepilogo"
-        JButton riepilogoButton = creaFlatButton("Mostra Riepilogo", e -> mostraRiepilogo(datePicker));
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        add(riepilogoButton, gbc);
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		add(new OutlinedLabel("Ora Fine:", Color.BLACK), gbc);
+		gbc.gridx = 1;
+		oraFineSpinner = createCustomTimeSpinner();
+		add(oraFineSpinner, gbc);
 
-        JButton backButton = BackgroundPanel.createFlatButton(
-                "Back",
-                e -> {
-                    Login.resetFields(); // Svuota i campi di testo
-                    BackgroundPanel.showPanel("createGiocatore"); // Torna al pannello di login
-                },
-                new Dimension(150, 30) // Dimensione personalizzata del bottone
-        );
-        // Personalizza colore per il pulsante "Back"
-        backButton.setForeground(Color.GRAY); // Sfondo grigio
-        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
-        backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
-        gbc.gridy = 7; // Quarta riga
-        add(backButton, gbc);
-    }
+		// Bottone "Riepilogo"
+		JButton riepilogoButton = BackgroundPanel.createFlatButton("Mostra Riepilogo", e -> mostraRiepilogo(datePicker),
+				new Dimension(150, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		gbc.gridwidth = 2;
+		add(riepilogoButton, gbc);
 
+		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
+			Login.resetFields();
+			BackgroundPanel.showPanel("createGiocatore");
+		}, new Dimension(150, 30));
+		backButton.setForeground(Color.GRAY);
+		backButton.setBackground(Color.DARK_GRAY);
+		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		gbc.gridy = 7;
+		add(backButton, gbc);
+	}
 
-    private JButton creaFlatButton(String testo, java.awt.event.ActionListener azione) {
-        JButton button = BackgroundPanel.createFlatButton(testo, azione, new Dimension(250, 50));
-        button.setForeground(Color.WHITE);
-        return button;
-    }
+	private void apriSelezionaCentroDialog() {
+		String filePathProvince = "src/main/java/localizzazione/comuni.csv";
+		Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);
+		Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
+		Map<String, String> comuniByCentro = new HashMap<>();
 
-    private void apriSelezionaCentroDialog() {
-        // Carica le province e i comuni dal file CSV
-        String filePathProvince = "src/main/java/localizzazione/comuni.csv"; // Assicurati che questo sia il percorso corretto
-        Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);
+		for (String provincia : provinceComuni.keySet()) {
+			Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
+			Map<String, Integer> centriMap = new HashMap<>();
+			for (CentroSportivo centro : centri.values()) {
+				centriMap.put(centro.getNome(), centro.getID());
+				String comune = centro.getComune();
+				comuniByCentro.put(centro.getNome(), comune);
+			}
+			centriByProvince.put(provincia, centriMap);
+		}
 
-        // Mappa che conterrà i centri per provincia
-        Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
-        // Mappa che conterrà i comuni associati ai centri
-        Map<String, String> comuniByCentro = new HashMap<>();
+		SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince,
+				comuniByCentro);
+		selezionaDialog.setVisible(true);
 
-        // Per ogni provincia, otteniamo i centri dal database
-        for (String provincia : provinceComuni.keySet()) {
-            Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
-            Map<String, Integer> centriMap = new HashMap<>();
-            
-            // Associa ogni centro con il comune
-            for (CentroSportivo centro : centri.values()) {
-                centriMap.put(centro.getNome(), centro.getID());
-                
-                // Recupera il comune per il centro dal database
-                String comune = centro.getComune(); // Assicurati che CentroSportivo abbia un metodo getComune
-                comuniByCentro.put(centro.getNome(), comune);  // Aggiungi il comune associato al centro
-            }
+		String centroSelezionato = selezionaDialog.getSelezione();
+		Integer centroID = (Integer) selezionaDialog.getSelezioneID();
 
-            centriByProvince.put(provincia, centriMap);
-        }
+		if (centroSelezionato != null) {
+			centroSelezionatoLabel.setText(centroSelezionato);
+			System.out.println("Centro ID selezionato: " + centroID);
+		} else {
+			centroSelezionatoLabel.setText("Non selezionato");
+		}
+	}
 
-        // Mostra il dialogo per selezionare la provincia e il centro sportivo
-        SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince, comuniByCentro);
-        selezionaDialog.setVisible(true);
+	private void apriSelezionaCampoDialog() {
+		String centroCorrente = centroSelezionatoLabel.getText().replace("Centro: ", "").trim();
 
-        // Ottieni la selezione fatta dall'utente
-        String centroSelezionato = selezionaDialog.getSelezione();
-        Integer centroID = (Integer) selezionaDialog.getSelezioneID(); // ID come Integer
+		if (centroCorrente.equals("Non selezionato")) {
+			JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", "Errore", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 
-        if (centroSelezionato != null) {
-            centroSelezionatoLabel.setText(centroSelezionato);
-            System.out.println("Centro ID selezionato: " + centroID);
-        } else {
-            centroSelezionatoLabel.setText("Centro: Non selezionato");
-        }
-    }
+		CentroSportivo centro = DataBase.getCentroByName(centroCorrente);
+		if (centro == null) {
+			JOptionPane.showMessageDialog(this, "Centro non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 
+		Map<String, Integer> campi = DataBase.getCampiCentroMappa(centro.getID());
+		if (campi.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", "Errore",
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 
+		SelezionaCampoDialog selezionaCampoDialog = new SelezionaCampoDialog("Seleziona Campo", campi);
+		selezionaCampoDialog.setVisible(true);
 
+		String campoSelezionato = selezionaCampoDialog.getSelezione();
+		Integer campoID = selezionaCampoDialog.getSelezioneID();
 
-    private void apriSelezionaCampoDialog() {
-        String centroCorrente = centroSelezionatoLabel.getText().replace("Centro: ", "").trim();
+		if (campoSelezionato != null) {
+			campoSelezionatoLabel.setText(campoSelezionato);
+			System.out.println("Campo ID selezionato: " + campoID);
+		} else {
+			campoSelezionatoLabel.setText("Non selezionato");
+		}
+	}
 
-        if (centroCorrente.equals("Non selezionato")) {
-            JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+	private void mostraRiepilogo(JXDatePicker datePicker) {
+		try {
+			// Ottieni i valori degli spinner
+			String oraInizioString = (String) oraInizioSpinner.getValue();
+			String oraFineString = (String) oraFineSpinner.getValue();
 
-        // Recupera l'ID del centro
-        CentroSportivo centro = DataBase.getCentroByName(centroCorrente);
-        if (centro == null) {
-            JOptionPane.showMessageDialog(this, "Centro non valido.", "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+			// Converte gli orari in oggetti java.sql.Time
+			java.sql.Time oraInizio = java.sql.Time.valueOf(oraInizioString + ":00");
+			java.sql.Time oraFine = java.sql.Time.valueOf(oraFineString + ":00");
 
-        // Ottieni i campi del centro
-        Map<String, Integer> campi = DataBase.getCampiCentroMappa(centro.getID());
-        if (campi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", 
-                "Errore", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+			// Converte la data dal JXDatePicker in java.sql.Date
+			java.sql.Date dataPrenotazione = new java.sql.Date(datePicker.getDate().getTime());
 
-        // Mostra il dialogo per selezionare il campo
-        SelezionaCampoDialog selezionaCampoDialog = new SelezionaCampoDialog("Seleziona Campo", campi);
-        selezionaCampoDialog.setVisible(true);
+			// Ottieni gli ID necessari
+			int idSessione = Sessione.getId();
+			int idCentro = DataBase.getCentroByName(centroSelezionatoLabel.getText()).getID();
 
-        // Ottieni la selezione fatta dall'utente
-        String campoSelezionato = selezionaCampoDialog.getSelezione();
-        Integer campoID = selezionaCampoDialog.getSelezioneID();
+			// Crea l'oggetto Prenotazione
+			Prenotazione prenotazione = new Prenotazione(dataPrenotazione, oraInizio, oraFine, idSessione, idCentro);
 
-        if (campoSelezionato != null) {
-            campoSelezionatoLabel.setText("Campo: " + campoSelezionato);
-            System.out.println("Campo ID selezionato: " + campoID);
-        } else {
-            campoSelezionatoLabel.setText("Campo: Non selezionato");
-        }
-    }
+			// Calcola il costo della prenotazione
+			double costo = prenotazione.calcolaCosto();
 
+			// Testo del riepilogo
+			String riepilogoCentro = "Centro: " + centroSelezionatoLabel.getText();
+			String riepilogoCampo = "Campo: " + campoSelezionatoLabel.getText();
+			String riepilogoData = "Data: " + new SimpleDateFormat("dd/MM/yyyy").format(dataPrenotazione);
+			String riepilogoOrario = "Orario: " + oraInizioString + " - " + oraFineString;
+			String riepilogoCosto = "Costo: €" + costo;
 
-    private void mostraRiepilogo(JXDatePicker datePicker) {
-        JOptionPane.showMessageDialog(this,
-            "Centro: " + centroSelezionatoLabel.getText() + "\n" +
-            "Campo: " + campoSelezionatoLabel.getText() + "\n" +
-            "Data: " + new SimpleDateFormat("dd/MM/yyyy").format(datePicker.getDate()),
-            "Riepilogo Prenotazione",
-            JOptionPane.INFORMATION_MESSAGE
-        );
-    }
+			// Pannello principale con GridBagLayout
+			JPanel mainPanel = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.insets = new Insets(10, 10, 10, 10); // Margini generali
 
-    private JSpinner createCustomTimeSpinner() {
-        List<String> times = generateTimeValues();
-        JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));
-        
-        // Imposta il valore iniziale su "08:00"
-        timeSpinner.setValue("08:00");
-        
-        // Impedisce la modifica manuale del valore nel text field
-        ((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);
-        
-        return timeSpinner;
-    }
+			// Crea e aggiungi le etichette per ogni riga con maggiore spazio
+			JLabel labelCentro = new JLabel(riepilogoCentro);
+			labelCentro.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+			labelCentro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+			JLabel labelCampo = new JLabel(riepilogoCampo);
+			labelCampo.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+			labelCampo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    private List<String> generateTimeValues() {
-        List<String> times = new ArrayList<>();
-        for (int h = 0; h < 24; h++) {
-            times.add(String.format("%02d:00", h));
-            times.add(String.format("%02d:30", h));
-        }
-        return times;
-    }
+			JLabel labelData = new JLabel(riepilogoData);
+			labelData.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+			labelData.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (clearImage != null) {
-            g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
-        }
-    }
-    
-    
+			JLabel labelOrario = new JLabel(riepilogoOrario);
+			labelOrario.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+			labelOrario.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+			JLabel labelCosto = new JLabel(riepilogoCosto);
+			labelCosto.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+			labelCosto.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+			// Aggiungi le etichette al pannello con spaziatura tra di loro
+			gbc.gridy = 0;
+			mainPanel.add(labelCentro, gbc);
+			gbc.gridy = 1;
+			mainPanel.add(labelCampo, gbc);
+			gbc.gridy = 2;
+			mainPanel.add(labelData, gbc);
+			gbc.gridy = 3;
+			mainPanel.add(labelOrario, gbc);
+			gbc.gridy = 4;
+			mainPanel.add(labelCosto, gbc);
+			
+			// Aggiungi uno spazio tra il riepilogo
+			gbc.gridy = 5; // Riga successiva
+			mainPanel.add(Box.createVerticalStrut(5), gbc); // Spazio verticale
+		
+			// Crea la finestra di dialogo
+			JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Riepilogo Prenotazione",
+					true);
+			dialog.getContentPane().add(mainPanel);
+			dialog.setSize(700, 500);
+			dialog.setLocationRelativeTo(this);
+
+			// Crea i pulsanti
+			JButton confermaButton = BackgroundPanel.createFlatButton("Conferma Prenotazione", e -> {
+				JOptionPane.showMessageDialog(dialog, "Prenotazione confermata!", "Conferma",
+						JOptionPane.INFORMATION_MESSAGE);
+				dialog.dispose(); // Chiudi la finestra
+			}, new Dimension(400, 50));
+			confermaButton.setFont(new Font("Arial", Font.BOLD, 18));
+
+			JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dialog.dispose(),
+					new Dimension(400, 30));
+			chiudiButton.setFont(new Font("Arial", Font.BOLD, 18));
+			chiudiButton.setBackground(Color.DARK_GRAY);
+			chiudiButton.setForeground(Color.GRAY);
+
+			// Aggiungi il pulsante Conferma
+			gbc.gridx = 0;
+			gbc.gridy = 6;
+			gbc.gridwidth = 2;
+			mainPanel.add(confermaButton, gbc);
+
+			// Aggiungi il pulsante Chiudi
+			gbc.gridx = 0;
+			gbc.gridy = 7;
+			mainPanel.add(chiudiButton, gbc);
+
+			dialog.setVisible(true);
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Errore nella prenotazione: " + e.getMessage(), "Errore",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private JSpinner createCustomTimeSpinner() {
+		List<String> times = generateTimeValues();
+		JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));
+		timeSpinner.setValue("08:00");
+		((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);
+		return timeSpinner;
+	}
+
+	private List<String> generateTimeValues() {
+		List<String> times = new ArrayList<>();
+		for (int h = 0; h < 24; h++) {
+			times.add(String.format("%02d:00", h));
+			times.add(String.format("%02d:30", h));
+		}
+		return times;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		if (clearImage != null) {
+			g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);
+		}
+	}
 }
