@@ -334,7 +334,7 @@ public class DataBase {
 		List<Prenotazione> prenotazioni = new ArrayList<>();
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
-		String query = "SELECT p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + "FROM Prenotazione p "
+		String query = "SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + "FROM Prenotazione p "
 				+ "JOIN Campo c ON p.Campo = c.ID " + "WHERE c.ID = ? AND c.CentroSportivo = ?";
 		try (Connection conn = DriverManager.getConnection(url);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -348,7 +348,7 @@ public class DataBase {
 				String dataString = rs.getString("Data"); // Ottieni la stringa della data
 
 				// Definisci il formato del database (dd-MM-yyyy)
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-gg");
 				try {
 					// Parse la stringa nella data
 					Date parsedDate = sdf.parse(dataString);
@@ -388,56 +388,66 @@ public class DataBase {
 	}
 
 	public static List<Prenotazione> getAllPrenotazioni(int utenteID) {
-		List<Prenotazione> prenotazioni = new ArrayList<>();
-		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	    List<Prenotazione> prenotazioni = new ArrayList<>();
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
-		String query = "SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + "FROM Prenotazione p "
-				+ "WHERE p.Utente = ?";
+	    String query = "SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo " + 
+	                   "FROM Prenotazione p " +
+	                   "WHERE p.Utente = ?";
 
-		try (Connection conn = DriverManager.getConnection(url);
-				PreparedStatement stmt = conn.prepareStatement(query)) {
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
 
-			stmt.setInt(1, utenteID);
-			ResultSet rs = stmt.executeQuery();
+	        stmt.setInt(1, utenteID);
+	        ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) {
-				String dataString = rs.getString("Data");
+	        while (rs.next()) {
+	            String dataString = rs.getString("Data");
 
-				// Definisci il formato della data
-				SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-				try {
-					Date parsedDate = sdf.parse(dataString);
-					java.sql.Date data = new java.sql.Date(parsedDate.getTime());
-					
-					int ID = rs.getInt("ID");
-					String oraInizioString = rs.getString("OraInizio");
-					String oraFineString = rs.getString("OraFine");
+	            // Definisci il formato della data
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Formato corretto per il parsing
 
-					if (oraInizioString.length() == 5) {
-						oraInizioString += ":00";
-					}
-					if (oraFineString.length() == 5) {
-						oraFineString += ":00";
-					}
+	            try {
+	                System.out.println("Ciaoo " + dataString);
 
-					Time oraInizio = Time.valueOf(oraInizioString);
-					Time oraFine = Time.valueOf(oraFineString);
+	                // Converte la stringa in un oggetto java.util.Date
+	                java.util.Date dataUtil = sdf.parse(dataString);
 
-					int campoID = rs.getInt("Campo");
+	                // Converte java.util.Date in java.sql.Date
+	                java.sql.Date data = new java.sql.Date(dataUtil.getTime()); 
 
-					// Crea l'oggetto Prenotazione
-					Prenotazione prenotazione = new Prenotazione(ID, data, oraInizio, oraFine, utenteID, campoID);
-					prenotazioni.add(prenotazione);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	                int ID = rs.getInt("ID");
+	                String oraInizioString = rs.getString("OraInizio");
+	                String oraFineString = rs.getString("OraFine");
 
-		return prenotazioni;
+	                // Aggiungi ":00" se non presente
+	                if (oraInizioString.length() == 5) {
+	                    oraInizioString += ":00";
+	                }
+	                if (oraFineString.length() == 5) {
+	                    oraFineString += ":00";
+	                }
+
+	                // Converte le ore in oggetti Time
+	                Time oraInizio = Time.valueOf(oraInizioString);
+	                Time oraFine = Time.valueOf(oraFineString);
+
+	                int campoID = rs.getInt("Campo");
+
+	                // Crea l'oggetto Prenotazione
+	                Prenotazione prenotazione = new Prenotazione(ID, data, oraInizio, oraFine, utenteID, campoID);
+	                prenotazioni.add(prenotazione);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return prenotazioni;
 	}
+
 
 	public static CentroSportivo getCentroByCampo(int campoId) {
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -580,7 +590,7 @@ public class DataBase {
 		return campo;
 	}
 	
-	public static void savePrenotazione(Prenotazione prenotazione) throws SQLException {
+	public static void updatePrenotazione(Prenotazione prenotazione) throws SQLException {
 	    String sql = "UPDATE Prenotazione " +
 	                 "SET Data = ?, OraInizio = ?, OraFine = ?" +
 	                 "WHERE id = ?";

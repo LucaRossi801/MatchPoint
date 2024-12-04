@@ -28,11 +28,13 @@ public class DettagliPrenotazioneDialog extends JDialog {
     private JButton salvaButton;
     private Campo campo;
     private CentroSportivo centro;
+    private int id;
 
     public DettagliPrenotazioneDialog(JFrame parent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         super(parent, "Dettagli Prenotazione", true);
         this.campo=campo;
         this.centro=centro;
+        this.id=prenotazione.getId();
         
         // Configurazione del layout principale
         setLayout(new BorderLayout());
@@ -152,6 +154,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
             // Crea una nuova prenotazione basata sui dati inseriti
             Prenotazione nuovaPrenotazione = new Prenotazione(
+            		this.id,
                 Date.valueOf(nuovaData.toLocalDate()), // Converti LocalDate in Date
                 nuovaOraInizio,
                 nuovaOraFine,
@@ -162,7 +165,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
             // Verifica la disponibilità usando il metodo della classe Prenotazione
             if (nuovaPrenotazione.verificaDisponibilita()) {
                 try {
-                    DataBase.savePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
+                    DataBase.updatePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
                     JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
                     dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
