@@ -21,6 +21,7 @@ public class Campo {
 	public int lunghezza;
 	public int larghezza;
 	public boolean coperto;
+	private int centroID;
 	public Giocatore[] giocatore;
 
 	@Override
@@ -59,6 +60,19 @@ public class Campo {
 		this.lunghezza = lunghezza;
 		this.larghezza = larghezza;
 		this.coperto = coperto;
+	}
+	
+	public Campo(int id, TipologiaCampo tipologiaCampo, int costoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza,
+			boolean coperto, int centroID) {
+		super();
+		this.ID=id;
+		this.tipologiaCampo = tipologiaCampo;
+		this.costoOraNotturna = costoOraNotturna;
+		this.costoOraDiurna = costoOraDiurna;
+		this.lunghezza = lunghezza;
+		this.larghezza = larghezza;
+		this.coperto = coperto;
+		this.centroID = centroID;
 	}
 	
 	@Override
@@ -142,5 +156,9 @@ public class Campo {
 
 	public void setCoperto(boolean coperto) {
 		this.coperto = coperto;
+	}
+	
+	public int getCentroId() {
+		return centroID;
 	}
 }

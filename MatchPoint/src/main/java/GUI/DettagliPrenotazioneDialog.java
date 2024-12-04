@@ -4,17 +4,19 @@ import org.jdesktop.swingx.JXDatePicker;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
+import components.Sessione;
 
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class DettagliPrenotazioneDialog extends JDialog {
@@ -23,10 +25,14 @@ public class DettagliPrenotazioneDialog extends JDialog {
     private JSpinner oraInizioSpinner;
     private JSpinner oraFineSpinner;
     private JButton salvaButton;
+    private Campo campo;
+    private CentroSportivo centro;
 
     public DettagliPrenotazioneDialog(JFrame parent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         super(parent, "Dettagli Prenotazione", true);
-
+        this.campo=campo;
+        this.centro=centro;
+        
         // Configurazione del layout principale
         setLayout(new BorderLayout());
         setSize(700, 500); // Dimensione del dialogo
@@ -130,17 +136,46 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
     private void salvaDettagliPrenotazione(ActionEvent e) {
         try {
+            // Recupera la nuova data, ora di inizio e ora di fine
             LocalDateTime nuovaData = datePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            String oraInizio = (String) oraInizioSpinner.getValue();
-            String oraFine = (String) oraFineSpinner.getValue();
+            String oraInizioString = oraInizioSpinner.getValue().toString();  // Ora di inizio come stringa
+            String oraFineString = oraFineSpinner.getValue().toString();  // Ora di fine come stringa
+            
+            // Assicurati che le stringhe siano nel formato corretto "HH:mm:ss"
+            Time nuovaOraInizio = Time.valueOf(oraInizioString + ":00"); // Aggiungi ":00" per i secondi
+            Time nuovaOraFine = Time.valueOf(oraFineString + ":00"); // Aggiungi ":00" per i secondi
 
-            // Logica di validazione e salvataggio
+            // Recupera l'ID dell'utente e dell'ID del campo dalla prenotazione
+            int utenteID = Sessione.getId();  // ID utente della prenotazione
+            int campoID = campo.getId();    // ID campo della prenotazione
 
-            JOptionPane.showMessageDialog(this, "Dati salvati con successo!");
+            // Crea una nuova prenotazione basata sui dati inseriti
+            Prenotazione nuovaPrenotazione = new Prenotazione(
+                Date.valueOf(nuovaData.toLocalDate()), // Converti LocalDate in Date
+                nuovaOraInizio,
+                nuovaOraFine,
+                utenteID, // ID utente dalla prenotazione
+                campoID   // ID campo dalla prenotazione
+            );
+
+            // Verifica la disponibilità usando il metodo della classe Prenotazione
+            if (nuovaPrenotazione.verificaDisponibilita()) {
+                // Logica di salvataggio della prenotazione
+                JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
+                dispose(); // Chiude la finestra dopo il salvataggio
+            } else {
+                // Se la prenotazione non è disponibile, mostra un messaggio di avviso
+                CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
+            }
+
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+            // Mostra un messaggio di errore se qualcosa va storto
+            CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
         }
     }
+
+
+
 
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);

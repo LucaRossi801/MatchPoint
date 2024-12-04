@@ -3,7 +3,9 @@ package components;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.Duration;
+import java.util.List;
 
+import GUI.CustomMessage;
 import dataBase.DataBase;
 
 public class Prenotazione {
@@ -61,6 +63,10 @@ public class Prenotazione {
     	return campoID;
     }
     
+    public int getUtenteId () {
+    	return utenteID;
+    }
+    
     public double calcolaCosto() {
     	//recupera il campo a cui è stata effettuata la prenotazione
     	Campo campo = DataBase.getCampoById(campoID);
@@ -110,6 +116,34 @@ public class Prenotazione {
         
         return costoTotale;
     }
+    
+    public boolean verificaDisponibilita() {
+    	
+    	Campo campo = DataBase.getCampoById(campoID);
+        // Recupera prenotazioni esistenti per lo stesso campo e data
+        List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campoID, campo.getCentroId());
+
+        // Controlla sovrapposizione con le prenotazioni esistenti
+        for (Prenotazione prenotazione : prenotazioniEsistenti) {
+            Time oraInizioEsistente = prenotazione.getOraInizio();
+            Time oraFineEsistente = prenotazione.getOraFine();
+
+            if (isOverlapping(oraInizio, oraFine, oraInizioEsistente, oraFineEsistente)) {
+                // Mostra messaggio di avviso tramite CustomMessage
+                CustomMessage.show("Il campo è già prenotato per l'intervallo di tempo selezionato.", "Attenzione", false);
+                return false;
+            }
+        }
+
+        // Nessuna sovrapposizione trovata, campo disponibile
+        return true;
+    }
+
+    private boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
+        // Verifica se l'intervallo [start1, end1] si sovrappone a [start2, end2]
+        return !end1.before(start2) && !start1.after(end2);
+    }
+
 
     @Override
     public String toString() {

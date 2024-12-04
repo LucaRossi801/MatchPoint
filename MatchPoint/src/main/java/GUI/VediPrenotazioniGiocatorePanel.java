@@ -129,12 +129,9 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         // Ordina le prenotazioni per data e ora
         prenotazioni.sort((p1, p2) -> {
-            LocalDateTime oraCorrente = LocalDateTime.now();
             LocalDateTime dt1 = LocalDateTime.of(p1.getData().toLocalDate(), p1.getOraInizio().toLocalTime());
             LocalDateTime dt2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());
-            
-            // Ordinamento cronologico puro
-            return dt1.compareTo(dt2);
+            return dt2.compareTo(dt1); // Ordina per data e ora in ordine decrescente
         });
 
 
@@ -319,6 +316,16 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             String giorno = prenotazione.getData().toLocalDate().format(formatter);
             prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
         }
+
+        // Ordinamento delle prenotazioni per giorno in ordine decrescente (ora più tardi prima)
+        for (List<Prenotazione> prenotazioniDelGiorno : prenotazioniPerGiorno.values()) {
+            prenotazioniDelGiorno.sort((p1, p2) -> {
+                LocalDateTime ora1 = LocalDateTime.of(p1.getData().toLocalDate(), p1.getOraInizio().toLocalTime());
+                LocalDateTime ora2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());
+                return ora2.compareTo(ora1); // Ordinamento decrescente per orario
+            });
+        }
+
         return prenotazioniPerGiorno;
     }
 

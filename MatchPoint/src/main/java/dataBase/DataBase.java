@@ -543,7 +543,7 @@ public class DataBase {
 
 	public static Campo getCampoById(int campoId) {
 		Campo campo = null;
-		String query = "SELECT ID, Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto FROM Campo c WHERE c.ID = ?";
+		String query = "SELECT ID, Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo FROM Campo c WHERE c.ID = ?";
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		try (Connection conn = DriverManager.getConnection(url);
 				PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -559,6 +559,7 @@ public class DataBase {
 				int lunghezza = rs.getInt("Lunghezza");
 				int larghezza = rs.getInt("Larghezza");
 				boolean coperto = rs.getBoolean("Coperto");
+				int centro = rs.getInt("CentroSportivo");
 
 				// Converti la stringa in TipologiaCampo
 				TipologiaCampo tipologia;
@@ -569,7 +570,7 @@ public class DataBase {
 				}
 
 				// Crea l'oggetto Campo
-				campo = new Campo(id, tipologia, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto);
+				campo = new Campo(id, tipologia, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto, centro);
 			}
 
 		} catch (SQLException e) {
