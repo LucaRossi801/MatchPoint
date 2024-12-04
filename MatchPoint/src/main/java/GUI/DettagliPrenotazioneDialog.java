@@ -31,11 +31,10 @@ public class DettagliPrenotazioneDialog extends JDialog {
     private int id;
 
     public DettagliPrenotazioneDialog(JFrame parent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
-        super(parent, "Dettagli Prenotazione", true);
-        this.campo=campo;
-        this.centro=centro;
-        this.id=prenotazione.getId();
-        
+    	 super(parent, "Dettagli Prenotazione", true);
+         this.campo = campo;
+         this.centro = centro;
+         this.id = prenotazione.getId();
         // Configurazione del layout principale
         setLayout(new BorderLayout());
         setSize(700, 500); // Dimensione del dialogo
@@ -167,6 +166,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
                 try {
                     DataBase.updatePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
                     JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
+                   
                     dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
                     exc.printStackTrace();
@@ -179,7 +179,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
         } catch (Exception ex) {
             // Mostra un messaggio di errore se qualcosa va storto
-            CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
+            CustomMessage.show("Errore nel salvataggio dei dati: AK " + ex.getMessage(), "Errore", false);
         }
     }
 

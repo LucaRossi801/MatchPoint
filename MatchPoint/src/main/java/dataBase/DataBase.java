@@ -12,6 +12,7 @@ import GUI.CustomMessage;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
+import components.Sessione;
 import components.TipologiaCampo;
 
 public class DataBase {
@@ -593,19 +594,38 @@ public class DataBase {
 	public static void updatePrenotazione(Prenotazione prenotazione) throws SQLException {
 	    String sql = "UPDATE Prenotazione " +
 	                 "SET Data = ?, OraInizio = ?, OraFine = ?" +
-	                 "WHERE id = ?";
+	                 "WHERE ID = ?";
 	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 
 	    try (Connection conn = DriverManager.getConnection(url);
 	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	        pstmt.setDate(1, prenotazione.getData());
-	        pstmt.setTime(2, prenotazione.getOraInizio());
-	        pstmt.setTime(3, prenotazione.getOraFine());
-	        pstmt.setInt(4, prenotazione.getUtenteId());
-	        pstmt.setInt(5, prenotazione.getCampoId());
-	        pstmt.setInt(6, prenotazione.getId()); 
+	    	pstmt.setString(1, prenotazione.getData().toString()); // Usa direttamente java.sql.Date
+	        pstmt.setString(2, prenotazione.getOraInizio().toString()); // java.sql.Time
+	        pstmt.setString(3, prenotazione.getOraFine().toString()); // java.sql.Time
+	        pstmt.setInt(4, prenotazione.getId()); // Imposta ID
 	        pstmt.executeUpdate();
 	    }
 	}
+	
+	public static void inserisciPrenotazione(Prenotazione prenotazione) throws SQLException {
+	    String sql = "INSERT INTO Prenotazione (Data, OraInizio, OraFine, Campo, Utente) VALUES (?, ?, ?, ?, ?)";
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	    
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        // Imposta i valori dei parametri nella query
+	        pstmt.setString(1, prenotazione.getData().toString()); // Data in formato yyyy-MM-dd
+	        pstmt.setString(2, prenotazione.getOraInizio().toString()); // Ora in formato HH:mm:ss
+	        pstmt.setString(3, prenotazione.getOraFine().toString()); // Ora in formato HH:mm:ss
+	        pstmt.setInt(4, prenotazione.getCampoId()); // ID del campo
+	        pstmt.setInt(5, prenotazione.getUtenteId()); // ID dell'utente
+
+	        // Esegui la query
+	        pstmt.executeUpdate();
+	    }
+	}
+
 
 }
