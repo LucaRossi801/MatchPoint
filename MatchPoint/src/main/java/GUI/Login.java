@@ -53,7 +53,8 @@ public class Login {
 	              
 	                if (validateCredentials(username, password)) {
 	                    CustomMessage.show("Login effettuato con successo!", "Successo", true);
-
+	                    resetFields();
+	                    
 	                    // Determina il ruolo dell'utente
 	                    String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo dal database
 	                    
@@ -73,6 +74,12 @@ public class Login {
 	        },
 	        new Dimension(100, 40) // Dimensione del pulsante
 	    );
+	    
+	    // Esegui il login quando premi Invio
+	    usernameField.addActionListener(e -> loginButton.doClick());
+	    // Esegui il login quando premi Invio
+	    passwordField.addActionListener(e -> loginButton.doClick());
+	    
 
 	    // Personalizza ulteriormente il pulsante
 	    loginButton.setFont(new Font("Arial", Font.BOLD, 20));
@@ -120,7 +127,7 @@ public class Login {
 	    gbc.gridwidth = 2; //Anche il pulsante "Back" occupa entrambe le colonne
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(createBackButton(usernameField, passwordField), gbc);
-
+	    
 	    return panel;
 	}
 	
