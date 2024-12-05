@@ -132,10 +132,24 @@ public class Prenotazione {
     }
     
     public boolean verificaDisponibilita() {
-    	System.out.println("sono in verifica");
+
         // Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
         if (oraInizio == null || oraFine == null || oraInizio.after(oraFine)) {
             CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", "Errore", false);
+            return false;
+        }
+
+        // Definisci gli orari limite (apertura alle 8:00 e chiusura a mezzanotte)
+        Time oraApertura = Time.valueOf("08:00:00");
+        Time oraChiusura = Time.valueOf("23:00:00");
+
+        // Controlla che gli orari di inizio e fine siano all'interno dell'intervallo
+        if (oraInizio.before(oraApertura) || oraFine.after(oraChiusura)) {
+            if (oraInizio.before(oraApertura)) {
+                CustomMessage.show("Il campo apre alle 8:00. Seleziona un orario valido.", "Errore", false);
+            } else if (oraFine.after(oraChiusura)) {
+                CustomMessage.show("Il campo chiude alle 23. Seleziona un orario valido.", "Errore", false);
+            }
             return false;
         }
 
@@ -147,11 +161,11 @@ public class Prenotazione {
         }
 
         // Recupera tutte le prenotazioni esistenti per lo stesso campo e data
-        List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campoID, campo.getCentroId());
+        List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campo.getCentroId(), campoID);
 
         // Controlla sovrapposizioni con le prenotazioni esistenti
         for (Prenotazione prenotazione : prenotazioniEsistenti) {
-        	System.out.println(prenotazione);
+
             // Verifica che la data sia la stessa
             if (!prenotazione.getData().equals(this.data)) {
                 continue; // Salta le prenotazioni di date diverse
@@ -163,11 +177,7 @@ public class Prenotazione {
 
             // Controlla sovrapposizione
             if (isOverlapping(oraInizio, oraFine, oraInizioEsistente, oraFineEsistente)) {
-                CustomMessage.show(
-                    "Il campo è già prenotato per l'intervallo di tempo selezionato.",
-                    "Attenzione",
-                    false
-                );
+            	CustomMessage.show("Orario non disponibile", "Errore", false);
                 return false;
             }
         }
@@ -175,6 +185,7 @@ public class Prenotazione {
         // Nessuna sovrapposizione trovata, campo disponibile
         return true;
     }
+
 
     private boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
         // Verifica se l'intervallo [start1, end1] si sovrappone a [start2, end2]

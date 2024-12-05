@@ -211,7 +211,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 	        // Ottieni gli ID necessari
 	        int idSessione = Sessione.getId();
-	        int idCentro = DataBase.getCentroByName(centroSelezionatoLabel.getText()).getID();
 
 	        // Crea l'oggetto Prenotazione
 	        Prenotazione prenotazione = new Prenotazione(dataPrenotazione, oraInizio, oraFine, idSessione, campoSelezionatoID);
@@ -268,8 +267,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	        dialog.setLocationRelativeTo(this);
 
 	        // Verifica disponibilità e gestione pulsanti
-	        if (prenotazione.verificaDisponibilita()) {
-	            CustomMessage.show("Orario non disponibile", "Errore", false);
+	        if (!prenotazione.verificaDisponibilita()) {
 	            dialog.dispose();
 	            return;
 	        }
@@ -298,7 +296,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 	        dialog.setVisible(true);
 	    } catch (Exception e) {
-	        JOptionPane.showMessageDialog(this, "Errore nella prenotazione: " + e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+	        e.printStackTrace();;
 	    }
 	}
 

@@ -349,7 +349,7 @@ public class DataBase {
 				String dataString = rs.getString("Data"); // Ottieni la stringa della data
 
 				// Definisci il formato del database (dd-MM-yyyy)
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-gg");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				try {
 					// Parse la stringa nella data
 					Date parsedDate = sdf.parse(dataString);
