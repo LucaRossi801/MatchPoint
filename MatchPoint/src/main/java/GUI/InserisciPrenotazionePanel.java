@@ -268,7 +268,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	        dialog.setLocationRelativeTo(this);
 
 	        // Verifica disponibilità e gestione pulsanti
-	        if (!prenotazione.verificaDisponibilita()) {
+	        if (prenotazione.verificaDisponibilita()) {
 	            CustomMessage.show("Orario non disponibile", "Errore", false);
 	            dialog.dispose();
 	            return;

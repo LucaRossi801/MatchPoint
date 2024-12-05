@@ -51,7 +51,7 @@ public class Prenotazione {
     
     public Time getDurata() {
         if (oraInizio == null || oraFine == null || oraFine.before(oraInizio)) {
-            throw new IllegalArgumentException("Orari non validi. Assicurati che oraFine sia successivo a oraInizio.");
+            throw new IllegalArgumentException("Orari non validi. Assicurati che ora fine sia successivo a ora inizio.");
         }
 
         // Calcolare la durata in millisecondi
@@ -132,19 +132,42 @@ public class Prenotazione {
     }
     
     public boolean verificaDisponibilita() {
-    	
-    	Campo campo = DataBase.getCampoById(campoID);
-        // Recupera prenotazioni esistenti per lo stesso campo e data
+    	System.out.println("sono in verifica");
+        // Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
+        if (oraInizio == null || oraFine == null || oraInizio.after(oraFine)) {
+            CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", "Errore", false);
+            return false;
+        }
+
+        // Recupera il campo associato
+        Campo campo = DataBase.getCampoById(campoID);
+        if (campo == null) {
+            CustomMessage.show("Campo non trovato.", "Errore", false);
+            return false;
+        }
+
+        // Recupera tutte le prenotazioni esistenti per lo stesso campo e data
         List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campoID, campo.getCentroId());
 
-        // Controlla sovrapposizione con le prenotazioni esistenti
+        // Controlla sovrapposizioni con le prenotazioni esistenti
         for (Prenotazione prenotazione : prenotazioniEsistenti) {
+        	System.out.println(prenotazione);
+            // Verifica che la data sia la stessa
+            if (!prenotazione.getData().equals(this.data)) {
+                continue; // Salta le prenotazioni di date diverse
+            }
+
+            // Recupera gli orari della prenotazione esistente
             Time oraInizioEsistente = prenotazione.getOraInizio();
             Time oraFineEsistente = prenotazione.getOraFine();
 
+            // Controlla sovrapposizione
             if (isOverlapping(oraInizio, oraFine, oraInizioEsistente, oraFineEsistente)) {
-                // Mostra messaggio di avviso tramite CustomMessage
-                CustomMessage.show("Il campo è già prenotato per l'intervallo di tempo selezionato.", "Attenzione", false);
+                CustomMessage.show(
+                    "Il campo è già prenotato per l'intervallo di tempo selezionato.",
+                    "Attenzione",
+                    false
+                );
                 return false;
             }
         }
