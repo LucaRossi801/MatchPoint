@@ -9,23 +9,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
 import java.sql.*;
 
-import org.jdatepicker.*;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-
+import org.jdesktop.swingx.JXDatePicker; // Assicurati di aggiungere questa libreria
 import dataBase.DataBase;
 import individui.Gestore;
 import individui.Giocatore;
 
 public class Register {
 
-	// Creazione della registrazione per i gestori
+
 	protected static JPanel createRegisterPanel(String tipologia) {
-		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // connessione al database
 	    JPanel panel = new JPanel() {
 	        @Override
 	        protected void paintComponent(Graphics g) {
@@ -78,17 +73,9 @@ public class Register {
 	        if (campo.equals("Password")) {
 	            inputField = new JPasswordField(20);
 	        } else if (campo.equals("DataNascita")) {
-	        	UtilDateModel model = new UtilDateModel();
-	            Properties properties = new Properties();
-	            properties.put("text.today", "Giorno");
-	            properties.put("text.month", "Mese");
-	            properties.put("text.year", "Anno");
-	            // Crea il pannello del selettore di data
-	            JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
-	            // Crea il date picker con il formatter personalizzato
-	            JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-	            datePicker.getJFormattedTextField().setFont(new Font("Arial", Font.PLAIN, 18));
-
+	            JXDatePicker datePicker = new JXDatePicker();
+	            datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
+	            datePicker.setFormats("dd-MM-yyyy"); // Imposta il formato della data
 	            inputField = datePicker;
 	        } else {
 	            inputField = new JTextField(20);
@@ -104,27 +91,25 @@ public class Register {
 	        row++; // Passa alla riga successiva
 	    }
 
-	 // Aggiungi il pulsante di registrazione utilizzando createFlatButton
+	    // Pulsante di registrazione
 	    JButton registerButton = BackgroundPanel.createFlatButton(
-	        "Register", // Testo del pulsante
+	        "Register",
 	        e -> {
 	            try {
 	                // Leggi i valori dai campi
 	                String name = ((JTextField) fields.get("Nome")).getText().trim();
 	                String surname = ((JTextField) fields.get("Cognome")).getText().trim();
 	                String birthDate = null;
-	                JDatePickerImpl datePicker = (JDatePickerImpl) fields.get("DataNascita");
-	                Object selectedDate = datePicker.getModel().getValue();
 
-	                if (selectedDate != null) {
-	                    // Formatta la data come stringa nel formato yyyy-MM-dd
-	                    java.util.Date date = (java.util.Date) selectedDate;
+	                JXDatePicker datePicker = (JXDatePicker) fields.get("DataNascita");
+	                if (datePicker.getDate() != null) {
 	                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	                    birthDate = sdf.format(date);
+	                    birthDate = sdf.format(datePicker.getDate());
 	                } else {
-	                	CustomMessage.show("Compilare la data di nascita!", "Errore", false);
+	                    CustomMessage.show("Compilare la data di nascita!", "Errore", false);
 	                    return;
 	                }
+
 	                String email = ((JTextField) fields.get("Email")).getText().trim();
 	                String username = ((JTextField) fields.get("Username")).getText().trim();
 	                String password = new String(((JPasswordField) fields.get("Password")).getPassword()).trim();
@@ -134,7 +119,7 @@ public class Register {
 	                // Controlla se ci sono campi vuoti
 	                if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() ||
 	                    (tipologia.equals("Gestore") && (certifications.isEmpty() || competences.isEmpty()))) {
-	                	CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
+	                    CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
 	                    return;
 	                }
 
@@ -151,8 +136,7 @@ public class Register {
 	                }
 
 	                if (!ris.isEmpty()) {
-	                    // Lo username esiste già
-	                	CustomMessage.show("Lo username '" + username + "' è già in uso!", "Errore", false);
+	                    CustomMessage.show("Lo username '" + username + "' è già in uso!", "Errore", false);
 	                    return;
 	                }
 
@@ -163,24 +147,22 @@ public class Register {
 	                } else {
 	                    String teamName = ((JTextField) fields.get("NomeSquadra")).getText().trim();
 	                    if (teamName.isEmpty()) {
-	                    	CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
+	                        CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
 	                        return;
 	                    }
 	                    Giocatore.registrazione(name, surname, birthDate, email, username, password, teamName);
 	                    System.out.println("Registrazione completata per il Giocatore!");
 	                }
 
-	                // Messaggio di successo
 	                CustomMessage.show("Registrazione effettuata con successo!", "Successo", true);
 	                BackgroundPanel.showPanel("login");
 	            } catch (Exception ex) {
 	                CustomMessage.show("Errore durante la registrazione", "Errore", false);
 	            }
 	        },
-	        new Dimension(300, 50) // Dimensione del pulsante
+	        new Dimension(300, 50)
 	    );
 
-	    // Configura il layout e aggiungi il pulsante "Register"
 	    registerButton.setFont(new Font("Arial", Font.BOLD, 18));
 	    registerButton.setBackground(new Color(32, 178, 170));
 	    registerButton.setForeground(new Color(220, 250, 245));
@@ -188,21 +170,19 @@ public class Register {
 
 	    gbc.gridx = 0;
 	    gbc.gridy = row;
-	    gbc.gridwidth = 2; // Il pulsante occupa due colonne
+	    gbc.gridwidth = 2;
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(registerButton, gbc);
 
-	    // Aggiungi il pulsante "Back"
-	    gbc.gridy = row + 1; // Riga successiva
+	    // Pulsante "Back"
+	    gbc.gridy = row + 1;
 	    gbc.gridwidth = 2;
 	    gbc.anchor = GridBagConstraints.CENTER;
 	    panel.add(createBackButton(fields), gbc);
 
-	    
 	    return panel;
-	    
-	    
 	}
+
 
 	protected static JButton createBackButton(Map<String, JComponent> fields) {
 	    // Usa createFlatButton per creare il pulsante "Back"
@@ -213,8 +193,8 @@ public class Register {
 	            fields.forEach((key, field) -> {
 	                if (field instanceof JTextField) {
 	                    ((JTextField) field).setText("");
-	                } else if (field instanceof JDatePickerImpl) {
-	                    ((JDatePickerImpl) field).getModel().setValue(null);
+	                } else if (field instanceof JXDatePicker) {
+	                    ((JXDatePicker) field).setDate(null); // Resetta la data
 	                }
 	            });
 
@@ -225,12 +205,13 @@ public class Register {
 	    );
 
 	    // Personalizzazioni specifiche per il pulsante "Back"
-        backButton.setForeground(Color.GRAY); // Sfondo grigio
-        backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
+	    backButton.setForeground(Color.GRAY); // Testo grigio
+	    backButton.setBackground(Color.DARK_GRAY); // Sfondo scuro
 	    backButton.setFont(new Font("Arial", Font.BOLD, 18));
 
 	    return backButton;
 	}
+
 
 
 	
@@ -255,6 +236,4 @@ public class Register {
 	    }
 
     }
-
-	
 }

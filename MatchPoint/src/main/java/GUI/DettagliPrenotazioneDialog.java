@@ -166,7 +166,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
                 try {
                     DataBase.updatePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
                     JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
-                   
+                 
                     dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
                     exc.printStackTrace();
@@ -179,7 +179,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
         } catch (Exception ex) {
             // Mostra un messaggio di errore se qualcosa va storto
-            CustomMessage.show("Errore nel salvataggio dei dati: AK " + ex.getMessage(), "Errore", false);
+            CustomMessage.show("Errore nel salvataggio dei dati:" + ex.getMessage(), "Errore", false);
         }
     }
 

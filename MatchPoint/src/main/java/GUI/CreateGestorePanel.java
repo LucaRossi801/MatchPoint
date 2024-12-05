@@ -2,6 +2,9 @@ package GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+import components.Sessione;
+import dataBase.DataBase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -49,9 +52,14 @@ public class CreateGestorePanel extends JPanel {
         JButton ModificaCentroButton = BackgroundPanel.createFlatButton(
             "Modifica Centro",
             e -> {
-            ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
-            BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
-            cardLayout.show(cardPanel, "modificaCentro");  
+             if(!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {
+            	 ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
+                 BackgroundPanel.cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
+                 cardLayout.show(cardPanel, "modificaCentro");
+             }
+             else {
+            	 CustomMessage.show("Non esistono centri registrati!", "Errore", false);
+             }
             },
             
             buttonSize
@@ -72,9 +80,14 @@ public class CreateGestorePanel extends JPanel {
         JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(
             "Vedi Prenotazioni",
             e -> {
-            	VediPrenotazioniGestorePanel panel = new VediPrenotazioniGestorePanel(cardLayout, cardPanel);
-                BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(cardLayout, cardPanel), "vediPrenotazioniGestore");
-            	cardLayout.show(cardPanel, "vediPrenotazioniGestore");},
+            	if(!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {
+            		VediPrenotazioniGestorePanel panel = new VediPrenotazioniGestorePanel(cardLayout, cardPanel);
+                    BackgroundPanel.cardPanel.add(new VediPrenotazioniGestorePanel(cardLayout, cardPanel), "vediPrenotazioniGestore");
+                	cardLayout.show(cardPanel, "vediPrenotazioniGestore");}
+            	else {
+            		CustomMessage.show("Non esistono centri registrati!", "Errore", false);
+            	}
+            },
             buttonSize
             
         );
