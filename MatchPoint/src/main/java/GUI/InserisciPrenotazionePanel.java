@@ -281,7 +281,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 	                if (gestorePagamenti.isPagamentoEffettuato()) {
 	                    // Inserimento prenotazione
-	                    System.out.println("Pagamento riuscito, inserisco la prenotazione.");
 	                    DataBase.inserisciPrenotazione(prenotazione);
 	                    JOptionPane.showMessageDialog(dialog, "Prenotazione confermata!", "Conferma", JOptionPane.INFORMATION_MESSAGE);
 	                    dialog.dispose();

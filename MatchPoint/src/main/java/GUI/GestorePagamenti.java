@@ -7,16 +7,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GestorePagamenti {
-	private boolean pagamentoEffettuato; // Stato del pagamento
-	
+    private boolean pagamentoEffettuato; // Stato del pagamento
+
+    public boolean isPagamentoEffettuato() {
+        return pagamentoEffettuato;
+    }
+
     // Metodo per mostrare la schermata di pagamento iniziale
     public void mostraSchermataPagamento(Prenotazione prenotazione) {
-    	pagamentoEffettuato=false;
+        pagamentoEffettuato = false; // Stato iniziale del pagamento
         double costo = prenotazione.calcolaCosto();
 
         // Crea il dialogo per il pagamento
-        JDialog pagamentoDialog = new JDialog();
-        pagamentoDialog.setTitle("Pagamento");
+        JDialog pagamentoDialog = new JDialog((Frame) null, "Pagamento", true); // Dialogo modale
         pagamentoDialog.setSize(400, 200);
         pagamentoDialog.setLocationRelativeTo(null);
         pagamentoDialog.setLayout(new BorderLayout());
@@ -26,7 +29,7 @@ public class GestorePagamenti {
         messaggio.setFont(new Font("Arial", Font.BOLD, 16));
         pagamentoDialog.add(messaggio, BorderLayout.CENTER);
 
-        // Imposta un listener per il clic del mouse
+        // Listener per il clic del mouse
         pagamentoDialog.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -38,11 +41,11 @@ public class GestorePagamenti {
                     pagamentoEffettuato = false; // Pagamento fallito
                     mostraSchermataConferma(false);
                 }
-                pagamentoDialog.dispose();
+                pagamentoDialog.dispose(); // Chiudi il dialogo
             }
         });
 
-        pagamentoDialog.setVisible(true);
+        pagamentoDialog.setVisible(true); // Mostra il dialogo e aspetta
     }
 
     // Metodo per mostrare la schermata di conferma del pagamento
@@ -96,7 +99,4 @@ public class GestorePagamenti {
         rimborsoFrame.setVisible(true);
     }
     
-    public boolean isPagamentoEffettuato() {
-        return pagamentoEffettuato;
-    }
 }
