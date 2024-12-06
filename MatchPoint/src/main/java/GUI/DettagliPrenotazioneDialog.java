@@ -153,7 +153,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
             // Crea una nuova prenotazione basata sui dati inseriti
             Prenotazione nuovaPrenotazione = new Prenotazione(
-            		this.id,
+                this.id,
                 Date.valueOf(nuovaData.toLocalDate()), // Converti LocalDate in Date
                 nuovaOraInizio,
                 nuovaOraFine,
@@ -164,9 +164,19 @@ public class DettagliPrenotazioneDialog extends JDialog {
             // Verifica la disponibilità usando il metodo della classe Prenotazione
             if (nuovaPrenotazione.verificaDisponibilita()) {
                 try {
-                    DataBase.updatePrenotazione(nuovaPrenotazione); // Salva la prenotazione nel database
-                    JOptionPane.showMessageDialog(this, "Prenotazione salvata con successo!");
-                 
+                    // Recupera la prenotazione precedente dal database
+                    Prenotazione vecchiaPrenotazione = DataBase.getPrenotazioneById(this.id);
+
+                    // Inizializza il gestore dei pagamenti
+                    GestorePagamenti gestorePagamenti = new GestorePagamenti();
+
+                    // Gestisci il pagamento modificato
+                    gestorePagamenti.gestisciPagamentoModificato(nuovaPrenotazione, vecchiaPrenotazione);
+
+                    // Aggiorna la prenotazione nel database
+                    DataBase.updatePrenotazione(nuovaPrenotazione);
+
+                   CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
                     dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
                     exc.printStackTrace();
@@ -175,13 +185,12 @@ public class DettagliPrenotazioneDialog extends JDialog {
             } else {
                 CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
             }
-
-
         } catch (Exception ex) {
             // Mostra un messaggio di errore se qualcosa va storto
-            CustomMessage.show("Errore nel salvataggio dei dati:" + ex.getMessage(), "Errore", false);
+            CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
         }
     }
+
 
 
 

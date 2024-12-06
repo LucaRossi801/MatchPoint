@@ -346,8 +346,9 @@ public class DataBase {
 			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
+				int id = rs.getInt("ID");
 				String dataString = rs.getString("Data"); // Ottieni la stringa della data
-
+				
 				// Definisci il formato del database (dd-MM-yyyy)
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				try {
@@ -375,7 +376,7 @@ public class DataBase {
 					int campoID = rs.getInt("Campo");
 
 					// Crea l'oggetto Prenotazione
-					Prenotazione prenotazione = new Prenotazione(data, oraInizio, oraFine, utenteID, campoID);
+					Prenotazione prenotazione = new Prenotazione(id, data, oraInizio, oraFine, utenteID, campoID);
 					prenotazioni.add(prenotazione);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -627,5 +628,35 @@ public class DataBase {
 	    }
 	}
 
+	public static Prenotazione getPrenotazioneById(int prenotazioneId) {
+	    Prenotazione prenotazione = null;
+	    String query = "SELECT ID, Data, OraInizio, OraFine, Utente, Campo FROM Prenotazione p WHERE p.ID = ?";
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setInt(1, prenotazioneId);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            int id = rs.getInt("ID");
+	            String data = rs.getString("Data");
+	            String oraInizio = rs.getString("OraInizio");
+	            String oraFine = rs.getString("OraFine");
+	            int utenteId = rs.getInt("Utente");
+	            int campoId = rs.getInt("Campo");
+
+	            java.sql.Date d = java.sql.Date.valueOf(data);
+	            Time oi= Time.valueOf(oraInizio);
+	            Time of = Time.valueOf(oraFine);
+	            // Crea l'oggetto Prenotazione
+	            prenotazione = new Prenotazione(id, d, oi, of, utenteId, campoId);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return prenotazione;
+	}
 
 }

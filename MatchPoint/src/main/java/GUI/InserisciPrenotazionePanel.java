@@ -279,7 +279,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	                GestorePagamenti gestorePagamenti = new GestorePagamenti();
 
 	                // Mostra la schermata di pagamento
-	                gestorePagamenti.mostraSchermataPagamento(prenotazione);
+	                gestorePagamenti.mostraSchermataPagamento(prenotazione, 0);
 
 	                // Pausa di 3 secondi
 	                Thread.sleep(3000); // Pausa di 3 secondi (3000 millisecondi)

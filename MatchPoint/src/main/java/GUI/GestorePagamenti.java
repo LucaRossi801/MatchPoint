@@ -16,7 +16,7 @@ public class GestorePagamenti {
     }
 
     // Metodo per mostrare la schermata di pagamento iniziale
-    public void mostraSchermataPagamento(Prenotazione prenotazione) {
+    public void mostraSchermataPagamento(Prenotazione prenotazione, double vecchioCosto) {
     	pagamentoEffettuato = false; // Stato iniziale del pagamento
         double costo = prenotazione.calcolaCosto();
 
@@ -35,13 +35,23 @@ public class GestorePagamenti {
         pagamentoDialog.add(mainPanel);
 
         // Etichetta del messaggio
-        JLabel messaggio = new JLabel(
-            "<html><center>Il pagamento è di <b>€ " + costo + "</b>.<br>Inserire la carta per continuare.</center></html>",
-            SwingConstants.CENTER
-        );
-        messaggio.setFont(new Font("Arial", Font.BOLD, 18));
-        messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
-        mainPanel.add(messaggio, BorderLayout.CENTER);
+        if (vecchioCosto!=0) {
+            JLabel messaggio = new JLabel(
+                    "<html><center>La differenza dovuta è di <b>€ " + (costo-vecchioCosto) + "</b>.<br>Inserire la carta per continuare.</center></html>",
+                    SwingConstants.CENTER
+                );
+                messaggio.setFont(new Font("Arial", Font.BOLD, 18));
+                messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
+                mainPanel.add(messaggio, BorderLayout.CENTER);
+        }else {
+	        JLabel messaggio = new JLabel(
+	            "<html><center>Il pagamento è di <b>€ " + costo + "</b>.<br>Inserire la carta per continuare.</center></html>",
+	            SwingConstants.CENTER
+	        );
+	        messaggio.setFont(new Font("Arial", Font.BOLD, 18));
+	        messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
+	        mainPanel.add(messaggio, BorderLayout.CENTER);
+        }
 
         // Listener per il clic del mouse
         pagamentoDialog.addMouseListener(new MouseAdapter() {
@@ -87,40 +97,57 @@ public class GestorePagamenti {
     }
 
 
-    // Metodo per gestire il pagamento di una prenotazione modificata
+ // Metodo per gestire il pagamento di una prenotazione modificata
     public void gestisciPagamentoModificato(Prenotazione nuovaPrenotazione, Prenotazione vecchiaPrenotazione) {
         double nuovoCosto = nuovaPrenotazione.calcolaCosto();
         double vecchioCosto = vecchiaPrenotazione.calcolaCosto();
 
+        // Gestione pagamento in caso di aumento del costo
         if (nuovoCosto > vecchioCosto) {
-            mostraSchermataPagamento(nuovaPrenotazione);
+            mostraSchermataPagamento(nuovaPrenotazione, vecchioCosto);
         } else if (nuovoCosto < vecchioCosto) {
             double differenza = vecchioCosto - nuovoCosto;
 
-            int scelta = JOptionPane.showConfirmDialog(null,
-                "Il costo è diminuito di € " + differenza + ". Vuoi un rimborso?",
-                "Rimborso",
-                JOptionPane.YES_NO_OPTION);
+            // Mostra una finestra di conferma per il rimborso
+            boolean scelta = CustomMessageWithChoice.show(
+            	    "Il costo è diminuito di € " + differenza + ". Vuoi un rimborso?",
+            	    "Rimborso",
+            	    true // Successo (verde)
+            	);
 
-            if (scelta == JOptionPane.YES_OPTION) {
-                mostraSchermataRimborso(differenza);
-            }
+            	if (scelta) {
+            	    mostraSchermataRimborso(differenza);
+            	}
         }
     }
 
     // Metodo per mostrare la schermata di rimborso
     private void mostraSchermataRimborso(double rimborso) {
-        JFrame rimborsoFrame = new JFrame();
+        // Crea una finestra per il rimborso
+        JFrame rimborsoFrame = new JFrame("Rimborso");
         rimborsoFrame.setSize(400, 200);
-        rimborsoFrame.setLocationRelativeTo(null);
+        rimborsoFrame.setLocationRelativeTo(null); // Centra la finestra
         rimborsoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        // Crea il messaggio di rimborso
         JLabel messaggio = new JLabel("Rimborso di € " + rimborso + " effettuato.", SwingConstants.CENTER);
         messaggio.setFont(new Font("Arial", Font.BOLD, 16));
-        rimborsoFrame.add(messaggio);
-        rimborsoFrame.getContentPane().setBackground(Color.BLUE);
+        messaggio.setForeground(Color.WHITE); // Colore del testo
 
+        // Imposta il colore del background (verde per successo)
+        JPanel contentPane = new JPanel();
+        contentPane.setBackground(new Color(34, 139, 34)); // Verde chiaro
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(messaggio, BorderLayout.CENTER);
+
+        // Imposta il contenuto del frame
+        rimborsoFrame.setContentPane(contentPane);
         rimborsoFrame.setVisible(true);
+
+        // Usa un Timer per chiudere la finestra dopo 3 secondi
+        new Timer(3000, e -> rimborsoFrame.dispose()).start();
     }
+
+
     
 }

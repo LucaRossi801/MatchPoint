@@ -150,11 +150,16 @@ public class Prenotazione {
             return false;
         }
 
-        // Recupera tutte le prenotazioni esistenti per lo stesso campo e data
+     // Recupera tutte le prenotazioni esistenti per lo stesso campo e data
         List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campo.getCentroId(), campoID);
 
         // Controlla sovrapposizioni con le prenotazioni esistenti
         for (Prenotazione prenotazione : prenotazioniEsistenti) {
+            
+            // Escludi la prenotazione corrente dal controllo
+            if (prenotazione.getId() == this.ID) {
+                continue; // Salta la prenotazione corrente
+            }
 
             // Verifica che la data sia la stessa
             if (!prenotazione.getData().equals(this.data)) {
@@ -167,10 +172,11 @@ public class Prenotazione {
 
             // Controlla sovrapposizione
             if (isOverlapping(oraInizio, oraFine, oraInizioEsistente, oraFineEsistente)) {
-            	CustomMessage.show("Orario non disponibile", "Errore", false);
+                CustomMessage.show("Orario non disponibile", "Errore", false);
                 return false;
             }
         }
+
 
         // Nessuna sovrapposizione trovata, campo disponibile
         return true;
