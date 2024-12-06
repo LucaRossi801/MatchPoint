@@ -86,19 +86,9 @@ public class Prenotazione {
     	Campo campo = DataBase.getCampoById(campoID);
     	int costoOraNotturna = campo.costoOraNotturna;
     	int costoOraDiurna = campo.costoOraDiurna;
-    	
-        // Verifica che gli orari siano validi
-        if (oraInizio == null || oraFine == null || oraFine.before(oraInizio)) {
-            throw new IllegalArgumentException("Orari non validi. Assicurati che oraFine sia successivo a oraInizio.");
-        }
 
         // Calcola la durata in millisecondi
         long durataInMillis = oraFine.getTime() - oraInizio.getTime();
-        
-        // Se la durata è negativa, la prenotazione non è valida
-        if (durataInMillis < 0) {
-            throw new IllegalArgumentException("La durata della prenotazione non può essere negativa.");
-        }
 
         // Converte la durata in minuti
         long durataInMinuti = durataInMillis / 60000;

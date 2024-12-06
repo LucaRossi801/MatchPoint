@@ -273,14 +273,31 @@ public class InserisciPrenotazionePanel extends JPanel {
 	        }
 
 	        JButton confermaButton = BackgroundPanel.createFlatButton("Conferma Prenotazione", e -> {
-	            JOptionPane.showMessageDialog(dialog, "Prenotazione confermata!", "Conferma", JOptionPane.INFORMATION_MESSAGE);
-	            dialog.dispose();
 	            try {
-	                DataBase.inserisciPrenotazione(prenotazione);
-	            } catch (SQLException e1) {
-	                e1.printStackTrace();
+	                GestorePagamenti gestorePagamenti = new GestorePagamenti();
+
+	                // Mostra la schermata di pagamento
+	                gestorePagamenti.mostraSchermataPagamento(prenotazione);
+
+	                if (gestorePagamenti.isPagamentoEffettuato()) {
+	                    // Inserimento prenotazione
+	                    System.out.println("Pagamento riuscito, inserisco la prenotazione.");
+	                    DataBase.inserisciPrenotazione(prenotazione);
+	                    JOptionPane.showMessageDialog(dialog, "Prenotazione confermata!", "Conferma", JOptionPane.INFORMATION_MESSAGE);
+	                    dialog.dispose();
+	                } else {
+	                    JOptionPane.showMessageDialog(dialog, "Pagamento non riuscito. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
+	                }
+	            } catch (SQLException ex) {
+	                ex.printStackTrace();
+	                JOptionPane.showMessageDialog(dialog, "Errore nel database: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	                JOptionPane.showMessageDialog(dialog, "Errore imprevisto: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
 	            }
 	        }, new Dimension(400, 50));
+
+
 	        confermaButton.setFont(new Font("Arial", Font.BOLD, 18));
 
 	        JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dialog.dispose(), new Dimension(400, 30));
