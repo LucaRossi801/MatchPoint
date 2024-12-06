@@ -10,6 +10,8 @@ import localizzazione.FileReaderUtils;
 
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.Timer;
+
 import java.awt.*;
 import java.net.URL;
 import java.sql.SQLException;
@@ -279,22 +281,29 @@ public class InserisciPrenotazionePanel extends JPanel {
 	                // Mostra la schermata di pagamento
 	                gestorePagamenti.mostraSchermataPagamento(prenotazione);
 
-	                if (gestorePagamenti.isPagamentoEffettuato()) {
-	                    // Inserimento prenotazione
-	                    DataBase.inserisciPrenotazione(prenotazione);
-	                    JOptionPane.showMessageDialog(dialog, "Prenotazione confermata!", "Conferma", JOptionPane.INFORMATION_MESSAGE);
-	                    dialog.dispose();
-	                } else {
-	                    JOptionPane.showMessageDialog(dialog, "Pagamento non riuscito. Riprova.", "Errore", JOptionPane.ERROR_MESSAGE);
-	                }
-	            } catch (SQLException ex) {
+	                // Aggiungi un ritardo di 3 secondi per l'esecuzione del codice seguente
+	                new Timer(2300, event -> {
+	                    if (gestorePagamenti.isPagamentoEffettuato()) {
+	                        // Inserimento prenotazione
+	                        try {
+								DataBase.inserisciPrenotazione(prenotazione);
+							} catch (SQLException e1) {
+				                CustomMessage.show("Errore nel database: " + e1.getMessage(), "Errore", false);
+							}
+	                        CustomMessage.show("Prenotazione confermata!", "Conferma", true);
+	                        dialog.dispose();
+	                    } else {
+	                        CustomMessage.show("Pagamento non riuscito. Riprova.", "Errore", false);
+	                    }
+	                }).start(); // Avvia il timer di 3 secondi
+
+	            } 
+	            catch (Exception ex) {
 	                ex.printStackTrace();
-	                JOptionPane.showMessageDialog(dialog, "Errore nel database: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
-	            } catch (Exception ex) {
-	                ex.printStackTrace();
-	                JOptionPane.showMessageDialog(dialog, "Errore imprevisto: " + ex.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
+	                CustomMessage.show("Errore imprevisto: " + ex.getMessage(), "Errore", false);
 	            }
 	        }, new Dimension(400, 50));
+
 
 
 	        confermaButton.setFont(new Font("Arial", Font.BOLD, 18));

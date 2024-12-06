@@ -7,6 +7,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GestorePagamenti {
+	private JDialog pagamentoDialog; // Dialogo per il pagamento
+	private JPanel mainPanel;       // Pannello principale
     private boolean pagamentoEffettuato; // Stato del pagamento
 
     public boolean isPagamentoEffettuato() {
@@ -15,19 +17,31 @@ public class GestorePagamenti {
 
     // Metodo per mostrare la schermata di pagamento iniziale
     public void mostraSchermataPagamento(Prenotazione prenotazione) {
-        pagamentoEffettuato = false; // Stato iniziale del pagamento
+    	pagamentoEffettuato = false; // Stato iniziale del pagamento
         double costo = prenotazione.calcolaCosto();
 
-        // Crea il dialogo per il pagamento
-        JDialog pagamentoDialog = new JDialog((Frame) null, "Pagamento", true); // Dialogo modale
-        pagamentoDialog.setSize(400, 200);
-        pagamentoDialog.setLocationRelativeTo(null);
+        // Inizializza il dialogo
+        pagamentoDialog = new JDialog((Frame) null, "Pagamento", true); // Modale
+        pagamentoDialog.setSize(450, 250);
+        pagamentoDialog.setLocationRelativeTo(null); // Centra la finestra
         pagamentoDialog.setLayout(new BorderLayout());
+        pagamentoDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-        // Messaggio di pagamento
-        JLabel messaggio = new JLabel("Il pagamento è di € " + costo + ". Inserire la carta.", SwingConstants.CENTER);
-        messaggio.setFont(new Font("Arial", Font.BOLD, 16));
-        pagamentoDialog.add(messaggio, BorderLayout.CENTER);
+        // Inizializza il pannello principale
+        mainPanel = new JPanel();
+        mainPanel.setBackground(new Color(255, 255, 153)); // Giallo chiaro
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Margini interni
+        pagamentoDialog.add(mainPanel);
+
+        // Etichetta del messaggio
+        JLabel messaggio = new JLabel(
+            "<html><center>Il pagamento è di <b>€ " + costo + "</b>.<br>Inserire la carta per continuare.</center></html>",
+            SwingConstants.CENTER
+        );
+        messaggio.setFont(new Font("Arial", Font.BOLD, 18));
+        messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
+        mainPanel.add(messaggio, BorderLayout.CENTER);
 
         // Listener per il clic del mouse
         pagamentoDialog.addMouseListener(new MouseAdapter() {
@@ -41,7 +55,6 @@ public class GestorePagamenti {
                     pagamentoEffettuato = false; // Pagamento fallito
                     mostraSchermataConferma(false);
                 }
-                pagamentoDialog.dispose(); // Chiudi il dialogo
             }
         });
 
@@ -50,18 +63,29 @@ public class GestorePagamenti {
 
     // Metodo per mostrare la schermata di conferma del pagamento
     private void mostraSchermataConferma(boolean successo) {
-        JFrame confermaFrame = new JFrame();
-        confermaFrame.setSize(400, 200);
-        confermaFrame.setLocationRelativeTo(null);
-        confermaFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        if (mainPanel != null) {
+            // Cambia il colore del pannello in base al risultato
+            mainPanel.setBackground(successo ? new Color(34, 139, 34) : new Color(255, 69, 0)); // Verde o rosso
 
-        JLabel messaggio = new JLabel(successo ? "Pagamento effettuato con successo" : "Pagamento fallito", SwingConstants.CENTER);
-        messaggio.setFont(new Font("Arial", Font.BOLD, 16));
-        confermaFrame.add(messaggio);
-        confermaFrame.getContentPane().setBackground(successo ? Color.GREEN : Color.RED);
+            // Aggiorna il messaggio
+            for (Component component : mainPanel.getComponents()) {
+                if (component instanceof JLabel) {
+                    JLabel label = (JLabel) component;
+                    label.setText("<html><center>" +
+                        (successo ? "Pagamento effettuato con successo!" : "Pagamento fallito") +
+                        "</center></html>");
+                    label.setForeground(Color.WHITE); // Colore del testo per contrasto
+                    label.repaint(); // Aggiorna il label
+                }
+            }
 
-        confermaFrame.setVisible(true);
+            mainPanel.repaint(); // Aggiorna il pannello visivamente
+
+            // Usa un Timer per chiudere il dialogo dopo 2 secondi
+            new Timer(2000, e -> pagamentoDialog.dispose()).start(); // Chiude il dialogo dopo 2000ms (2 secondi)
+        }
     }
+
 
     // Metodo per gestire il pagamento di una prenotazione modificata
     public void gestisciPagamentoModificato(Prenotazione nuovaPrenotazione, Prenotazione vecchiaPrenotazione) {
