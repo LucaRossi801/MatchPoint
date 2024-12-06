@@ -281,28 +281,29 @@ public class InserisciPrenotazionePanel extends JPanel {
 	                // Mostra la schermata di pagamento
 	                gestorePagamenti.mostraSchermataPagamento(prenotazione);
 
-	                // Aggiungi un ritardo di 3 secondi per l'esecuzione del codice seguente
-	                new Timer(2300, event -> {
-	                    if (gestorePagamenti.isPagamentoEffettuato()) {
-	                        // Inserimento prenotazione
-	                        try {
-								DataBase.inserisciPrenotazione(prenotazione);
-							} catch (SQLException e1) {
-				                CustomMessage.show("Errore nel database: " + e1.getMessage(), "Errore", false);
-							}
-	                        CustomMessage.show("Prenotazione confermata!", "Conferma", true);
-	                        dialog.dispose();
-	                    } else {
-	                        CustomMessage.show("Pagamento non riuscito. Riprova.", "Errore", false);
-	                    }
-	                }).start(); // Avvia il timer di 3 secondi
+	                // Pausa di 3 secondi
+	                Thread.sleep(3000); // Pausa di 3 secondi (3000 millisecondi)
 
-	            } 
-	            catch (Exception ex) {
+	                // Verifica se il pagamento è stato effettuato
+	                if (gestorePagamenti.isPagamentoEffettuato()) {
+	                    // Inserimento prenotazione solo se il pagamento è confermato
+	                    DataBase.inserisciPrenotazione(prenotazione);
+	                    CustomMessage.show("Prenotazione confermata!", "Conferma", true);
+	                    dialog.dispose(); // Chiude il dialogo
+	                } else {
+	                    CustomMessage.show("Pagamento non riuscito. Riprova.", "Errore", false);
+	                }
+	            } catch (SQLException ex) {
+	                ex.printStackTrace();
+	                CustomMessage.show("Errore nel database: " + ex.getMessage(), "Errore", false);
+	            } catch (Exception ex) {
 	                ex.printStackTrace();
 	                CustomMessage.show("Errore imprevisto: " + ex.getMessage(), "Errore", false);
 	            }
 	        }, new Dimension(400, 50));
+
+
+
 
 
 
