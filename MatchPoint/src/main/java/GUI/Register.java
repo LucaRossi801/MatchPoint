@@ -159,6 +159,9 @@ public class Register {
 	            } catch (Exception ex) {
 	                CustomMessage.show("Errore durante la registrazione", "Errore", false);
 	            }
+	            
+	            // Pulizia campi
+	            resetFields(fields);
 	        },
 	        new Dimension(300, 50)
 	    );
@@ -189,14 +192,8 @@ public class Register {
 	    JButton backButton = BackgroundPanel.createFlatButton(
 	        "Back", // Testo del pulsante
 	        e -> {
-	            // Resetta tutti i campi
-	            fields.forEach((key, field) -> {
-	                if (field instanceof JTextField) {
-	                    ((JTextField) field).setText("");
-	                } else if (field instanceof JXDatePicker) {
-	                    ((JXDatePicker) field).setDate(null); // Resetta la data
-	                }
-	            });
+	        	// Pulizia campi
+	            resetFields(fields);
 
 	            // Cambia pannello
 	            BackgroundPanel.showPanel("main");
@@ -211,8 +208,6 @@ public class Register {
 
 	    return backButton;
 	}
-
-
 
 	
 	public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
@@ -236,4 +231,17 @@ public class Register {
 	    }
 
     }
+	
+	public static void resetFields(Map<String, JComponent> fields) {
+	    fields.forEach((key, field) -> {
+	        if (field instanceof JTextField) {
+	            ((JTextField) field).setText(""); // Resetta il testo
+	        } else if (field instanceof JPasswordField) {
+	            ((JPasswordField) field).setText(""); // Resetta la password
+	        } else if (field instanceof JXDatePicker) {
+	            ((JXDatePicker) field).setDate(null); // Resetta la data
+	        }
+	    });
+	}
+
 }
