@@ -24,8 +24,8 @@ import components.Prenotazione;
 import components.Sessione;
 
 public class VediPrenotazioniGiocatorePanel extends JPanel {
-    private JScrollPane scrollPane;
-	private JTextArea prenotazioniArea;
+    private static JScrollPane scrollPane;
+	private static JTextArea prenotazioniArea;
     private Map<String, CentroSportivo> centriSportivi;
     private Image clearImage;
 
@@ -117,9 +117,14 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
     /**
      * Aggiorna l'area delle prenotazioni in base al campo selezionato.
      */
-    private void aggiornaPrenotazioni() {
+    public static void aggiornaPrenotazioni() {
         // Ripulisce l'area di prenotazioni
-        prenotazioniArea.setText("");
+        try {
+			prenotazioniArea.setText("");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // Recupera l'ID utente della sessione corrente
         int utenteID = Sessione.getId();
@@ -217,7 +222,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
     /**
      * Crea un pannello rettangolare per rappresentare una prenotazione.
      */
-    private JPanel creaCardPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+    private static JPanel creaCardPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         JPanel card = new JPanel(new GridBagLayout());
 
         // Configura data e orari della prenotazione
@@ -299,7 +304,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                mostraDettagliPrenotazione(prenotazione, campo, centro);
+                mostraDettagliPrenotazione(scrollPane, prenotazione, campo, centro);
             }
         });
 
@@ -309,7 +314,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
 
     
-    private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
+    private static Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         for (Prenotazione prenotazione : prenotazioni) {
@@ -330,14 +335,14 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
     }
 
     
-    private JSeparator creaLineaSeparatrice() {
+    private static JSeparator creaLineaSeparatrice() {
         JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
         separatore.setForeground(new Color(16, 139, 135));
         separatore.setPreferredSize(new Dimension(800, 2)); // Linea sottile
         return separatore;
     }
 
-    private JSeparator creaLineaSeparatriceSpessa() {
+    private static JSeparator creaLineaSeparatriceSpessa() {
         JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
         separatore.setForeground(new Color(16, 139, 135)); // Colore della linea
         separatore.setPreferredSize(new Dimension(800, 5)); // Altezza maggiore
@@ -352,11 +357,12 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
     /**
      * Mostra una finestra di dialogo con i dettagli di una prenotazione.
      */
-    private void mostraDettagliPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
-        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+    private static void mostraDettagliPrenotazione(Component parentComponent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(parentComponent);
         DettagliPrenotazioneDialog dialog = new DettagliPrenotazioneDialog(parentFrame, prenotazione, campo, centro);
         dialog.setVisible(true);
     }
+
 
 
     @Override

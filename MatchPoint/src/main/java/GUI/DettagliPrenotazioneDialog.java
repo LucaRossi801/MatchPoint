@@ -177,6 +177,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
                     DataBase.updatePrenotazione(nuovaPrenotazione);
 
                    CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
+                   VediPrenotazioniGiocatorePanel.aggiornaPrenotazioni();
                     dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
                     exc.printStackTrace();
