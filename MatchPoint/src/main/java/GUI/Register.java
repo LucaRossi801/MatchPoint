@@ -9,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
+
 import java.sql.*;
 
 import org.jdesktop.swingx.JXDatePicker; // Assicurati di aggiungere questa libreria
@@ -60,36 +62,56 @@ public class Register {
 	    int row = 1; // La riga parte da 1 (sotto il titolo)
 
 	    for (String campo : campi) {
-	        // Crea l'etichetta
 	        JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
 	        label.setFont(new Font("Montserrat", Font.BOLD, 24));
-	        gbc.gridx = 0; // Colonna 0 (sinistra)
+	        gbc.gridx = 0;
 	        gbc.gridy = row;
 	        panel.add(label, gbc);
 
-	        // Crea il campo di input
 	        JComponent inputField = null;
 
 	        if (campo.equals("Password")) {
 	            inputField = new JPasswordField(20);
+	            addCharacterLimit((JPasswordField) inputField, 20, panel);
 	        } else if (campo.equals("DataNascita")) {
 	            JXDatePicker datePicker = new JXDatePicker();
 	            datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
-	            datePicker.setFormats("dd-MM-yyyy"); // Imposta il formato della data
+	            datePicker.setFormats("dd-MM-yyyy");
 	            inputField = datePicker;
 	        } else {
 	            inputField = new JTextField(20);
+	            int maxLength;
+
+	            // Utilizza il switch tradizionale
+	            switch (campo) {
+	                case "Nome":
+	                case "Cognome":
+	                case "Username":
+	                case "NomeSquadra":
+	                case "Certificazione":
+	                case "Competenze":
+	                    maxLength = 20;
+	                    break;
+	                case "Email":
+	                    maxLength = 40;
+	                    break;
+	                default:
+	                    maxLength = 20; // Default per gli altri campi
+	                    break;
+	            }
+
+	            addCharacterLimit((JTextField) inputField, maxLength, panel);
 	        }
 
 	        inputField.setFont(new Font("Arial", Font.PLAIN, 18));
-	        gbc.gridx = 1; // Colonna 1 (destra)
+	        gbc.gridx = 1;
 	        panel.add(inputField, gbc);
 
-	        // Salva il campo nella mappa con il suo nome
 	        fields.put(campo, inputField);
 
-	        row++; // Passa alla riga successiva
+	        row++;
 	    }
+
 
 	    // Pulsante di registrazione
 	    JButton registerButton = BackgroundPanel.createFlatButton(
@@ -240,6 +262,56 @@ public class Register {
 	            ((JPasswordField) field).setText(""); // Resetta la password
 	        } else if (field instanceof JXDatePicker) {
 	            ((JXDatePicker) field).setDate(null); // Resetta la data
+	        }
+	    });
+	}
+	
+	private static void addCharacterLimit(JTextField field, int maxLength, JPanel containerPanel) {
+	    // Crea la JLabel per il messaggio di avviso
+	    JLabel warningLabel = new JLabel();
+	    warningLabel.setForeground(Color.RED);
+	    warningLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+	    warningLabel.setPreferredSize(new Dimension(200, 20)); // Imposta una larghezza fissa per la label
+	    warningLabel.setHorizontalAlignment(SwingConstants.LEFT);
+	    warningLabel.setVisible(false); // Nascondi inizialmente
+
+	    // Usa un layout null per avere un controllo assoluto sulla posizione
+	    JPanel fieldPanel = new JPanel();
+	    fieldPanel.setLayout(null); // Layout assoluto
+	    fieldPanel.setOpaque(false); // Non colorare il pannello
+
+	    // Imposta la posizione e la dimensione della JTextField
+	    field.setBounds(0, 0, 200, 30); // Cambia queste dimensioni e posizione in base alle tue esigenze
+	    fieldPanel.add(field); // Aggiungi la JTextField al pannello
+
+	    // Imposta la posizione e la dimensione della JLabel
+	    warningLabel.setBounds(210, 5, 200, 20); // Cambia queste coordinate per regolare la posizione della scritta
+	    fieldPanel.add(warningLabel); // Aggiungi la JLabel al pannello
+
+	    // Configura il layout principale per il pannello
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = 1; // Posiziona nella colonna giusta
+	    gbc.gridy = GridBagConstraints.RELATIVE; // Riga successiva
+	    gbc.fill = GridBagConstraints.HORIZONTAL; // Riempie orizzontalmente
+	    gbc.insets = new Insets(5, 0, 5, 0); // Imposta margini
+	    containerPanel.add(fieldPanel, gbc); // Aggiungi il pannello al container
+
+	    // Listener per limitare i caratteri
+	    field.addKeyListener(new java.awt.event.KeyAdapter() {
+	        @Override
+	        public void keyTyped(java.awt.event.KeyEvent e) {
+	            if (field.getText().length() >= maxLength) {
+	                e.consume(); // Ignora ulteriori input
+	                warningLabel.setText("Massimo " + maxLength + " caratteri!");
+	                warningLabel.setVisible(true);
+
+	                // Nascondi la scritta dopo 1.5 secondi
+	                Timer timer = new Timer(1500, evt -> warningLabel.setVisible(false));
+	                timer.setRepeats(false);
+	                timer.start();
+	            } else {
+	                warningLabel.setVisible(false); // Nascondi se sotto il limite
+	            }
 	        }
 	    });
 	}
