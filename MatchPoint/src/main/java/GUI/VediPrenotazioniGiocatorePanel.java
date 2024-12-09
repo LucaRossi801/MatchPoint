@@ -87,6 +87,10 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
                 new Font("Arial", Font.BOLD, 14),
                 Color.GRAY
         ));
+        
+        // Modifica la velocità dello scrolling
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Incremento per ogni "tick" della rotella
+        scrollPane.getVerticalScrollBar().setBlockIncrement(60); // Incremento per clic nella barra
 
         // Aggiungi lo JScrollPane al layout
         gbc.gridx = 0;

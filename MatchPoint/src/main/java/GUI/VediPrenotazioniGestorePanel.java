@@ -141,6 +141,10 @@ public class VediPrenotazioniGestorePanel extends JPanel {
             new Font("Arial", Font.BOLD, 14),
             Color.GRAY
         ));
+        
+        // Modifica la velocità dello scrolling
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Incremento per ogni "tick" della rotella
+        scrollPane.getVerticalScrollBar().setBlockIncrement(60); // Incremento per clic nella barra
 
         // Aggiungi lo JScrollPane al layout
         gbc.gridx = 0;
@@ -331,6 +335,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
                     JPanel cardPrenotazione = creaCardPrenotazione(prenotazione);
                     cardPrenotazione.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra la prenotazione
                     contenitorePrenotazioni.add(cardPrenotazione);
+                    // Aggiungi uno spazio tra le prenotazioni
+                    contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio di 10 pixel
                 }
 
                 // Aggiungi spazio tra l'ultima prenotazione e la linea separatrice spessa
