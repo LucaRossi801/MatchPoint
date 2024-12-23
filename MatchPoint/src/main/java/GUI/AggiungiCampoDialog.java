@@ -183,8 +183,8 @@ public class AggiungiCampoDialog extends JDialog {
 			// Recupera il valore della JCheckBox per Coperto
 			isCoperto = switchButton.isSelected(); // Aggiorna isCoperto con il valore del pulsante toggle
 			TipologiaCampo tipologiaCampo = (TipologiaCampo) tipoComboBox.getSelectedItem();
-			int costoOraDiurna = Integer.parseInt(fields.get("CostoOraDiurna").getText());
-			int costoOraNotturna = Integer.parseInt(fields.get("CostoOraNotturna").getText());
+			int costoOraDiurna = Integer.parseInt(fields.get("CostoOraNotturna").getText());
+			int costoOraNotturna = Integer.parseInt(fields.get("CostoOraDiurna").getText());
 			int lunghezza = Integer.parseInt(fields.get("Lunghezza").getText());
 			int larghezza = Integer.parseInt(fields.get("Larghezza").getText());
 
