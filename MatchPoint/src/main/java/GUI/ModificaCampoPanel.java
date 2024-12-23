@@ -337,15 +337,13 @@ public class ModificaCampoPanel extends JPanel {
                 // Salva le modifiche nel database
                 boolean success = DataBase.updateCampo(campo);
                 if (success) {
-                    JOptionPane.showMessageDialog(this, "Modifiche salvate con successo.", "Successo",
-                            JOptionPane.INFORMATION_MESSAGE);
+                	 CustomMessage.show("Modifiche salvate con successo.", "Successo", true);
+                   BackgroundPanel.showPanel("modificaCentro");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Errore nel salvataggio delle modifiche.", "Errore",
-                            JOptionPane.ERROR_MESSAGE);
+                    CustomMessage.show("Errore nel salvataggio delle modifiche.", "Errore", false);
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Errore nei dati inseriti: " + e.getMessage(), "Errore",
-                        JOptionPane.ERROR_MESSAGE);
+            	CustomMessage.show("Errore nei dati inseriti.", "Errore", false);
             }
         }
     }
