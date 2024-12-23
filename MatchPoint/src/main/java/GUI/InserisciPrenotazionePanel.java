@@ -201,7 +201,19 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 
 	private void mostraRiepilogo(JXDatePicker datePicker) {
-	    try {
+			
+		// Controlli preliminari
+	    if (campoSelezionatoID == null) {
+	        CustomMessage.show("Seleziona un campo prima di procedere.", "Errore", false);
+	        return;
+	    }
+
+	    if (datePicker.getDate() == null) {
+	        CustomMessage.show("Seleziona una data valida.", "Errore", false);
+	        return;
+	    }
+	    	
+	    	try {
 	        // Ottieni i valori degli spinner e convertili in Time
 	        String oraInizioString = (String) oraInizioSpinner.getValue() + ":00";
 	        String oraFineString = (String) oraFineSpinner.getValue() + ":00";
@@ -322,7 +334,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 	        dialog.setVisible(true);
 	    } catch (Exception e) {
-	        e.printStackTrace();;
+	        e.printStackTrace();
 	    }
 	}
 

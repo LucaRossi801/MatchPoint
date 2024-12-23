@@ -90,8 +90,6 @@ public class GestorePagamenti {
 			// Usa un Timer per chiudere il dialogo dopo 2 secondi
 			Timer timer = new Timer(3000, e -> {
 		        pagamentoDialog.dispose(); // Chiudi la finestra di rimborso
-
-		        CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
 		        
 		    });
 
