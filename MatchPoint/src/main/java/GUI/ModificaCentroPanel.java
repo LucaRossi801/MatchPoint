@@ -292,12 +292,12 @@ public class ModificaCentroPanel extends JPanel {
 	        CentroSportivo centro = centriGestiti.get(centroSelezionato);
 
 	        // Chiedi conferma all'utente
-	        int conferma = JOptionPane.showConfirmDialog(this,
-	                "Sei sicuro di voler eliminare il centro \"" + centro.getNome() + "\"?",
-	                "Conferma eliminazione",
-	                JOptionPane.YES_NO_OPTION);
-
-	        if (conferma == JOptionPane.YES_OPTION) {
+	        boolean conferma = CustomMessageWithChoice.show(
+                    "Sei sicuro di voler eliminare il centro?",
+                    "Conferma Cancellazione",
+                    false // Utilizza il colore rosso per il messaggio di errore
+                );
+	        if (conferma) {
 	            // Elimina il centro dal database
 	            boolean success = DataBase.eliminaCentro(centro.getID());
 
