@@ -10,6 +10,7 @@ public class GestorePagamenti {
 	private JDialog pagamentoDialog; // Dialogo per il pagamento
 	private JPanel mainPanel; // Pannello principale
 	private boolean pagamentoEffettuato; // Stato del pagamento
+	private Timer timeoutTimer; // Timer per il timeout del pagamento
 
 	public boolean isPagamentoEffettuato() {
 		return pagamentoEffettuato;
@@ -48,15 +49,36 @@ public class GestorePagamenti {
 			messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
 			mainPanel.add(messaggio, BorderLayout.CENTER);
 		}
-
+		
+		// Inizializza il timer per il timeout
+	    timeoutTimer = new Timer(30000, e -> {
+	        pagamentoEffettuato = false; // Pagamento fallito
+	        mostraSchermataConferma(false);
+	        pagamentoDialog.dispose();
+	    });
+	    timeoutTimer.setRepeats(false); // Una sola esecuzione
+	    timeoutTimer.start(); // Avvia il timer
+		
 		// Listener per il clic del mouse
 		pagamentoDialog.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (timeoutTimer != null) {
+	                timeoutTimer.stop(); // Ferma il timer
+	            }
 				if (e.getX() >= 0 && e.getX() <= pagamentoDialog.getWidth() && e.getY() >= 0
 						&& e.getY() <= pagamentoDialog.getHeight()) {
 					pagamentoEffettuato = true; // Pagamento riuscito
 					mostraSchermataConferma(true);
+					if (vecchioCosto != 0) {
+						Timer timer = new Timer(3000, ec -> {
+				        CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
+				    });
+						
+
+				    timer.setRepeats(false); // Impedisce che il timer si ripeta
+				    timer.start(); // Avvia il timer
+					}
 				} else {
 					pagamentoEffettuato = false; // Pagamento fallito
 					mostraSchermataConferma(false);
@@ -86,9 +108,10 @@ public class GestorePagamenti {
 			}
 
 			mainPanel.repaint(); // Aggiorna il pannello visivamente
-
-			// Usa un Timer per chiudere il dialogo dopo 2 secondi
+			
+			// Usa un Timer per chiudere il dialogo dopo 3 secondi
 			Timer timer = new Timer(3000, e -> {
+				
 		        pagamentoDialog.dispose(); // Chiudi la finestra di rimborso
 		        
 		    });
