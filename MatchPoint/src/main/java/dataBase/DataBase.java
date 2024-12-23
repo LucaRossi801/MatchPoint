@@ -658,5 +658,24 @@ public class DataBase {
 	    }
 	    return prenotazione;
 	}
+	
+	public static void eliminaPrenotazione(Prenotazione prenotazione) throws SQLException {
+	    String sql = "DELETE FROM Prenotazione WHERE Data = ? AND OraInizio = ? AND Campo = ? AND Utente = ?";
+	    String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+
+	    try (Connection conn = DriverManager.getConnection(url);
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+	        // Imposta i valori dei parametri nella query
+	        pstmt.setString(1, prenotazione.getData().toString()); // Data in formato yyyy-MM-dd
+	        pstmt.setString(2, prenotazione.getOraInizio().toString()); // Ora in formato HH:mm:ss
+	        pstmt.setInt(3, prenotazione.getCampoId()); // ID del campo
+	        pstmt.setInt(4, prenotazione.getUtenteId()); // ID dell'utente
+
+	        // Esegui la query
+	        pstmt.executeUpdate();
+	    }
+	}
+
 
 }

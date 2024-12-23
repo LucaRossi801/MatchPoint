@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -302,6 +303,64 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         // Costo (in basso, centrato)
         gbc.gridy = 2;
         card.add(new JLabel("  💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+        // Aggiungi l'icona del cestino in fondo a destra
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.anchor = GridBagConstraints.EAST;
+
+        // Carica l'immagine come ImageIcon
+        ImageIcon trashIcon = new ImageIcon(VediPrenotazioniGiocatorePanel.class.getResource("/GUI/immagini/trashIcon.png"));
+
+        // Ridimensiona l'immagine
+        Image img = trashIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH); // Cambia la dimensione come desiderato
+        trashIcon = new ImageIcon(img);
+
+        // Crea il JLabel con l'icona ridimensionata
+        JLabel trashIconLabel = new JLabel(trashIcon);
+
+     // Impostare la dimensione e la posizione dell'icona
+        trashIconLabel.setFont(new Font("Arial", Font.PLAIN, 24));  // Imposta una dimensione adeguata
+        trashIconLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia il cursore al passaggio del mouse
+
+
+        trashIconLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Mostra il messaggio di conferma tramite CustomMessageWithChoice
+                boolean conferma = CustomMessageWithChoice.show(
+                    "Sei sicuro di voler cancellare questa prenotazione?",
+                    "Conferma Cancellazione",
+                    false // Utilizza il colore rosso per il messaggio di errore
+                );
+
+                if (conferma) {
+                    // L'utente ha confermato la cancellazione, quindi procedi con l'eliminazione
+                    try {
+                        DataBase.eliminaPrenotazione(prenotazione); // Elimina la prenotazione
+                        aggiornaPrenotazioni(); // Aggiorna l'elenco delle prenotazioni dopo l'eliminazione
+                    } catch (SQLException ex) {
+                        // Se si verifica un errore durante l'eliminazione, mostra un messaggio di errore
+                        CustomMessageWithChoice.show(
+                            "Errore nell'eliminazione della prenotazione.",
+                            "Errore",
+                            false // Colore rosso per errore
+                        );
+                        ex.printStackTrace();
+                    }
+                } else {
+                    // L'utente ha annullato l'operazione
+                    CustomMessage.show(
+                        "Cancellazione annullata.",
+                        "Annullato",
+                        false // Colore rosso per errore (oppure puoi usare un colore neutro)
+                    );
+                }
+            }
+        });
+
+
+        card.add(trashIconLabel, gbc);
 
         // Aggiunge azione clic per mostrare i dettagli
         card.addMouseListener(new MouseAdapter() {
