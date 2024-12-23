@@ -175,12 +175,9 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
                     // Aggiorna la prenotazione nel database
                     DataBase.updatePrenotazione(nuovaPrenotazione);
-                  
-                        
-         
-                   
+                    
                    VediPrenotazioniGiocatorePanel.aggiornaPrenotazioni();
-                   dispose(); // Chiude la finestra dopo il salvataggio
+                   
                 } catch (SQLException exc) {
                     exc.printStackTrace();
                     CustomMessage.show("Errore durante il salvataggio della prenotazione.", "Errore", false);
@@ -192,6 +189,10 @@ public class DettagliPrenotazioneDialog extends JDialog {
             // Mostra un messaggio di errore se qualcosa va storto
             CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
         }
+        Timer timer = new Timer(3000, ec -> dispose()); // Timer con ritardo di 1 secondo
+        timer.setRepeats(false); // Assicura che venga eseguito solo una volta
+        timer.start(); // Avvia il timer
+
     }
 
 
