@@ -309,7 +309,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.weightx = 0;
         gbc.anchor = GridBagConstraints.EAST;
 
-        // Carica l'immagine come ImageIcon
+     // Carica l'immagine come ImageIcon
         ImageIcon trashIcon = new ImageIcon(VediPrenotazioniGiocatorePanel.class.getResource("/GUI/immagini/trashIcon.png"));
 
         // Ridimensiona l'immagine
@@ -319,14 +319,23 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         // Crea il JLabel con l'icona ridimensionata
         JLabel trashIconLabel = new JLabel(trashIcon);
 
-     // Impostare la dimensione e la posizione dell'icona
-        trashIconLabel.setFont(new Font("Arial", Font.PLAIN, 24));  // Imposta una dimensione adeguata
+        // Impostare la dimensione e la posizione dell'icona
+        trashIconLabel.setFont(new Font("Arial", Font.PLAIN, 24)); // Imposta una dimensione adeguata
         trashIconLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia il cursore al passaggio del mouse
-
 
         trashIconLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                // Verifica se la prenotazione è già passata o se mancano meno di 24 ore
+                if (prenotazionePassata || menoDi24Ore) {
+                    CustomMessage.show(
+                        "Non è possibile eliminare prenotazioni già passate o entro 24 ore",
+                        "Errore",
+                        false // Colore rosso per errore
+                    );
+                    return; // Esci senza procedere
+                }
+
                 // Mostra il messaggio di conferma tramite CustomMessageWithChoice
                 boolean conferma = CustomMessageWithChoice.show(
                     "Sei sicuro di voler cancellare questa prenotazione?",
@@ -358,7 +367,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
                 }
             }
         });
-
 
         card.add(trashIconLabel, gbc);
 
