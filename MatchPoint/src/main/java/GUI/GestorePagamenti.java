@@ -111,17 +111,16 @@ public class GestorePagamenti {
 
 			// Mostra una finestra di conferma per il rimborso
 			boolean scelta = CustomMessageWithChoice
-					.show("Il costo è diminuito di € " + differenza + ". Vuoi un rimborso?", "Rimborso", true // Successo
-																												// (verde)
+					.show("Il costo è diminuito di € " + differenza + ". Vuoi un rimborso?", "Rimborso", true // Successo (verde)
 					);
 
 			if (scelta) {
 
-				mostraSchermataRimborso(differenza); // Test con un rimborso di 150.50
+				mostraSchermataRimborso(differenza); 
 			}
 		}
 		else {
-	        CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
+	        CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
 
 		}
 	}
@@ -155,7 +154,7 @@ public class GestorePagamenti {
 
 	    // Timer per chiudere la finestra dopo 3 secondi
 	    Timer timer = new Timer(3000, e -> {
-	        rimborsoFrame.dispose(); // Chiudi la finestra di rimborso
+	    	rimborsoFrame.dispose(); // Chiudi la finestra di rimborso
 
 	        CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
 	        

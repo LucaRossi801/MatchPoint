@@ -180,7 +180,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
          
                    
                    VediPrenotazioniGiocatorePanel.aggiornaPrenotazioni();
-                    dispose(); // Chiude la finestra dopo il salvataggio
+                   dispose(); // Chiude la finestra dopo il salvataggio
                 } catch (SQLException exc) {
                     exc.printStackTrace();
                     CustomMessage.show("Errore durante il salvataggio della prenotazione.", "Errore", false);

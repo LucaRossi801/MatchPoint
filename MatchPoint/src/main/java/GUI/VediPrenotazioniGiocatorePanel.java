@@ -126,7 +126,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         try {
 			prenotazioniArea.setText("");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
