@@ -181,10 +181,17 @@ public class ModificaCampoPanel extends JPanel {
     		add(copertoPanel, gbc);
  
         
-        JButton eliminaCampoButton = BackgroundPanel.createFlatButton("Elimina campo selezionato", e-> {
-        	eliminaCampo();
-       	 
-       }, new Dimension(150, 40));
+    		JButton eliminaCampoButton = BackgroundPanel.createFlatButton("Elimina campo selezionato", e -> {
+    		    // Mostra finestra di conferma
+    		    boolean conferma = CustomMessageWithChoice.show("Sei sicuro di voler eliminare il campo selezionato?", "Attenzione", false);
+    		    
+    		    // Controlla la risposta dell'utente
+    		    if (conferma == true) {
+    		        eliminaCampo();
+    		    } else {
+    		        CustomMessage.show("Cancellazione annullata.", "Attenzione", false);
+    		    }
+    		}, new Dimension(150, 40));
        gbc.gridx = 0;
        gbc.gridy = 7;
        gbc.gridwidth = 2;

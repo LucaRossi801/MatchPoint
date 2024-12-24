@@ -33,7 +33,7 @@ public class ModificaCentroPanel extends JPanel {
 
 	public ModificaCentroPanel() {
 		// Carica i dati delle province e comuni
-		String filePath = "src/main/java/localizzazione/comuni.csv"; // Sostituisci con il percorso corretto
+		String filePath = "src/main/java/localizzazione/comuni.csv"; 
         provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
         if (provinceComuni == null || provinceComuni.isEmpty()) {
             System.err.println("Errore: la mappa provinceComuni è vuota o null.");
@@ -244,10 +244,10 @@ public class ModificaCentroPanel extends JPanel {
 				Campo.inserisci(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), centro.getID());
 			}
-			CustomMessage.show("Campo inserito con successo!", "Successo", true);
-			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
+			
 			if (success) {
 				CustomMessage.show("Modifiche salvate con successo!", "Successo", true);
+				BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
 				nuovoNome = centro.getNome();
 				nuovaProvincia = centro.getProvincia();
 				nuovoComune = centro.getComune();
@@ -313,6 +313,9 @@ public class ModificaCentroPanel extends JPanel {
 	            } else {
 	                CustomMessage.show("Errore durante l'eliminazione del centro.", "Errore", false);
 	            }
+	        }
+	        else {
+	        	CustomMessage.show("Cancellazione annullata", "Attenzione", false);
 	        }
 	    } else {
 	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
