@@ -160,7 +160,7 @@ public class InserisciCentroPanel extends JPanel {
             String comune = (String) comuneComboBox.getSelectedItem();
 
 			// Controlla se tutti i campi sono stati compilati
-			if (nomeCentro.isEmpty() || provincia.isEmpty() || comune.isEmpty()) {
+			if (nomeCentro == null || provincia == null || comune == null || nomeCentro.isEmpty() || provincia.isEmpty() || comune.isEmpty()) {
 				CustomMessage.show("Compila tutti i campi!", "Errore", false);
 				return;
 			}
