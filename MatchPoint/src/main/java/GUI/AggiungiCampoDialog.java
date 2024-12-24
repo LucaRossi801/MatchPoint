@@ -59,9 +59,29 @@ public class AggiungiCampoDialog extends JDialog {
 
 			JTextField field = new JTextField(30); // Larghezza dei campi di testo
 			field.setFont(new Font("Arial", Font.PLAIN, 18)); // Font personalizzato
-			((PlainDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter());
+
+			// Limita il campo a un massimo di 5 caratteri
+			((PlainDocument) field.getDocument()).setDocumentFilter(new DocumentFilter() {
+			    private final int limit = 5;
+
+			    @Override
+			    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+			        if (fb.getDocument().getLength() + string.length() <= limit) {
+			            super.insertString(fb, offset, string, attr);
+			        }
+			    }
+
+			    @Override
+			    public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs) throws BadLocationException {
+			        if (fb.getDocument().getLength() - length + string.length() <= limit) {
+			            super.replace(fb, offset, length, string, attrs);
+			        }
+			    }
+			});
+
 			gbc.gridx = 1;
 			add(field, gbc);
+
 
 			fields.put(campo, field);
 
