@@ -82,7 +82,7 @@ public class Register {
 	            inputField = new JTextField(20);
 	            int maxLength;
 
-	            // Utilizza il switch tradizionale
+	            // Utilizza lo switch tradizionale
 	            switch (campo) {
 	                case "Nome":
 	                case "Cognome":
@@ -161,6 +161,24 @@ public class Register {
 	                    CustomMessage.show("Lo username '" + username + "' è già in uso!", "Errore", false);
 	                    return;
 	                }
+	                
+	                // Controlla se l'email è già presente nel database
+	                String emailSql = "SELECT Email FROM Gestore WHERE Email ='" + email +
+	                                  "' UNION SELECT Email FROM Giocatore WHERE Email ='" + email + "'";
+	                String emailRis = "";
+	                try (Connection conn = DriverManager.getConnection(url)) {
+	                    emailRis = DataBase.eseguiSelect(conn, emailSql);
+	                } catch (SQLException ex) {
+	                    ex.printStackTrace();
+	                    CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
+	                    return;
+	                }
+
+	                if (!emailRis.isEmpty()) {
+	                    CustomMessage.show("L'email '" + email + "' è già in uso!", "Errore", false);
+	                    return;
+	                }
+
 
 	                // Chiama il metodo di registrazione per i Gestori o Giocatori
 	                if (tipologia.equals("Gestore")) {
