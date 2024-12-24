@@ -1,5 +1,10 @@
 package GUI;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
+import javax.swing.text.PlainDocument;
 
 import components.Campo;
 import components.TipologiaCampo;
@@ -82,10 +87,48 @@ public class ModificaCampoPanel extends JPanel {
         tipologiaField.setFont(new Font("Arial", Font.PLAIN, 18));
         gbc.gridx = 1;
         add(tipologiaField, gbc);
+
+        // Metodo per aggiungere il filtro di controllo ai campi
+        DocumentFilter numericFilter = new DocumentFilter() {
+            private final int limit = 5;
+
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (isValidInput(fb.getDocument().getLength(), string)) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs) throws BadLocationException {
+                if (isValidInput(fb.getDocument().getLength() - length, string)) {
+                    super.replace(fb, offset, length, string, attrs);
+                }
+            }
+
+            private boolean isValidInput(int currentLength, String string) {
+                // Verifica che la lunghezza totale non superi il limite
+                if (currentLength + string.length() > limit) {
+                    return false;
+                }
+                // Verifica che la stringa sia numerica
+                return string.matches("\\d*");
+            }
+        };
+
+        // Crea e configura i campi con il filtro
         costoOraNotturnaField = creaCampo("Costo Ora Notturna:", 2, gbc, Color.BLACK);
+        ((PlainDocument) costoOraNotturnaField.getDocument()).setDocumentFilter(numericFilter);
+
         costoOraDiurnaField = creaCampo("Costo Ora Diurna:", 3, gbc, Color.BLACK);
+        ((PlainDocument) costoOraDiurnaField.getDocument()).setDocumentFilter(numericFilter);
+
         lunghezzaField = creaCampo("Lunghezza:", 4, gbc, Color.BLACK);
+        ((PlainDocument) lunghezzaField.getDocument()).setDocumentFilter(numericFilter);
+
         larghezzaField = creaCampo("Larghezza:", 5, gbc, Color.BLACK);
+        ((PlainDocument) larghezzaField.getDocument()).setDocumentFilter(numericFilter);
+
 
         // Pannello per Coperto
         JPanel copertoPanel = new JPanel(new GridBagLayout());
