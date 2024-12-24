@@ -49,45 +49,53 @@ public class AggiungiCampoDialog extends JDialog {
 
 		// Campi
 		for (String campo : campiNumerici) {
-			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 18)); // Stile originale
-			gbc.gridx = 0;
-			gbc.gridy = row;
-			gbc.gridwidth = 1;
-			gbc.anchor = GridBagConstraints.WEST;
-			add(label, gbc);
+		    JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
+		    label.setFont(new Font("Montserrat", Font.BOLD, 18)); // Stile originale
+		    gbc.gridx = 0;
+		    gbc.gridy = row;
+		    gbc.gridwidth = 1;
+		    gbc.anchor = GridBagConstraints.WEST;
+		    add(label, gbc);
 
-			JTextField field = new JTextField(30); // Larghezza dei campi di testo
-			field.setFont(new Font("Arial", Font.PLAIN, 18)); // Font personalizzato
+		    JTextField field = new JTextField(30); // Larghezza dei campi di testo
+		    field.setFont(new Font("Arial", Font.PLAIN, 18)); // Font personalizzato
 
-			// Limita il campo a un massimo di 5 caratteri
-			((PlainDocument) field.getDocument()).setDocumentFilter(new DocumentFilter() {
-			    private final int limit = 5;
+		    // Applica il filtro combinato
+		    ((PlainDocument) field.getDocument()).setDocumentFilter(new DocumentFilter() {
+		        private final int limit = 5;
 
-			    @Override
-			    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-			        if (fb.getDocument().getLength() + string.length() <= limit) {
-			            super.insertString(fb, offset, string, attr);
-			        }
-			    }
+		        @Override
+		        public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+		            if (isInputValid(fb, string)) {
+		                super.insertString(fb, offset, string, attr);
+		            }
+		        }
 
-			    @Override
-			    public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs) throws BadLocationException {
-			        if (fb.getDocument().getLength() - length + string.length() <= limit) {
-			            super.replace(fb, offset, length, string, attrs);
-			        }
-			    }
-			});
+		        @Override
+		        public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs) throws BadLocationException {
+		            if (isInputValid(fb, string)) {
+		                super.replace(fb, offset, length, string, attrs);
+		            }
+		        }
 
-			gbc.gridx = 1;
-			add(field, gbc);
+		        private boolean isInputValid(FilterBypass fb, String string) {
+		            if (string == null) return false;
+		            // Verifica che la lunghezza totale non superi il limite
+		            boolean lengthValid = fb.getDocument().getLength() + string.length() <= limit;
+		            // Verifica che il contenuto sia solo numerico
+		            boolean numericValid = string.matches("\\d*");
+		            return lengthValid && numericValid;
+		        }
+		    });
 
+		    gbc.gridx = 1;
+		    add(field, gbc);
 
-			fields.put(campo, field);
+		    fields.put(campo, field);
 
-			row++;
-
+		    row++;
 		}
+
 
 		// Switch per Coperto
 		// Pannello per Coperto

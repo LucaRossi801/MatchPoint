@@ -393,7 +393,7 @@ public class ModificaCampoPanel extends JPanel {
                     CustomMessage.show("Errore nel salvataggio delle modifiche.", "Errore", false);
                 }
             } catch (Exception e) {
-            	CustomMessage.show("Errore nei dati inseriti.", "Errore", false);
+            	CustomMessage.show("Compila tutti i campi!", "Errore", false);
             }
         }
     }
