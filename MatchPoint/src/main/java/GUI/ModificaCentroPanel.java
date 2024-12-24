@@ -198,20 +198,26 @@ public class ModificaCentroPanel extends JPanel {
 	}
 
 	private void caricaCentriGestiti() {
-		// Controlla se l'utente è loggato
-		utenteId = Sessione.getId();
-		if (utenteId != null && utenteId > 0) {
-			centriGestiti = dataBase.getCentriSportiviGestiti(utenteId); // Ottieni centri gestiti
-			centriComboBox.removeAllItems(); // Svuota ComboBox
+	    // Controlla se l'utente è loggato
+	    utenteId = Sessione.getId();
+	    if (utenteId != null && utenteId > 0) {
+	        centriGestiti = dataBase.getCentriSportiviGestiti(utenteId); // Ottieni centri gestiti
+	        centriComboBox.removeAllItems(); // Svuota ComboBox
 
-			if (centriGestiti != null && !centriGestiti.isEmpty()) {
-				for (String nomeCentro : centriGestiti.keySet()) {
-					centriComboBox.addItem(nomeCentro);
-				}
-				aggiornaDettagliCentro(); // Aggiorna dettagli del primo centro
-			}
-		}
+	        if (centriGestiti != null && !centriGestiti.isEmpty()) {
+	            // Ordina i nomi dei centri in ordine alfabetico
+	            List<String> nomiCentri = new ArrayList<>(centriGestiti.keySet());
+	            nomiCentri.sort(String::compareToIgnoreCase);
+
+	            // Aggiungi i nomi ordinati alla ComboBox
+	            for (String nomeCentro : nomiCentri) {
+	                centriComboBox.addItem(nomeCentro);
+	            }
+	            aggiornaDettagliCentro(); // Aggiorna dettagli del primo centro
+	        }
+	    }
 	}
+
 
 	private void aggiornaDettagliCentro() {
 		// Aggiorna i dettagli del centro selezionato
