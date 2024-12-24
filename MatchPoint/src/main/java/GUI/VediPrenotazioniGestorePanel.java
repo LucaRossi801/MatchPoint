@@ -367,16 +367,20 @@ public class VediPrenotazioniGestorePanel extends JPanel {
     private JSeparator creaLineaSeparatrice() {
         JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
         separatore.setForeground(new Color(16, 139, 135));
-        separatore.setPreferredSize(new Dimension(800, 3)); // Linea sottile
+        separatore.setMaximumSize(new Dimension(800, 2)); // Limita la larghezza
+        separatore.setPreferredSize(new Dimension(800, 2)); // Imposta una dimensione preferita
+        separatore.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra il separatore
         return separatore;
     }
+
 
     /**
      * Crea una linea separatrice più spessa tra i gruppi di prenotazioni.
      */
     private JPanel creaLineaSeparatriceSpessa() {
         JPanel separatore = new JPanel();
-        separatore.setPreferredSize(new Dimension(800, 5)); // Altezza maggiore per una linea più evidente
+        separatore.setMaximumSize(new Dimension(800, 4)); // Limita la larghezza
+        separatore.setPreferredSize(new Dimension(800, 4)); // Altezza maggiore per una linea più evidente
         separatore.setBackground(new Color(16, 139, 135)); // Colore della linea
         return separatore;
     }
