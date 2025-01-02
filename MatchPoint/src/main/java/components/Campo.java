@@ -22,7 +22,7 @@ public class Campo {
 	public int larghezza;
 	public boolean coperto;
 	private int centroID;
-	public Giocatore[] giocatore;
+//	public Giocatore[] giocatore;
 
 	@Override
 	public String toString() {

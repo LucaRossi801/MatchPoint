@@ -2,6 +2,7 @@ package GUI;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
 import components.Sessione;
@@ -280,12 +281,13 @@ public class InserisciPrenotazionePanel extends JPanel {
 	        dialog.setSize(700, 500);
 	        dialog.setLocationRelativeTo(this);
 
+	       
 	        // Verifica disponibilità e gestione pulsanti
-	        if (!prenotazione.verificaDisponibilita()) {
+	        if (!verificaDisponibilita(prenotazione)) {
 	            dialog.dispose();
 	            return;
 	        }
-
+	        
 	        JButton confermaButton = BackgroundPanel.createFlatButton("Conferma Prenotazione", e -> {
 	            try {
 	                GestorePagamenti gestorePagamenti = new GestorePagamenti();
@@ -338,7 +340,71 @@ public class InserisciPrenotazionePanel extends JPanel {
 	    }
 	}
 
+	 public boolean verificaDisponibilita(Prenotazione p) {
 
+         // Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
+         if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine())) {
+             CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", "Errore", false);
+             return false;
+         }
+
+         // Definisci gli orari limite (apertura alle 8:00 e chiusura a mezzanotte)
+         Time oraApertura = Time.valueOf("08:00:00");
+         Time oraChiusura = Time.valueOf("23:00:00");
+
+         // Controlla che gli orari di inizio e fine siano all'interno dell'intervallo
+         if (p.getOraInizio().before(oraApertura) || p.getOraFine().after(oraChiusura)) {
+             if (p.getOraInizio().before(oraApertura)) {
+                 CustomMessage.show("Il campo apre alle 8:00. Seleziona un orario valido.", "Errore", false);
+             } else if (p.getOraFine().after(oraChiusura)) {
+                 CustomMessage.show("Il campo chiude alle 23. Seleziona un orario valido.", "Errore", false);
+             }
+             return false;
+         }
+
+         // Recupera il campo associato
+         Campo campo = DataBase.getCampoById(p.getCampoId());
+         if (campo == null) {
+             CustomMessage.show("Campo non trovato.", "Errore", false);
+             return false;
+         }
+
+         // Recupera tutte le prenotazioni esistenti per lo stesso campo e data
+         List<Prenotazione> prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campo.getCentroId(), p.getCampoId());
+
+         // Controlla sovrapposizioni con le prenotazioni esistenti
+         for (Prenotazione prenotazione : prenotazioniEsistenti) {
+
+             // Escludi la prenotazione corrente dal controllo
+             if (prenotazione.getId() == p.getId()) {
+                 continue; // Salta la prenotazione corrente
+             }
+
+             // Verifica che la data sia la stessa
+             if (!prenotazione.getData().equals(p.getData())) {
+                 continue; // Salta le prenotazioni di date diverse
+             }
+
+             // Recupera gli orari della prenotazione esistente
+             Time oraInizioEsistente = prenotazione.getOraInizio();
+             Time oraFineEsistente = prenotazione.getOraFine();
+
+             // Controlla sovrapposizione
+             if (isOverlapping(p.getOraInizio(), p.getOraFine(), oraInizioEsistente, oraFineEsistente)) {
+                 CustomMessage.show("Orario non disponibile", "Errore", false);
+                 return false;
+             }
+         }
+
+         // Nessuna sovrapposizione trovata, campo disponibile
+         return true;
+     }
+	 
+	 private boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
+	        // Verifica se l'intervallo [start1, end1] si sovrappone a [start2, end2]
+	        return !end1.before(start2) && !start1.after(end2);
+	    }
+	 
 	private JSpinner createCustomTimeSpinner() {
 		List<String> times = generateTimeValues();
 		JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));

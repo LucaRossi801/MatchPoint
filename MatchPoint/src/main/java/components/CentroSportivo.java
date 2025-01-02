@@ -13,7 +13,7 @@ import individui.Gestore;
 
 public class CentroSportivo
 {
-	private Gestore gestore;
+	//private Gestore gestore;
 	private int ID;
 	private String nome;
 	private String provincia;	
