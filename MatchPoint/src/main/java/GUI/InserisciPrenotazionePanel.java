@@ -5,8 +5,8 @@ import org.jdesktop.swingx.JXDatePicker;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
-import components.Sessione;
 import dataBase.DataBase;
+import dataBase.Sessione;
 import localizzazione.FileReaderUtils;
 
 import javax.swing.*;
@@ -231,7 +231,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	        Prenotazione prenotazione = new Prenotazione(dataPrenotazione, oraInizio, oraFine, idSessione, campoSelezionatoID);
 
 	        // Calcola il costo della prenotazione
-	        double costo = prenotazione.calcolaCosto();
+	        double costo = DettagliPrenotazioneDialog.calcolaCosto(prenotazione);
 
 	        // Formattazione dei dettagli per il riepilogo
 	        String riepilogoCentro = "Centro: " + centroSelezionatoLabel.getText();
@@ -340,7 +340,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	    }
 	}
 
-	 public boolean verificaDisponibilita(Prenotazione p) {
+	 public static boolean verificaDisponibilita(Prenotazione p) {
 
          // Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
          if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine())) {
@@ -400,7 +400,7 @@ public class InserisciPrenotazionePanel extends JPanel {
          return true;
      }
 	 
-	 private boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
+	 private static boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
 	        // Verifica se l'intervallo [start1, end1] si sovrappone a [start2, end2]
 	        return !end1.before(start2) && !start1.after(end2);
 	    }

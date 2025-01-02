@@ -5,6 +5,7 @@ import javax.swing.*;
 import components.Campo;
 import components.CentroSportivo;
 import dataBase.DataBase;
+import dataBase.Sessione;
 import localizzazione.FileReaderUtils;
 
 import java.awt.*;
@@ -165,7 +166,7 @@ public class InserisciCentroPanel extends JPanel {
 				return;
 			}
 			// aggiunge il centro sportivo al DB
-			CentroSportivo.inserisci(nomeCentro, provincia, comune);
+			DataBase.insert(nomeCentro, provincia, comune, Sessione.getId());
 			CustomMessage.show("Centro inserito con successo!", "Successo", true);
 			// Cambia schermata
 		    cardLayout.show(cardPanel, "createGestore");
@@ -185,7 +186,7 @@ public class InserisciCentroPanel extends JPanel {
 			// aggiungi anche i campi al DB (se ci sono)
 			ArrayList<Campo> campiSelezionati = AggiungiCampoDialog.getCampi();
 			for (Campo c : campiSelezionati) {
-				Campo.inserisci(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
+				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), idGestore);
 			}
 			//CustomMessage.show("Campo inserito con successo!", "Successo", true);

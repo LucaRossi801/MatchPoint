@@ -4,8 +4,8 @@ import org.jdesktop.swingx.JXDatePicker;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
-import components.Sessione;
 import dataBase.DataBase;
+import dataBase.Sessione;
 
 import javax.swing.*;
 import javax.swing.JSpinner.DefaultEditor;
@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -108,7 +109,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
         gbc.gridy++;
         panelDettagli.add(createLabel("Costo:"), gbc);
         gbc.gridx = 1;
-        panelDettagli.add(createValueLabel("€" + prenotazione.calcolaCosto()), gbc);
+        panelDettagli.add(createValueLabel("€" + calcolaCosto(prenotazione)), gbc);
 
         add(panelDettagli, BorderLayout.CENTER);
 
@@ -162,7 +163,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
             );
 
             // Verifica la disponibilità usando il metodo della classe Prenotazione
-            if (nuovaPrenotazione.verificaDisponibilita()) {
+            if (InserisciPrenotazionePanel.verificaDisponibilita(nuovaPrenotazione)) {
                 try {
                     // Recupera la prenotazione precedente dal database
                     Prenotazione vecchiaPrenotazione = DataBase.getPrenotazioneById(this.id);
@@ -230,5 +231,44 @@ public class DettagliPrenotazioneDialog extends JDialog {
         return String.format("%02d:%02d", time.getHour(), time.getMinute());
     }
 
+    public static double calcolaCosto(Prenotazione p) {
+        // Recupera il campo a cui è stata effettuata la prenotazione
+        Campo campo = DataBase.getCampoById(p.getCampoId());
+        int costoOraNotturna = campo.getCostoOraNotturna();
+        int costoOraDiurna = campo.getCostoOraDiurna();
+
+        // Calcola la durata in millisecondi
+        long durataInMillis = p.getOraFine().getTime() - p.getOraInizio().getTime();
+
+        // Converte la durata in minuti
+        long durataInMinuti = durataInMillis / 60000;
+
+        // Definire gli orari limite per la divisione tra giorno e notte
+        Time ore18 = Time.valueOf("18:00:00");
+
+        // Calcolare la durata delle ore diurne e notturne
+        double costoTotale = 0.0;
+
+        // Se la prenotazione finisce prima delle 18:00
+        if (p.getOraFine().before(ore18)) {
+            costoTotale = (durataInMinuti / 60.0) * costoOraDiurna;
+        }
+        // Se la prenotazione inizia dopo le 18:00
+        else if (p.getOraInizio().after(ore18)) {
+            costoTotale = (durataInMinuti / 60.0) * costoOraNotturna;
+        }
+        // Altrimenti la prenotazione è divisa tra giorno e notte
+        else {
+            // Ore diurne (dalla partenza fino alle 18:00)
+            long minutiDiurni = Duration.between(p.getOraInizio().toLocalTime(), ore18.toLocalTime()).toMinutes();
+            costoTotale += (minutiDiurni / 60.0) * costoOraDiurna;
+
+            // Ore notturne (dalle 18:00 in poi)
+            long minutiNotturni = durataInMinuti - minutiDiurni;
+            costoTotale += (minutiNotturni / 60.0) * costoOraNotturna;
+        }
+
+        return costoTotale;
+    }
 
 }

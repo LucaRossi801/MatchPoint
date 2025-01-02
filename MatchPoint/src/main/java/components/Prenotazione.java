@@ -81,45 +81,7 @@ public class Prenotazione {
     	return utenteID;
     }
     
-    public double calcolaCosto() {
-    	//recupera il campo a cui è stata effettuata la prenotazione
-    	Campo campo = DataBase.getCampoById(campoID);
-    	int costoOraNotturna = campo.costoOraNotturna;
-    	int costoOraDiurna = campo.costoOraDiurna;
-
-        // Calcola la durata in millisecondi
-        long durataInMillis = oraFine.getTime() - oraInizio.getTime();
-
-        // Converte la durata in minuti
-        long durataInMinuti = durataInMillis / 60000;
-        
-        // Definire gli orari limite per la divisione tra giorno e notte
-        Time ore18 = Time.valueOf("18:00:00");
-        
-        // Calcolare la durata delle ore diurne e notturne
-        double costoTotale = 0.0;
-        
-        // Se la prenotazione finisce prima delle 18:00
-        if (oraFine.before(ore18)) {
-            costoTotale = (durataInMinuti / 60.0) * costoOraDiurna;
-        }
-        // Se la prenotazione inizia dopo le 18:00
-        else if (oraInizio.after(ore18)) {
-            costoTotale = (durataInMinuti / 60.0) * costoOraNotturna;
-        }
-        // Altrimenti la prenotazione è divisa tra giorno e notte
-        else {
-            // Ore diurne (dalla partenza fino alle 18:00)
-            long minutiDiurni = Duration.between(oraInizio.toLocalTime(), ore18.toLocalTime()).toMinutes();
-            costoTotale += (minutiDiurni / 60.0) * costoOraDiurna;
-
-            // Ore notturne (dalle 18:00 in poi)
-            long minutiNotturni = durataInMinuti - minutiDiurni;
-            costoTotale += (minutiNotturni / 60.0) * costoOraNotturna;
-        }
-        
-        return costoTotale;
-    }
+  
     
     @Override
     public String toString() {

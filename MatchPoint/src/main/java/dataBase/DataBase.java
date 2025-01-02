@@ -12,7 +12,6 @@ import GUI.CustomMessage;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
-import components.Sessione;
 import components.TipologiaCampo;
 
 public class DataBase {
@@ -273,9 +272,11 @@ public class DataBase {
 		}
 	}
 
-	public static void insert(Connection conn, String nome, String provincia, String comune, int gestore) {
+	public static void insert( String nome, String provincia, String comune, int gestore) {
 		String sql = "INSERT INTO CentroSportivo(Nome, Provincia, Comune, Gestore) VALUES (?, ?, ?, ?)";
-		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		try (Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, nome);
 			pstmt.setString(2, provincia);
 			pstmt.setString(3, comune);
@@ -286,10 +287,12 @@ public class DataBase {
 		}
 	}
 
-	public static void insert(Connection conn, String tipologia, int CostoOraNotturna, int costoOraDiurna,
+	public static void insert(String tipologia, int CostoOraNotturna, int costoOraDiurna,
 			int lunghezza, int larghezza, boolean coperto, int centro) {
 		String sql = "INSERT INTO Campo(Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
+		try (Connection conn = DriverManager.getConnection(url);
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, tipologia);
 			pstmt.setInt(2, CostoOraNotturna);
 			pstmt.setInt(3, costoOraDiurna);

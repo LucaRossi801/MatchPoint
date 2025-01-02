@@ -21,8 +21,8 @@ import java.util.Map;
 import components.Campo;
 import components.CentroSportivo;
 import dataBase.DataBase;
+import dataBase.Sessione;
 import components.Prenotazione;
-import components.Sessione;
 
 public class VediPrenotazioniGiocatorePanel extends JPanel {
     private static JScrollPane scrollPane;
@@ -302,7 +302,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         // Costo (in basso, centrato)
         gbc.gridy = 2;
-        card.add(new JLabel("  💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+        card.add(new JLabel("  💶 Costo: €" + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);
         // Aggiungi l'icona del cestino in fondo a destra
         gbc.gridx = 3;
         gbc.gridy = 1;

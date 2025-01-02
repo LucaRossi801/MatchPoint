@@ -19,7 +19,7 @@ public class GestorePagamenti {
 	// Metodo per mostrare la schermata di pagamento iniziale
 	public void mostraSchermataPagamento(Prenotazione prenotazione, double vecchioCosto) {
 		pagamentoEffettuato = false; // Stato iniziale del pagamento
-		double costo = prenotazione.calcolaCosto();
+		double costo = DettagliPrenotazioneDialog.calcolaCosto(prenotazione);
 
 		// Inizializza il dialogo
 		pagamentoDialog = new JDialog((Frame) null, "Pagamento", true); // Modale
@@ -123,8 +123,8 @@ public class GestorePagamenti {
 
 	// Metodo per gestire il pagamento di una prenotazione modificata
 	public void gestisciPagamentoModificato(Prenotazione nuovaPrenotazione, Prenotazione vecchiaPrenotazione) {
-		double nuovoCosto = nuovaPrenotazione.calcolaCosto();
-		double vecchioCosto = vecchiaPrenotazione.calcolaCosto();
+		double nuovoCosto = DettagliPrenotazioneDialog.calcolaCosto(nuovaPrenotazione);
+		double vecchioCosto = DettagliPrenotazioneDialog.calcolaCosto(vecchiaPrenotazione);
 
 		// Gestione pagamento in caso di aumento del costo
 		if (nuovoCosto > vecchioCosto) {

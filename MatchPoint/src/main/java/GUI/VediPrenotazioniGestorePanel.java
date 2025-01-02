@@ -19,8 +19,8 @@ import java.util.Map;
 import components.Campo;
 import components.CentroSportivo;
 import dataBase.DataBase;
+import dataBase.Sessione;
 import components.Prenotazione;
-import components.Sessione;
 
 public class VediPrenotazioniGestorePanel extends JPanel {
     private JComboBox<String> centriComboBox;
@@ -440,7 +440,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 
         // Costo
         gbc.gridx = 2;
-        card.add(new JLabel("💶 Costo: €" + prenotazione.calcolaCosto()), gbc);
+        card.add(new JLabel("💶 Costo: €" + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);
 
         return card;
     }

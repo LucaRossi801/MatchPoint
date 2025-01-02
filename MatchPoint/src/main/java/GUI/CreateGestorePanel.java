@@ -2,8 +2,8 @@ package GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
-import components.Sessione;
 import dataBase.DataBase;
+import dataBase.Sessione;
 
 import javax.swing.*;
 import java.awt.*;

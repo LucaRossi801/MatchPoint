@@ -1,8 +1,6 @@
-package components;
+package dataBase;
 
 import java.sql.SQLException;
-
-import dataBase.DataBase;
 
 public class Sessione {
 	private static int id;

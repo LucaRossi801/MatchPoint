@@ -4,9 +4,9 @@ import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
 
-import components.Sessione;
 import individui.Utente;
 import dataBase.DataBase;
+import dataBase.Sessione;
 
 
 public class Login {

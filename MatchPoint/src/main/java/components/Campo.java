@@ -99,14 +99,6 @@ public class Campo {
 	    return new Campo(this.tipologiaCampo, this.costoOraDiurna, this.costoOraNotturna, this.lunghezza, this.larghezza, this.coperto);
 	}
 
-	public static void inserisci(String tipologia, int CostoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza, boolean coperto, int centro) {
-		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; //connessione al database
-		try  (Connection conn = DriverManager.getConnection(url)){
-			DataBase.insert(conn, tipologia, CostoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto, centro);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-}
 
 	public String getTipologiaCampo() {
 		return tipologiaCampo.toString();

@@ -4,8 +4,8 @@ import javax.swing.*;
 
 import components.Campo;
 import components.CentroSportivo;
-import components.Sessione;
 import dataBase.DataBase;
+import dataBase.Sessione;
 import localizzazione.FileReaderUtils;
 
 import java.awt.*;
@@ -247,7 +247,7 @@ public class ModificaCentroPanel extends JPanel {
 			
 			ArrayList<Campo> campiSelezionati = AggiungiCampoDialog.getCampi();
 			for (Campo c : campiSelezionati) {
-				Campo.inserisci(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
+				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), centro.getID());
 			}
 			
