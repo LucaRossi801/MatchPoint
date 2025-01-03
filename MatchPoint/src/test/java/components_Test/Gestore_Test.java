@@ -10,6 +10,11 @@ import java.util.UUID;
 
 /**
  * Classe di test per la classe Gestore.
+ * Dato che i dati vengono inseriti nel database viene generata una stringa
+ * username randomica altrimenti il test avrebbe successo solo alla prima
+ * esecuzione e fallimento in tutte le altre (username già in uso);
+ * permane comunque una possibilità di fallimento poichè potrebbe essere
+ * generato uno username già in uso.
  */
 public class Gestore_Test {
 
