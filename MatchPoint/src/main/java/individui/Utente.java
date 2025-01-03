@@ -1,3 +1,6 @@
+/**
+ * Il package individui contiene la definizione delle classi relative agli individui.
+ */
 package individui;
 
 import java.sql.*;
