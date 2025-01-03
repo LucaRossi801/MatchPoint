@@ -6,28 +6,30 @@ import individui.Gestore;
 
 import static org.junit.Assert.*;
 
+import java.util.UUID;
+
 /**
  * Classe di test per la classe Gestore.
  */
 public class Gestore_Test {
 
-    /**
-     * Test per la registrazione di un nuovo gestore con dati validi.
-     */
-    @Test
-    public void testRegistrazioneSuccesso() {
-        String nome = "Mario";
-        String cognome = "Rossi";
-        String dataNascita = "1990-05-15";
-        String email = "mario.rossi@example.com";
-        String username = "mario_rossiPippa";
-        String password = "password123";
-        String certificazioni = "Certificazione A";
-        String competenze = "Gestione eventi";
+	@Test
+	public void testRegistrazioneSuccesso() {
+	    String nome = "Mario";
+	    String cognome = "Rossi";
+	    String dataNascita = "1990-05-15";
+	    String email = "mario.rossi@example.com";
 
-        int risultato = Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
-        assertEquals(1, risultato); // La registrazione dovrebbe avere successo.
-    }
+	    // Genera un username unico utilizzando UUID
+	    String username = "mario_rossi_" + UUID.randomUUID().toString().substring(0, 10);
+
+	    String password = "password123";
+	    String certificazioni = "Certificazione A";
+	    String competenze = "Gestione eventi";
+
+	    int risultato = Gestore.registrazione(nome, cognome, dataNascita, email, username, password, certificazioni, competenze);
+	    assertEquals(1, risultato); // La registrazione dovrebbe avere successo.
+	}
 
     /**
      * Test per la registrazione di un gestore con uno username già in uso.
