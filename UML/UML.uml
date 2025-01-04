@@ -664,6 +664,62 @@
       <message xmi:type="uml:Message" xmi:id="_B878sMRTEe-yyvDrKHvqrg" name="6.1.1:InserisciPrenotazione(), MostraRiepilogo()" messageSort="asynchCall" receiveEvent="_B8-Y8MRTEe-yyvDrKHvqrg" sendEvent="_B89x4MRTEe-yyvDrKHvqrg"/>
       <message xmi:type="uml:Message" xmi:id="_GkWzwMRTEe-yyvDrKHvqrg" name="6.2.1: VediPrenotazioni()" messageSort="asynchCall" receiveEvent="_GkYo8MRTEe-yyvDrKHvqrg" sendEvent="_GkYB4MRTEe-yyvDrKHvqrg"/>
     </packagedElement>
+    <packagedElement xmi:type="uml:Activity" xmi:id="_K3JHAMqHEe-duvL3Y-bjTQ" node="_bEwlIMqHEe-duvL3Y-bjTQ _NJvJ0MqJEe-duvL3Y-bjTQ _kJ4rsMqJEe-duvL3Y-bjTQ _qfXnEMqJEe-duvL3Y-bjTQ _9RNVcMqJEe-duvL3Y-bjTQ _0iDM8MqJEe-duvL3Y-bjTQ _LI_koMqKEe-duvL3Y-bjTQ _cBz74MqKEe-duvL3Y-bjTQ _dpGp0MqKEe-duvL3Y-bjTQ _l5iO8MqKEe-duvL3Y-bjTQ _FstQMMqMEe-duvL3Y-bjTQ _Tzb6UMqMEe-duvL3Y-bjTQ _sPcWMMqMEe-duvL3Y-bjTQ _jtz24MqNEe-duvL3Y-bjTQ _o-8ZUMqNEe-duvL3Y-bjTQ _B5P6wMqOEe-duvL3Y-bjTQ _AvHEEMqoEe-duvL3Y-bjTQ _DOxkcMqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _aTJfAMqoEe-duvL3Y-bjTQ" group="_VeeDUMqNEe-duvL3Y-bjTQ _bPAekMqNEe-duvL3Y-bjTQ">
+      <edge xmi:type="uml:ControlFlow" xmi:id="_kKQfI8qJEe-duvL3Y-bjTQ" target="_kJ4rsMqJEe-duvL3Y-bjTQ" source="_bEwlIMqHEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_oSYyIMqJEe-duvL3Y-bjTQ" target="_NJvJ0MqJEe-duvL3Y-bjTQ" source="_kJ4rsMqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_uAx4UMqJEe-duvL3Y-bjTQ" target="_qfXnEMqJEe-duvL3Y-bjTQ" source="_kJ4rsMqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_0ipp4MqJEe-duvL3Y-bjTQ" target="_0iDM8MqJEe-duvL3Y-bjTQ" source="_qfXnEMqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_FWNtsMqKEe-duvL3Y-bjTQ" name="[SI]" target="_9RNVcMqJEe-duvL3Y-bjTQ" source="_0iDM8MqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_LKVocMqKEe-duvL3Y-bjTQ" name="[NO]" target="_LI_koMqKEe-duvL3Y-bjTQ" source="_0iDM8MqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_cCOyoMqKEe-duvL3Y-bjTQ" target="_cBz74MqKEe-duvL3Y-bjTQ" source="_NJvJ0MqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_gDYT4MqKEe-duvL3Y-bjTQ" name="[SI]" target="_dpGp0MqKEe-duvL3Y-bjTQ" source="_cBz74MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_l6LIIMqKEe-duvL3Y-bjTQ" name="[NO]" target="_l5iO8MqKEe-duvL3Y-bjTQ" source="_cBz74MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_T0UEEMqMEe-duvL3Y-bjTQ" target="_Tzb6UMqMEe-duvL3Y-bjTQ" source="_dpGp0MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_sQcbwMqMEe-duvL3Y-bjTQ" name="[Dati Non Corretti]" target="_sPcWMMqMEe-duvL3Y-bjTQ" source="_Tzb6UMqMEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_mPLAYMqNEe-duvL3Y-bjTQ" name="[Dati Corretti]" target="_jtz24MqNEe-duvL3Y-bjTQ" source="_dpGp0MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_o_ZFQMqNEe-duvL3Y-bjTQ" target="_o-8ZUMqNEe-duvL3Y-bjTQ" source="_9RNVcMqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_B51woMqOEe-duvL3Y-bjTQ" target="_B5P6wMqOEe-duvL3Y-bjTQ" source="_jtz24MqNEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_AyS68MqoEe-duvL3Y-bjTQ" target="_AvHEEMqoEe-duvL3Y-bjTQ" source="_B5P6wMqOEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_DP_scMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_DOxkcMqoEe-duvL3Y-bjTQ" source="_AvHEEMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_TetWwMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_H7FikMqoEe-duvL3Y-bjTQ" source="_DOxkcMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_M-LB8MqoEe-duvL3Y-bjTQ" source="_DOxkcMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_VZ6fMMqoEe-duvL3Y-bjTQ" source="_AvHEEMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_z-65oMqoEe-duvL3Y-bjTQ" name="[Inserire Campo]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_aTJfAMqoEe-duvL3Y-bjTQ" source="_H7FikMqoEe-duvL3Y-bjTQ"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_VeeDUMqNEe-duvL3Y-bjTQ" name="GESTORE" node="_AvHEEMqoEe-duvL3Y-bjTQ _DOxkcMqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _aTJfAMqoEe-duvL3Y-bjTQ" edge="_DP_scMqoEe-duvL3Y-bjTQ _TetWwMqoEe-duvL3Y-bjTQ _UqRK8MqoEe-duvL3Y-bjTQ _YRzSUMqoEe-duvL3Y-bjTQ _z-65oMqoEe-duvL3Y-bjTQ"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_bPAekMqNEe-duvL3Y-bjTQ" name="GIOCATORE"/>
+      <node xmi:type="uml:InitialNode" xmi:id="_bEwlIMqHEe-duvL3Y-bjTQ" name="" outgoing="_kKQfI8qJEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_NJvJ0MqJEe-duvL3Y-bjTQ" name="Effettuare Login" incoming="_oSYyIMqJEe-duvL3Y-bjTQ" outgoing="_cCOyoMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_kJ4rsMqJEe-duvL3Y-bjTQ" incoming="_kKQfI8qJEe-duvL3Y-bjTQ" outgoing="_oSYyIMqJEe-duvL3Y-bjTQ _uAx4UMqJEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_qfXnEMqJEe-duvL3Y-bjTQ" name="Effettuare Registrazione" incoming="_uAx4UMqJEe-duvL3Y-bjTQ" outgoing="_0ipp4MqJEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_0iDM8MqJEe-duvL3Y-bjTQ" incoming="_0ipp4MqJEe-duvL3Y-bjTQ" outgoing="_FWNtsMqKEe-duvL3Y-bjTQ _LKVocMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_9RNVcMqJEe-duvL3Y-bjTQ" name="Salvataggio dati nel Database" incoming="_FWNtsMqKEe-duvL3Y-bjTQ" outgoing="_o_ZFQMqNEe-duvL3Y-bjTQ">
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_3SsTIMqKEe-duvL3Y-bjTQ"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_KuXBoMqLEe-duvL3Y-bjTQ"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_Ft6KEMqMEe-duvL3Y-bjTQ"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_HKL60MqMEe-duvL3Y-bjTQ" exceptionInput="_FstQMcqMEe-duvL3Y-bjTQ" handlerBody="_FstQMMqMEe-duvL3Y-bjTQ"/>
+      </node>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_LI_koMqKEe-duvL3Y-bjTQ" incoming="_LKVocMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_cBz74MqKEe-duvL3Y-bjTQ" name="" incoming="_cCOyoMqKEe-duvL3Y-bjTQ" outgoing="_gDYT4MqKEe-duvL3Y-bjTQ _l6LIIMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_dpGp0MqKEe-duvL3Y-bjTQ" name="Controllo dati nel Database" incoming="_gDYT4MqKEe-duvL3Y-bjTQ" outgoing="_T0UEEMqMEe-duvL3Y-bjTQ _mPLAYMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_l5iO8MqKEe-duvL3Y-bjTQ" incoming="_l6LIIMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_FstQMMqMEe-duvL3Y-bjTQ" name="Mostra messaggio di errore">
+        <object xmi:type="uml:InputPin" xmi:id="_FstQMcqMEe-duvL3Y-bjTQ" name="Errore nel Salvataggio Dati">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FstQMsqMEe-duvL3Y-bjTQ" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FstQM8qMEe-duvL3Y-bjTQ" value="1"/>
+        </object>
+      </node>
+      <node xmi:type="uml:DecisionNode" xmi:id="_Tzb6UMqMEe-duvL3Y-bjTQ" incoming="_T0UEEMqMEe-duvL3Y-bjTQ" outgoing="_sQcbwMqMEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_sPcWMMqMEe-duvL3Y-bjTQ" name="" incoming="_sQcbwMqMEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_jtz24MqNEe-duvL3Y-bjTQ" name="Controllo Tipologia Utente" incoming="_mPLAYMqNEe-duvL3Y-bjTQ" outgoing="_B51woMqOEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_o-8ZUMqNEe-duvL3Y-bjTQ" name="" incoming="_o_ZFQMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_B5P6wMqOEe-duvL3Y-bjTQ" incoming="_B51woMqOEe-duvL3Y-bjTQ" outgoing="_AyS68MqoEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_AvHEEMqoEe-duvL3Y-bjTQ" name="ForkNode33" incoming="_AyS68MqoEe-duvL3Y-bjTQ" outgoing="_DP_scMqoEe-duvL3Y-bjTQ _YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_DOxkcMqoEe-duvL3Y-bjTQ" name="" incoming="_DP_scMqoEe-duvL3Y-bjTQ" outgoing="_TetWwMqoEe-duvL3Y-bjTQ _UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_H7FikMqoEe-duvL3Y-bjTQ" name="Inserire Centro Sportivo" incoming="_TetWwMqoEe-duvL3Y-bjTQ" outgoing="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_M-LB8MqoEe-duvL3Y-bjTQ" name="Modificare Centro Sportivo" incoming="_UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_VZ6fMMqoEe-duvL3Y-bjTQ" name="Controllare Prenotazioni" incoming="_YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_aTJfAMqoEe-duvL3Y-bjTQ" name="Inserire Campo (singolo)" incoming="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+    </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/papyrus/Codegen/1#/"/>
