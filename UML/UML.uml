@@ -664,61 +664,168 @@
       <message xmi:type="uml:Message" xmi:id="_B878sMRTEe-yyvDrKHvqrg" name="6.1.1:InserisciPrenotazione(), MostraRiepilogo()" messageSort="asynchCall" receiveEvent="_B8-Y8MRTEe-yyvDrKHvqrg" sendEvent="_B89x4MRTEe-yyvDrKHvqrg"/>
       <message xmi:type="uml:Message" xmi:id="_GkWzwMRTEe-yyvDrKHvqrg" name="6.2.1: VediPrenotazioni()" messageSort="asynchCall" receiveEvent="_GkYo8MRTEe-yyvDrKHvqrg" sendEvent="_GkYB4MRTEe-yyvDrKHvqrg"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Activity" xmi:id="_K3JHAMqHEe-duvL3Y-bjTQ" node="_bEwlIMqHEe-duvL3Y-bjTQ _NJvJ0MqJEe-duvL3Y-bjTQ _kJ4rsMqJEe-duvL3Y-bjTQ _qfXnEMqJEe-duvL3Y-bjTQ _9RNVcMqJEe-duvL3Y-bjTQ _0iDM8MqJEe-duvL3Y-bjTQ _LI_koMqKEe-duvL3Y-bjTQ _cBz74MqKEe-duvL3Y-bjTQ _dpGp0MqKEe-duvL3Y-bjTQ _l5iO8MqKEe-duvL3Y-bjTQ _FstQMMqMEe-duvL3Y-bjTQ _Tzb6UMqMEe-duvL3Y-bjTQ _sPcWMMqMEe-duvL3Y-bjTQ _jtz24MqNEe-duvL3Y-bjTQ _o-8ZUMqNEe-duvL3Y-bjTQ _B5P6wMqOEe-duvL3Y-bjTQ _AvHEEMqoEe-duvL3Y-bjTQ _DOxkcMqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _aTJfAMqoEe-duvL3Y-bjTQ" group="_VeeDUMqNEe-duvL3Y-bjTQ _bPAekMqNEe-duvL3Y-bjTQ">
+    <packagedElement xmi:type="uml:Activity" xmi:id="_K3JHAMqHEe-duvL3Y-bjTQ" node="_rAURgMwJEe-jKcBxacZyKg _oTCy8MwJEe-jKcBxacZyKg _WReD4MwJEe-jKcBxacZyKg _TvZvwMwJEe-jKcBxacZyKg _RLsc4MwJEe-jKcBxacZyKg _Xf9FsMwIEe-jKcBxacZyKg _aTJfAMqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _AvHEEMqoEe-duvL3Y-bjTQ _B5P6wMqOEe-duvL3Y-bjTQ _o-8ZUMqNEe-duvL3Y-bjTQ _jtz24MqNEe-duvL3Y-bjTQ _sPcWMMqMEe-duvL3Y-bjTQ _Tzb6UMqMEe-duvL3Y-bjTQ _FstQMMqMEe-duvL3Y-bjTQ _dpGp0MqKEe-duvL3Y-bjTQ _cBz74MqKEe-duvL3Y-bjTQ _9RNVcMqJEe-duvL3Y-bjTQ _0iDM8MqJEe-duvL3Y-bjTQ _qfXnEMqJEe-duvL3Y-bjTQ _kJ4rsMqJEe-duvL3Y-bjTQ _NJvJ0MqJEe-duvL3Y-bjTQ _bEwlIMqHEe-duvL3Y-bjTQ _wn4W8MwJEe-jKcBxacZyKg _AO8LYMwKEe-jKcBxacZyKg _KLnP4MwKEe-jKcBxacZyKg _OIMaMMwKEe-jKcBxacZyKg _DeYGYMwLEe-jKcBxacZyKg _MqfQoMwLEe-jKcBxacZyKg _XWECgMwLEe-jKcBxacZyKg _bP2-kMwLEe-jKcBxacZyKg _shKuUMwLEe-jKcBxacZyKg _B4kwwMwMEe-jKcBxacZyKg _DCN5YMwMEe-jKcBxacZyKg _QHUHYMwMEe-jKcBxacZyKg _cWs1YMwMEe-jKcBxacZyKg _yRTrgMwMEe-jKcBxacZyKg _yg18UMwMEe-jKcBxacZyKg _8RjocMwMEe-jKcBxacZyKg _W7WKgMwNEe-jKcBxacZyKg _iTsi0MwNEe-jKcBxacZyKg _lPio4MwNEe-jKcBxacZyKg _tQ2z8MwNEe-jKcBxacZyKg _9r_JoMwNEe-jKcBxacZyKg __hrf8MwNEe-jKcBxacZyKg _A98poMwOEe-jKcBxacZyKg" group="_bPAekMqNEe-duvL3Y-bjTQ _VeeDUMqNEe-duvL3Y-bjTQ">
       <edge xmi:type="uml:ControlFlow" xmi:id="_kKQfI8qJEe-duvL3Y-bjTQ" target="_kJ4rsMqJEe-duvL3Y-bjTQ" source="_bEwlIMqHEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_oSYyIMqJEe-duvL3Y-bjTQ" target="_NJvJ0MqJEe-duvL3Y-bjTQ" source="_kJ4rsMqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_uAx4UMqJEe-duvL3Y-bjTQ" target="_qfXnEMqJEe-duvL3Y-bjTQ" source="_kJ4rsMqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_0ipp4MqJEe-duvL3Y-bjTQ" target="_0iDM8MqJEe-duvL3Y-bjTQ" source="_qfXnEMqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_FWNtsMqKEe-duvL3Y-bjTQ" name="[SI]" target="_9RNVcMqJEe-duvL3Y-bjTQ" source="_0iDM8MqJEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_LKVocMqKEe-duvL3Y-bjTQ" name="[NO]" target="_LI_koMqKEe-duvL3Y-bjTQ" source="_0iDM8MqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_cCOyoMqKEe-duvL3Y-bjTQ" target="_cBz74MqKEe-duvL3Y-bjTQ" source="_NJvJ0MqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_gDYT4MqKEe-duvL3Y-bjTQ" name="[SI]" target="_dpGp0MqKEe-duvL3Y-bjTQ" source="_cBz74MqKEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_l6LIIMqKEe-duvL3Y-bjTQ" name="[NO]" target="_l5iO8MqKEe-duvL3Y-bjTQ" source="_cBz74MqKEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_T0UEEMqMEe-duvL3Y-bjTQ" target="_Tzb6UMqMEe-duvL3Y-bjTQ" source="_dpGp0MqKEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_sQcbwMqMEe-duvL3Y-bjTQ" name="[Dati Non Corretti]" target="_sPcWMMqMEe-duvL3Y-bjTQ" source="_Tzb6UMqMEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_mPLAYMqNEe-duvL3Y-bjTQ" name="[Dati Corretti]" target="_jtz24MqNEe-duvL3Y-bjTQ" source="_dpGp0MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_mPLAYMqNEe-duvL3Y-bjTQ" name="[Dati Corretti]" target="_jtz24MqNEe-duvL3Y-bjTQ" source="_Tzb6UMqMEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_o_ZFQMqNEe-duvL3Y-bjTQ" target="_o-8ZUMqNEe-duvL3Y-bjTQ" source="_9RNVcMqJEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_B51woMqOEe-duvL3Y-bjTQ" target="_B5P6wMqOEe-duvL3Y-bjTQ" source="_jtz24MqNEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_AyS68MqoEe-duvL3Y-bjTQ" target="_AvHEEMqoEe-duvL3Y-bjTQ" source="_B5P6wMqOEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_DP_scMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_DOxkcMqoEe-duvL3Y-bjTQ" source="_AvHEEMqoEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_TetWwMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_H7FikMqoEe-duvL3Y-bjTQ" source="_DOxkcMqoEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_M-LB8MqoEe-duvL3Y-bjTQ" source="_DOxkcMqoEe-duvL3Y-bjTQ"/>
       <edge xmi:type="uml:ControlFlow" xmi:id="_YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_VZ6fMMqoEe-duvL3Y-bjTQ" source="_AvHEEMqoEe-duvL3Y-bjTQ"/>
-      <edge xmi:type="uml:ControlFlow" xmi:id="_z-65oMqoEe-duvL3Y-bjTQ" name="[Inserire Campo]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_aTJfAMqoEe-duvL3Y-bjTQ" source="_H7FikMqoEe-duvL3Y-bjTQ"/>
-      <group xmi:type="uml:ActivityPartition" xmi:id="_VeeDUMqNEe-duvL3Y-bjTQ" name="GESTORE" node="_AvHEEMqoEe-duvL3Y-bjTQ _DOxkcMqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _aTJfAMqoEe-duvL3Y-bjTQ" edge="_DP_scMqoEe-duvL3Y-bjTQ _TetWwMqoEe-duvL3Y-bjTQ _UqRK8MqoEe-duvL3Y-bjTQ _YRzSUMqoEe-duvL3Y-bjTQ _z-65oMqoEe-duvL3Y-bjTQ"/>
-      <group xmi:type="uml:ActivityPartition" xmi:id="_bPAekMqNEe-duvL3Y-bjTQ" name="GIOCATORE"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_aTJfAMqoEe-duvL3Y-bjTQ" source="_H7FikMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_XiA7MMwIEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_Xf9FsMwIEe-jKcBxacZyKg" source="_AvHEEMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_ZT1eIMwIEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_M-LB8MqoEe-duvL3Y-bjTQ" source="_Xf9FsMwIEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_aQWwwMwIEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_H7FikMqoEe-duvL3Y-bjTQ" source="_Xf9FsMwIEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_WSEg0MwJEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_WReD4MwJEe-jKcBxacZyKg" source="_M-LB8MqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_oT5ukMwJEe-jKcBxacZyKg" target="_oTCy8MwJEe-jKcBxacZyKg" source="_cBz74MqKEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_rA6ucMwJEe-jKcBxacZyKg" target="_rAURgMwJEe-jKcBxacZyKg" source="_0iDM8MqJEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_won90MwJEe-jKcBxacZyKg" target="_wn4W8MwJEe-jKcBxacZyKg" source="_FstQMMqMEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_APsZUMwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_AO8LYMwKEe-jKcBxacZyKg" source="_WReD4MwJEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_Do1fYMwKEe-jKcBxacZyKg" name="[SI]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_RLsc4MwJEe-jKcBxacZyKg" source="_AO8LYMwKEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_KMVBkMwKEe-jKcBxacZyKg" name="[NO]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_KLnP4MwKEe-jKcBxacZyKg" source="_AO8LYMwKEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_OI6y8MwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_OIMaMMwKEe-jKcBxacZyKg" source="_WReD4MwJEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_RY1EgMwKEe-jKcBxacZyKg" name="[SI]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_TvZvwMwJEe-jKcBxacZyKg" source="_OIMaMMwKEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_T9y7oMwKEe-jKcBxacZyKg" name="[NO]" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_KLnP4MwKEe-jKcBxacZyKg" source="_OIMaMMwKEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_DfSFUMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_DeYGYMwLEe-jKcBxacZyKg" source="_TvZvwMwJEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_EmDgIMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_DeYGYMwLEe-jKcBxacZyKg" source="_RLsc4MwJEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_HGnYYMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" source="_aTJfAMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_KxFfAMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" source="_DeYGYMwLEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_MrPekMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_MqfQoMwLEe-jKcBxacZyKg" source="_VZ6fMMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_XW3TwMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_XWECgMwLEe-jKcBxacZyKg" source="_DeYGYMwLEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_Yn4PsMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_XWECgMwLEe-jKcBxacZyKg" source="_aTJfAMqoEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_ZzREwMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_MqfQoMwLEe-jKcBxacZyKg" source="_XWECgMwLEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_bQtTIMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ" target="_bP2-kMwLEe-jKcBxacZyKg" source="_MqfQoMwLEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_FPkhwMwMEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_DCN5YMwMEe-jKcBxacZyKg" source="_B4kwwMwMEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_QINfQMwMEe-jKcBxacZyKg" target="_QHUHYMwMEe-jKcBxacZyKg" source="_shKuUMwLEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_cXv-QMwMEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_cWs1YMwMEe-jKcBxacZyKg" source="_B4kwwMwMEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_hCFmcMwMEe-jKcBxacZyKg" target="_B4kwwMwMEe-jKcBxacZyKg" source="_B5P6wMqOEe-duvL3Y-bjTQ"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_W8PiYMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_W7WKgMwNEe-jKcBxacZyKg" source="_DCN5YMwMEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_iUvrsMwNEe-jKcBxacZyKg" name="[SI]" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_iTsi0MwNEe-jKcBxacZyKg" source="_W7WKgMwNEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_lQlxwMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_lPio4MwNEe-jKcBxacZyKg" source="_W7WKgMwNEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_9tEHsMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_9r_JoMwNEe-jKcBxacZyKg" source="_cWs1YMwMEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_-u8bcMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_9r_JoMwNEe-jKcBxacZyKg" source="_iTsi0MwNEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="__i4Z0MwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="__hrf8MwNEe-jKcBxacZyKg" source="_9r_JoMwNEe-jKcBxacZyKg"/>
+      <edge xmi:type="uml:ControlFlow" xmi:id="_A_N08MwOEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ" target="_A98poMwOEe-jKcBxacZyKg" source="_tQ2z8MwNEe-jKcBxacZyKg"/>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_VeeDUMqNEe-duvL3Y-bjTQ" name="GESTORE" node="_AvHEEMqoEe-duvL3Y-bjTQ _H7FikMqoEe-duvL3Y-bjTQ _M-LB8MqoEe-duvL3Y-bjTQ _VZ6fMMqoEe-duvL3Y-bjTQ _aTJfAMqoEe-duvL3Y-bjTQ _Xf9FsMwIEe-jKcBxacZyKg _RLsc4MwJEe-jKcBxacZyKg _TvZvwMwJEe-jKcBxacZyKg _WReD4MwJEe-jKcBxacZyKg _AO8LYMwKEe-jKcBxacZyKg _KLnP4MwKEe-jKcBxacZyKg _OIMaMMwKEe-jKcBxacZyKg _DeYGYMwLEe-jKcBxacZyKg _MqfQoMwLEe-jKcBxacZyKg _XWECgMwLEe-jKcBxacZyKg _bP2-kMwLEe-jKcBxacZyKg" edge="_YRzSUMqoEe-duvL3Y-bjTQ _z-65oMqoEe-duvL3Y-bjTQ _XiA7MMwIEe-jKcBxacZyKg _ZT1eIMwIEe-jKcBxacZyKg _aQWwwMwIEe-jKcBxacZyKg _WSEg0MwJEe-jKcBxacZyKg _APsZUMwKEe-jKcBxacZyKg _Do1fYMwKEe-jKcBxacZyKg _KMVBkMwKEe-jKcBxacZyKg _OI6y8MwKEe-jKcBxacZyKg _RY1EgMwKEe-jKcBxacZyKg _T9y7oMwKEe-jKcBxacZyKg _DfSFUMwLEe-jKcBxacZyKg _EmDgIMwLEe-jKcBxacZyKg _HGnYYMwLEe-jKcBxacZyKg _KxFfAMwLEe-jKcBxacZyKg _MrPekMwLEe-jKcBxacZyKg _XW3TwMwLEe-jKcBxacZyKg _Yn4PsMwLEe-jKcBxacZyKg _ZzREwMwLEe-jKcBxacZyKg _bQtTIMwLEe-jKcBxacZyKg">
+        <ownedComment xmi:type="uml:Comment" xmi:id="_cdWh4MwKEe-jKcBxacZyKg">
+          <body>&lt;&lt;input decisionale>> Modificare il campo?&#xD;
+</body>
+        </ownedComment>
+        <ownedComment xmi:type="uml:Comment" xmi:id="_rRFb8MwKEe-jKcBxacZyKg">
+          <body>&lt;&lt;input decisionale>> Eliminare il Campo?&#xD;
+&#xD;
+</body>
+        </ownedComment>
+      </group>
+      <group xmi:type="uml:ActivityPartition" xmi:id="_bPAekMqNEe-duvL3Y-bjTQ" name="GIOCATORE" node="_B4kwwMwMEe-jKcBxacZyKg _DCN5YMwMEe-jKcBxacZyKg _cWs1YMwMEe-jKcBxacZyKg _yRTrgMwMEe-jKcBxacZyKg _yg18UMwMEe-jKcBxacZyKg _8RjocMwMEe-jKcBxacZyKg _W7WKgMwNEe-jKcBxacZyKg _iTsi0MwNEe-jKcBxacZyKg _lPio4MwNEe-jKcBxacZyKg _tQ2z8MwNEe-jKcBxacZyKg _9r_JoMwNEe-jKcBxacZyKg __hrf8MwNEe-jKcBxacZyKg _A98poMwOEe-jKcBxacZyKg" edge="_FPkhwMwMEe-jKcBxacZyKg _cXv-QMwMEe-jKcBxacZyKg _W8PiYMwNEe-jKcBxacZyKg _iUvrsMwNEe-jKcBxacZyKg _lQlxwMwNEe-jKcBxacZyKg _9tEHsMwNEe-jKcBxacZyKg _-u8bcMwNEe-jKcBxacZyKg __i4Z0MwNEe-jKcBxacZyKg _A_N08MwOEe-jKcBxacZyKg">
+        <ownedComment xmi:type="uml:Comment" xmi:id="_oSKFUMwNEe-jKcBxacZyKg">
+          <body>&lt;&lt;input decisionale>> Effettuare il pagamento?</body>
+        </ownedComment>
+      </group>
       <node xmi:type="uml:InitialNode" xmi:id="_bEwlIMqHEe-duvL3Y-bjTQ" name="" outgoing="_kKQfI8qJEe-duvL3Y-bjTQ"/>
       <node xmi:type="uml:OpaqueAction" xmi:id="_NJvJ0MqJEe-duvL3Y-bjTQ" name="Effettuare Login" incoming="_oSYyIMqJEe-duvL3Y-bjTQ" outgoing="_cCOyoMqKEe-duvL3Y-bjTQ"/>
       <node xmi:type="uml:ForkNode" xmi:id="_kJ4rsMqJEe-duvL3Y-bjTQ" incoming="_kKQfI8qJEe-duvL3Y-bjTQ" outgoing="_oSYyIMqJEe-duvL3Y-bjTQ _uAx4UMqJEe-duvL3Y-bjTQ"/>
       <node xmi:type="uml:OpaqueAction" xmi:id="_qfXnEMqJEe-duvL3Y-bjTQ" name="Effettuare Registrazione" incoming="_uAx4UMqJEe-duvL3Y-bjTQ" outgoing="_0ipp4MqJEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:DecisionNode" xmi:id="_0iDM8MqJEe-duvL3Y-bjTQ" incoming="_0ipp4MqJEe-duvL3Y-bjTQ" outgoing="_FWNtsMqKEe-duvL3Y-bjTQ _LKVocMqKEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_0iDM8MqJEe-duvL3Y-bjTQ" incoming="_0ipp4MqJEe-duvL3Y-bjTQ" outgoing="_FWNtsMqKEe-duvL3Y-bjTQ _rA6ucMwJEe-jKcBxacZyKg"/>
       <node xmi:type="uml:OpaqueAction" xmi:id="_9RNVcMqJEe-duvL3Y-bjTQ" name="Salvataggio dati nel Database" incoming="_FWNtsMqKEe-duvL3Y-bjTQ" outgoing="_o_ZFQMqNEe-duvL3Y-bjTQ">
         <handler xmi:type="uml:ExceptionHandler" xmi:id="_3SsTIMqKEe-duvL3Y-bjTQ"/>
         <handler xmi:type="uml:ExceptionHandler" xmi:id="_KuXBoMqLEe-duvL3Y-bjTQ"/>
         <handler xmi:type="uml:ExceptionHandler" xmi:id="_Ft6KEMqMEe-duvL3Y-bjTQ"/>
         <handler xmi:type="uml:ExceptionHandler" xmi:id="_HKL60MqMEe-duvL3Y-bjTQ" exceptionInput="_FstQMcqMEe-duvL3Y-bjTQ" handlerBody="_FstQMMqMEe-duvL3Y-bjTQ"/>
       </node>
-      <node xmi:type="uml:ActivityFinalNode" xmi:id="_LI_koMqKEe-duvL3Y-bjTQ" incoming="_LKVocMqKEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:DecisionNode" xmi:id="_cBz74MqKEe-duvL3Y-bjTQ" name="" incoming="_cCOyoMqKEe-duvL3Y-bjTQ" outgoing="_gDYT4MqKEe-duvL3Y-bjTQ _l6LIIMqKEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_dpGp0MqKEe-duvL3Y-bjTQ" name="Controllo dati nel Database" incoming="_gDYT4MqKEe-duvL3Y-bjTQ" outgoing="_T0UEEMqMEe-duvL3Y-bjTQ _mPLAYMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:ActivityFinalNode" xmi:id="_l5iO8MqKEe-duvL3Y-bjTQ" incoming="_l6LIIMqKEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_FstQMMqMEe-duvL3Y-bjTQ" name="Mostra messaggio di errore">
+      <node xmi:type="uml:DecisionNode" xmi:id="_cBz74MqKEe-duvL3Y-bjTQ" name="" incoming="_cCOyoMqKEe-duvL3Y-bjTQ" outgoing="_gDYT4MqKEe-duvL3Y-bjTQ _oT5ukMwJEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_dpGp0MqKEe-duvL3Y-bjTQ" name="Controllo dati nel Database" incoming="_gDYT4MqKEe-duvL3Y-bjTQ" outgoing="_T0UEEMqMEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_FstQMMqMEe-duvL3Y-bjTQ" name="Mostra messaggio di errore" outgoing="_won90MwJEe-jKcBxacZyKg">
         <object xmi:type="uml:InputPin" xmi:id="_FstQMcqMEe-duvL3Y-bjTQ" name="Errore nel Salvataggio Dati">
           <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_FstQMsqMEe-duvL3Y-bjTQ" value="1"/>
           <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_FstQM8qMEe-duvL3Y-bjTQ" value="1"/>
         </object>
       </node>
-      <node xmi:type="uml:DecisionNode" xmi:id="_Tzb6UMqMEe-duvL3Y-bjTQ" incoming="_T0UEEMqMEe-duvL3Y-bjTQ" outgoing="_sQcbwMqMEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_Tzb6UMqMEe-duvL3Y-bjTQ" incoming="_T0UEEMqMEe-duvL3Y-bjTQ" outgoing="_sQcbwMqMEe-duvL3Y-bjTQ _mPLAYMqNEe-duvL3Y-bjTQ"/>
       <node xmi:type="uml:ActivityFinalNode" xmi:id="_sPcWMMqMEe-duvL3Y-bjTQ" name="" incoming="_sQcbwMqMEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_jtz24MqNEe-duvL3Y-bjTQ" name="Controllo Tipologia Utente" incoming="_mPLAYMqNEe-duvL3Y-bjTQ" outgoing="_B51woMqOEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_jtz24MqNEe-duvL3Y-bjTQ" name="Controllo Tipologia Utente" incoming="_mPLAYMqNEe-duvL3Y-bjTQ" outgoing="_B51woMqOEe-duvL3Y-bjTQ">
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_imo-4MwLEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_kdZsMMwLEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_lMm7kMwLEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_slM5wMwLEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_xlXA8MwLEe-jKcBxacZyKg" exceptionInput="_shUfUMwLEe-jKcBxacZyKg" handlerBody="_shKuUMwLEe-jKcBxacZyKg"/>
+      </node>
       <node xmi:type="uml:ActivityFinalNode" xmi:id="_o-8ZUMqNEe-duvL3Y-bjTQ" name="" incoming="_o_ZFQMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:ForkNode" xmi:id="_B5P6wMqOEe-duvL3Y-bjTQ" incoming="_B51woMqOEe-duvL3Y-bjTQ" outgoing="_AyS68MqoEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:ForkNode" xmi:id="_AvHEEMqoEe-duvL3Y-bjTQ" name="ForkNode33" incoming="_AyS68MqoEe-duvL3Y-bjTQ" outgoing="_DP_scMqoEe-duvL3Y-bjTQ _YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:DecisionNode" xmi:id="_DOxkcMqoEe-duvL3Y-bjTQ" name="" incoming="_DP_scMqoEe-duvL3Y-bjTQ" outgoing="_TetWwMqoEe-duvL3Y-bjTQ _UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_H7FikMqoEe-duvL3Y-bjTQ" name="Inserire Centro Sportivo" incoming="_TetWwMqoEe-duvL3Y-bjTQ" outgoing="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_M-LB8MqoEe-duvL3Y-bjTQ" name="Modificare Centro Sportivo" incoming="_UqRK8MqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_VZ6fMMqoEe-duvL3Y-bjTQ" name="Controllare Prenotazioni" incoming="_YRzSUMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
-      <node xmi:type="uml:OpaqueAction" xmi:id="_aTJfAMqoEe-duvL3Y-bjTQ" name="Inserire Campo (singolo)" incoming="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_B5P6wMqOEe-duvL3Y-bjTQ" incoming="_B51woMqOEe-duvL3Y-bjTQ" outgoing="_AyS68MqoEe-duvL3Y-bjTQ _hCFmcMwMEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_AvHEEMqoEe-duvL3Y-bjTQ" incoming="_AyS68MqoEe-duvL3Y-bjTQ" outgoing="_YRzSUMqoEe-duvL3Y-bjTQ _XiA7MMwIEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_H7FikMqoEe-duvL3Y-bjTQ" name="Inserire Centro Sportivo" incoming="_aQWwwMwIEe-jKcBxacZyKg" outgoing="_z-65oMqoEe-duvL3Y-bjTQ" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_M-LB8MqoEe-duvL3Y-bjTQ" name="Modificare Centro Sportivo" incoming="_ZT1eIMwIEe-jKcBxacZyKg" outgoing="_WSEg0MwJEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_VZ6fMMqoEe-duvL3Y-bjTQ" name="Controllare Prenotazioni" incoming="_YRzSUMqoEe-duvL3Y-bjTQ" outgoing="_MrPekMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_aTJfAMqoEe-duvL3Y-bjTQ" name="Inserire Campo (singolo)" incoming="_z-65oMqoEe-duvL3Y-bjTQ" outgoing="_HGnYYMwLEe-jKcBxacZyKg _Yn4PsMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_Xf9FsMwIEe-jKcBxacZyKg" name="" incoming="_XiA7MMwIEe-jKcBxacZyKg" outgoing="_ZT1eIMwIEe-jKcBxacZyKg _aQWwwMwIEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:CreateObjectAction" xmi:id="_RLsc4MwJEe-jKcBxacZyKg" name="Modificare Campo" incoming="_Do1fYMwKEe-jKcBxacZyKg" outgoing="_EmDgIMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_TvZvwMwJEe-jKcBxacZyKg" name="Eliminare Campo" incoming="_RY1EgMwKEe-jKcBxacZyKg" outgoing="_DfSFUMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ForkNode" xmi:id="_WReD4MwJEe-jKcBxacZyKg" name="" incoming="_WSEg0MwJEe-jKcBxacZyKg" outgoing="_APsZUMwKEe-jKcBxacZyKg _OI6y8MwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:FlowFinalNode" xmi:id="_oTCy8MwJEe-jKcBxacZyKg" name="[NO]" incoming="_oT5ukMwJEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:FlowFinalNode" xmi:id="_rAURgMwJEe-jKcBxacZyKg" name="[NO]" incoming="_rA6ucMwJEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_wn4W8MwJEe-jKcBxacZyKg" name="" incoming="_won90MwJEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_AO8LYMwKEe-jKcBxacZyKg" name="" incoming="_APsZUMwKEe-jKcBxacZyKg" outgoing="_Do1fYMwKEe-jKcBxacZyKg _KMVBkMwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_KLnP4MwKEe-jKcBxacZyKg" name="" incoming="_KMVBkMwKEe-jKcBxacZyKg _T9y7oMwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:DecisionNode" xmi:id="_OIMaMMwKEe-jKcBxacZyKg" name="" incoming="_OI6y8MwKEe-jKcBxacZyKg" outgoing="_RY1EgMwKEe-jKcBxacZyKg _T9y7oMwKEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:JoinNode" xmi:id="_DeYGYMwLEe-jKcBxacZyKg" name="" incoming="_DfSFUMwLEe-jKcBxacZyKg _EmDgIMwLEe-jKcBxacZyKg" outgoing="_KxFfAMwLEe-jKcBxacZyKg _XW3TwMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:JoinNode" xmi:id="_MqfQoMwLEe-jKcBxacZyKg" name="" incoming="_MrPekMwLEe-jKcBxacZyKg _ZzREwMwLEe-jKcBxacZyKg" outgoing="_bQtTIMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:JoinNode" xmi:id="_XWECgMwLEe-jKcBxacZyKg" name="" incoming="_XW3TwMwLEe-jKcBxacZyKg _Yn4PsMwLEe-jKcBxacZyKg" outgoing="_ZzREwMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_bP2-kMwLEe-jKcBxacZyKg" name="" incoming="_bQtTIMwLEe-jKcBxacZyKg" inPartition="_VeeDUMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_shKuUMwLEe-jKcBxacZyKg" name="Mostra messaggio di errore" outgoing="_QINfQMwMEe-jKcBxacZyKg">
+        <object xmi:type="uml:InputPin" xmi:id="_shUfUMwLEe-jKcBxacZyKg" name="Errore nel rintracciamento del &quot;tipo&quot; dell'utente">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_shUfUcwLEe-jKcBxacZyKg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_shUfUswLEe-jKcBxacZyKg" value="1"/>
+        </object>
+      </node>
+      <node xmi:type="uml:ForkNode" xmi:id="_B4kwwMwMEe-jKcBxacZyKg" name="" incoming="_hCFmcMwMEe-jKcBxacZyKg" outgoing="_FPkhwMwMEe-jKcBxacZyKg _cXv-QMwMEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_DCN5YMwMEe-jKcBxacZyKg" name="Inserire Prenotazione" incoming="_FPkhwMwMEe-jKcBxacZyKg" outgoing="_W8PiYMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_ntgVkMwMEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_qGx6EMwMEe-jKcBxacZyKg"/>
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_IWINkMwNEe-jKcBxacZyKg" exceptionInput="_Cq8MYMwNEe-jKcBxacZyKg" handlerBody="_8RjocMwMEe-jKcBxacZyKg"/>
+      </node>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_QHUHYMwMEe-jKcBxacZyKg" name="" incoming="_QINfQMwMEe-jKcBxacZyKg"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_cWs1YMwMEe-jKcBxacZyKg" name="Controllare Prenotazioni effettuate" incoming="_cXv-QMwMEe-jKcBxacZyKg" outgoing="_9tEHsMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_yRTrgMwMEe-jKcBxacZyKg" name="Mostra messaggio di errore" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <object xmi:type="uml:InputPin" xmi:id="_yRTrgcwMEe-jKcBxacZyKg" name="Errore nel rintracciamento del &quot;tipo&quot; dell'utente">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yRTrgswMEe-jKcBxacZyKg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yRTrg8wMEe-jKcBxacZyKg" value="1"/>
+        </object>
+      </node>
+      <node xmi:type="uml:StartClassifierBehaviorAction" xmi:id="_yg18UMwMEe-jKcBxacZyKg" name="Mostra messaggio di errore" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <object xmi:type="uml:InputPin" xmi:id="_yg18UcwMEe-jKcBxacZyKg" name="Errore nel rintracciamento del &quot;tipo&quot; dell'utente">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_yg18UswMEe-jKcBxacZyKg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_yg18U8wMEe-jKcBxacZyKg" value="1"/>
+        </object>
+      </node>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_8RjocMwMEe-jKcBxacZyKg" name="Mostra messaggio di errore" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <inputValue xmi:type="uml:InputPin" xmi:id="_Cq8MYMwNEe-jKcBxacZyKg" name="Errore nell'inserimento dei dati della prenotazione">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="_Cq8zcMwNEe-jKcBxacZyKg" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Cq8MYcwNEe-jKcBxacZyKg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Cq8MYswNEe-jKcBxacZyKg" value="1"/>
+        </inputValue>
+      </node>
+      <node xmi:type="uml:DecisionNode" xmi:id="_W7WKgMwNEe-jKcBxacZyKg" incoming="_W8PiYMwNEe-jKcBxacZyKg" outgoing="_iUvrsMwNEe-jKcBxacZyKg _lQlxwMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_iTsi0MwNEe-jKcBxacZyKg" name="Mostra messaggio di conferma del pagamento" incoming="_iUvrsMwNEe-jKcBxacZyKg" outgoing="_-u8bcMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <handler xmi:type="uml:ExceptionHandler" xmi:id="_1LtKoMwNEe-jKcBxacZyKg" exceptionInput="_ui_KMMwNEe-jKcBxacZyKg" handlerBody="_tQ2z8MwNEe-jKcBxacZyKg"/>
+      </node>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_lPio4MwNEe-jKcBxacZyKg" name="[NO]" incoming="_lQlxwMwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:OpaqueAction" xmi:id="_tQ2z8MwNEe-jKcBxacZyKg" name="Mostra messaggio di errore ed annulla la transazione" outgoing="_A_N08MwOEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ">
+        <inputValue xmi:type="uml:InputPin" xmi:id="_ui_KMMwNEe-jKcBxacZyKg" name="Errore nel pagamento">
+          <upperBound xmi:type="uml:LiteralInteger" xmi:id="_ui_KMcwNEe-jKcBxacZyKg" value="1"/>
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ui_KMswNEe-jKcBxacZyKg" value="1"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ui_KM8wNEe-jKcBxacZyKg" value="1"/>
+        </inputValue>
+      </node>
+      <node xmi:type="uml:JoinNode" xmi:id="_9r_JoMwNEe-jKcBxacZyKg" name="" incoming="_9tEHsMwNEe-jKcBxacZyKg _-u8bcMwNEe-jKcBxacZyKg" outgoing="__i4Z0MwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="__hrf8MwNEe-jKcBxacZyKg" name="" incoming="__i4Z0MwNEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
+      <node xmi:type="uml:ActivityFinalNode" xmi:id="_A98poMwOEe-jKcBxacZyKg" name="" incoming="_A_N08MwOEe-jKcBxacZyKg" inPartition="_bPAekMqNEe-duvL3Y-bjTQ"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_0BHsQJz5Ee-Nxo7GTrOCtw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_0BI6YJz5Ee-Nxo7GTrOCtw" source="http://www.eclipse.org/uml2/2.0.0/UML">
