@@ -1,41 +1,41 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.JFormattedTextField.AbstractFormatter;
-import org.jdatepicker.JDatePicker;
-import org.jdatepicker.impl.*;
-
 import com.formdev.flatlaf.FlatLightLaf;
-
 import dataBase.DataBase;
-import individui.Gestore;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Properties;
 
-//Classe che gestisce il pannello della GUI
+/**
+ * Classe che gestisce il pannello principale della GUI, utilizzando un layout a schede (CardLayout)
+ * per navigare tra le diverse schermate dell'applicazione.
+ */
 public class BackgroundPanel extends JPanel {
-	protected static CardLayout cardLayout;
-	protected static JPanel cardPanel;
-	protected JPanel homePanel; // Pannello per la homepage
-	protected JPanel mainPanel; // Pannello per la vista principale (con immagine nitida e bottoni)
-	protected static JPanel loginPanel; // Pannello per la vista di login
-	protected static JPanel playerRegisterPanel; // Pannello per la vista di registrazione
-	protected static JPanel managerRegisterPanel; // Pannello per la vista di registrazione
-	protected Image backgroundImage;
-	protected static Image clearImage;
+	protected static CardLayout cardLayout; // Gestore di layout a schede per la navigazione tra i pannelli.
+    protected static JPanel cardPanel; // Pannello contenitore per i diversi pannelli.
+    protected JPanel homePanel; // Pannello per la homepage.
+    protected JPanel mainPanel; // Pannello per la vista principale (con immagine nitida e bottoni).
+    protected static JPanel loginPanel; // Pannello per la vista di login.
+    protected static JPanel playerRegisterPanel; // Pannello per la registrazione dei giocatori.
+    protected static JPanel managerRegisterPanel; // Pannello per la registrazione dei gestori.
+    protected Image backgroundImage; // Immagine di sfondo per il pannello home.
+    protected static Image clearImage; // Immagine nitida per il pannello principale.
 
-	protected boolean isVisible; // Booleano per la visibilità della scritta lampeggiante
-	protected Timer blinkTimer; // Timer per gestire il lampeggiamento
-	protected int blinkInterval; // Intervallo di tempo per il lampeggiamento
+    protected boolean isVisible; // Stato per la visibilità della scritta lampeggiante.
+    protected Timer blinkTimer; // Timer per gestire il lampeggiamento della scritta.
+    protected int blinkInterval; // Intervallo di tempo per il lampeggiamento.
 
 	protected JButton registerButton; // Bottone per il "Register"
 	protected JButton loginButton; // Bottone per il "Login"
-
+	
+	/**
+     * Costruttore della classe BackgroundPanel.
+     *
+     * @param blurredImagePath Il percorso dell'immagine sfocata per la homepage.
+     * @param clearImagePath   Il percorso dell'immagine nitida per il pannello principale.
+     */
 	protected BackgroundPanel(String blurredImagePath, String clearImagePath) {
 		// Imposta il tema FlatLaf
 		try {
@@ -54,7 +54,7 @@ public class BackgroundPanel extends JPanel {
 		loginPanel = Login.createLoginPanel();
 		playerRegisterPanel = Register.createRegisterPanel("Giocatore");
 		managerRegisterPanel = Register.createRegisterPanel("Gestore");
-		DataBase dataBase = new DataBase();
+
 		// Aggiungi i pannelli al CardLayout
 		cardPanel.add(homePanel, "home");
 		cardPanel.add(mainPanel, "main");
@@ -65,7 +65,6 @@ public class BackgroundPanel extends JPanel {
 		cardPanel.add(new InserisciPrenotazionePanel(cardLayout, cardPanel), "inserisciPrenotazione");
 		cardPanel.add(new CreateGiocatorePanel(cardLayout, cardPanel), "createGiocatore");
 		cardPanel.add(new InserisciCentroPanel(cardLayout, cardPanel), "inserisciCentro");
-		//cardPanel.add(new ModificaCentroPanel(), "modificaCentro");
 
 		// Imposta la vista iniziale come la homepage
 		cardLayout.show(cardPanel, "home");
@@ -75,7 +74,12 @@ public class BackgroundPanel extends JPanel {
 		add(cardPanel, BorderLayout.CENTER);
 	}
 
-	// Crea il pannello della homepage con immagine sfocata e scritta lampeggiante
+	/**
+     * Crea il pannello della homepage con immagine sfocata e scritta lampeggiante.
+     *
+     * @param blurredImagePath Il percorso dell'immagine sfocata.
+     * @return Il pannello della homepage.
+     */
 	private JPanel createHomePanel(String blurredImagePath) {
 		JPanel panel = new JPanel() {
 			@Override
@@ -86,7 +90,7 @@ public class BackgroundPanel extends JPanel {
 				if (backgroundImage != null) {
 					g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 				} else {
-					System.out.println("Immagine sfocata non trovata!");
+					CustomMessage.show("Immagine sfocata non trovata!", "Errore", false);
 				}
 
 				// Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero e stile
@@ -132,7 +136,7 @@ public class BackgroundPanel extends JPanel {
 		if (blurredImageUrl != null) {
 			this.backgroundImage = new ImageIcon(blurredImageUrl).getImage();
 		} else {
-			System.out.println("Errore nel caricamento dell'immagine : " + blurredImagePath);
+			CustomMessage.show("Errore nel caricamento dell'immagine : " + blurredImagePath, "Errore", false);
 		}
 
 		// Timer per il lampeggiamento della scritta
@@ -154,7 +158,12 @@ public class BackgroundPanel extends JPanel {
 		return panel;
 	}
 
-	// Crea il pannello principale
+	/**
+     * Crea il pannello principale con immagine nitida e bottoni per la navigazione.
+     *
+     * @param clearImagePath Il percorso dell'immagine nitida.
+     * @return Il pannello principale.
+     */
 	private JPanel createMainPanel(String clearImagePath) {
 		JPanel panel = new JPanel(new GridBagLayout()) {
 			@Override
@@ -197,7 +206,7 @@ public class BackgroundPanel extends JPanel {
 		if (clearImageUrl != null) {
 			this.clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			System.out.println("Errore nel caricamento dell'immagine : " + clearImagePath);
+			CustomMessage.show("Errore nel caricamento dell'immagine : " + clearImagePath, "Errore", false);
 		}
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -244,9 +253,7 @@ public class BackgroundPanel extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 3; // Riga successiva sotto il bottone "Login"
 		gbc.gridwidth = 2; // Centrare il bottone
-		JButton quitButton = createFlatButton("Quit", e -> System.exit(0), new Dimension(300, 40)); // Azione per
-																									// chiudere
-																									// l'applicazione
+		JButton quitButton = createFlatButton("Quit", e -> System.exit(0), new Dimension(300, 40)); // Azione per chiudere l'applicazione
 		quitButton.setForeground(Color.GRAY); // Sfondo grigio
 		quitButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
 		panel.add(quitButton, gbc);
@@ -254,7 +261,11 @@ public class BackgroundPanel extends JPanel {
 		return panel;
 	}
 
-	// metodo che permette di mostrare un pannello dato il nome del pannello
+	/**
+     * Mostra un pannello specifico dato il suo nome.
+     *
+     * @param name Il nome del pannello da mostrare.
+     */
 	protected static void showPanel(String name) {
 		try {
 			cardLayout.show(cardPanel, name);
@@ -263,7 +274,14 @@ public class BackgroundPanel extends JPanel {
 		}
 	}
 
-	// Aggiorna i pulsanti per usare il tema FlatLaf
+	/**
+     * Crea un bottone con stile FlatLaf.
+     *
+     * @param text   Il testo del bottone.
+     * @param action L'azione da eseguire al click.
+     * @param size   La dimensione del bottone.
+     * @return Il bottone creato.
+     */
 	public static JButton createFlatButton(String text, ActionListener action, Dimension size) {
 		JButton button = new JButton(text);
 		button.addActionListener(action);
@@ -272,8 +290,7 @@ public class BackgroundPanel extends JPanel {
 		button.setFont(new Font("Arial", Font.BOLD, 22)); // Font più grande per i pulsanti più grandi
 		button.putClientProperty("JButton.buttonType", "roundRect"); // Tipo di bottone arrotondato
 		button.setBackground(new Color(32, 178, 170)); // Colore sfondo
-		button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138)); // Colore al passaggio del
-																							// mouse
+		button.putClientProperty("JButton.hoverBackgroundColor", new Color(28, 144, 138)); // Colore al passaggio del mouse
 
 		button.setForeground(new Color(220, 250, 245)); // Colore del testo
 		button.setFocusPainted(false); // Rimuove il bordo al click

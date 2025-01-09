@@ -1,6 +1,5 @@
 package GUI;
 
-import javax.print.attribute.*;
 import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.text.AttributeSet;
@@ -9,7 +8,6 @@ import components.Campo;
 import components.TipologiaCampo;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.*;
 
 /**
@@ -78,7 +76,7 @@ public class AggiungiCampoDialog extends JDialog {
             JTextField field = new JTextField(30);
             field.setFont(new Font("Arial", Font.PLAIN, 18));
 
-            // Applica un filtro per accettare solo numeri.
+            // Applica un filtro per accettare solo numeri
             ((PlainDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter());
 
             gbc.gridx = 1;
