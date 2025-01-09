@@ -40,8 +40,9 @@ public class Gestore extends Utente {
      * @param competenze    Le competenze dell'utente.
      * @return 1 se la registrazione ha successo, -3 se lo username è già in uso.
      */
-    public static int registrazione(String nome, String cognome, String dataNascita, String email, String username, String password, String certificazioni, String competenze) {
-        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // URL di connessione al database
+    public static int registrazione(String nome, String cognome, String dataNascita, String email, String username, String password, String certificazioni, String competenze, Connection testConnection) {
+        Connection conn = null;
+        boolean useTestConnection = (testConnection != null);
         int eta;
 
         // Calcolo dell'età basato sulla data di nascita
@@ -55,22 +56,43 @@ public class Gestore extends Utente {
         String sql = "SELECT Password FROM Gestore WHERE Username ='" + username + "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'";
         String ris = "";
 
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try {
+            conn = useTestConnection ? testConnection : DriverManager.getConnection("jdbc:sqlite:src/main/java/dataBase/matchpointDB.db");
             ris = DataBase.eseguiSelect(conn, sql); // Esecuzione della query
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (!useTestConnection && conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         // Se lo username non esiste, registra il nuovo utente
         if (ris.equals("")) {
-            try (Connection conn = DriverManager.getConnection(url)) {
+            try {
+                if (!useTestConnection) {
+                    conn = DriverManager.getConnection("jdbc:sqlite:src/main/java/dataBase/matchpointDB.db");
+                }
                 DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, certificazioni, competenze);
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                if (!useTestConnection && conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             return 1;
         } else {
             return -3;
         }
     }
+
 }
