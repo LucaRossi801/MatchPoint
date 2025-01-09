@@ -182,7 +182,7 @@ public class Register {
 
 	                // Chiama il metodo di registrazione per i Gestori o Giocatori
 	                if (tipologia.equals("Gestore")) {
-	                    Gestore.registrazione(name, surname, birthDate, email, username, password, certifications, competences);
+	                    Gestore.registrazione(name, surname, birthDate, email, username, password, certifications, competences, null);
 	                    System.out.println("Registrazione completata per il Gestore!");
 	                } else {
 	                    String teamName = ((JTextField) fields.get("NomeSquadra")).getText().trim();

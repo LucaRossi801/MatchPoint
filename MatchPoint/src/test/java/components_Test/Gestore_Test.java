@@ -67,4 +67,20 @@ public class Gestore_Test {
         assertEquals(-3, risultato); // La registrazione dovrebbe fallire con username già in uso.
     }
 
+    @Test
+    public void testRegistrazioneMailGiaInUso() throws Exception {
+        String nome = "Luca";
+        String cognome = "Rossi";
+        String dataNascita = "1985-03-10";
+        String email = "mario.rossi@example.com";// mail già in uso (presente nella configurazione iniziale del database)
+        String username = "mrossi"; 
+        String password = "ciao";
+        String certificazioni = "8";
+        String competenze = "Organizzazione";
+
+        int risultato = Gestore.registrazione(
+            nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
+        );
+        assertEquals(-3, risultato); // La registrazione dovrebbe fallire con username già in uso.
+    }
 }
