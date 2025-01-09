@@ -22,15 +22,28 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Finestra di dialogo per visualizzare e modificare i dettagli di una prenotazione.
+ * Permette di aggiornare la data, l'ora di inizio e di fine di una prenotazione
+ * solo se la prenotazione è modificabile (almeno 24 ore prima dell'inizio).
+ */
 public class DettagliPrenotazioneDialog extends JDialog {
-    private JXDatePicker datePicker;
-    private JSpinner oraInizioSpinner;
-    private JSpinner oraFineSpinner;
-    private JButton salvaButton;
-    private Campo campo;
-    private CentroSportivo centro;
-    private int id;
-
+	private JXDatePicker datePicker; // Componente per selezionare la data
+    private JSpinner oraInizioSpinner; // Spinner per selezionare l'orario di inizio
+    private JSpinner oraFineSpinner; // Spinner per selezionare l'orario di fine
+    private JButton salvaButton; // Bottone per salvare i dettagli della prenotazione
+    private Campo campo; // Campo associato alla prenotazione
+    private CentroSportivo centro; // Centro sportivo associato alla prenotazione
+    private int id; // ID della prenotazione
+    
+    /**
+     * Costruttore per creare la finestra di dialogo dei dettagli di una prenotazione.
+     *
+     * @param parent       La finestra padre (JFrame) da cui viene aperto il dialogo.
+     * @param prenotazione La prenotazione da visualizzare/modificare.
+     * @param campo        Il campo sportivo associato alla prenotazione.
+     * @param centro       Il centro sportivo associato alla prenotazione.
+     */
     public DettagliPrenotazioneDialog(JFrame parent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
     	 super(parent, "Dettagli Prenotazione", true);
          this.campo = campo;
@@ -136,7 +149,13 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
         add(panelBottoni, BorderLayout.SOUTH);
     }
-
+    
+    /**
+     * Salva i dettagli aggiornati di una prenotazione.
+     * Recupera i nuovi dati inseriti dall'utente, verifica la disponibilità del campo e gestisce eventuali pagamenti o aggiornamenti nel database.
+     * 
+     * @param e L'evento associato all'azione del pulsante "Salva".
+     */
     private void salvaDettagliPrenotazione(ActionEvent e) {
         try {
             // Recupera la nuova data, ora di inizio e ora di fine
@@ -196,19 +215,36 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
 
 
-
+    /**
+     * Crea un'etichetta JLabel con testo specificato e stile predefinito.
+     * 
+     * @param text Il testo da visualizzare sull'etichetta.
+     * @return Un'istanza di JLabel con il testo e lo stile specificato.
+     */
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.BOLD, 20));
         return label;
     }
-
+    
+    /**
+     * Crea un'etichetta JLabel per visualizzare un valore con stile predefinito.
+     * 
+     * @param text Il valore da visualizzare sull'etichetta.
+     * @return Un'istanza di JLabel con il valore e lo stile specificato.
+     */
     private JLabel createValueLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("Arial", Font.PLAIN, 20));
         return label;
     }
-
+    
+    /**
+     * Crea un JSpinner personalizzato per la selezione di orari.
+     * Gli orari disponibili sono generati automaticamente con incrementi di 30 minuti.
+     * 
+     * @return Un'istanza di JSpinner configurata con orari personalizzati.
+     */
     private JSpinner createCustomTimeSpinner() {
         List<String> times = generateTimeValues();
         JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));
@@ -216,7 +252,12 @@ public class DettagliPrenotazioneDialog extends JDialog {
         ((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);
         return timeSpinner;
     }
-
+    
+    /**
+     * Genera una lista di valori orari in formato "HH:mm", con incrementi di 30 minuti.
+     * 
+     * @return Una lista di stringhe rappresentanti gli orari disponibili.
+     */
     private List<String> generateTimeValues() {
         List<String> times = new ArrayList<>();
         for (int h = 0; h < 24; h++) {
@@ -226,11 +267,23 @@ public class DettagliPrenotazioneDialog extends JDialog {
         return times;
     }
     
-    // Metodo per formattare LocalTime in formato HH:mm
+    /**
+     * Formatta un'istanza di {@link LocalTime} nel formato "HH:mm".
+     * 
+     * @param time L'oggetto LocalTime da formattare.
+     * @return Una stringa rappresentante l'orario nel formato "HH:mm".
+     */
     private String formatTime(LocalTime time) {
         return String.format("%02d:%02d", time.getHour(), time.getMinute());
     }
-
+    
+    /**
+     * Calcola il costo di una prenotazione in base agli orari e ai costi del campo.
+     * Il costo varia tra tariffa diurna e notturna, in base agli orari di prenotazione.
+     * 
+     * @param p La prenotazione per cui calcolare il costo.
+     * @return Il costo totale della prenotazione.
+     */
     public static double calcolaCosto(Prenotazione p) {
         // Recupera il campo a cui è stata effettuata la prenotazione
         Campo campo = DataBase.getCampoById(p.getCampoId());

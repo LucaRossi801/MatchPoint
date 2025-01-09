@@ -6,17 +6,32 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Classe che gestisce il pagamento e il rimborso per una prenotazione.
+ * Mostra dialoghi per la conferma di pagamento e gestisce eventuali
+ * differenze di costo in caso di modifiche alla prenotazione.
+ */
 public class GestorePagamenti {
 	private JDialog pagamentoDialog; // Dialogo per il pagamento
 	private JPanel mainPanel; // Pannello principale
 	private boolean pagamentoEffettuato; // Stato del pagamento
 	private Timer timeoutTimer; // Timer per il timeout del pagamento
-
+	
+	 /**
+     * Ritorna lo stato del pagamento.
+     *
+     * @return true se il pagamento è stato effettuato con successo, altrimenti false.
+     */
 	public boolean isPagamentoEffettuato() {
 		return pagamentoEffettuato;
 	}
 
-	// Metodo per mostrare la schermata di pagamento iniziale
+	/**
+     * Mostra la schermata di pagamento per una prenotazione.
+     *
+     * @param prenotazione La prenotazione per la quale eseguire il pagamento.
+     * @param vecchioCosto Il costo precedente della prenotazione, se modificata.
+     */
 	public void mostraSchermataPagamento(Prenotazione prenotazione, double vecchioCosto) {
 		pagamentoEffettuato = false; // Stato iniziale del pagamento
 		double costo = DettagliPrenotazioneDialog.calcolaCosto(prenotazione);
@@ -89,7 +104,11 @@ public class GestorePagamenti {
 		pagamentoDialog.setVisible(true); // Mostra il dialogo e aspetta
 	}
 
-	// Metodo per mostrare la schermata di conferma del pagamento
+	/**
+     * Mostra la schermata di conferma per il pagamento.
+     *
+     * @param successo true se il pagamento è stato effettuato, false altrimenti.
+     */
 	private void mostraSchermataConferma(boolean successo) {
 		if (mainPanel != null) {
 			// Cambia il colore del pannello in base al risultato
@@ -121,7 +140,12 @@ public class GestorePagamenti {
 		}
 	}
 
-	// Metodo per gestire il pagamento di una prenotazione modificata
+	/**
+     * Gestisce il pagamento per una prenotazione modificata.
+     *
+     * @param nuovaPrenotazione La nuova prenotazione con i dettagli aggiornati.
+     * @param vecchiaPrenotazione La prenotazione precedente da confrontare.
+     */
 	public void gestisciPagamentoModificato(Prenotazione nuovaPrenotazione, Prenotazione vecchiaPrenotazione) {
 		double nuovoCosto = DettagliPrenotazioneDialog.calcolaCosto(nuovaPrenotazione);
 		double vecchioCosto = DettagliPrenotazioneDialog.calcolaCosto(vecchiaPrenotazione);
@@ -143,7 +167,12 @@ public class GestorePagamenti {
 			}
 		}
 	}
-
+	
+	/**
+     * Mostra una finestra per il rimborso di un importo.
+     *
+     * @param rimborso L'importo da rimborsare.
+     */
 	private static void mostraSchermataRimborso(double rimborso) {
 	    // Crea una finestra per il rimborso
 	    JFrame rimborsoFrame = new JFrame("Rimborso");
