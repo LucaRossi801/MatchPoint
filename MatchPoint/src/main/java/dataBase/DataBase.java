@@ -35,8 +35,6 @@ public class DataBase {
 
 	// Metodo per ottenere l'ID di un utente
 	public static int getIdUtente(String username, String tipologia) throws SQLException {
-		System.out.println(tipologia);
-		System.out.println(username);
 		String query = "SELECT ID FROM " + tipologia + " WHERE username = ?";
 		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 		try (Connection conn = DriverManager.getConnection(url);
@@ -45,7 +43,6 @@ public class DataBase {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
-				System.out.println(rs.getInt("ID"));
 				return rs.getInt("ID"); // Restituisce l'ID dell'utente
 			}
 		}
@@ -412,8 +409,6 @@ public class DataBase {
 	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  // Formato corretto per il parsing
 
 	            try {
-	                System.out.println("Ciaoo " + dataString);
-
 	                // Converte la stringa in un oggetto java.util.Date
 	                java.util.Date dataUtil = sdf.parse(dataString);
 
@@ -489,7 +484,6 @@ public class DataBase {
 		ResultSet resultSet = null;
 
 		try {
-			System.out.println("sono nel try");
 			// Query per trovare il centro sportivo con il nome specificato
 			String query = "SELECT * FROM CentroSportivo WHERE Nome = ?";
 			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -508,7 +502,6 @@ public class DataBase {
 				// Crea un oggetto CentroSportivo dal risultato della query
 				centro = new CentroSportivo(resultSet.getInt("ID"), // Supponendo che l'ID sia un intero
 						resultSet.getString("Nome"), resultSet.getString("Provincia"), resultSet.getString("Comune"));
-				System.out.println("Centro trovato: " + centro.getID());
 			}
 		} catch (Exception e) {
 			e.printStackTrace(); // Log dell'errore
