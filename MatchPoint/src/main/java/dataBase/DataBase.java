@@ -558,17 +558,9 @@ public class DataBase {
 				// Definisci il formato della data
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Formato corretto per il parsing
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 	            try {
 	                // Converte la stringa in un oggetto java.util.Date
 	                java.util.Date dataUtil = sdf.parse(dataString);
-=======
-				try {
-
-					// Converte la stringa in un oggetto java.util.Date
-					java.util.Date dataUtil = sdf.parse(dataString);
->>>>>>> Stashed changes
 
 					// Converte java.util.Date in java.sql.Date
 					java.sql.Date data = new java.sql.Date(dataUtil.getTime());
@@ -602,45 +594,6 @@ public class DataBase {
 			e.printStackTrace();
 		}
 
-=======
-				try {
-
-					// Converte la stringa in un oggetto java.util.Date
-					java.util.Date dataUtil = sdf.parse(dataString);
-
-					// Converte java.util.Date in java.sql.Date
-					java.sql.Date data = new java.sql.Date(dataUtil.getTime());
-
-					int ID = rs.getInt("ID");
-					String oraInizioString = rs.getString("OraInizio");
-					String oraFineString = rs.getString("OraFine");
-
-					// Aggiungi ":00" se non presente
-					if (oraInizioString.length() == 5) {
-						oraInizioString += ":00";
-					}
-					if (oraFineString.length() == 5) {
-						oraFineString += ":00";
-					}
-
-					// Converte le ore in oggetti Time
-					Time oraInizio = Time.valueOf(oraInizioString);
-					Time oraFine = Time.valueOf(oraFineString);
-
-					int campoID = rs.getInt("Campo");
-
-					// Crea l'oggetto Prenotazione
-					Prenotazione prenotazione = new Prenotazione(ID, data, oraInizio, oraFine, utenteID, campoID);
-					prenotazioni.add(prenotazione);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
->>>>>>> Stashed changes
 		return prenotazioni;
 	}
 
