@@ -19,35 +19,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * Classe responsabile della creazione del pannello per l'inserimento di un
+ * nuovo centro sportivo. Consente di selezionare nome, provincia, comune e
+ * campi sportivi associati.
+ */
 public class InserisciCentroPanel extends JPanel {
-	private Image background;
-	private JComboBox<String> provinciaComboBox;
-    private JComboBox<String> comuneComboBox;
-    
+	private Image background; // Immagine di sfondo
+	private JComboBox<String> provinciaComboBox; // Dropdown per la selezione della provincia
+	private JComboBox<String> comuneComboBox; // Dropdown per la selezione del comune
+
+	/**
+	 * Costruttore della classe. Inizializza il pannello con i componenti necessari
+	 * per l'inserimento del centro.
+	 *
+	 * @param cardLayout Gestore di layout per la navigazione tra pannelli.
+	 * @param cardPanel  Pannello principale contenente i vari componenti.
+	 */
 	public InserisciCentroPanel(CardLayout cardLayout, JPanel cardPanel) {
 		// Carica dati dal file CSV
-        String filePath = "src/main/java/localizzazione/comuni.csv"; // Sostituisci con il percorso corretto
-        Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
+		String filePath = "src/main/java/localizzazione/comuni.csv"; // Sostituisci con il percorso corretto
+		Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);
 
-        // Inizializza ComboBox
-        provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
-        provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
-        comuneComboBox = new JComboBox<>();
-        comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		// Inizializza ComboBox
+		provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
+		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		comuneComboBox = new JComboBox<>();
+		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
 
-        provinciaComboBox.addActionListener(e -> {
-            String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
-            comuneComboBox.removeAllItems();
-            if (provinciaSelezionata != null) {
-                List<String> comuni = provinceComuni.get(provinciaSelezionata);
-                if (comuni != null) {
-                    for (String comune : comuni) {
-                        comuneComboBox.addItem(comune);
-                    }
-                }
-            }
-        });
-        
+		provinciaComboBox.addActionListener(e -> {
+			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
+			comuneComboBox.removeAllItems();
+			if (provinciaSelezionata != null) {
+				List<String> comuni = provinceComuni.get(provinciaSelezionata);
+				if (comuni != null) {
+					for (String comune : comuni) {
+						comuneComboBox.addItem(comune);
+					}
+				}
+			}
+		});
+
 		JPanel riepilogoPanel = new JPanel();
 		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));
 		riepilogoPanel.setBackground(Color.WHITE);
@@ -84,7 +96,7 @@ public class InserisciCentroPanel extends JPanel {
 		Map<String, JTextField> fields = new HashMap<>();
 
 		// Campi di testo
-		String[] campi = { "NomeCentro"};
+		String[] campi = { "NomeCentro" };
 		int row = 1; // Riga di partenza
 
 		for (String campo : campi) {
@@ -109,26 +121,26 @@ public class InserisciCentroPanel extends JPanel {
 			row++;
 		}
 		// Provincia
-        JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
-        provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        add(provinciaLabel, gbc);
+		JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
+		provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+		gbc.gridx = 0;
+		gbc.gridy = row;
+		add(provinciaLabel, gbc);
 
-        gbc.gridx = 1;
-        add(provinciaComboBox, gbc);
-        row++;
-        
-        // Comune
-        JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
-        comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        add(comuneLabel, gbc);
+		gbc.gridx = 1;
+		add(provinciaComboBox, gbc);
+		row++;
 
-        gbc.gridx = 1;
-        add(comuneComboBox, gbc);
-        row++;
+		// Comune
+		JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
+		comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+		gbc.gridx = 0;
+		gbc.gridy = row;
+		add(comuneLabel, gbc);
+
+		gbc.gridx = 1;
+		add(comuneComboBox, gbc);
+		row++;
 
 		// Bottone per aggiungere campo
 		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi Campo", e -> {
@@ -147,7 +159,7 @@ public class InserisciCentroPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(aggiungiCampoButton, gbc);
 		row++;
-		
+
 		// Aggiungi il JTextArea per il riepilogo
 		gbc.gridy = row;
 		gbc.gridwidth = 2;
@@ -157,11 +169,12 @@ public class InserisciCentroPanel extends JPanel {
 		JButton inserisciCentroButton = BackgroundPanel.createFlatButton("Inserisci Centro", e -> {
 			// Recupera i dati inseriti e fai l'inserimento
 			String nomeCentro = fields.get("NomeCentro").getText();
-            String provincia = (String) provinciaComboBox.getSelectedItem();
-            String comune = (String) comuneComboBox.getSelectedItem();
+			String provincia = (String) provinciaComboBox.getSelectedItem();
+			String comune = (String) comuneComboBox.getSelectedItem();
 
 			// Controlla se tutti i campi sono stati compilati
-			if (nomeCentro == null || provincia == null || comune == null || nomeCentro.isEmpty() || provincia.isEmpty() || comune.isEmpty()) {
+			if (nomeCentro == null || provincia == null || comune == null || nomeCentro.isEmpty() || provincia.isEmpty()
+					|| comune.isEmpty()) {
 				CustomMessage.show("Compila tutti i campi!", "Errore", false);
 				return;
 			}
@@ -169,7 +182,7 @@ public class InserisciCentroPanel extends JPanel {
 			DataBase.insert(nomeCentro, provincia, comune, Sessione.getId());
 			CustomMessage.show("Centro inserito con successo!", "Successo", true);
 			// Cambia schermata
-		    cardLayout.show(cardPanel, "createGestore");
+			cardLayout.show(cardPanel, "createGestore");
 
 			// Seleziona ID del centro sportivo creato
 			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
@@ -189,7 +202,7 @@ public class InserisciCentroPanel extends JPanel {
 				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), idGestore);
 			}
-			//CustomMessage.show("Campo inserito con successo!", "Successo", true);
+			// CustomMessage.show("Campo inserito con successo!", "Successo", true);
 
 		}, new Dimension(300, 50));
 
@@ -202,19 +215,19 @@ public class InserisciCentroPanel extends JPanel {
 
 		// Bottone Indietro
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
-		    // Svuota tutti i campi di input
-		    fields.values().forEach(field -> field.setText(""));
+			// Svuota tutti i campi di input
+			fields.values().forEach(field -> field.setText(""));
 
-		    // Svuota i campi sportivi creati
-		    AggiungiCampoDialog.getCampi().clear();
+			// Svuota i campi sportivi creati
+			AggiungiCampoDialog.getCampi().clear();
 
-		    // Rimuovi i pannelli dei campi dal riepilogo
-		    riepilogoPanel.removeAll();
-		    riepilogoPanel.revalidate();
-		    riepilogoPanel.repaint();
+			// Rimuovi i pannelli dei campi dal riepilogo
+			riepilogoPanel.removeAll();
+			riepilogoPanel.revalidate();
+			riepilogoPanel.repaint();
 
-		    // Cambia schermata
-		    cardLayout.show(cardPanel, "createGestore");
+			// Cambia schermata
+			cardLayout.show(cardPanel, "createGestore");
 		}, new Dimension(120, 30));
 
 		backButton.setFont(new Font("Arial", Font.BOLD, 18));
@@ -227,6 +240,11 @@ public class InserisciCentroPanel extends JPanel {
 
 	}
 
+	/**
+	 * Override del metodo paintComponent per disegnare l'immagine di sfondo.
+	 *
+	 * @param g Oggetto Graphics utilizzato per disegnare il pannello.
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
