@@ -84,7 +84,9 @@ public class Prenotazione {
 
         // Calcolare la durata in millisecondi
         long durataInMillis = oraFine.getTime() - oraInizio.getTime();
-
+        	
+        
+        System.out.println("allah khinzir"+new Time(durataInMillis));
         // Convertire la durata in millisecondi in un oggetto Time
         return new Time(durataInMillis);
     }
