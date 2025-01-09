@@ -141,19 +141,6 @@ public class GestorePagamenti {
 
 				mostraSchermataRimborso(differenza); 
 			}
-			else {
-				// Usa un Timer per ritardare l'esecuzione del messaggio di successo
-			    Timer timer = new Timer(1000, e -> {
-			        CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
-			    });
-
-			    timer.setRepeats(false); // Impedisce che il timer si ripeta
-			    timer.start(); // Avvia il timer
-			}
-		}
-		else {
-	        CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
-
 		}
 	}
 
@@ -188,7 +175,7 @@ public class GestorePagamenti {
 	    Timer timer = new Timer(3000, e -> {
 	    	rimborsoFrame.dispose(); // Chiudi la finestra di rimborso
 
-	        CustomMessage.show("Prenotazione salvata con successo!", "Successo", true);
+	        CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
 	        
 	    });
 
