@@ -33,7 +33,7 @@ public class CustomMessageWithChoice {
                 ImageIcon icon = new ImageIcon(iconURL);
                 dialog.setIconImage(icon.getImage());
             } else {
-                System.err.println("Icona non trovata: " + logoPath);
+                CustomMessage.show("Icona non trovata: " + logoPath, "Errore", false);
             }
         }
 
