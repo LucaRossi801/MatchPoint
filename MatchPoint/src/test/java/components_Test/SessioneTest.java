@@ -1,15 +1,9 @@
 package components_Test;
 
 import org.junit.*;
-
 import dataBase.DataBase;
 import dataBase.Sessione;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 
@@ -46,6 +40,7 @@ public class SessioneTest {
         // Dati per il login valido
         String username = "mario";
         String tipologia = "Giocatore";
+
         try {
             // Effettuo il login
             Sessione.login(username, tipologia);
@@ -78,7 +73,7 @@ public class SessioneTest {
             // Verifico che l'utente sia loggato
             assertTrue(Sessione.isUtenteLoggato());
 
-            // Eseguo il logout
+            // Effettuo il logout
             Sessione.logout();
 
             // Verifico che l'utente sia disconnesso
@@ -88,4 +83,47 @@ public class SessioneTest {
         }
     }
 
+    @Test
+    public void testGetUsername() {
+        // Verifico che inizialmente lo username sia null
+        assertNull(Sessione.getUsername());
+
+        try {
+            // Effettuo il login
+            Sessione.login("testuser", "Giocatore");
+
+            // Verifico che lo username sia corretto
+            assertEquals("testuser", Sessione.getUsername());
+        } catch (SQLException e) {
+            fail("Login fallito: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetTipologia() {
+        // Verifico che inizialmente la tipologia sia null
+        assertNull(Sessione.getTipologia());
+
+        try {
+            // Effettuo il login
+            Sessione.login("admin", "Gestore");
+
+            // Verifico che la tipologia sia corretta
+            assertEquals("Gestore", Sessione.getTipologia());
+        } catch (SQLException e) {
+            fail("Login fallito: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testLogoutWithoutLogin() {
+        // Effettuo il logout senza aver effettuato il login
+        Sessione.logout();
+
+        // Verifico che la sessione sia vuota
+        assertFalse(Sessione.isUtenteLoggato());
+        assertNull(Sessione.getUsername());
+        assertNull(Sessione.getTipologia());
+        assertEquals(-9, Sessione.getId());
+    }
 }
