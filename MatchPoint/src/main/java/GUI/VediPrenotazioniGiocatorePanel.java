@@ -5,12 +5,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,15 +21,29 @@ import dataBase.DataBase;
 import dataBase.Sessione;
 import components.Prenotazione;
 
+/**
+ * Classe VediPrenotazioniGiocatorePanel
+ * 
+ * Questa classe rappresenta un pannello per i giocatori che consente di visualizzare
+ * e gestire le prenotazioni associate all'utente corrente. Include funzionalità per
+ * mostrare le prenotazioni ordinate, raggruppate per giorno, e opzioni di gestione
+ * come eliminare una prenotazione o visualizzarne i dettagli.
+ */
 public class VediPrenotazioniGiocatorePanel extends JPanel {
     private static JScrollPane scrollPane;
 	private static JTextArea prenotazioniArea;
-    private Map<String, CentroSportivo> centriSportivi;
+	private Map<String, CentroSportivo> centriSportivi;
     private Image clearImage;
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
-
+    
+    /**
+     * Costruttore del pannello per la visualizzazione delle prenotazioni del giocatore.
+     *
+     * @param cardLayout Il CardLayout utilizzato per la navigazione tra i pannelli.
+     * @param cardPanel  Il contenitore dei pannelli (card panel).
+     */
     public VediPrenotazioniGiocatorePanel(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
@@ -42,7 +53,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         if (clearImageUrl != null) {
             clearImage = new ImageIcon(clearImageUrl).getImage();
         } else {
-            System.out.println("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png");
+            CustomMessage.show("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png", "Errore", false);
         }
 
         // Configura layout e componenti
@@ -120,7 +131,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
  
     /**
-     * Aggiorna l'area delle prenotazioni in base al campo selezionato.
+     * Aggiorna l'area di visualizzazione con le prenotazioni dell'utente corrente.
      */
     public static void aggiornaPrenotazioni() {
         // Ripulisce l'area di prenotazioni
@@ -184,12 +195,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         for (String giorno : giorniOrdinati) {
             List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
 
-            // Debug per assicurarsi che l'ordine sia corretto
-            System.out.println("Giorno: " + giorno);
-            for (Prenotazione prenotazione : prenotazioniDelGiorno) {
-                System.out.println(" - Prenotazione: " + prenotazione.getData() + " " + prenotazione.getOraInizio());
-            }
-
             // Header per il giorno
             JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
             headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
@@ -218,13 +223,18 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         if (scrollPane != null) {
             scrollPane.setViewportView(contenitorePrenotazioni);
         } else {
-            System.err.println("Errore: scrollPane non inizializzato correttamente.");
+            CustomMessage.show("Errore: scrollPane non inizializzato correttamente.", "Errore", false);
         }
     }
 
 
     /**
      * Crea un pannello rettangolare per rappresentare una prenotazione.
+     *
+     * @param prenotazione La prenotazione da visualizzare.
+     * @param campo        Il campo associato alla prenotazione.
+     * @param centro       Il centro sportivo associato alla prenotazione.
+     * @return Un pannello configurato per visualizzare i dettagli della prenotazione.
      */
     private static JPanel creaCardPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         JPanel card = new JPanel(new GridBagLayout());
@@ -381,9 +391,12 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         return card;
     }
 
-
-
-    
+    /**
+     * Raggruppa le prenotazioni per giorno.
+     *
+     * @param prenotazioni La lista di prenotazioni da raggruppare.
+     * @return Una mappa che associa ogni giorno alle prenotazioni relative.
+     */
     private static Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -404,14 +417,23 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         return prenotazioniPerGiorno;
     }
 
-    
+    /**
+     * Crea una linea separatrice sottile.
+     *
+     * @return Un oggetto JSeparator configurato.
+     */
     private static JSeparator creaLineaSeparatrice() {
         JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
         separatore.setForeground(new Color(16, 139, 135));
         separatore.setPreferredSize(new Dimension(800, 2)); // Linea sottile
         return separatore;
     }
-
+    
+    /**
+     * Crea una linea separatrice più spessa per separare i gruppi di giorni.
+     *
+     * @return Un oggetto JSeparator configurato.
+     */
     private static JSeparator creaLineaSeparatriceSpessa() {
         JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);
         separatore.setForeground(new Color(16, 139, 135)); // Colore della linea
@@ -419,22 +441,25 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         return separatore;
     }
 
-
-
-
-
-
     /**
      * Mostra una finestra di dialogo con i dettagli di una prenotazione.
+     *
+     * @param parentComponent Il componente principale che richiama la finestra di dialogo.
+     * @param prenotazione    La prenotazione da visualizzare.
+     * @param campo           Il campo associato alla prenotazione.
+     * @param centro          Il centro sportivo associato alla prenotazione.
      */
     private static void mostraDettagliPrenotazione(Component parentComponent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(parentComponent);
         DettagliPrenotazioneDialog dialog = new DettagliPrenotazioneDialog(parentFrame, prenotazione, campo, centro);
         dialog.setVisible(true);
     }
-
-
-
+    
+    /**
+     * Sovrascrive il metodo paintComponent per disegnare lo sfondo personalizzato.
+     *
+     * @param g L'oggetto Graphics utilizzato per disegnare il pannello.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

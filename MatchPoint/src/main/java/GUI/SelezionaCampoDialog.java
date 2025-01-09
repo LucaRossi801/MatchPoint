@@ -1,14 +1,23 @@
 package GUI;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * Classe SelezionaCampoDialog rappresenta un dialogo per la selezione di un campo.
+ * Mostra una lista di campi con i relativi pulsanti per selezionare un campo.
+ */
 public class SelezionaCampoDialog extends JDialog {
     private String selezione = null;
     private Integer selezioneID = null;
-
+    
+    /**
+     * Costruttore per creare il dialogo di selezione del campo.
+     *
+     * @param titolo Il titolo della finestra di dialogo.
+     * @param campi  Una mappa contenente i nomi dei campi come chiave e i relativi ID come valore.
+     */
     public SelezionaCampoDialog(String titolo, Map<String, Integer> campi) {
         setTitle(titolo);
         setModal(true);
@@ -77,13 +86,21 @@ public class SelezionaCampoDialog extends JDialog {
         setLocationRelativeTo(null); // Centra il dialogo
     }
 
-    // Metodo per ottenere la selezione effettuata
+    /**
+     * Restituisce il nome del campo selezionato.
+     *
+     * @return Il nome del campo selezionato, oppure null se nessun campo è stato selezionato.
+     */
     public String getSelezione() {
         return selezione;
     }
 
-    // Metodo per ottenere l'ID selezionato
-    public Integer getSelezioneID() {
+    /**
+     * Restituisce l'ID del campo selezionato.
+     *
+     * @return L'ID del campo selezionato, oppure null se nessun campo è stato selezionato.
+     */
+	public Integer getSelezioneID() {
         return selezioneID;
     }
 }

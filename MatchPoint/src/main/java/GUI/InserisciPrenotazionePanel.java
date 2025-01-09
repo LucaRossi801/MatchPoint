@@ -47,7 +47,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		if (clearImageUrl != null) {
 			clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			System.out.println("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png");
+			CustomMessage.show("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png", "Errore", false);
 		}
 
 		setLayout(new GridBagLayout());
@@ -172,7 +172,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 		// Aggiorna la label in base alla selezione
 		if (centroSelezionato != null && centroSelezionatoID != null) {
 			centroSelezionatoLabel.setText(centroSelezionato);
-			System.out.println("Centro ID selezionato: " + centroSelezionatoID);
 		} else {
 			centroSelezionatoLabel.setText("Non selezionato");
 		}
@@ -212,7 +211,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 		if (campoSelezionato != null && campoSelezionatoID != null) {
 			campoSelezionatoLabel.setText(campoSelezionato);
-			System.out.println("Campo ID selezionato: " + campoSelezionatoID);
 		} else {
 			campoSelezionatoLabel.setText("Non selezionato");
 		}
