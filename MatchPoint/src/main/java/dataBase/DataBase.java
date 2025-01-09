@@ -8,7 +8,6 @@ import java.util.Map;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import GUI.CustomMessage;
 import components.Campo;
 import components.CentroSportivo;
 import components.Prenotazione;
