@@ -21,6 +21,11 @@ import java.util.*;
  */
 public class AggiungiCampoDialog extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// Lista statica che mantiene tutti i campi salvati.
 	private static ArrayList<Campo> campiSalvati = new ArrayList<>();
 
@@ -47,16 +52,17 @@ public class AggiungiCampoDialog extends JDialog {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
 		int row = 0;
-
+		String font = "Arial";
+		
 		// Sezione 1: Selezione della tipologia del campo
 		JLabel tipoLabel = new JLabel("Tipologia Campo:");
-		tipoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		tipoLabel.setFont(new Font(font, Font.BOLD, 18));
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		add(tipoLabel, gbc);
 
 		JComboBox<TipologiaCampo> tipoComboBox = new JComboBox<>(TipologiaCampo.values());
-		tipoComboBox.setFont(new Font("Arial", Font.PLAIN, 18));
+		tipoComboBox.setFont(new Font(font, Font.PLAIN, 18));
 		gbc.gridx = 1;
 		add(tipoComboBox, gbc);
 
@@ -76,7 +82,7 @@ public class AggiungiCampoDialog extends JDialog {
 			add(label, gbc);
 
 			JTextField field = new JTextField(30);
-			field.setFont(new Font("Arial", Font.PLAIN, 18));
+			field.setFont(new Font(font, Font.PLAIN, 18));
 
 			// Applica un filtro per accettare solo numeri
 			((PlainDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter());
@@ -93,7 +99,7 @@ public class AggiungiCampoDialog extends JDialog {
 		copertoPanel.setBackground(getBackground());
 
 		JLabel copertoLabel = new JLabel("Coperto:");
-		copertoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		copertoLabel.setFont(new Font(font, Font.BOLD, 18));
 		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
 		GridBagConstraints copertoGbc = new GridBagConstraints();
@@ -120,12 +126,11 @@ public class AggiungiCampoDialog extends JDialog {
 		row++;
 
 		// Sezione 4: Bottone "Salva"
-		JButton salvaButton = BackgroundPanel.createFlatButton("Salva", e -> {
-			// Validazione e salvataggio dei dati inseriti
-			salvaCampo(tipoComboBox, fields, switchButton, riepilogoPanel);
-		}, new Dimension(200, 50));
+		JButton salvaButton = BackgroundPanel.createFlatButton("Salva", e -> 
+	    salvaCampo(tipoComboBox, fields, switchButton, riepilogoPanel), 
+	    new Dimension(200, 50));
 
-		salvaButton.setFont(new Font("Arial", Font.BOLD, 16));
+		salvaButton.setFont(new Font(font, Font.BOLD, 16));
 		gbc.gridy = row;
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(salvaButton, gbc);
