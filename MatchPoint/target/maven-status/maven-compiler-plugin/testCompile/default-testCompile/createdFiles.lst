@@ -1,0 +1,6 @@
+components_Test\SessioneTest.class
+components_Test\Campo_Test.class
+components_Test\InMemoryDatabaseUtil.class
+components_Test\CentroSportivo_Test.class
+components_Test\Giocatore_Test.class
+components_Test\Prenotazione_Test.class
