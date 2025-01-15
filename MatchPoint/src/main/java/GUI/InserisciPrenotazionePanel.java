@@ -337,6 +337,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 					ex.printStackTrace();
 					CustomMessage.show("Errore imprevisto: " + ex.getMessage(), "Errore", false);
 				}
+				resetFields();
 			}, new Dimension(400, 50));
 
 			confermaButton.setFont(new Font("Arial", Font.BOLD, 18));
