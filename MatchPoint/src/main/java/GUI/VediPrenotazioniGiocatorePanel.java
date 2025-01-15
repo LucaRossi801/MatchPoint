@@ -155,7 +155,6 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         });
 
 
-
         // Raggruppa le prenotazioni per giorno
         Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
 

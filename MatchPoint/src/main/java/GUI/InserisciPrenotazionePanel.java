@@ -32,6 +32,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 	private Integer centroSelezionatoID;
 	private JSpinner oraInizioSpinner;
 	private JSpinner oraFineSpinner;
+	JXDatePicker datePicker = new JXDatePicker();
 
 	/**
 	 * Costruttore della classe InserisciPrenotazionePanel. Inizializza il pannello
@@ -93,7 +94,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 		add(campoSelezionatoLabel, gbc);
 
 		// Date Picker per la selezione della data
-		JXDatePicker datePicker = new JXDatePicker();
 		datePicker.setFormats(new SimpleDateFormat("dd-MM-yyyy"));
 		datePicker.setDate(new Date());
 		gbc.gridx = 0;
@@ -129,7 +129,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		add(riepilogoButton, gbc);
 
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
-			Login.resetFields();
+			resetFields(); // Pulisce i campi
 			BackgroundPanel.showPanel("createGiocatore");
 		}, new Dimension(150, 30));
 		backButton.setForeground(Color.GRAY);
@@ -467,6 +467,18 @@ public class InserisciPrenotazionePanel extends JPanel {
 		}
 		return times;
 	}
+	
+	/**
+	 * Resetta tutti i campi del pannello.
+	 */
+	private void resetFields() {
+	    centroSelezionatoLabel.setText("Non selezionato");
+	    campoSelezionatoLabel.setText("Non selezionato");
+	    datePicker.setDate(null); // Imposta la data a null per pulirla
+	    oraInizioSpinner.setValue("08:00");
+	    oraFineSpinner.setValue("09:00");
+	}
+
 
 	/**
 	 * Override del metodo paintComponent per disegnare l'immagine di sfondo.
