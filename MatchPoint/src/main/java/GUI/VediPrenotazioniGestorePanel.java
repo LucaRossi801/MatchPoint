@@ -86,12 +86,13 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		// ComboBox per i centri sportivi
 		centriComboBox = new JComboBox<>();
 		caricaCentriSportivi();
-		centriComboBox.addActionListener(e -> aggiornaCampi());
+		centriComboBox.addItemListener(e -> aggiornaCampi());
 		centriComboBox.setPreferredSize(new Dimension(200, 30));
 		centriComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
 		centriComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		gbc.gridx = 1;
 		topPanel.add(centriComboBox, gbc);
+		centriComboBox.addItemListener(e -> aggiornaPrenotazioni());
 
 		// Etichetta per il campo sportivo
 		JPanel campiPanel = new JPanel(new BorderLayout());
@@ -102,16 +103,15 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		topPanel.add(campiPanel, gbc);
-
 		// ComboBox per i campi sportivi
 		campiComboBox = new JComboBox<>();
-		campiComboBox.addActionListener(e -> aggiornaPrenotazioni());
+		
 		campiComboBox.setPreferredSize(new Dimension(200, 30));
 		campiComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
 		campiComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 		gbc.gridx = 1;
 		topPanel.add(campiComboBox, gbc);
-
+		campiComboBox.addItemListener(e -> aggiornaPrenotazioni());
 		// Aggiungi il pannello superiore al layout principale
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -283,88 +283,101 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 	 * Aggiorna l'area delle prenotazioni in base al campo selezionato.
 	 */
 	private void aggiornaPrenotazioni() {
-		// Recupera il centro selezionato e il campo selezionato
-		String centroSelezionato = (String) centriComboBox.getSelectedItem();
-		Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem();
+	    // Recupera il centro selezionato e il campo selezionato
+	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
+	    Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem();
 
-		JPanel contenitorePrenotazioni = new JPanel();
-		contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));
-		contenitorePrenotazioni.setOpaque(false); // Trasparente per vedere lo sfondo
+	    // Reset dell'area delle prenotazioni
+	    prenotazioniArea.setText(""); // Reset area di testo per messaggio
 
-		// Ripulisci l'area di testo
-		prenotazioniArea.setText("");
+	    // Verifica che un centro e un campo siano selezionati
+	    if (centroSelezionato == null || campoSelezionato == null) {
+	        prenotazioniArea.setText("Seleziona un centro sportivo e un campo per visualizzare le prenotazioni.");
+	        return;
+	    }
 
-		if (centroSelezionato == null || campoSelezionato == null) {
-			prenotazioniArea.setText("Seleziona un centro sportivo e un campo per visualizzare le prenotazioni.");
-			return;
-		}
+	    // Contenitore delle prenotazioni
+	    JPanel contenitorePrenotazioni = new JPanel();
+	    contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));
+	    contenitorePrenotazioni.setOpaque(false); // Assicurati che sia trasparente
 
-		try {
-			// Ottieni gli ID del centro e del campo
-			int centroId = centriSportivi.get(centroSelezionato).getID();
-			int campoId = campoSelezionato.getId();
+	    try {
+	        // Ottieni gli ID del centro e del campo
+	        int centroId = centriSportivi.get(centroSelezionato).getID();
+	        int campoId = campoSelezionato.getId();
 
-			// Recupera le prenotazioni dal database
-			List<Prenotazione> prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);
+	        // Recupera le prenotazioni dal database
+	        List<Prenotazione> prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);
 
-			if (prenotazioni.isEmpty()) {
-				prenotazioniArea.setText("Nessuna prenotazione per questo campo.");
-				return;
-			}
+	        // Se la lista delle prenotazioni è vuota
+	        if (prenotazioni.isEmpty()) {
+	            // Mostra il messaggio nell'area delle prenotazioni
+	            prenotazioniArea.setText("Nessuna prenotazione per questo campo.");
+	            prenotazioniArea.setEditable(false); // Rende l'area non modificabile
 
-			StringBuilder builder = new StringBuilder();
-			Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
+	            // Rimuovi tutti i componenti precedenti dal contenitore
+	            contenitorePrenotazioni.removeAll();  
+	            contenitorePrenotazioni.revalidate(); // Ricalcola il layout
+	            contenitorePrenotazioni.repaint();    // Ridisegna il contenitore
 
-			// Ordina le date in ordine decrescente (più recente in cima)
-			List<String> giorniOrdinati = new ArrayList<>(prenotazioniPerGiorno.keySet());
-			Collections.sort(giorniOrdinati, Collections.reverseOrder()); // Ordina in ordine decrescente
+	            // Aggiorna il JScrollPane con il contenitore vuoto
+	            JScrollPane scrollPane = (JScrollPane) getComponent(1);
+	            scrollPane.setViewportView(contenitorePrenotazioni); // Imposta il contenitore vuoto
 
-			for (String giorno : giorniOrdinati) {
-				List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
+	            return; // Esci dalla funzione poiché non ci sono prenotazioni
+	        }
 
-				// Header per il giorno
-				JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
-				headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
-				headerGiorno.setForeground(new Color(16, 139, 135));
-				headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra il testo
-				contenitorePrenotazioni.add(headerGiorno);
+	        // Raggruppa le prenotazioni per giorno
+	        Map<String, List<Prenotazione>> prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);
 
-				// Linea divisoria tra giorno e prenotazioni (linea originale)
-				contenitorePrenotazioni.add(creaLineaSeparatrice());
+	        // Ordina i giorni in ordine decrescente
+	        List<String> giorniOrdinati = new ArrayList<>(prenotazioniPerGiorno.keySet());
+	        Collections.sort(giorniOrdinati, Collections.reverseOrder());
 
-				// Spazio tra la riga del giorno e la prima prenotazione
-				contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));
+	        // Aggiungi le prenotazioni per giorno
+	        for (String giorno : giorniOrdinati) {
+	            List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
 
-				for (Prenotazione prenotazione : prenotazioniDelGiorno) {
-					// Crea il pannello per ogni prenotazione
-					JPanel cardPrenotazione = creaCardPrenotazione(prenotazione);
-					cardPrenotazione.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra la prenotazione
-					contenitorePrenotazioni.add(cardPrenotazione);
-					// Aggiungi uno spazio tra le prenotazioni
-					contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio di 10 pixel
-				}
+	            // Header per il giorno
+	            JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
+				
+	            headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
+	            headerGiorno.setForeground(new Color(16, 139, 135));
+	            headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);
+	            contenitorePrenotazioni.add(headerGiorno);
 
-				// Aggiungi spazio tra l'ultima prenotazione e la linea separatrice spessa
-				contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio aggiuntivo
+	            // Linea separatrice tra il giorno e le prenotazioni
+	            contenitorePrenotazioni.add(creaLineaSeparatrice());
+	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio tra prenotazioni
+	            // Aggiungi prenotazioni per il giorno
+	            for (Prenotazione prenotazione : prenotazioniDelGiorno) {
+	                JPanel cardPrenotazione = creaCardPrenotazione(prenotazione);
+	                cardPrenotazione.setAlignmentX(Component.CENTER_ALIGNMENT);
+	                contenitorePrenotazioni.add(cardPrenotazione);
+	                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio tra prenotazioni
+	            }
 
-				// Linea separatrice più spessa tra il gruppo di prenotazioni e il prossimo
-				// giorno
-				contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());
+	            // Aggiungi una linea separatrice tra i giorni
+	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));
+	            contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());
+	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));
+	        }
 
-				// Spaziatura tra giorni
-				contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));
-			}
+	        // Aggiungi il contenitore al JScrollPane
+	        JScrollPane scrollPane = (JScrollPane) getComponent(1);
+	        scrollPane.setViewportView(contenitorePrenotazioni); // Imposta il contenitore aggiornato
 
-			// Aggiunge il contenitore al pannello con lo scroll
-			JScrollPane scrollPane = (JScrollPane) getComponent(1); // Assumendo che sia il secondo componente
-			scrollPane.setViewportView(contenitorePrenotazioni);
+	        prenotazioniArea.setText("");  // Reset dell'area delle prenotazioni
+	        prenotazioniArea.setEditable(false); // Rende l'area non modificabile
 
-			prenotazioniArea.setText(builder.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			prenotazioniArea.setText("Errore durante il caricamento delle prenotazioni.");
-		}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        prenotazioniArea.setText("Errore durante il caricamento delle prenotazioni.");
+	    }
 	}
+
+
+
 
 	/**
 	 * Crea una linea separatrice originale tra i giorni.
