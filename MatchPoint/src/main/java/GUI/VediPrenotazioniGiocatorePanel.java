@@ -187,6 +187,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         if (prenotazioni.isEmpty()) {
             prenotazioniArea.setText("Non ci sono prenotazioni per l'utente corrente.");
+            prenotazioniArea.setEditable(false);
             return;
         }
 
