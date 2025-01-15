@@ -1,6 +1,8 @@
-package components_Test;
+package individui_Test;
 
 import org.junit.*;
+
+import components_Test.InMemoryDatabaseUtil;
 import individui.Giocatore;
 
 import static org.junit.Assert.*;
@@ -12,7 +14,7 @@ import java.util.UUID;
  * I test utilizzano un database SQLite in-memory per isolare i dati durante il testing.
  */
 public class Giocatore_Test {
-
+	
     private InMemoryDatabaseUtil dbUtil;
 
     @Before
@@ -43,7 +45,7 @@ public class Giocatore_Test {
         String nomeSquadra = "TeamAlpha";
 
         int risultato = Giocatore.registrazione(
-            nome, cognome, dataNascita, email, username, password, nomeSquadra
+        		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
         assertEquals(1, risultato); // La registrazione dovrebbe avere successo.
     }
@@ -59,7 +61,7 @@ public class Giocatore_Test {
         String nomeSquadra = "TeamBeta";
 
         int risultato = Giocatore.registrazione(
-            nome, cognome, dataNascita, email, username, password, nomeSquadra
+        		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
         assertEquals(-3, risultato); // La registrazione dovrebbe fallire con username già in uso.
     }
@@ -75,8 +77,8 @@ public class Giocatore_Test {
         String nomeSquadra = "TeamGamma";
 
         int risultato = Giocatore.registrazione(
-            nome, cognome, dataNascita, email, username, password, nomeSquadra
+        		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
-        assertEquals(-3, risultato); // La registrazione dovrebbe fallire con email già in uso.
+        assertEquals(-4, risultato); // La registrazione dovrebbe fallire con email già in uso.
     }
 }

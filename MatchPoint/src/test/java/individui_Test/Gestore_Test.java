@@ -1,7 +1,8 @@
-package components_Test;
+package individui_Test;
 
 import org.junit.*;
 
+import components_Test.InMemoryDatabaseUtil;
 import individui.Gestore;
 
 import static org.junit.Assert.*;

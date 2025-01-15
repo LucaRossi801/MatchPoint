@@ -4,7 +4,6 @@
 package individui;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -35,6 +34,7 @@ public class Giocatore extends Utente {
     /**
      * Metodo per registrare un nuovo giocatore nel sistema.
      *
+     * @param conn        La connessione al database.
      * @param nome        Il nome del giocatore.
      * @param cognome     Il cognome del giocatore.
      * @param dataNascita La data di nascita del giocatore in formato "yyyy-MM-dd".
@@ -42,11 +42,10 @@ public class Giocatore extends Utente {
      * @param username    Lo username del giocatore.
      * @param password    La password del giocatore.
      * @param nomeSquadra Il nome della squadra del giocatore.
-     * @return 1 se la registrazione ha successo, -3 se lo username è già in uso.
+     * @return 1 se la registrazione ha successo, -3 se lo username è già in uso, -4 se l'email è già in uso.
      */
-    public static int registrazione(String nome, String cognome, String dataNascita, String email, String username,
+    public static int registrazione(Connection conn, String nome, String cognome, String dataNascita, String email, String username,
                                      String password, String nomeSquadra) {
-        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // Connessione al database
         int eta;
 
         // Calcolo dell'età basato sulla data di nascita
@@ -56,26 +55,34 @@ public class Giocatore extends Utente {
         Period periodo = Period.between(nascita, oggi);
         eta = periodo.getYears();
 
-        // Query per verificare se lo username esiste già
-        String sql = "SELECT Password FROM Gestore WHERE Username ='" + username + "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'";
-        String ris = "";
+        // Query per verificare se lo username o l'email esistono già
+        String sqlUsername = "SELECT Password FROM Gestore WHERE Username ='" + username + "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'";
+        String sqlEmail = "SELECT Password FROM Gestore WHERE Email ='" + email + "' UNION SELECT Password FROM Giocatore WHERE Email ='" + email + "'";
+        String risUsername = "";
+        String risEmail = "";
 
-        try (Connection conn = DriverManager.getConnection(url)) {
-            ris = DataBase.eseguiSelect(conn, sql); // Esecuzione della query
+        try {
+            risUsername = DataBase.eseguiSelect(conn, sqlUsername); // Controllo username
+            risEmail = DataBase.eseguiSelect(conn, sqlEmail);       // Controllo email
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        // Se lo username non esiste, registra il nuovo giocatore
-        if (ris.equals("")) {
-            try (Connection conn = DriverManager.getConnection(url)) {
-                DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, nomeSquadra);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return 1;
-        } else {
-            return -3;
+        // Gestione dei controlli
+        if (!risUsername.equals("")) {
+            return -3; // Username già in uso
+        } 
+        if (!risEmail.equals("")) {
+            return -4; // Email già in uso
         }
+
+        // Se username ed email non esistono, registra il nuovo giocatore
+        try {
+            DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, nomeSquadra);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Errore generico
+        }
+        return 1; // Registrazione avvenuta con successo
     }
 }

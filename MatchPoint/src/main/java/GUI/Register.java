@@ -198,7 +198,9 @@ public class Register {
 						CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
 						return;
 					}
-					Giocatore.registrazione(name, surname, birthDate, email, username, password, teamName);
+					try (Connection conn = DriverManager.getConnection(url)) {
+					    Giocatore.registrazione(conn, name, surname, birthDate, email, username, password, teamName);
+					}
 				}
 
 				BackgroundPanel.showPanel("login");

@@ -47,9 +47,6 @@ public class InMemoryDatabaseUtil {
                     " PRIMARY KEY(ID AUTOINCREMENT)" +
                     ");");
 
-            // Aggiungi altre tabelle come necessario...
-            // ...
-
             // Inserisci dati di esempio
             addSampleData();
         }
@@ -74,7 +71,6 @@ public class InMemoryDatabaseUtil {
             stmt.execute("INSERT INTO Giocatore (Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES " +
                     "('Sara', 'Neri', '1995-09-15', 28, 'sara.neri@example.com', 'sneri', 'password101', 1);");
 
-            // Aggiungi altri dati come necessario...
         }
     }
 
