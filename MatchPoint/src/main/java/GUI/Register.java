@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.Timer;
@@ -85,6 +87,9 @@ public class Register {
 				JXDatePicker datePicker = new JXDatePicker();
 				datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
 				datePicker.setFormats("dd-MM-yyyy");
+				LocalDateTime oraCorrente = LocalDateTime.now();
+				datePicker.getMonthView()
+						.setLowerBound(Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant()));
 				inputField = datePicker;
 			} else {
 				inputField = new JTextField(20);

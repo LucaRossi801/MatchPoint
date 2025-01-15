@@ -100,7 +100,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridy = 3;
 		add(new OutlinedLabel("Data:", Color.BLACK), gbc);
 		gbc.gridx = 1;
-		LocalDateTime oraCorrente = LocalDateTime.now().plusHours(24);
+		LocalDateTime oraCorrente = LocalDateTime.now();
 		datePicker.getMonthView()
 				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
 		add(datePicker, gbc);
