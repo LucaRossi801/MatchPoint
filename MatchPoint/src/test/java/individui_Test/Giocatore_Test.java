@@ -46,7 +46,7 @@ public class Giocatore_Test {
         String password = "securePassword";
         String nomeSquadra = "TeamAlpha";
         
-      //Crea un oggetto risultato contentente i dati della registrazione
+      //Crea un risultato che è uguale a 1 se la registrazione è andata a buon fine.
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
@@ -65,7 +65,7 @@ public class Giocatore_Test {
         String password = "password123";
         String nomeSquadra = "TeamBeta";
         
-        //Crea un oggetto risultato contentente i dati della registrazione
+        //Crea un risultato che è uguale a -3 se la registrazione è andata a buon fine.
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
@@ -84,7 +84,7 @@ public class Giocatore_Test {
         String password = "anotherPassword";
         String nomeSquadra = "TeamGamma";
 
-        //Crea un oggetto risultato contentente i dati della registrazione
+      //Crea un risultato che è uguale a -3 se la registrazione è andata a buon fine.
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );

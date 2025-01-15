@@ -47,7 +47,7 @@ public class Gestore_Test {
         String certificazioni = "9";
         String competenze = "Gestione eventi";
         
-        //Crea un oggetto risultato contentente i dati della registrazione
+        //Crea un risultato che è uguale a 1 se la registrazione è andata a buon fine.
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );
@@ -67,7 +67,7 @@ public class Gestore_Test {
         String certificazioni = "8";
         String competenze = "Organizzazione";
         
-      //Crea un oggetto risultato contentente i dati della registrazione
+      //Crea un risultato che è uguale a -3 se la registrazione non è andata a buon fine.
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );
@@ -87,7 +87,7 @@ public class Gestore_Test {
         String certificazioni = "8";
         String competenze = "Organizzazione";
         
-      //Crea un oggetto risultato contentente i dati della registrazione
+      //Crea un risultato che è uguale a -3 se la registrazione non è andata a buon fine.
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );
