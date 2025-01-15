@@ -30,9 +30,11 @@ public class Giocatore_Test {
             dbUtil.tearDown(); // Chiude il database
         }
     }
-
+    
+    //Test per il metodo di registrazione
     @Test
     public void testRegistrazioneSuccesso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Marco";
         String cognome = "Verdi";
         String dataNascita = "1995-07-20";
@@ -43,15 +45,18 @@ public class Giocatore_Test {
 
         String password = "securePassword";
         String nomeSquadra = "TeamAlpha";
-
+        
+      //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
         assertEquals(1, risultato); // La registrazione dovrebbe avere successo.
     }
-
+    
+  //Test per controllare la registrazione in caso di username già in utilizzo (nel Database)
     @Test
     public void testRegistrazioneUsernameGiaInUso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Andrea";
         String cognome = "Bianchi";
         String dataNascita = "1990-03-15";
@@ -59,15 +64,18 @@ public class Giocatore_Test {
         String username = "lverdi"; // Username già in uso (presente nella configurazione iniziale del database)
         String password = "password123";
         String nomeSquadra = "TeamBeta";
-
+        
+        //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );
         assertEquals(-3, risultato); // La registrazione dovrebbe fallire con username già in uso.
     }
-
+    
+  //Test per controllare la registrazione in caso di email già in utilizzo (nel Database)
     @Test
     public void testRegistrazioneEmailGiaInUso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Sara";
         String cognome = "Neri";
         String dataNascita = "1988-12-10";
@@ -76,6 +84,7 @@ public class Giocatore_Test {
         String password = "anotherPassword";
         String nomeSquadra = "TeamGamma";
 
+        //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Giocatore.registrazione(
         		dbUtil.getConnection(), nome, cognome, dataNascita, email, username, password, nomeSquadra
         );

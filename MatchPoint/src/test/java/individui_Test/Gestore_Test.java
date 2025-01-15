@@ -30,9 +30,11 @@ public class Gestore_Test {
             dbUtil.tearDown(); // Chiude il database
         }
     }
-
+    
+    //Test per il metodo di registrazione
     @Test
     public void testRegistrazioneSuccesso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Mario";
         String cognome = "Rossi";
         String dataNascita = "1990-05-15";
@@ -44,15 +46,18 @@ public class Gestore_Test {
         String password = "password123";
         String certificazioni = "9";
         String competenze = "Gestione eventi";
-
+        
+        //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );
         assertEquals(1, risultato); // La registrazione dovrebbe avere successo.
     }
-
+    
+    //Test per controllare la registrazione in caso di username già in utilizzo (nel Database)
     @Test
     public void testRegistrazioneUsernameGiaInUso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Luca";
         String cognome = "Rossi";
         String dataNascita = "1985-03-10";
@@ -61,15 +66,18 @@ public class Gestore_Test {
         String password = "ciao";
         String certificazioni = "8";
         String competenze = "Organizzazione";
-
+        
+      //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );
         assertEquals(-3, risultato); // La registrazione dovrebbe fallire con username già in uso.
     }
-
+    
+  //Test per controllare la registrazione in caso di email già in utilizzo (nel Database)
     @Test
     public void testRegistrazioneMailGiaInUso() throws Exception {
+    	//Vengono impsotati dei valori agli attributi
         String nome = "Luca";
         String cognome = "Rossi";
         String dataNascita = "1985-03-10";
@@ -78,7 +86,8 @@ public class Gestore_Test {
         String password = "ciao";
         String certificazioni = "8";
         String competenze = "Organizzazione";
-
+        
+      //Crea un oggetto risultato contentente i dati della registrazione
         int risultato = Gestore.registrazione(
             nome, cognome, dataNascita, email, username, password, certificazioni, competenze, dbUtil.getConnection()
         );

@@ -14,7 +14,8 @@ public class SessioneTest {
         // Resetto lo stato della sessione prima di ogni test.
         Sessione.logout();
     }
-
+    
+    //Test per il successo del login
     @Test
     public void testLoginSuccess() {
         // Dati per il login valido
