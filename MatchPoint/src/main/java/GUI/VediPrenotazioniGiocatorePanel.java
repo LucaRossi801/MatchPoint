@@ -185,10 +185,23 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         contenitorePrenotazioni.setOpaque(false);
 
         if (prenotazioni.isEmpty()) {
-            prenotazioniArea.setText("Non ci sono prenotazioni per l'utente corrente.");
-            prenotazioniArea.setEditable(false);
+            JPanel panelVuoto = new JPanel();
+            panelVuoto.setLayout(new GridBagLayout());
+            panelVuoto.setOpaque(false); // Rende il pannello trasparente
+
+            JLabel messaggioVuoto = new JLabel("Non ci sono prenotazioni per l'utente corrente.");
+            messaggioVuoto.setFont(new Font("Arial", Font.BOLD, 18));
+            messaggioVuoto.setForeground(Color.GRAY); // Colore del testo
+            messaggioVuoto.setOpaque(false); // Rende la label trasparente
+
+            panelVuoto.add(messaggioVuoto);
+
+            // Aggiorna il contenuto dello scrollPane
+            scrollPane.setViewportView(panelVuoto);
             return;
         }
+
+
 
         
         // Popola il contenitore con le prenotazioni
