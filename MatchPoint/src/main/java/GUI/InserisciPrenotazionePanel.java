@@ -102,7 +102,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridx = 1;
 		LocalDateTime oraCorrente = LocalDateTime.now();
 		datePicker.getMonthView()
-				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
+				.setLowerBound(Date.from(oraCorrente.plusHours(36).atZone(ZoneId.systemDefault()).toInstant()));
 		add(datePicker, gbc);
 
 		// Spinner per orario di inizio e fine
