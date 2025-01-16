@@ -258,9 +258,6 @@ public class InserisciCentroPanel extends JPanel {
 		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia
 		comuneComboBox.removeAllItems(); // Svuota i comuni
 
-		// Svuota i campi sportivi selezionati
-		AggiungiCampoDialog.getCampi().clear();
-
 		// Rimuovi i pannelli dal riepilogo
 		riepilogoPanel.removeAll();
 		riepilogoPanel.revalidate();
