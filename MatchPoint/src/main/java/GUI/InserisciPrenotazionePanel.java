@@ -430,6 +430,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 			// Controlla sovrapposizione
 			if (isOverlapping(p.getOraInizio(), p.getOraFine(), oraInizioEsistente, oraFineEsistente)) {
+				CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
 				return false;
 			}
 		}

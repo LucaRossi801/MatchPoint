@@ -214,9 +214,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 					exc.printStackTrace();
 					CustomMessage.show("Errore durante il salvataggio della prenotazione.", "Errore", false);
 				}
-			} else {
-				CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
-			}
+			} 
 		} catch (Exception ex) {
 			// Mostra un messaggio di errore se qualcosa va storto
 			CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
