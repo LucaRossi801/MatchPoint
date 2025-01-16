@@ -132,13 +132,24 @@ public class Register {
 				String surname = ((JTextField) fields.get("Cognome")).getText().trim();
 				String birthDate = null;
 
-				JXDatePicker datePicker = (JXDatePicker) fields.get("DataNascita");
-				if (datePicker.getDate() != null) {
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					birthDate = sdf.format(datePicker.getDate());
+				JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();
+				JXDatePicker datePicker = null;
+
+				// Trova il componente JXDatePicker all'interno del pannello
+				for (Component comp : datePickerPanel.getComponents()) {
+				    if (comp instanceof JXDatePicker) {
+				        datePicker = (JXDatePicker) comp;
+				        break;
+				    }
+				}
+
+				// Verifica se il JXDatePicker è stato trovato e se è selezionata una data
+				if (datePicker != null && datePicker.getDate() != null) {
+				    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				    birthDate = sdf.format(datePicker.getDate());
 				} else {
-					CustomMessage.show("Compilare la data di nascita!", "Errore", false);
-					return;
+				    CustomMessage.show("Compilare la data di nascita!", "Errore", false);
+				    return;
 				}
 
 				String email = ((JTextField) fields.get("Email")).getText().trim();
@@ -206,7 +217,7 @@ public class Register {
 					    Giocatore.registrazione(conn, name, surname, birthDate, email, username, password, teamName);
 					}
 				}
-
+				CustomMessage.show("Registrazione effettuata con successo!", "Successo", true);
 				BackgroundPanel.showPanel("login");
 			} catch (Exception ex) {
 				CustomMessage.show("Errore durante la registrazione", "Errore", false);
