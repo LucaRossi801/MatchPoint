@@ -68,14 +68,7 @@ public class GestorePagamenti {
 			mainPanel.add(messaggio, BorderLayout.CENTER);
 		}
 
-		// Inizializza il timer per il timeout
-		timeoutTimer = new Timer(30000, e -> {
-			pagamentoEffettuato = false; // Pagamento fallito
-			mostraSchermataConferma(false);
-			pagamentoDialog.dispose();
-		});
-		timeoutTimer.setRepeats(false); // Una sola esecuzione
-		timeoutTimer.start(); // Avvia il timer
+		timerTimeoutStart();
 
 		// Listener per il clic del mouse
 		pagamentoDialog.addMouseListener(new MouseAdapter() {
@@ -106,6 +99,17 @@ public class GestorePagamenti {
 		});
 
 		pagamentoDialog.setVisible(true); // Mostra il dialogo e aspetta
+	}
+
+	private void timerTimeoutStart() {
+		// Inizializza il timer per il timeout
+		timeoutTimer = new Timer(30000, e -> {
+			pagamentoEffettuato = false; // Pagamento fallito
+			mostraSchermataConferma(false);
+			pagamentoDialog.dispose();
+		});
+		timeoutTimer.setRepeats(false); // Una sola esecuzione
+		timeoutTimer.start(); // Avvia il timer
 	}
 
 	/**
@@ -205,6 +209,11 @@ public class GestorePagamenti {
 		// Mostra la finestra
 		rimborsoFrame.setVisible(true);
 
+		timer3Seconds(rimborsoFrame);
+
+	}
+
+	private static void timer3Seconds(JFrame rimborsoFrame) {
 		// Timer per chiudere la finestra dopo 3 secondi
 		Timer timer = new Timer(3000, e -> {
 			rimborsoFrame.dispose(); // Chiudi la finestra di rimborso
@@ -217,7 +226,6 @@ public class GestorePagamenti {
 
 		timer.setRepeats(false); // Impedisce che il timer venga ripetuto
 		timer.start(); // Avvia il timer
-
 	}
 
 }

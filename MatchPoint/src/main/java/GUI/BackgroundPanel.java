@@ -122,6 +122,10 @@ public class BackgroundPanel extends JPanel {
 				g2d.drawString(matchPointText, x, y);
 
 				// Scritta "Clicca ovunque per continuare"
+				cliccaPerContinuare(g);
+			}
+
+			private void cliccaPerContinuare(Graphics g) {
 				if (isVisible) {
 					g.setColor(Color.BLACK);
 					g.setFont(new Font("Montserrat", Font.BOLD, 24));
@@ -146,13 +150,7 @@ public class BackgroundPanel extends JPanel {
 		}
 
 		// Timer per il lampeggiamento della scritta
-		blinkTimer = new Timer(blinkInterval, e -> {
-			isVisible = !isVisible;
-			blinkInterval = isVisible ? 300 : 800;
-			blinkTimer.setDelay(blinkInterval);
-			repaint();
-		});
-		blinkTimer.start();
+		timerBlink();
 
 		// Aggiungi il mouse listener
 		panel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -162,6 +160,16 @@ public class BackgroundPanel extends JPanel {
 		});
 
 		return panel;
+	}
+
+	private void timerBlink() {
+		blinkTimer = new Timer(blinkInterval, e -> {
+			isVisible = !isVisible;
+			blinkInterval = isVisible ? 300 : 800;
+			blinkTimer.setDelay(blinkInterval);
+			repaint();
+		});
+		blinkTimer.start();
 	}
 
 	/**

@@ -163,17 +163,15 @@ public class ModificaCentroPanel extends JPanel {
       add(eliminaCampoButton, gbc);
        
 		
-       // Pulsante Salva Modifiche
-		salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
-				new Dimension(200, 50));
-		gbc.gridx = 0;
-		gbc.gridy = 8;
-		gbc.gridwidth = 2;
-		gbc.anchor = GridBagConstraints.EAST;
-		salvaButton.setBackground(new Color(0, 128, 128));
-		salvaButton.setForeground(Color.WHITE);
-		add(salvaButton, gbc);
+       buttonSalvaModifiche(gbc);
 		
+	buttonBack(gbc);
+
+		// Carica i centri sportivi gestiti
+		caricaCentriGestiti();
+	}
+
+	private void buttonBack(GridBagConstraints gbc) {
 		//pulsante Back
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
 			BackgroundPanel.showPanel("createGestore"); // Torna al pannello di login
@@ -186,9 +184,19 @@ public class ModificaCentroPanel extends JPanel {
 		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
 		gbc.gridy = 9; // Quarta riga
 		add(backButton, gbc);
+	}
 
-		// Carica i centri sportivi gestiti
-		caricaCentriGestiti();
+	private void buttonSalvaModifiche(GridBagConstraints gbc) {
+		// Pulsante Salva Modifiche
+			salvaButton = BackgroundPanel.createFlatButton("Salva Modifiche", e -> salvaModifiche(),
+					new Dimension(200, 50));
+			gbc.gridx = 0;
+			gbc.gridy = 8;
+			gbc.gridwidth = 2;
+			gbc.anchor = GridBagConstraints.EAST;
+			salvaButton.setBackground(new Color(0, 128, 128));
+			salvaButton.setForeground(Color.WHITE);
+			add(salvaButton, gbc);
 	}
 
 	@Override

@@ -160,13 +160,7 @@ public class ModificaCampoPanel extends JPanel {
 		copertoGbc.gridy = 0;
 		copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta
 
-		// Switch per Coperto
-		switchButton.setPreferredSize(new Dimension(50, 25));
-		switchButton.setFocusPainted(false);
-		switchButton.setBorder(BorderFactory.createEmptyBorder()); // Rimuovi bordi
-		switchButton.setBackground(null); // Rimuovi lo sfondo
-		switchButton.setContentAreaFilled(false); // Disabilita l'area di contenuto
-		switchButton.setOpaque(false); // Rendi trasparente il bottone
+		buttonSwitchCoperto();
 
 		// Aggiungi il pulsante al pannello con le stesse impostazioni
 		copertoGbc.gridx = 1; // Colonna 1 per lo switch
@@ -260,6 +254,13 @@ public class ModificaCampoPanel extends JPanel {
 		gbc.gridwidth = 2;
 		add(salvaCampoButton, gbc);
 
+		buttonBack(gbc);
+
+		// Carica i dettagli del primo campo
+		aggiornaDettagliCampo();
+	}
+
+	private void buttonBack(GridBagConstraints gbc) {
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
 			BackgroundPanel.showPanel("modificaCentro"); // Torna al pannello di login
 		}, new Dimension(150, 30) // Dimensione personalizzata del bottone
@@ -270,9 +271,16 @@ public class ModificaCampoPanel extends JPanel {
 		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back"
 		gbc.gridy = 10; // Quarta riga
 		add(backButton, gbc);
+	}
 
-		// Carica i dettagli del primo campo
-		aggiornaDettagliCampo();
+	// Switch per Coperto
+	private void buttonSwitchCoperto() {
+		switchButton.setPreferredSize(new Dimension(50, 25));
+		switchButton.setFocusPainted(false);
+		switchButton.setBorder(BorderFactory.createEmptyBorder()); // Rimuovi bordi
+		switchButton.setBackground(null); // Rimuovi lo sfondo
+		switchButton.setContentAreaFilled(false); // Disabilita l'area di contenuto
+		switchButton.setOpaque(false); // Rendi trasparente il bottone
 	}
 
 	/**

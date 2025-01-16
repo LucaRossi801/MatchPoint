@@ -98,6 +98,13 @@ public class Login {
 		loginButton.setFocusPainted(false);
 
 		// Posizionamento componenti
+		posizionamentoComponenti(panel, gbc, titleLabel, usernameLabel, passwordLabel, loginButton);
+
+		return panel;
+	}
+
+	private static void posizionamentoComponenti(JPanel panel, GridBagConstraints gbc, JLabel titleLabel,
+			JLabel usernameLabel, JLabel passwordLabel, JButton loginButton) {
 		// Aggiungi il titolo (Login)
 		gbc.gridx = 0; // Colonna
 		gbc.gridy = 0; // Riga
@@ -136,8 +143,6 @@ public class Login {
 		gbc.gridwidth = 2; // Anche il pulsante "Back" occupa entrambe le colonne
 		gbc.anchor = GridBagConstraints.CENTER;
 		panel.add(createBackButton(usernameField, passwordField), gbc);
-
-		return panel;
 	}
 
 	/**

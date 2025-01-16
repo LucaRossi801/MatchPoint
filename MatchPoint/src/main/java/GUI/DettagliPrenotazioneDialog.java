@@ -139,6 +139,14 @@ public class DettagliPrenotazioneDialog extends JDialog {
 		gbcBottoni.insets = new Insets(10, 0, 10, 0);
 		gbcBottoni.fill = GridBagConstraints.HORIZONTAL;
 
+		buttonSalva(modificabile, panelBottoni, gbcBottoni);
+
+		buttonBack(ButtonFontDim, panelBottoni, gbcBottoni);
+
+		add(panelBottoni, BorderLayout.SOUTH);
+	}
+
+	private void buttonSalva(boolean modificabile, JPanel panelBottoni, GridBagConstraints gbcBottoni) {
 		// Bottone "Salva"
 		salvaButton = BackgroundPanel.createFlatButton("Salva", this::salvaDettagliPrenotazione,
 				new Dimension(200, 40));
@@ -146,7 +154,9 @@ public class DettagliPrenotazioneDialog extends JDialog {
 		salvaButton.setEnabled(modificabile);
 		gbcBottoni.gridy = 0;
 		panelBottoni.add(salvaButton, gbcBottoni);
+	}
 
+	private void buttonBack(int ButtonFontDim, JPanel panelBottoni, GridBagConstraints gbcBottoni) {
 		// Bottone "Chiudi"
 		JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dispose(), new Dimension(200, 30));
 		chiudiButton.setBackground(Color.DARK_GRAY);
@@ -154,8 +164,6 @@ public class DettagliPrenotazioneDialog extends JDialog {
 		chiudiButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		gbcBottoni.gridy++;
 		panelBottoni.add(chiudiButton, gbcBottoni);
-
-		add(panelBottoni, BorderLayout.SOUTH);
 	}
 
 	/**

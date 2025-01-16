@@ -61,6 +61,13 @@ public class CustomMessage {
 		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margini
 		panel.add(messageLabel, BorderLayout.CENTER);
 
+		buttonOK(success, dialog, panel);
+
+		// Mostra la finestra di dialogo
+		dialog.setVisible(true);
+	}
+
+	private static void buttonOK(boolean success, JDialog dialog, JPanel panel) {
 		// Pulsante "OK" per chiudere la finestra di dialogo
 		JButton okButton = new JButton("OK");
 		int ButtonDFontDim = 14;
@@ -76,8 +83,5 @@ public class CustomMessage {
 		buttonPanel.setOpaque(false); // Sfondo trasparente
 		buttonPanel.add(okButton); // Aggiunge il pulsante al centro
 		panel.add(buttonPanel, BorderLayout.SOUTH);
-
-		// Mostra la finestra di dialogo
-		dialog.setVisible(true);
 	}
 }

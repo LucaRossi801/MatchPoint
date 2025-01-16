@@ -43,43 +43,34 @@ public class CreateGestorePanel extends JPanel {
 
 		Dimension buttonSize = new Dimension(400, 120); // Dimensioni personalizzate per i pulsanti.
 
-		// Crea il primo pulsante "Inserisci Centro".
-		JButton inserisciCentroButton = BackgroundPanel.createFlatButton("Inserisci Centro",
-				e -> cardLayout.show(cardPanel, "inserisciCentro"), buttonSize);
-		inserisciCentroButton.setForeground(new Color(220, 250, 245));
+		buttonInserisciCentro(cardLayout, cardPanel, gbc, buttonSize);
 
-		// Aggiungi l'icona al pulsante.
-		ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
-		if (addIcon != null) {
-			inserisciCentroButton.setIcon(addIcon);
-			inserisciCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
-			inserisciCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
-		}
-		gbc.gridy = 0; // Prima riga.
-		add(inserisciCentroButton, gbc);
+		buttonModificaCentro(cardLayout, cardPanel, er, gbc, buttonSize);
 
-		// Crea il secondo pulsante "Modifica Centro".
-		JButton modificaCentroButton = BackgroundPanel.createFlatButton("Modifica Centro", e -> {
-			if (!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {
-				ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
-				BackgroundPanel.cardPanel.add(modificaCentroPanel, "modificaCentro");
-				cardLayout.show(cardPanel, "modificaCentro");
-			} else {
-				CustomMessage.show("Non esistono centri registrati!", er, false);
-			}
-		}, buttonSize);
-		modificaCentroButton.setForeground(new Color(220, 250, 245));
+		buttonVediPrenotazioni(cardLayout, cardPanel, er, gbc, buttonSize);
 
-		// Aggiungi l'icona al pulsante.
-		ImageIcon editIcon = caricaIcona("/GUI/immagini/edit_icon.png");
-		if (editIcon != null) {
-			modificaCentroButton.setIcon(editIcon);
-			modificaCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
-			modificaCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
-		}
-		gbc.gridy = 1; // Seconda riga.
-		add(modificaCentroButton, gbc);
+		buttonBack(gbc);
+	}
 
+	private void buttonBack(GridBagConstraints gbc) {
+		// Crea il pulsante "Back".
+		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
+			Login.resetFields(); // Svuota i campi di testo.
+			BackgroundPanel.showPanel("login"); // Torna al pannello di login.
+		}, new Dimension(150, 50) // Dimensione personalizzata del bottone.
+		);
+
+		// Personalizza colore per il pulsante "Back".
+		backButton.setForeground(Color.GRAY);
+		backButton.setBackground(Color.DARK_GRAY);
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
+		gbc.gridy = 3; // Quarta riga.
+		add(backButton, gbc);
+	}
+
+	private void buttonVediPrenotazioni(CardLayout cardLayout, JPanel cardPanel, String er, GridBagConstraints gbc,
+			Dimension buttonSize) {
 		// Crea il terzo pulsante "Vedi Prenotazioni".
 		JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton("Vedi Prenotazioni", e -> {
 			if (!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {
@@ -101,21 +92,49 @@ public class CreateGestorePanel extends JPanel {
 		}
 		gbc.gridy = 2; // Terza riga.
 		add(vediPrenotazioniButton, gbc);
+	}
 
-		// Crea il pulsante "Back".
-		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
-			Login.resetFields(); // Svuota i campi di testo.
-			BackgroundPanel.showPanel("login"); // Torna al pannello di login.
-		}, new Dimension(150, 50) // Dimensione personalizzata del bottone.
-		);
+	private void buttonModificaCentro(CardLayout cardLayout, JPanel cardPanel, String er, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il secondo pulsante "Modifica Centro".
+		JButton modificaCentroButton = BackgroundPanel.createFlatButton("Modifica Centro", e -> {
+			if (!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {
+				ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();
+				BackgroundPanel.cardPanel.add(modificaCentroPanel, "modificaCentro");
+				cardLayout.show(cardPanel, "modificaCentro");
+			} else {
+				CustomMessage.show("Non esistono centri registrati!", er, false);
+			}
+		}, buttonSize);
+		modificaCentroButton.setForeground(new Color(220, 250, 245));
 
-		// Personalizza colore per il pulsante "Back".
-		backButton.setForeground(Color.GRAY);
-		backButton.setBackground(Color.DARK_GRAY);
-		int ButtonFontDim = 18;
-		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
-		gbc.gridy = 3; // Quarta riga.
-		add(backButton, gbc);
+		// Aggiungi l'icona al pulsante.
+		ImageIcon editIcon = caricaIcona("/GUI/immagini/edit_icon.png");
+		if (editIcon != null) {
+			modificaCentroButton.setIcon(editIcon);
+			modificaCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
+			modificaCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
+		}
+		gbc.gridy = 1; // Seconda riga.
+		add(modificaCentroButton, gbc);
+	}
+
+	private void buttonInserisciCentro(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il primo pulsante "Inserisci Centro".
+		JButton inserisciCentroButton = BackgroundPanel.createFlatButton("Inserisci Centro",
+				e -> cardLayout.show(cardPanel, "inserisciCentro"), buttonSize);
+		inserisciCentroButton.setForeground(new Color(220, 250, 245));
+
+		// Aggiungi l'icona al pulsante.
+		ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
+		if (addIcon != null) {
+			inserisciCentroButton.setIcon(addIcon);
+			inserisciCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
+			inserisciCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
+		}
+		gbc.gridy = 0; // Prima riga.
+		add(inserisciCentroButton, gbc);
 	}
 
 	/**

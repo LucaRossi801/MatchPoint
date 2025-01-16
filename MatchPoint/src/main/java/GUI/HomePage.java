@@ -129,16 +129,21 @@ public class HomePage {
 			String username = usernameField.getText().trim();
 			String password = new String(passwordField.getPassword()).trim();
 
-			// Controlla che tutti i campi siano pieni
-			if (firstName.isEmpty() || lastName.isEmpty() || day.isEmpty() || month.isEmpty() || year.isEmpty()
-					|| username.isEmpty() || password.isEmpty()) {
-				String CampiObbligatori = "Tutti i campi sono obbligatori!";
-				String er = "Errore";
-				JOptionPane.showMessageDialog(frame, CampiObbligatori, er,
-						JOptionPane.ERROR_MESSAGE);
-			}
+			
+			controlloCampiCompilati(firstName, lastName, day, month, year, username, password);
 		});
 
 		return panel;
+	}
+	// Controlla che tutti i campi siano pieni
+	private void controlloCampiCompilati(String firstName, String lastName, String day, String month, String year,
+			String username, String password) {
+		if (firstName.isEmpty() || lastName.isEmpty() || day.isEmpty() || month.isEmpty() || year.isEmpty()
+				|| username.isEmpty() || password.isEmpty()) {
+			String CampiObbligatori = "Tutti i campi sono obbligatori!";
+			String er = "Errore";
+			JOptionPane.showMessageDialog(frame, CampiObbligatori, er,
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

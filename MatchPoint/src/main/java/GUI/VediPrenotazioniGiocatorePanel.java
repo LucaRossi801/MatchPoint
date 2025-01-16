@@ -115,8 +115,14 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.fill = GridBagConstraints.NONE;
         add(scrollPane, gbc);
 
-        // Bottone Indietro
-        JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
+        buttonBack(cardLayout, cardPanel, gbc);
+
+        aggiornaPrenotazioni();
+    }
+
+    // Bottone Indietro
+	private void buttonBack(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc) {
+		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
             prenotazioniArea.setText("");
             cardLayout.show(cardPanel, "createGiocatore");
         }, new Dimension(120, 30));
@@ -128,9 +134,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.CENTER;
         add(backButton, gbc);
-
-        aggiornaPrenotazioni();
-    }
+	}
 
  
     /**
@@ -211,12 +215,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         for (String giorno : giorniOrdinati) {
             List<Prenotazione> prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);
 
-            // Header per il giorno
-            JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
-            headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
-            headerGiorno.setForeground(new Color(16, 139, 135));
-            headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);
-            contenitorePrenotazioni.add(headerGiorno);
+            creazioneHeader(contenitorePrenotazioni, giorno);
 
             // Ordina le prenotazioni del giorno in ordine crescente di orario
             contenitorePrenotazioni.add(creaLineaSeparatrice());
@@ -243,6 +242,15 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 			CustomMessage.show("Errore: scrollPane non inizializzato correttamente.", er, false);
         }
     }
+
+	private static void creazioneHeader(JPanel contenitorePrenotazioni, String giorno) {
+		// Header per il giorno
+		JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
+		headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
+		headerGiorno.setForeground(new Color(16, 139, 135));
+		headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);
+		contenitorePrenotazioni.add(headerGiorno);
+	}
 
 
     /**
@@ -288,48 +296,18 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Orario (a sinistra, metà altezza)
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.weightx = 1;
-        card.add(new JLabel("⏰ Orario: " + prenotazione.getOraInizio() + " - " + prenotazione.getOraFine()), gbc);
+        posizioneOrario(prenotazione, card, gbc);
 
-        // Barra verticale (separator) spostata leggermente più a sinistra
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.gridheight = 3; // Occupa tre righe
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.weightx = 0;
-        gbc.insets = new Insets(0, 0, 0, 30); // Aggiunto un piccolo offset a sinistra
-        JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
-        separator.setForeground(Color.GRAY);
-        card.add(separator, gbc);
+        barraVerticale(card, gbc);
 
-        // Località (a destra, metà altezza)
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        gbc.gridheight = 1; // Ripristina l'altezza a una riga
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.EAST;
-        card.add(new JLabel("📍 Località: " + centro.getComune() + ", " + centro.getProvincia()), gbc);
+        posizioneLocalità(centro, card, gbc);
 
-        // Durata (centrata)
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.weightx = 0.5;
-        card.add(new JLabel("  🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti()), gbc);
+        posizioneDurata(prenotazione, card, gbc);
 
-        // Tipo di campo (con dimensioni tra parentesi, sotto la durata)
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.CENTER;
-        card.add(new JLabel("  ⚽ " + campo.getTipologiaCampo() + " (" + campo.getLunghezza() + "x" + campo.getLarghezza() + ")"), gbc);
+        posizioneTipologiaCampo(campo, card, gbc);
 
-        // Costo (in basso, centrato)
-        gbc.gridy = 2;
-        card.add(new JLabel("  💶 Costo: €" + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);
+        posizioneCosto(prenotazione, card, gbc);
+        
         // Aggiungi l'icona del cestino in fondo a destra
         gbc.gridx = 3;
         gbc.gridy = 1;
@@ -408,6 +386,61 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
 
         return card;
     }
+
+	private static void posizioneCosto(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Costo (in basso, centrato)
+        gbc.gridy = 2;
+        card.add(new JLabel("  💶 Costo: €" + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);
+	}
+
+	private static void posizioneTipologiaCampo(Campo campo, JPanel card, GridBagConstraints gbc) {
+		// Tipo di campo (con dimensioni tra parentesi, sotto la durata)
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        card.add(new JLabel("  ⚽ " + campo.getTipologiaCampo() + " (" + campo.getLunghezza() + "x" + campo.getLarghezza() + ")"), gbc);
+	}
+
+	private static void posizioneDurata(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Durata (centrata)
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 0.5;
+        card.add(new JLabel("  🕒 Durata: " + prenotazione.getDurataInFormatoOreMinuti()), gbc);
+	}
+
+	private static void posizioneLocalità(CentroSportivo centro, JPanel card, GridBagConstraints gbc) {
+		// Località (a destra, metà altezza)
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.gridheight = 1; // Ripristina l'altezza a una riga
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.EAST;
+        card.add(new JLabel("📍 Località: " + centro.getComune() + ", " + centro.getProvincia()), gbc);
+	}
+    
+    // Barra verticale (separator) spostata leggermente più a sinistra
+	private static void barraVerticale(JPanel card, GridBagConstraints gbc) {
+		gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.gridheight = 3; // Occupa tre righe
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.weightx = 0;
+        gbc.insets = new Insets(0, 0, 0, 30); // Aggiunto un piccolo offset a sinistra
+        JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+        separator.setForeground(Color.GRAY);
+        card.add(separator, gbc);
+	}
+
+	private static void posizioneOrario(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Orario (a sinistra, metà altezza)
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.weightx = 1;
+        card.add(new JLabel("⏰ Orario: " + prenotazione.getOraInizio() + " - " + prenotazione.getOraFine()), gbc);
+	}
 
     /**
      * Raggruppa le prenotazioni per giorno.

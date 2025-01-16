@@ -85,16 +85,7 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		gbc.gridy = 0;
 		topPanel.add(centriPanel, gbc);
 
-		// ComboBox per i centri sportivi
-		centriComboBox = new JComboBox<>();
-		caricaCentriSportivi();
-		centriComboBox.addItemListener(e -> aggiornaCampi());
-		centriComboBox.setPreferredSize(new Dimension(200, 30));
-		centriComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
-		centriComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-		gbc.gridx = 1;
-		topPanel.add(centriComboBox, gbc);
-		centriComboBox.addItemListener(e -> aggiornaPrenotazioni());
+		comboBoxCentri(gbc, topPanel);
 
 		// Etichetta per il campo sportivo
 		JPanel campiPanel = new JPanel(new BorderLayout());
@@ -105,15 +96,9 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		topPanel.add(campiPanel, gbc);
-		// ComboBox per i campi sportivi
-		campiComboBox = new JComboBox<>();
 		
-		campiComboBox.setPreferredSize(new Dimension(200, 30));
-		campiComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
-		campiComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-		gbc.gridx = 1;
-		topPanel.add(campiComboBox, gbc);
-		campiComboBox.addItemListener(e -> aggiornaPrenotazioni());
+		comboBoxCampi(gbc, topPanel);
+		
 		// Aggiungi il pannello superiore al layout principale
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -190,6 +175,31 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		add(backButton, gbc);
 
 		aggiornaCampi();
+	}
+
+	private void comboBoxCampi(GridBagConstraints gbc, JPanel topPanel) {
+		// ComboBox per i campi sportivi
+		campiComboBox = new JComboBox<>();
+		
+		campiComboBox.setPreferredSize(new Dimension(200, 30));
+		campiComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+		campiComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		gbc.gridx = 1;
+		topPanel.add(campiComboBox, gbc);
+		campiComboBox.addItemListener(e -> aggiornaPrenotazioni());
+	}
+
+	private void comboBoxCentri(GridBagConstraints gbc, JPanel topPanel) {
+		// ComboBox per i centri sportivi
+		centriComboBox = new JComboBox<>();
+		caricaCentriSportivi();
+		centriComboBox.addItemListener(e -> aggiornaCampi());
+		centriComboBox.setPreferredSize(new Dimension(200, 30));
+		centriComboBox.setFont(new Font("Arial", Font.PLAIN, 14));
+		centriComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+		gbc.gridx = 1;
+		topPanel.add(centriComboBox, gbc);
+		centriComboBox.addItemListener(e -> aggiornaPrenotazioni());
 	}
 
 	/**
@@ -447,6 +457,12 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 5, 5, 5);
 
+		creazioneEtichette(prenotazione, card, gbc);
+
+		return card;
+	}
+
+	private void creazioneEtichette(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
 		// Ora inizio - Ora fine
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -459,8 +475,6 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		// Costo
 		gbc.gridx = 2;
 		card.add(new JLabel("💶 Costo: €" + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);
-
-		return card;
 	}
 
 	/**

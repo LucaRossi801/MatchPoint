@@ -69,12 +69,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 		gbc.gridwidth = 1;
 
-		// Bottone per selezionare il centro
-		JButton selezionaCentroButton = BackgroundPanel.createFlatButton("Seleziona Centro",
-				e -> apriSelezionaCentroDialog(), new Dimension(300, 50));
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		add(selezionaCentroButton, gbc);
+		buttonSelezioneCampo(gbc);
 
 		String NotSelected = "Non selezionato";
 		centroSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);
@@ -84,12 +79,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridx = 1;
 		add(centroSelezionatoLabel, gbc);
 
-		// Bottone per selezionare il campo
-		JButton selezionaCampoButton = BackgroundPanel.createFlatButton("Seleziona Campo",
-				e -> apriSelezionaCampoDialog(), new Dimension(300, 50));
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		add(selezionaCampoButton, gbc);
+		buttonSelezioneCentro(gbc);
 
 		campoSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);
 		campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
@@ -97,17 +87,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridx = 1;
 		add(campoSelezionatoLabel, gbc);
 
-		// Date Picker per la selezione della data
-		datePicker.setFormats(new SimpleDateFormat("dd-MM-yyyy"));
-		datePicker.setDate(new Date());
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		add(new OutlinedLabel("Data:", Color.BLACK), gbc);
-		gbc.gridx = 1;
-		LocalDateTime oraCorrente = LocalDateTime.now();
-		datePicker.getMonthView()
-				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
-		add(datePicker, gbc);
+		addDatePicker(gbc);
 
 		// Spinner per orario di inizio e fine
 		gbc.gridx = 0;
@@ -124,13 +104,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		oraFineSpinner = createCustomTimeSpinner();
 		add(oraFineSpinner, gbc);
 
-		// Bottone "Riepilogo"
-		JButton riepilogoButton = BackgroundPanel.createFlatButton("Mostra Riepilogo", e -> mostraRiepilogo(datePicker),
-				new Dimension(150, 50));
-		gbc.gridx = 0;
-		gbc.gridy = 6;
-		gbc.gridwidth = 2;
-		add(riepilogoButton, gbc);
+		buttonRiepilogo(gbc);
 
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
 			resetFields(); // Pulisce i campi
@@ -141,6 +115,48 @@ public class InserisciPrenotazionePanel extends JPanel {
 		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		gbc.gridy = 7;
 		add(backButton, gbc);
+	}
+
+	private void addDatePicker(GridBagConstraints gbc) {
+		// Date Picker per la selezione della data
+		datePicker.setFormats(new SimpleDateFormat("dd-MM-yyyy"));
+		datePicker.setDate(new Date());
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		add(new OutlinedLabel("Data:", Color.BLACK), gbc);
+		gbc.gridx = 1;
+		LocalDateTime oraCorrente = LocalDateTime.now();
+		datePicker.getMonthView()
+				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
+		add(datePicker, gbc);
+	}
+	
+	// Bottone "Riepilogo"
+	private void buttonRiepilogo(GridBagConstraints gbc) {
+		JButton riepilogoButton = BackgroundPanel.createFlatButton("Mostra Riepilogo", e -> mostraRiepilogo(datePicker),
+				new Dimension(150, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		gbc.gridwidth = 2;
+		add(riepilogoButton, gbc);
+	}
+
+	private void buttonSelezioneCampo(GridBagConstraints gbc) {
+		// Bottone per selezionare il campo
+		JButton selezionaCampoButton = BackgroundPanel.createFlatButton("Seleziona Campo",
+				e -> apriSelezionaCampoDialog(), new Dimension(300, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		add(selezionaCampoButton, gbc);
+	}
+
+	private void buttonSelezioneCentro(GridBagConstraints gbc) {
+		// Bottone per selezionare il centro
+		JButton selezionaCentroButton = BackgroundPanel.createFlatButton("Seleziona Centro",
+				e -> apriSelezionaCentroDialog(), new Dimension(300, 50));
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		add(selezionaCentroButton, gbc);
 	}
 
 	/**

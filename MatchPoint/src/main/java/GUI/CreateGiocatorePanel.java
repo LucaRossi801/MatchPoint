@@ -38,21 +38,29 @@ public class CreateGiocatorePanel extends JPanel {
 
 		Dimension buttonSize = new Dimension(400, 120); // Dimensioni personalizzate per i pulsanti.
 
-		// Crea il pulsante "Inserisci Prenotazione".
-		JButton prenotaButton = BackgroundPanel.createFlatButton("Inserisci Prenotazione",
-				e -> cardLayout.show(cardPanel, "inserisciPrenotazione"), buttonSize);
-		prenotaButton.setForeground(new Color(220, 250, 245));
+		buttonInserisciPrenotazione(cardLayout, cardPanel, gbc, buttonSize);
 
-		// Aggiungi l'icona al pulsante.
-		ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
-		if (addIcon != null) {
-			prenotaButton.setIcon(addIcon);
-			prenotaButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
-			prenotaButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
-		}
-		gbc.gridy = 0; // Prima riga.
-		add(prenotaButton, gbc);
+		buttonVediPrenotazioni(cardLayout, cardPanel, gbc, buttonSize);
 
+		buttonBack(cardLayout, cardPanel, gbc);
+	}
+
+	private void buttonBack(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc) {
+		// Crea il pulsante "Back".
+		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> cardLayout.show(cardPanel, "login"),
+				new Dimension(150, 50));
+
+		// Personalizza colore per il pulsante "Back".
+		backButton.setForeground(Color.GRAY);
+		backButton.setBackground(Color.DARK_GRAY);
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
+		gbc.gridy = 3; // Quarta riga.
+		add(backButton, gbc);
+	}
+
+	private void buttonVediPrenotazioni(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc,
+			Dimension buttonSize) {
 		// Crea il pulsante "Vedi Prenotazioni".
 		JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton("Vedi Prenotazioni", e -> {
 			VediPrenotazioniGiocatorePanel panel = new VediPrenotazioniGiocatorePanel(cardLayout, cardPanel);
@@ -70,18 +78,24 @@ public class CreateGiocatorePanel extends JPanel {
 		}
 		gbc.gridy = 1; // Seconda riga.
 		add(vediPrenotazioniButton, gbc);
+	}
 
-		// Crea il pulsante "Back".
-		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> cardLayout.show(cardPanel, "login"),
-				new Dimension(150, 50));
+	private void buttonInserisciPrenotazione(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il pulsante "Inserisci Prenotazione".
+		JButton prenotaButton = BackgroundPanel.createFlatButton("Inserisci Prenotazione",
+				e -> cardLayout.show(cardPanel, "inserisciPrenotazione"), buttonSize);
+		prenotaButton.setForeground(new Color(220, 250, 245));
 
-		// Personalizza colore per il pulsante "Back".
-		backButton.setForeground(Color.GRAY);
-		backButton.setBackground(Color.DARK_GRAY);
-		int ButtonFontDim = 18;
-		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
-		gbc.gridy = 3; // Quarta riga.
-		add(backButton, gbc);
+		// Aggiungi l'icona al pulsante.
+		ImageIcon addIcon = caricaIcona("/GUI/immagini/add_icon.png");
+		if (addIcon != null) {
+			prenotaButton.setIcon(addIcon);
+			prenotaButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.
+			prenotaButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.
+		}
+		gbc.gridy = 0; // Prima riga.
+		add(prenotaButton, gbc);
 	}
 
 	/**

@@ -52,16 +52,7 @@ public class SelezionaCampoDialog extends JDialog {
             campoLabel.setFont(new Font("Montserrat", Font.PLAIN, 16));
 
             // Pulsante "Seleziona" con la lettera "V"
-            JButton selezionaButton = BackgroundPanel.createFlatButton("V", e -> {
-                selezione = campoNome;
-                selezioneID = campoID;
-                dispose(); // Chiude il dialogo
-            }, new Dimension(30, 25)); // Dimensioni ridotte per il pulsante
-
-            selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
-            selezionaButton.setForeground(Color.WHITE); // Colore del testo bianco
-            int SelectButtonFontDim = 14;
-			selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, SelectButtonFontDim));
+            JButton selezionaButton = buttonV(campoNome, campoID);
 
             // Aggiungi i componenti al pannello
             campoItemPanel.add(campoLabel, BorderLayout.CENTER);
@@ -87,6 +78,20 @@ public class SelezionaCampoDialog extends JDialog {
 
         setLocationRelativeTo(null); // Centra il dialogo
     }
+
+	private JButton buttonV(String campoNome, Integer campoID) {
+		JButton selezionaButton = BackgroundPanel.createFlatButton("V", e -> {
+		    selezione = campoNome;
+		    selezioneID = campoID;
+		    dispose(); // Chiude il dialogo
+		}, new Dimension(30, 25)); // Dimensioni ridotte per il pulsante
+
+		selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
+		selezionaButton.setForeground(Color.WHITE); // Colore del testo bianco
+		int SelectButtonFontDim = 14;
+		selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, SelectButtonFontDim));
+		return selezionaButton;
+	}
 
     /**
      * Restituisce il nome del campo selezionato.
