@@ -36,6 +36,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	private Campo campo; // Campo associato alla prenotazione
 	private CentroSportivo centro; // Centro sportivo associato alla prenotazione
 	private int id; // ID della prenotazione
+	private LocalDateTime oraCorrente = LocalDateTime.now();
 
 	/**
 	 * Costruttore per creare la finestra di dialogo dei dettagli di una
@@ -173,16 +174,21 @@ public class DettagliPrenotazioneDialog extends JDialog {
 			// Assicurati che le stringhe siano nel formato corretto "HH:mm:ss"
 			Time nuovaOraInizio = Time.valueOf(oraInizioString + ":00"); // Aggiungi ":00" per i secondi
 			Time nuovaOraFine = Time.valueOf(oraFineString + ":00"); // Aggiungi ":00" per i secondi
+			LocalDateTime nuovaOraInizioDateTime = nuovaData.withHour(nuovaOraInizio.getHours()).withMinute(nuovaOraInizio.getMinutes());
 
 			// Recupera l'ID dell'utente e dell'ID del campo dalla prenotazione
 			int utenteID = Sessione.getId(); // ID utente della prenotazione
 			int campoID = campo.getId(); // ID campo della prenotazione
+			
+			// Verifica se la nuova ora di inizio è almeno 24 ore dopo l'ora corrente
+			if (nuovaOraInizioDateTime.isBefore(oraCorrente.plusHours(24))) {
+			    CustomMessage.show("L'ora di inizio deve essere almeno 24 ore dopo l'ora attuale.", "Attenzione", false);
+			    return; // Interrompe il salvataggio
+			}
 
 			// Crea una nuova prenotazione basata sui dati inseriti
-			Prenotazione nuovaPrenotazione = new Prenotazione(this.id, Date.valueOf(nuovaData.toLocalDate()), // Converti
-																												// LocalDate
-																												// in
-																												// Date
+			Prenotazione nuovaPrenotazione = new Prenotazione(this.id, Date.valueOf(nuovaData.toLocalDate()), // Converti Local Date in Date
+																												
 					nuovaOraInizio, nuovaOraFine, utenteID, // ID utente dalla prenotazione
 					campoID // ID campo dalla prenotazione
 			);
