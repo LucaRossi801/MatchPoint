@@ -102,7 +102,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridx = 1;
 		LocalDateTime oraCorrente = LocalDateTime.now();
 		datePicker.getMonthView()
-				.setLowerBound(Date.from(oraCorrente.plusHours(36).atZone(ZoneId.systemDefault()).toInstant()));
+				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
 		add(datePicker, gbc);
 
 		// Spinner per orario di inizio e fine
@@ -233,6 +233,18 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 		if (datePicker.getDate() == null) {
 			CustomMessage.show("Seleziona una data valida.", "Errore", false);
+			return;
+		}
+		// Calcola l'orario attuale e la data/orario della prenotazione
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime dataOraPrenotazione = datePicker.getDate().toInstant().atZone(ZoneId.systemDefault())
+				.toLocalDateTime().withHour(Integer.parseInt(((String) oraInizioSpinner.getValue()).split(":")[0]))
+				.withMinute(Integer.parseInt(((String) oraInizioSpinner.getValue()).split(":")[1]));
+
+		// Verifica se mancano meno di 24 ore
+		if (now.plusHours(24).isAfter(dataOraPrenotazione)) {
+			CustomMessage.show("Non è possibile effettuare prenotazioni con meno di 24 ore di preavviso.", "Errore",
+					false);
 			return;
 		}
 
@@ -468,18 +480,17 @@ public class InserisciPrenotazionePanel extends JPanel {
 		}
 		return times;
 	}
-	
+
 	/**
 	 * Resetta tutti i campi del pannello.
 	 */
 	private void resetFields() {
-	    centroSelezionatoLabel.setText("Non selezionato");
-	    campoSelezionatoLabel.setText("Non selezionato");
-	    datePicker.setDate(null); // Imposta la data a null per pulirla
-	    oraInizioSpinner.setValue("08:00");
-	    oraFineSpinner.setValue("09:00");
+		centroSelezionatoLabel.setText("Non selezionato");
+		campoSelezionatoLabel.setText("Non selezionato");
+		datePicker.setDate(null); // Imposta la data a null per pulirla
+		oraInizioSpinner.setValue("08:00");
+		oraFineSpinner.setValue("09:00");
 	}
-
 
 	/**
 	 * Override del metodo paintComponent per disegnare l'immagine di sfondo.
