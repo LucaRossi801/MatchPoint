@@ -55,6 +55,8 @@ public class InserisciCentroPanel extends JPanel {
 				if (comuni != null) {
 					for (String comune : comuni) {
 						comuneComboBox.addItem(comune);
+						comuneComboBox.setSelectedIndex(-1); // Deseleziona la provincia
+
 					}
 				}
 			}
