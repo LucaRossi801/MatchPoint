@@ -86,10 +86,14 @@ public class Register {
             if (campo.equals("Password")) {
                 inputField = new JPasswordField(20);
                 addCharacterLimit((JPasswordField) inputField, 20, panel);
-            } else if (campo.equals("DataNascita")) {
-                // Creazione del JXDatePicker con la selezione dell'anno tramite JComboBox
-                JPanel datePanel =YearSelectorDatePicker.createDatePicker();
-                inputField = datePanel;  // Usa il pannello con il JXDatePicker e JComboBox
+            }else if (campo.equals("DataNascita")) {
+                JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();
+                inputField = datePickerPanel;
+
+                // Salva il riferimento al JXDatePicker per accedere in seguito
+                JXDatePicker datePicker = YearSelectorDatePicker.getDatePicker(datePickerPanel);
+                fields.put("DataNascitaPicker", datePicker); // Salva il JXDatePicker
+            
             } else {
                 inputField = new JTextField(20);
                 int maxLength;
@@ -132,18 +136,7 @@ public class Register {
 				String surname = ((JTextField) fields.get("Cognome")).getText().trim();
 				String birthDate = null;
 
-				JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();
-				JXDatePicker datePicker = null;
-
-				// Trova il componente JXDatePicker all'interno del pannello
-				for (Component comp : datePickerPanel.getComponents()) {
-				    if (comp instanceof JXDatePicker) {
-				        datePicker = (JXDatePicker) comp;
-				        break;
-				    }
-				}
-
-				// Verifica se il JXDatePicker è stato trovato e se è selezionata una data
+				JXDatePicker datePicker = (JXDatePicker) fields.get("DataNascitaPicker");				
 				if (datePicker != null && datePicker.getDate() != null) {
 				    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				    birthDate = sdf.format(datePicker.getDate());
@@ -151,6 +144,7 @@ public class Register {
 				    CustomMessage.show("Compilare la data di nascita!", "Errore", false);
 				    return;
 				}
+
 
 				String email = ((JTextField) fields.get("Email")).getText().trim();
 				String username = ((JTextField) fields.get("Username")).getText().trim();
@@ -390,61 +384,71 @@ public class Register {
 	}
 	
 	public static class YearSelectorDatePicker {
-		 public static JPanel createDatePicker() {
-			        JPanel datePanel = new JPanel();
-			        datePanel.setLayout(new BorderLayout());
+	    private static final String DATE_PICKER_KEY = "DatePicker";
 
-			        // Crea il JXDatePicker
-			        JXDatePicker datePicker = new JXDatePicker();
-			        datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
-			        datePicker.setFormats("dd-MM-yyyy");
+	    public static JPanel createDatePicker() {
+	        JPanel datePanel = new JPanel();
+	        datePanel.setLayout(new BorderLayout());
 
-			        // Imposta la data corrente come predefinita
-			        LocalDateTime oraCorrente = LocalDateTime.now();
-			        Date today = Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant());
-			        datePicker.setDate(today);
+	        // Crea il JXDatePicker
+	        JXDatePicker datePicker = new JXDatePicker();
+	        datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
+	        datePicker.setFormats("dd-MM-yyyy");
 
-			        // Imposta il limite massimo sulla data
-			        datePicker.getMonthView().setUpperBound(today);
+	        // Imposta la data corrente come predefinita
+	        LocalDateTime oraCorrente = LocalDateTime.now();
+	        Date today = Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant());
+	        datePicker.setDate(today);
 
-			        // Crea la JComboBox per gli anni
-			        JComboBox<Integer> yearComboBox = new JComboBox<>();
-			        int currentYear = oraCorrente.getYear();
-			        for (int year = currentYear; year >= 1900; year--) {
-			            yearComboBox.addItem(year);
-			        }
+	        // Imposta il limite massimo sulla data
+	        datePicker.getMonthView().setUpperBound(today);
 
-			        // Imposta l'anno corrente come selezione predefinita
-			        yearComboBox.setSelectedItem(currentYear);
+	        // Aggiungi il JXDatePicker al pannello e salvalo come proprietà
+	        datePanel.putClientProperty(DATE_PICKER_KEY, datePicker);
 
-			        // Listener per cambiare l'anno selezionato
-			        yearComboBox.addActionListener(e -> {
-			            int selectedYear = (int) yearComboBox.getSelectedItem();
-			            Calendar calendar = Calendar.getInstance();
-			            Date currentDate = datePicker.getDate();
+	        // Crea la JComboBox per gli anni
+	        JComboBox<Integer> yearComboBox = new JComboBox<>();
+	        int currentYear = oraCorrente.getYear();
+	        for (int year = currentYear; year >= 1900; year--) {
+	            yearComboBox.addItem(year);
+	        }
 
-			            if (currentDate != null) {
-			                calendar.setTime(currentDate);
-			            } else {
-			                calendar.setTime(today); // Fallback alla data odierna se nulla
-			            }
+	        // Imposta l'anno corrente come selezione predefinita
+	        yearComboBox.setSelectedItem(currentYear);
 
-			            // Aggiorna l'anno mantenendo il giorno e mese attuali
-			            calendar.set(Calendar.YEAR, selectedYear);
+	        // Listener per cambiare l'anno selezionato
+	        yearComboBox.addActionListener(e -> {
+	            int selectedYear = (int) yearComboBox.getSelectedItem();
+	            Calendar calendar = Calendar.getInstance();
+	            Date currentDate = datePicker.getDate();
 
-			            // Se la data supera il limite massimo, impostala al massimo consentito
-			            Date updatedDate = calendar.getTime();
-			            if (updatedDate.after(today)) {
-			                updatedDate = today;
-			            }
+	            if (currentDate != null) {
+	                calendar.setTime(currentDate);
+	            } else {
+	                calendar.setTime(today); // Fallback alla data odierna se nulla
+	            }
 
-			            datePicker.setDate(updatedDate);
-			        });
+	            // Aggiorna l'anno mantenendo il giorno e mese attuali
+	            calendar.set(Calendar.YEAR, selectedYear);
 
-			        // Aggiungi i componenti al pannello
-			        datePanel.add(yearComboBox, BorderLayout.NORTH);
-			        datePanel.add(datePicker, BorderLayout.CENTER);
+	            // Se la data supera il limite massimo, impostala al massimo consentito
+	            Date updatedDate = calendar.getTime();
+	            if (updatedDate.after(today)) {
+	                updatedDate = today;
+	            }
 
-			        return datePanel;}
-		}
+	            datePicker.setDate(updatedDate);
+	        });
+
+	        // Aggiungi i componenti al pannello
+	        datePanel.add(yearComboBox, BorderLayout.NORTH);
+	        datePanel.add(datePicker, BorderLayout.CENTER);
+
+	        return datePanel;
+	    }
+
+	    public static JXDatePicker getDatePicker(JPanel datePanel) {
+	        return (JXDatePicker) datePanel.getClientProperty(DATE_PICKER_KEY);
+	    }
+	}
 	}
