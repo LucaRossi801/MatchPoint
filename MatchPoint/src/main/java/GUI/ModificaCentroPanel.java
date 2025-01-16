@@ -142,6 +142,7 @@ public class ModificaCentroPanel extends JPanel {
 		gbc.gridy = 6;
 		gbc.gridwidth = 2;
 		add(scrollPane, gbc);
+		AggiungiCampoDialog.clear();
 		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton("Aggiungi campo", e-> {// Passa riepilogoPanel invece di riepilogoArea
 			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);
 		}, new Dimension(200, 40));

@@ -289,4 +289,7 @@ public class AggiungiCampoDialog extends JDialog {
 	public static ArrayList<Campo> getCampi() {
 		return campiSalvati;
 	}
+	public static void clear() {
+		 campiSalvati.removeAll(campiSalvati);
+	}
 }
