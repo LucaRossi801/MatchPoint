@@ -440,11 +440,11 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 			// Controlla sovrapposizione
 			if (isOverlapping(p.getOraInizio(), p.getOraFine(), oraInizioEsistente, oraFineEsistente)) {
-<<<<<<< Updated upstream
+
 				CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
-=======
+
 				CustomMessage.show("Orario non disponibile", er, false);
->>>>>>> Stashed changes
+
 				return false;
 			}
 		}
@@ -499,20 +499,20 @@ public class InserisciPrenotazionePanel extends JPanel {
 	 * Resetta tutti i campi del pannello.
 	 */
 	private void resetFields() {
-<<<<<<< Updated upstream
+
 		centroSelezionatoLabel.setText("Non selezionato");
 		campoSelezionatoLabel.setText("Non selezionato");
 		datePicker.setDate(null); // Imposta la data a null per pulirla
 		oraInizioSpinner.setValue("08:00");
 		oraFineSpinner.setValue("09:00");
-=======
+
 	    String NotSelected = "Non selezionato";
 		centroSelezionatoLabel.setText(NotSelected);
 	    campoSelezionatoLabel.setText(NotSelected);
 	    datePicker.setDate(null); // Imposta la data a null per pulirla
 	    oraInizioSpinner.setValue("08:00");
 	    oraFineSpinner.setValue("09:00");
->>>>>>> Stashed changes
+
 	}
 
 	/**

@@ -44,13 +44,13 @@ public class InserisciCentroPanel extends JPanel {
 		int ButtonFontDim = 18;
 		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
 		comuneComboBox = new JComboBox<>();
-<<<<<<< Updated upstream
+
 		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
 		// Resetta combobox
 		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia
-=======
+
 		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
->>>>>>> Stashed changes
+
 
 		provinciaComboBox.addActionListener(e -> {
 			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
