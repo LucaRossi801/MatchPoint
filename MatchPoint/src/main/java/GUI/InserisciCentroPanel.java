@@ -3,13 +3,11 @@ package GUI;
 import javax.swing.*;
 
 import components.Campo;
-import components.CentroSportivo;
 import dataBase.DataBase;
 import dataBase.Sessione;
 import localizzazione.FileReaderUtils;
 
 import java.awt.*;
-import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -46,6 +44,8 @@ public class InserisciCentroPanel extends JPanel {
 		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
 		comuneComboBox = new JComboBox<>();
 		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		// Resetta combobox
+		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia
 
 		provinciaComboBox.addActionListener(e -> {
 			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
@@ -183,7 +183,9 @@ public class InserisciCentroPanel extends JPanel {
 			CustomMessage.show("Centro inserito con successo!", "Successo", true);
 			// Cambia schermata
 			cardLayout.show(cardPanel, "createGestore");
-
+			// Resetta tutti i campi
+		    resetFields(fields, riepilogoPanel);
+		    
 			// Seleziona ID del centro sportivo creato
 			String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db";
 			String sql = "SELECT ID FROM CentroSportivo WHERE Nome ='" + nomeCentro + "' AND Comune = '" + comune + "'";
@@ -202,7 +204,6 @@ public class InserisciCentroPanel extends JPanel {
 				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,
 						c.larghezza, c.isCoperto(), idGestore);
 			}
-			// CustomMessage.show("Campo inserito con successo!", "Successo", true);
 
 		}, new Dimension(300, 50));
 
@@ -215,6 +216,9 @@ public class InserisciCentroPanel extends JPanel {
 
 		// Bottone Indietro
 		JButton backButton = BackgroundPanel.createFlatButton("Back", e -> {
+			
+			// Resetta tutti i campi
+		    resetFields(fields, riepilogoPanel);
 			// Svuota tutti i campi di input
 			fields.values().forEach(field -> field.setText(""));
 
@@ -238,6 +242,27 @@ public class InserisciCentroPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.CENTER;
 		add(backButton, gbc);
 
+	}
+
+	/**
+	 * Resetta tutti i campi del pannello, inclusi JTextField, JComboBox e il
+	 * JTextArea.
+	 */
+	public void resetFields(Map<String, JTextField> fields, JPanel riepilogoPanel) {
+		// Pulisci i JTextField
+		fields.values().forEach(field -> field.setText(""));
+
+		// Reset delle JComboBox
+		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia
+		comuneComboBox.removeAllItems(); // Svuota i comuni
+
+		// Svuota i campi sportivi selezionati
+		AggiungiCampoDialog.getCampi().clear();
+
+		// Rimuovi i pannelli dal riepilogo
+		riepilogoPanel.removeAll();
+		riepilogoPanel.revalidate();
+		riepilogoPanel.repaint();
 	}
 
 	/**
