@@ -97,7 +97,8 @@ public class DettagliPrenotazioneDialog extends JDialog {
 		datePicker.setFormats("dd-MM-yyyy");
 		datePicker.getMonthView()
 				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));
-		datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
+		int ButtonFontDim = 18;
+		datePicker.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
 
 		panelDettagli.add(datePicker, gbc);
 
@@ -150,7 +151,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 		JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dispose(), new Dimension(200, 30));
 		chiudiButton.setBackground(Color.DARK_GRAY);
 		chiudiButton.setForeground(Color.GRAY);
-		chiudiButton.setFont(new Font("Arial", Font.BOLD, 18));
+		chiudiButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		gbcBottoni.gridy++;
 		panelBottoni.add(chiudiButton, gbcBottoni);
 
@@ -165,6 +166,7 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	 * @param e L'evento associato all'azione del pulsante "Salva".
 	 */
 	private void salvaDettagliPrenotazione(ActionEvent e) {
+		String er = "Errore";
 		try {
 			// Verifica che il campo data non sia vuoto
 	        if (datePicker.getDate() == null) {
@@ -218,12 +220,13 @@ public class DettagliPrenotazioneDialog extends JDialog {
 
 				} catch (SQLException exc) {
 					exc.printStackTrace();
-					CustomMessage.show("Errore durante il salvataggio della prenotazione.", "Errore", false);
+					CustomMessage.show("Errore durante il salvataggio della prenotazione.", er, false);
 				}
 			} 
 		} catch (Exception ex) {
 			// Mostra un messaggio di errore se qualcosa va storto
-			CustomMessage.show("Errore nel salvataggio dei dati: " + ex.getMessage(), "Errore", false);
+			String Saveerror = "Errore nel salvataggio dei dati: ";
+			CustomMessage.show(Saveerror + ex.getMessage(), er, false);
 		}
 		dispose(); // Chiude la finestra dopo il salvataggio
 	}
@@ -236,7 +239,8 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	 */
 	private JLabel createLabel(String text) {
 		JLabel label = new JLabel(text);
-		label.setFont(new Font("Arial", Font.BOLD, 20));
+		int LabelFontDim = 20;
+		label.setFont(new Font("Arial", Font.BOLD, LabelFontDim));
 		return label;
 	}
 
@@ -248,7 +252,8 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	 */
 	private JLabel createValueLabel(String text) {
 		JLabel label = new JLabel(text);
-		label.setFont(new Font("Arial", Font.PLAIN, 20));
+		int LabelFontDim = 20;
+		label.setFont(new Font("Arial", Font.PLAIN, LabelFontDim));
 		return label;
 	}
 
@@ -261,7 +266,8 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	private JSpinner createCustomTimeSpinner() {
 		List<String> times = generateTimeValues();
 		JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));
-		timeSpinner.setFont(new Font("Arial", Font.PLAIN, 18));
+		int ButtonFontDim = 18;
+		timeSpinner.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
 		((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);
 		return timeSpinner;
 	}

@@ -40,16 +40,18 @@ public class ModificaCampoPanel extends JPanel {
 		this.centroId = centroId;
 
 		// Carica l'immagine di sfondo
+		String er = "Errore";
 		try {
 			URL clearImageUrl = getClass().getResource("/GUI/immagini/sfondohome.png");
 			if (clearImageUrl != null) {
 				clearImage = new ImageIcon(clearImageUrl).getImage();
 			} else {
-				CustomMessage.show("Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png", "Errore",
+				String ImageNotFound = "Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png";
+				CustomMessage.show(ImageNotFound, er,
 						false);
 			}
 		} catch (Exception e) {
-			CustomMessage.show("Eccezione durante il caricamento dell'immagine: " + e.getMessage(), "Errore", false);
+			CustomMessage.show("Eccezione durante il caricamento dell'immagine: " + e.getMessage(), er, false);
 		}
 
 		setLayout(new GridBagLayout());
@@ -359,10 +361,12 @@ public class ModificaCampoPanel extends JPanel {
 	 */
 	private void eliminaCampo() {
 		int index = campiComboBox.getSelectedIndex();
+		String er = "Errore";
 		if (index >= 0) {
 			Campo campo = campi.get(index);
 			if (DataBase.eliminaCampo(centroId, campo.getId())) {
-				CustomMessage.show("Campo Eliminato Correttamente!", "Successo", true);
+				String S = "Successo";
+				CustomMessage.show("Campo Eliminato Correttamente!", S, true);
 
 				// Aggiorna la lista dei campi
 				caricaCampi();
@@ -370,10 +374,10 @@ public class ModificaCampoPanel extends JPanel {
 				// Aggiorna la JComboBox
 				aggiornaComboBox();
 			} else {
-				CustomMessage.show("Errore durante l'eliminazione", "Errore", false);
+				CustomMessage.show("Errore durante l'eliminazione", er, false);
 			}
 		} else {
-			CustomMessage.show("Nessun campo selezionato per l'eliminazione.", "Errore", false);
+			CustomMessage.show("Nessun campo selezionato per l'eliminazione.", er, false);
 		}
 	}
 
@@ -385,6 +389,7 @@ public class ModificaCampoPanel extends JPanel {
 		if (index >= 0) {
 			Campo campo = campi.get(index);
 
+			String er = "Errore";
 			try {
 				// Aggiorna i valori del campo
 				campo.setTipologiaCampo(TipologiaCampo.valueOf(tipologiaField.getSelectedItem().toString()));
@@ -397,13 +402,17 @@ public class ModificaCampoPanel extends JPanel {
 				// Salva le modifiche nel database
 				boolean success = DataBase.updateCampo(campo);
 				if (success) {
-					CustomMessage.show("Modifiche salvate con successo.", "Successo", true);
+					String S = "Successo";
+					String SuccessMod = "Modifiche salvate con successo.";
+					CustomMessage.show(SuccessMod, S, true);
 					BackgroundPanel.showPanel("modificaCentro");
 				} else {
-					CustomMessage.show("Errore nel salvataggio delle modifiche.", "Errore", false);
+					String Moderror = "Errore nel salvataggio delle modifiche.";
+					CustomMessage.show(Moderror, er, false);
 				}
 			} catch (Exception e) {
-				CustomMessage.show("Compila tutti i campi!", "Errore", false);
+				String CompAll = "Compila tutti i campi!";
+				CustomMessage.show(CompAll, er, false);
 			}
 		}
 	}

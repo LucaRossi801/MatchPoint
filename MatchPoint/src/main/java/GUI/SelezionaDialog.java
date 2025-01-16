@@ -37,7 +37,8 @@ public class SelezionaDialog extends JDialog {
 		// Creazione di un JPanel per la North con margini
 		JPanel northPanel = new JPanel(new BorderLayout());
 		JComboBox<String> provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
-		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		int ButtonFontDim = 18;
+		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
 		northPanel.add(provinciaComboBox, BorderLayout.CENTER);
 		northPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Margini personalizzati
 		add(northPanel, BorderLayout.NORTH);
@@ -70,7 +71,7 @@ public class SelezionaDialog extends JDialog {
 		// Creazione del JPanel per la South con margini
 		JPanel southPanel = new JPanel(new BorderLayout());
 		JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dispose(), new Dimension(100, 40));
-		chiudiButton.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		chiudiButton.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
 		chiudiButton.setForeground(Color.GRAY); // Sfondo grigio
 		chiudiButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
 		southPanel.add(chiudiButton, BorderLayout.CENTER);
@@ -125,7 +126,8 @@ public class SelezionaDialog extends JDialog {
 					selezioneID = centroID;
 					dispose(); // Chiude il dialogo
 				}, new Dimension(30, 25)); // Dimensioni ridotte
-				selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, 14));
+				int SelectButtonFontDim = 14;
+				selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, SelectButtonFontDim));
 				selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
 				selezionaButton.setForeground(Color.WHITE);
 

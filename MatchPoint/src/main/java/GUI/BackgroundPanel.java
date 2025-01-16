@@ -91,7 +91,9 @@ public class BackgroundPanel extends JPanel {
 				if (backgroundImage != null) {
 					g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
 				} else {
-					CustomMessage.show("Immagine sfocata non trovata!", "Errore", false);
+					String BlurryNotFound = "Immagine sfocata non trovata!";
+					String er = "Errore";
+					CustomMessage.show(BlurryNotFound, er, false);
 				}
 
 				// Disegna la scritta "MATCHPOINT" in alto, centrata con contorno nero e stile
@@ -123,7 +125,8 @@ public class BackgroundPanel extends JPanel {
 				if (isVisible) {
 					g.setColor(Color.BLACK);
 					g.setFont(new Font("Montserrat", Font.BOLD, 24));
-					String text = "Clicca ovunque per continuare!".toUpperCase();
+					String ClickToContinue = "Clicca ovunque per continuare!";
+					String text = ClickToContinue.toUpperCase();
 					FontMetrics metricsText = g.getFontMetrics();
 					int xText = (getWidth() - metricsText.stringWidth(text)) / 2;
 					int yText = (int) (getHeight() * 0.75);
@@ -137,7 +140,9 @@ public class BackgroundPanel extends JPanel {
 		if (blurredImageUrl != null) {
 			this.backgroundImage = new ImageIcon(blurredImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine : " + blurredImagePath, "Errore", false);
+			String BlurryNotFound = "Errore nel caricamento dell'immagine : ";
+			String er = "Errore";
+			CustomMessage.show(BlurryNotFound + blurredImagePath, er, false);
 		}
 
 		// Timer per il lampeggiamento della scritta
@@ -207,7 +212,9 @@ public class BackgroundPanel extends JPanel {
 		if (clearImageUrl != null) {
 			this.clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine : " + clearImagePath, "Errore", false);
+			String ImageNotFound = "Errore nel caricamento dell'immagine : ";
+			String er = "Errore";
+			CustomMessage.show(ImageNotFound + clearImagePath, er, false);
 		}
 
 		GridBagConstraints gbc = new GridBagConstraints();

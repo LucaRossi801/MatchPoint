@@ -48,7 +48,9 @@ public class InserisciPrenotazionePanel extends JPanel {
 		if (clearImageUrl != null) {
 			clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png", "Errore", false);
+			String ImageNotFound = "Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png";
+			String er = "Errore";
+			CustomMessage.show(ImageNotFound, er, false);
 		}
 
 		setLayout(new GridBagLayout());
@@ -74,8 +76,10 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridy = 1;
 		add(selezionaCentroButton, gbc);
 
-		centroSelezionatoLabel = new JLabel("Non selezionato", JLabel.LEFT);
-		centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		String NotSelected = "Non selezionato";
+		centroSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);
+		int ButtonFontDim = 18;
+		centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		centroSelezionatoLabel.setForeground(Color.WHITE);
 		gbc.gridx = 1;
 		add(centroSelezionatoLabel, gbc);
@@ -87,8 +91,8 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridy = 2;
 		add(selezionaCampoButton, gbc);
 
-		campoSelezionatoLabel = new JLabel("Non selezionato", JLabel.LEFT);
-		campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		campoSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);
+		campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		campoSelezionatoLabel.setForeground(Color.WHITE);
 		gbc.gridx = 1;
 		add(campoSelezionatoLabel, gbc);
@@ -134,7 +138,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		}, new Dimension(150, 30));
 		backButton.setForeground(Color.GRAY);
 		backButton.setBackground(Color.DARK_GRAY);
-		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		gbc.gridy = 7;
 		add(backButton, gbc);
 	}
@@ -173,7 +177,8 @@ public class InserisciPrenotazionePanel extends JPanel {
 		if (centroSelezionato != null && centroSelezionatoID != null) {
 			centroSelezionatoLabel.setText(centroSelezionato);
 		} else {
-			centroSelezionatoLabel.setText("Non selezionato");
+			String NotSelected = "Non selezionato";
+			centroSelezionatoLabel.setText(NotSelected);
 		}
 	}
 
@@ -184,21 +189,23 @@ public class InserisciPrenotazionePanel extends JPanel {
 	private void apriSelezionaCampoDialog() {
 		String centroCorrente = centroSelezionatoLabel.getText().trim();
 
-		if (centroCorrente.equals("Non selezionato")) {
-			JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", "Errore", JOptionPane.ERROR_MESSAGE);
+		String er = "Errore";
+		String NotSelected = "Non selezionato";
+		if (centroCorrente.equals(NotSelected)) {
+			JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", er, JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		CentroSportivo centro = DataBase.getCentroByName(centroCorrente);
 		if (centro == null) {
-			JOptionPane.showMessageDialog(this, "Errore nel recupero del centro selezionato.", "Errore",
+			JOptionPane.showMessageDialog(this, "Errore nel recupero del centro selezionato.", er,
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
 		Map<String, Integer> campi = DataBase.getCampiCentroMappa(centro.getID());
 		if (campi == null || campi.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", "Errore",
+			JOptionPane.showMessageDialog(this, "Nessun campo disponibile per il centro selezionato.", er,
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -212,7 +219,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		if (campoSelezionato != null && campoSelezionatoID != null) {
 			campoSelezionatoLabel.setText(campoSelezionato);
 		} else {
-			campoSelezionatoLabel.setText("Non selezionato");
+			campoSelezionatoLabel.setText(NotSelected);
 		}
 	}
 
@@ -226,13 +233,14 @@ public class InserisciPrenotazionePanel extends JPanel {
 	private void mostraRiepilogo(JXDatePicker datePicker) {
 
 		// Controlli preliminari
+		String er = "Errore";
 		if (campoSelezionatoID == null) {
-			CustomMessage.show("Seleziona un campo prima di procedere.", "Errore", false);
+			CustomMessage.show("Seleziona un campo prima di procedere.", er, false);
 			return;
 		}
 
 		if (datePicker.getDate() == null) {
-			CustomMessage.show("Seleziona una data valida.", "Errore", false);
+			CustomMessage.show("Seleziona una data valida.", er, false);
 			return;
 		}
 		// Calcola l'orario attuale e la data/orario della prenotazione
@@ -289,8 +297,9 @@ public class InserisciPrenotazionePanel extends JPanel {
 			JLabel labelCosto = new JLabel(riepilogoCosto);
 
 			// Imposta font e allineamento per le etichette
+			int ButtonFontDim = 18;
 			for (JLabel label : new JLabel[] { labelCentro, labelCampo, labelData, labelOrario, labelCosto }) {
-				label.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+				label.setFont(new Font("Segoe UI", Font.PLAIN, ButtonFontDim));
 				label.setAlignmentX(Component.CENTER_ALIGNMENT);
 			}
 
@@ -340,23 +349,23 @@ public class InserisciPrenotazionePanel extends JPanel {
 						CustomMessage.show("Prenotazione confermata!", "Conferma", true);
 						dialog.dispose(); // Chiude il dialogo
 					} else {
-						CustomMessage.show("Pagamento non riuscito. Riprova.", "Errore", false);
+						CustomMessage.show("Pagamento non riuscito. Riprova.", er, false);
 					}
 				} catch (SQLException ex) {
 					ex.printStackTrace();
-					CustomMessage.show("Errore nel database: " + ex.getMessage(), "Errore", false);
+					CustomMessage.show("Errore nel database: " + ex.getMessage(), er, false);
 				} catch (Exception ex) {
 					ex.printStackTrace();
-					CustomMessage.show("Errore imprevisto: " + ex.getMessage(), "Errore", false);
+					CustomMessage.show("Errore imprevisto: " + ex.getMessage(), er, false);
 				}
 				resetFields();
 			}, new Dimension(400, 50));
 
-			confermaButton.setFont(new Font("Arial", Font.BOLD, 18));
+			confermaButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 
 			JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dialog.dispose(),
 					new Dimension(400, 30));
-			chiudiButton.setFont(new Font("Arial", Font.BOLD, 18));
+			chiudiButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 			chiudiButton.setBackground(Color.DARK_GRAY);
 			chiudiButton.setForeground(Color.GRAY);
 
@@ -382,8 +391,9 @@ public class InserisciPrenotazionePanel extends JPanel {
 	public static boolean verificaDisponibilita(Prenotazione p) {
 
 		// Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
+		String er = "Errore";
 		if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine())) {
-			CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", "Errore", false);
+			CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", er, false);
 			return false;
 		}
 
@@ -394,9 +404,9 @@ public class InserisciPrenotazionePanel extends JPanel {
 		// Controlla che gli orari di inizio e fine siano all'interno dell'intervallo
 		if (p.getOraInizio().before(oraApertura) || p.getOraFine().after(oraChiusura)) {
 			if (p.getOraInizio().before(oraApertura)) {
-				CustomMessage.show("Il campo apre alle 8:00. Seleziona un orario valido.", "Errore", false);
+				CustomMessage.show("Il campo apre alle 8:00. Seleziona un orario valido.", er, false);
 			} else if (p.getOraFine().after(oraChiusura)) {
-				CustomMessage.show("Il campo chiude alle 23. Seleziona un orario valido.", "Errore", false);
+				CustomMessage.show("Il campo chiude alle 23. Seleziona un orario valido.", er, false);
 			}
 			return false;
 		}
@@ -404,7 +414,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		// Recupera il campo associato
 		Campo campo = DataBase.getCampoById(p.getCampoId());
 		if (campo == null) {
-			CustomMessage.show("Campo non trovato.", "Errore", false);
+			CustomMessage.show("Campo non trovato.", er, false);
 			return false;
 		}
 
@@ -430,7 +440,11 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 			// Controlla sovrapposizione
 			if (isOverlapping(p.getOraInizio(), p.getOraFine(), oraInizioEsistente, oraFineEsistente)) {
+<<<<<<< Updated upstream
 				CustomMessage.show("Il campo non è disponibile per l'orario selezionato.", "Attenzione", false);
+=======
+				CustomMessage.show("Orario non disponibile", er, false);
+>>>>>>> Stashed changes
 				return false;
 			}
 		}
@@ -485,11 +499,20 @@ public class InserisciPrenotazionePanel extends JPanel {
 	 * Resetta tutti i campi del pannello.
 	 */
 	private void resetFields() {
+<<<<<<< Updated upstream
 		centroSelezionatoLabel.setText("Non selezionato");
 		campoSelezionatoLabel.setText("Non selezionato");
 		datePicker.setDate(null); // Imposta la data a null per pulirla
 		oraInizioSpinner.setValue("08:00");
 		oraFineSpinner.setValue("09:00");
+=======
+	    String NotSelected = "Non selezionato";
+		centroSelezionatoLabel.setText(NotSelected);
+	    campoSelezionatoLabel.setText(NotSelected);
+	    datePicker.setDate(null); // Imposta la data a null per pulirla
+	    oraInizioSpinner.setValue("08:00");
+	    oraFineSpinner.setValue("09:00");
+>>>>>>> Stashed changes
 	}
 
 	/**

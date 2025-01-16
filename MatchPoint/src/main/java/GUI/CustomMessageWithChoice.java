@@ -33,7 +33,9 @@ public class CustomMessageWithChoice {
 				ImageIcon icon = new ImageIcon(iconURL);
 				dialog.setIconImage(icon.getImage());
 			} else {
-				CustomMessage.show("Icona non trovata: " + logoPath, "Errore", false);
+				String IconNotFound = "Icona non trovata: ";
+				String er = "Errore";
+				CustomMessage.show(IconNotFound + logoPath, er, false);
 			}
 		}
 
@@ -45,19 +47,21 @@ public class CustomMessageWithChoice {
 
 		// Testo del messaggio
 		JLabel messageLabel = new JLabel("<html><center>" + message + "</center></html>", SwingConstants.CENTER);
-		messageLabel.setFont(new Font("Arial", Font.BOLD, 18));
+		int ButtonFontDim = 18;
+		messageLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		messageLabel.setForeground(Color.WHITE);
 		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		panel.add(messageLabel, BorderLayout.CENTER);
 
 		// Pulsanti Sì e No
 		JButton yesButton = new JButton("Sì");
-		yesButton.setFont(new Font("Arial", Font.BOLD, 14));
+		int ButtonDFontDim = 14;
+		yesButton.setFont(new Font("Arial", Font.BOLD, ButtonDFontDim));
 		yesButton.setBackground(Color.WHITE);
 		yesButton.setForeground(success ? new Color(32, 178, 170) : Color.RED);
 
 		JButton noButton = new JButton("No");
-		noButton.setFont(new Font("Arial", Font.BOLD, 14));
+		noButton.setFont(new Font("Arial", Font.BOLD, ButtonDFontDim));
 		noButton.setBackground(Color.WHITE);
 		noButton.setForeground(success ? new Color(32, 178, 170) : Color.RED);
 

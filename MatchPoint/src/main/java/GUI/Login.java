@@ -59,8 +59,11 @@ public class Login {
 						String username = usernameField.getText();
 						String password = new String(passwordField.getPassword());
 
+						String er = "Errore";
 						if (validateCredentials(username, password)) {
-							CustomMessage.show("Login effettuato con successo!", "Successo", true);
+							String S = "Successo";
+							String SuccessL = "Login effettuato con successo!";
+							CustomMessage.show(SuccessL, S, true);
 							resetFields();
 
 							// Determina il ruolo dell'utente
@@ -74,10 +77,10 @@ public class Login {
 							} else if ("Giocatore".equalsIgnoreCase(ruolo)) {
 								BackgroundPanel.showPanel("createGiocatore"); // Mostra pannello Giocatore
 							} else {
-								CustomMessage.show("Ruolo sconosciuto! Contatta l'amministratore.", "Errore", false);
+								CustomMessage.show("Ruolo sconosciuto! Contatta l'amministratore.", er, false);
 							}
 						} else {
-							CustomMessage.show("Username o password errati!", "Errore", false);
+							CustomMessage.show("Username o password errati!", er, false);
 						}
 					}
 				}, new Dimension(100, 40) // Dimensione del pulsante
@@ -162,13 +165,14 @@ public class Login {
 		String username = usernameField.getText().trim();
 		String password = new String(passwordField.getPassword()).trim();
 
+		String er = "Errore";
 		if (username.isEmpty()) {
-			CustomMessage.show("Il campo 'Username' non può essere vuoto!", "Errore", false);
+			CustomMessage.show("Il campo 'Username' non può essere vuoto!", er, false);
 			return false;
 		}
 
 		if (password.isEmpty()) {
-			CustomMessage.show("Il campo 'Password' non può essere vuoto!", "Errore", false);
+			CustomMessage.show("Il campo 'Password' non può essere vuoto!", er, false);
 			return false;
 		}
 
@@ -200,7 +204,8 @@ public class Login {
 		// Personalizzazioni specifiche per il pulsante "Back"
 		backButton.setForeground(Color.GRAY); // Sfondo grigio
 		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
-		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 
 		return backButton;
 	}
@@ -217,7 +222,8 @@ public class Login {
 		try {
 			Sessione.login(username, tipologia); // Esegui il login
 		} catch (SQLException e) {
-			CustomMessage.show("Errore di login", "Errore", false);
+			String er = "Errore";
+			CustomMessage.show("Errore di login", er, false);
 		}
 	}
 
@@ -247,7 +253,9 @@ public class Login {
 				}
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Errore nel connettersi al database: " + e.getMessage(), "Errore",
+			String er = "Errore";
+			String DBerror = "Errore nel connettersi al database: ";
+			JOptionPane.showMessageDialog(null, DBerror + e.getMessage(), er,
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}

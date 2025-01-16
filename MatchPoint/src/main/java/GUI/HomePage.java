@@ -47,7 +47,9 @@ public class HomePage {
 		if (iconUrl != null) {
 			frame.setIconImage(new ImageIcon(iconUrl).getImage());
 		} else {
-			CustomMessage.show("Immagine dell'icona non trovata!", "Errore", false);
+			String IconNotFound = "Immagine dell'icona non trovata!";
+			String er = "Errore";
+			CustomMessage.show(IconNotFound, er, false);
 		}
 
 		// Aggiunge il pannello di sfondo
@@ -130,7 +132,9 @@ public class HomePage {
 			// Controlla che tutti i campi siano pieni
 			if (firstName.isEmpty() || lastName.isEmpty() || day.isEmpty() || month.isEmpty() || year.isEmpty()
 					|| username.isEmpty() || password.isEmpty()) {
-				JOptionPane.showMessageDialog(frame, "Tutti i campi sono obbligatori!", "Errore",
+				String CampiObbligatori = "Tutti i campi sono obbligatori!";
+				String er = "Errore";
+				JOptionPane.showMessageDialog(frame, CampiObbligatori, er,
 						JOptionPane.ERROR_MESSAGE);
 			}
 		});

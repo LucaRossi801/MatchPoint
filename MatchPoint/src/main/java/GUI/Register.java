@@ -74,21 +74,48 @@ public class Register {
         gbc.anchor = GridBagConstraints.WEST; // Allineamento a sinistra
         int row = 1; // La riga parte da 1 (sotto il titolo)
 
+<<<<<<< Updated upstream
         for (String campo : campi) {
             JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
             label.setFont(new Font("Montserrat", Font.BOLD, 24));
             gbc.gridx = 0;
             gbc.gridy = row;
             panel.add(label, gbc);
+=======
+		int ButtonFontDim = 18;
+		for (String campo : campi) {
+			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
+			label.setFont(new Font("Montserrat", Font.BOLD, 24));
+			gbc.gridx = 0;
+			gbc.gridy = row;
+			panel.add(label, gbc);
+>>>>>>> Stashed changes
 
             JComponent inputField = null;
 
+<<<<<<< Updated upstream
             if (campo.equals("Password")) {
                 inputField = new JPasswordField(20);
                 addCharacterLimit((JPasswordField) inputField, 20, panel);
             }else if (campo.equals("DataNascita")) {
                 JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();
                 inputField = datePickerPanel;
+=======
+			if (campo.equals("Password")) {
+				inputField = new JPasswordField(20);
+				addCharacterLimit((JPasswordField) inputField, 20, panel);
+			} else if (campo.equals("DataNascita")) {
+				JXDatePicker datePicker = new JXDatePicker();
+				datePicker.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
+				datePicker.setFormats("dd-MM-yyyy");
+				LocalDateTime oraCorrente = LocalDateTime.now();
+				datePicker.getMonthView()
+						.setLowerBound(Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant()));
+				inputField = datePicker;
+			} else {
+				inputField = new JTextField(20);
+				int maxLength;
+>>>>>>> Stashed changes
 
                 // Salva il riferimento al JXDatePicker per accedere in seguito
                 JXDatePicker datePicker = YearSelectorDatePicker.getDatePicker(datePickerPanel);
@@ -116,8 +143,14 @@ public class Register {
                     break;
                 }
 
+<<<<<<< Updated upstream
                 addCharacterLimit((JTextField) inputField, maxLength, panel);
             }
+=======
+			inputField.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
+			gbc.gridx = 1;
+			panel.add(inputField, gbc);
+>>>>>>> Stashed changes
 
             inputField.setFont(new Font("Arial", Font.PLAIN, 18));
             gbc.gridx = 1;
@@ -130,6 +163,7 @@ public class Register {
 
 		// Pulsante di registrazione
 		JButton registerButton = BackgroundPanel.createFlatButton("Register", e -> {
+			String er = "Errore";
 			try {
 				// Leggi i valori dai campi
 				String name = ((JTextField) fields.get("Nome")).getText().trim();
@@ -141,8 +175,13 @@ public class Register {
 				    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				    birthDate = sdf.format(datePicker.getDate());
 				} else {
+<<<<<<< Updated upstream
 				    CustomMessage.show("Compilare la data di nascita!", "Errore", false);
 				    return;
+=======
+					CustomMessage.show("Compilare la data di nascita!", er, false);
+					return;
+>>>>>>> Stashed changes
 				}
 
 
@@ -157,9 +196,10 @@ public class Register {
 						: null;
 
 				// Controlla se ci sono campi vuoti
+				String CompAll = "Tutti i campi devono essere compilati!";
 				if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()
 						|| (tipologia.equals("Gestore") && (certifications.isEmpty() || competences.isEmpty()))) {
-					CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
+					CustomMessage.show(CompAll, er, false);
 					return;
 				}
 
@@ -167,16 +207,17 @@ public class Register {
 				String sql = "SELECT Password FROM Gestore WHERE Username ='" + username
 						+ "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'";
 				String ris = "";
+				String DBerror = "Errore di connessione al DataBase";
 				try (Connection conn = DriverManager.getConnection(url)) {
 					ris = DataBase.eseguiSelect(conn, sql);
 				} catch (SQLException ex) {
 					ex.printStackTrace();
-					CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
+					CustomMessage.show(DBerror, er, false);
 					return;
 				}
 
 				if (!ris.isEmpty()) {
-					CustomMessage.show("Lo username '" + username + "' è già in uso!", "Errore", false);
+					CustomMessage.show("Lo username '" + username + "' è già in uso!", er, false);
 					return;
 				}
 
@@ -188,12 +229,12 @@ public class Register {
 					emailRis = DataBase.eseguiSelect(conn, emailSql);
 				} catch (SQLException ex) {
 					ex.printStackTrace();
-					CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
+					CustomMessage.show(DBerror, er, false);
 					return;
 				}
 
 				if (!emailRis.isEmpty()) {
-					CustomMessage.show("L'email '" + email + "' è già in uso!", "Errore", false);
+					CustomMessage.show("L'email '" + email + "' è già in uso!", er, false);
 					return;
 				}
 
@@ -204,7 +245,7 @@ public class Register {
 				} else {
 					String teamName = ((JTextField) fields.get("NomeSquadra")).getText().trim();
 					if (teamName.isEmpty()) {
-						CustomMessage.show("Tutti i campi devono essere compilati!", "Errore", false);
+						CustomMessage.show(CompAll, er, false);
 						return;
 					}
 					try (Connection conn = DriverManager.getConnection(url)) {
@@ -214,14 +255,14 @@ public class Register {
 				CustomMessage.show("Registrazione effettuata con successo!", "Successo", true);
 				BackgroundPanel.showPanel("login");
 			} catch (Exception ex) {
-				CustomMessage.show("Errore durante la registrazione", "Errore", false);
+				CustomMessage.show("Errore durante la registrazione", er, false);
 			}
 
 			// Pulizia campi
 			resetFields(fields);
 		}, new Dimension(300, 50));
 
-		registerButton.setFont(new Font("Arial", Font.BOLD, 18));
+		registerButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		registerButton.setBackground(new Color(32, 178, 170));
 		registerButton.setForeground(new Color(220, 250, 245));
 		registerButton.setFocusPainted(false);
@@ -263,7 +304,8 @@ public class Register {
 		// Personalizzazioni specifiche per il pulsante "Back"
 		backButton.setForeground(Color.GRAY); // Testo grigio
 		backButton.setBackground(Color.DARK_GRAY); // Sfondo scuro
-		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 
 		return backButton;
 	}

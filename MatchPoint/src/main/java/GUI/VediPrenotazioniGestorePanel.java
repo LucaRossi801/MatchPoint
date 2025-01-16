@@ -55,7 +55,9 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 		if (clearImageUrl != null) {
 			clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png", "Errore",
+			String ImageNotFound = "Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png";
+			String er = "Errore";
+			CustomMessage.show(ImageNotFound, er,
 					false);
 		}
 
@@ -178,7 +180,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 			// Cambia schermata al card layout
 			cardLayout.show(cardPanel, "createGestore");
 		}, new Dimension(120, 30));
-		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		backButton.setForeground(Color.GRAY);
 		backButton.setBackground(Color.DARK_GRAY);
 
@@ -204,7 +207,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 			Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			return new ImageIcon(scaledImage);
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine: " + path, "Errore", false);
+			String er = "Errore";
+			CustomMessage.show("Errore nel caricamento dell'immagine: " + path, er, false);
 			return null;
 		}
 	}
@@ -268,7 +272,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(this, "Errore durante il caricamento dei campi. Riprovare.", "Errore",
+					String er = "Errore";
+					JOptionPane.showMessageDialog(this, "Errore durante il caricamento dei campi. Riprovare.", er,
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -341,7 +346,8 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 	            // Header per il giorno
 	            JLabel headerGiorno = new JLabel("Prenotazioni per il giorno: " + giorno);
 				
-	            headerGiorno.setFont(new Font("Arial", Font.BOLD, 18));
+	            int ButtonFontDim = 18;
+				headerGiorno.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 	            headerGiorno.setForeground(new Color(16, 139, 135));
 	            headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);
 	            contenitorePrenotazioni.add(headerGiorno);

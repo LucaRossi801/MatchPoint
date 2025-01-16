@@ -41,11 +41,16 @@ public class InserisciCentroPanel extends JPanel {
 
 		// Inizializza ComboBox
 		provinciaComboBox = new JComboBox<>(provinceComuni.keySet().toArray(new String[0]));
-		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
+		int ButtonFontDim = 18;
+		provinciaComboBox.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
 		comuneComboBox = new JComboBox<>();
+<<<<<<< Updated upstream
 		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, 18));
 		// Resetta combobox
 		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia
+=======
+		comuneComboBox.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
+>>>>>>> Stashed changes
 
 		provinciaComboBox.addActionListener(e -> {
 			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();
@@ -75,7 +80,8 @@ public class InserisciCentroPanel extends JPanel {
 		if (backgroundUrl != null) {
 			background = new ImageIcon(backgroundUrl).getImage();
 		} else {
-			System.out.println("Errore nel caricamento dell'immagine di sfondo.");
+			String ImageNotFound = "Errore nel caricamento dell'immagine di sfondo.";
+			System.out.println(ImageNotFound);
 		}
 
 		// Layout e configurazione
@@ -101,10 +107,11 @@ public class InserisciCentroPanel extends JPanel {
 		String[] campi = { "NomeCentro" };
 		int row = 1; // Riga di partenza
 
+		int LabeFontDim = 24;
 		for (String campo : campi) {
 			// Etichetta
 			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 24));
+			label.setFont(new Font("Montserrat", Font.BOLD, LabeFontDim));
 			gbc.gridx = 0; // Colonna sinistra
 			gbc.gridy = row;
 			gbc.gridwidth = 1;
@@ -113,7 +120,7 @@ public class InserisciCentroPanel extends JPanel {
 
 			// Campo di input
 			JTextField inputField = new JTextField(20);
-			inputField.setFont(new Font("Arial", Font.PLAIN, 18));
+			inputField.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
 			gbc.gridx = 1; // Colonna destra
 			add(inputField, gbc);
 
@@ -124,7 +131,7 @@ public class InserisciCentroPanel extends JPanel {
 		}
 		// Provincia
 		JLabel provinciaLabel = new OutlinedLabel("Provincia:", Color.BLACK);
-		provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+		provinciaLabel.setFont(new Font("Montserrat", Font.BOLD, LabeFontDim));
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		add(provinciaLabel, gbc);
@@ -135,7 +142,7 @@ public class InserisciCentroPanel extends JPanel {
 
 		// Comune
 		JLabel comuneLabel = new OutlinedLabel("Comune:", Color.BLACK);
-		comuneLabel.setFont(new Font("Montserrat", Font.BOLD, 24));
+		comuneLabel.setFont(new Font("Montserrat", Font.BOLD, LabeFontDim));
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		add(comuneLabel, gbc);
@@ -150,7 +157,7 @@ public class InserisciCentroPanel extends JPanel {
 			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);
 		}, new Dimension(300, 50));
 
-		aggiungiCampoButton.setFont(new Font("Arial", Font.BOLD, 18));
+		aggiungiCampoButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		aggiungiCampoButton.setBackground(new Color(32, 178, 170));
 		aggiungiCampoButton.setForeground(new Color(220, 250, 245));
 		aggiungiCampoButton.setFocusPainted(false);
@@ -175,14 +182,17 @@ public class InserisciCentroPanel extends JPanel {
 			String comune = (String) comuneComboBox.getSelectedItem();
 
 			// Controlla se tutti i campi sono stati compilati
+			String er = "Errore";
 			if (nomeCentro == null || provincia == null || comune == null || nomeCentro.isEmpty() || provincia.isEmpty()
 					|| comune.isEmpty()) {
-				CustomMessage.show("Compila tutti i campi!", "Errore", false);
+				String CompAll = "Compila tutti i campi!";
+				CustomMessage.show(CompAll, er, false);
 				return;
 			}
 			// aggiunge il centro sportivo al DB
 			DataBase.insert(nomeCentro, provincia, comune, Sessione.getId());
-			CustomMessage.show("Centro inserito con successo!", "Successo", true);
+			String S = "Successo";
+			CustomMessage.show("Centro inserito con successo!", S, true);
 			// Cambia schermata
 			cardLayout.show(cardPanel, "createGestore");
 			// Resetta tutti i campi
@@ -196,7 +206,8 @@ public class InserisciCentroPanel extends JPanel {
 				ris = DataBase.eseguiSelect(conn, sql);
 			} catch (SQLException ex) {
 				ex.printStackTrace();
-				CustomMessage.show("Errore di connessione al DataBase", "Errore", false);
+				String DBerror = "Errore di connessione al DataBase";
+				CustomMessage.show(DBerror, er, false);
 				return;
 			}
 			int idGestore = Integer.parseInt(ris);
@@ -209,7 +220,7 @@ public class InserisciCentroPanel extends JPanel {
 
 		}, new Dimension(300, 50));
 
-		inserisciCentroButton.setFont(new Font("Arial", Font.BOLD, 18));
+		inserisciCentroButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		inserisciCentroButton.setBackground(new Color(0, 128, 128));
 		inserisciCentroButton.setForeground(Color.WHITE);
 
@@ -236,7 +247,7 @@ public class InserisciCentroPanel extends JPanel {
 			cardLayout.show(cardPanel, "createGestore");
 		}, new Dimension(120, 30));
 
-		backButton.setFont(new Font("Arial", Font.BOLD, 18));
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		backButton.setForeground(Color.GRAY);
 		backButton.setBackground(Color.DARK_GRAY);
 

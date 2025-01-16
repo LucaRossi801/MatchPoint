@@ -25,7 +25,8 @@ public class CreateGiocatorePanel extends JPanel {
 		if (clearImageUrl != null) {
 			clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png", "Errore",
+			String ImageNotFound = "Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png";
+			CustomMessage.show(ImageNotFound, "Errore",
 					false);
 		}
 
@@ -77,7 +78,8 @@ public class CreateGiocatorePanel extends JPanel {
 		// Personalizza colore per il pulsante "Back".
 		backButton.setForeground(Color.GRAY);
 		backButton.setBackground(Color.DARK_GRAY);
-		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back".
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
 		gbc.gridy = 3; // Quarta riga.
 		add(backButton, gbc);
 	}

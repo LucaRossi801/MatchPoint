@@ -41,7 +41,9 @@ public class CustomMessage {
 				ImageIcon icon = new ImageIcon(iconURL);
 				dialog.setIconImage(icon.getImage());
 			} else {
-				CustomMessage.show("Icona non trovata: " + logoPath, "Errore", false);
+				String IconNotFound = "Icona non trovata: ";
+				String er = "Errore";
+				CustomMessage.show(IconNotFound + logoPath, er, false);
 			}
 		}
 
@@ -53,14 +55,16 @@ public class CustomMessage {
 
 		// Etichetta per il messaggio
 		JLabel messageLabel = new JLabel("<html><center>" + message + "</center></html>", SwingConstants.CENTER);
-		messageLabel.setFont(new Font("Arial", Font.BOLD, 20));
+		int LabelFontDim = 20;
+		messageLabel.setFont(new Font("Arial", Font.BOLD, LabelFontDim));
 		messageLabel.setForeground(Color.WHITE); // Testo bianco
 		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margini
 		panel.add(messageLabel, BorderLayout.CENTER);
 
 		// Pulsante "OK" per chiudere la finestra di dialogo
 		JButton okButton = new JButton("OK");
-		okButton.setFont(new Font("Arial", Font.BOLD, 14));
+		int ButtonDFontDim = 14;
+		okButton.setFont(new Font("Arial", Font.BOLD, ButtonDFontDim));
 		okButton.setPreferredSize(new Dimension(80, 30)); // Dimensioni del pulsante
 		okButton.setBackground(Color.WHITE); // Sfondo bianco per il pulsante
 		okButton.setForeground(success ? new Color(32, 178, 170) : Color.RED); // Testo verde o rosso

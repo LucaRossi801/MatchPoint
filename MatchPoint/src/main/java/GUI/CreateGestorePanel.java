@@ -27,10 +27,12 @@ public class CreateGestorePanel extends JPanel {
 	public CreateGestorePanel(CardLayout cardLayout, JPanel cardPanel) {
 		// Carica l'immagine di sfondo.
 		URL clearImageUrl = getClass().getClassLoader().getResource("GUI/immagini/sfondohome.png");
+		String er = "Errore";
 		if (clearImageUrl != null) {
 			clearImage = new ImageIcon(clearImageUrl).getImage();
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png", "Errore", false);
+			String ImageNotFound = "Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png";
+			CustomMessage.show(ImageNotFound, er, false);
 		}
 
 		// Imposta il layout.
@@ -63,7 +65,7 @@ public class CreateGestorePanel extends JPanel {
 				BackgroundPanel.cardPanel.add(modificaCentroPanel, "modificaCentro");
 				cardLayout.show(cardPanel, "modificaCentro");
 			} else {
-				CustomMessage.show("Non esistono centri registrati!", "Errore", false);
+				CustomMessage.show("Non esistono centri registrati!", er, false);
 			}
 		}, buttonSize);
 		modificaCentroButton.setForeground(new Color(220, 250, 245));
@@ -85,7 +87,7 @@ public class CreateGestorePanel extends JPanel {
 				BackgroundPanel.cardPanel.add(panel, "vediPrenotazioniGestore");
 				cardLayout.show(cardPanel, "vediPrenotazioniGestore");
 			} else {
-				CustomMessage.show("Non esistono centri registrati!", "Errore", false);
+				CustomMessage.show("Non esistono centri registrati!", er, false);
 			}
 		}, buttonSize);
 		vediPrenotazioniButton.setForeground(new Color(220, 250, 245));
@@ -110,7 +112,8 @@ public class CreateGestorePanel extends JPanel {
 		// Personalizza colore per il pulsante "Back".
 		backButton.setForeground(Color.GRAY);
 		backButton.setBackground(Color.DARK_GRAY);
-		backButton.setFont(new Font("Arial", Font.BOLD, 18)); // Font più piccolo per il pulsante "Back".
+		int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante "Back".
 		gbc.gridy = 3; // Quarta riga.
 		add(backButton, gbc);
 	}
@@ -129,7 +132,9 @@ public class CreateGestorePanel extends JPanel {
 			Image scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 			return new ImageIcon(scaledImage);
 		} else {
-			CustomMessage.show("Errore nel caricamento dell'icona: " + percorso, "Errore", false);
+			String IconNotFound = "Errore nel caricamento dell'icona: ";
+			String er = "Errore";
+			CustomMessage.show(IconNotFound + percorso, er, false);
 			return null; // Restituisci null se l'icona non viene trovata.
 		}
 	}

@@ -54,7 +54,8 @@ public class ModificaCentroPanel extends JPanel {
 			if (clearImageUrl != null) {
 				clearImage = new ImageIcon(clearImageUrl).getImage();
 			} else {
-				System.err.println("Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png");
+				String ImageNotFound = "Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png";
+				System.err.println(ImageNotFound);
 			}
 		} catch (Exception e) {
 			System.err.println("Eccezione durante il caricamento dell'immagine: " + e.getMessage());
@@ -263,7 +264,9 @@ public class ModificaCentroPanel extends JPanel {
 				resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo
 				BackgroundPanel.showPanel("createGestore");
 			} else {
-				CustomMessage.show( "Errore nel salvataggio delle modifiche.", "Errore", false);
+				String Moderror = "Errore nel salvataggio delle modifiche.";
+				String er = "Errore";
+				CustomMessage.show( Moderror, er, false);
 			}
 		}
 	}
@@ -277,7 +280,8 @@ public class ModificaCentroPanel extends JPanel {
 	        List<Campo> campi = DataBase.getCampiById(centro.getID());
 	        if (campi == null || campi.isEmpty()) {
 	            // Mostra messaggio di errore e resta sul pannello corrente
-	            CustomMessage.show("Nessun campo disponibile per il centro selezionato.", "Errore", false);
+	            String er = "Errore";
+				CustomMessage.show("Nessun campo disponibile per il centro selezionato.", er, false);
 	            BackgroundPanel.showPanel("modificaCentro");
 	            return;
 	        }
@@ -295,7 +299,8 @@ public class ModificaCentroPanel extends JPanel {
 	    // Recupera il nome del centro selezionato dalla ComboBox
 	    String centroSelezionato = (String) centriComboBox.getSelectedItem();
 
-	    if (centroSelezionato != null && centriGestiti.containsKey(centroSelezionato)) {
+	    String er = "Errore";
+		if (centroSelezionato != null && centriGestiti.containsKey(centroSelezionato)) {
 	        CentroSportivo centro = centriGestiti.get(centroSelezionato);
 
 	        // Chiedi conferma all'utente
@@ -318,14 +323,14 @@ public class ModificaCentroPanel extends JPanel {
 	                // Eventuali ulteriori aggiornamenti dell'interfaccia
 	                
 	            } else {
-	                CustomMessage.show("Errore durante l'eliminazione del centro.", "Errore", false);
+	                CustomMessage.show("Errore durante l'eliminazione del centro.", er, false);
 	            }
 	        }
 	        else {
 	        	CustomMessage.show("Cancellazione annullata", "Attenzione", false);
 	        }
 	    } else {
-	        CustomMessage.show("Nessun centro selezionato.", "Errore", false);
+	        CustomMessage.show("Nessun centro selezionato.", er, false);
 	    }
 	}
 	    private Map<String, List<String>> caricaProvinceEComuni(String filePath) {

@@ -52,16 +52,18 @@ public class GestorePagamenti {
 		pagamentoDialog.add(mainPanel);
 
 		// Etichetta del messaggio
+		String InsertCard = "</b>.<br>Inserire la carta per continuare.</center></html>";
+		int ButtonFontDim = 18;
 		if (vecchioCosto != 0) {
 			JLabel messaggio = new JLabel("<html><center>La differenza dovuta è di <b>€ " + (costo - vecchioCosto)
-					+ "</b>.<br>Inserire la carta per continuare.</center></html>", SwingConstants.CENTER);
-			messaggio.setFont(new Font("Arial", Font.BOLD, 18));
+					+ InsertCard, SwingConstants.CENTER);
+			messaggio.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 			messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
 			mainPanel.add(messaggio, BorderLayout.CENTER);
 		} else {
 			JLabel messaggio = new JLabel("<html><center>Il pagamento è di <b>€ " + costo
-					+ "</b>.<br>Inserire la carta per continuare.</center></html>", SwingConstants.CENTER);
-			messaggio.setFont(new Font("Arial", Font.BOLD, 18));
+					+ InsertCard, SwingConstants.CENTER);
+			messaggio.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 			messaggio.setForeground(Color.DARK_GRAY); // Colore del testo
 			mainPanel.add(messaggio, BorderLayout.CENTER);
 		}
@@ -88,7 +90,9 @@ public class GestorePagamenti {
 					mostraSchermataConferma(true);
 					if (vecchioCosto != 0) {
 						Timer timer = new Timer(3000, ec -> {
-							CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
+							String SuccessP = "Prenotazione modificata con successo!";
+							String S = "Successo";
+							CustomMessage.show(SuccessP, S, true);
 						});
 
 						timer.setRepeats(false); // Impedisce che il timer si ripeta
@@ -205,7 +209,9 @@ public class GestorePagamenti {
 		Timer timer = new Timer(3000, e -> {
 			rimborsoFrame.dispose(); // Chiudi la finestra di rimborso
 
-			CustomMessage.show("Prenotazione modificata con successo!", "Successo", true);
+			String SuccessP = "Prenotazione modificata con successo!";
+			String S = "Successo";
+			CustomMessage.show(SuccessP, S, true);
 
 		});
 

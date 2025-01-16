@@ -60,7 +60,8 @@ public class SelezionaCampoDialog extends JDialog {
 
             selezionaButton.setBackground(new Color(34, 139, 34)); // Verde
             selezionaButton.setForeground(Color.WHITE); // Colore del testo bianco
-            selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, 14));
+            int SelectButtonFontDim = 14;
+			selezionaButton.setFont(new Font("Montserrat", Font.PLAIN, SelectButtonFontDim));
 
             // Aggiungi i componenti al pannello
             campoItemPanel.add(campoLabel, BorderLayout.CENTER);
@@ -76,7 +77,8 @@ public class SelezionaCampoDialog extends JDialog {
         // Creazione del pannello per la South con il pulsante "Chiudi"
         JPanel southPanel = new JPanel(new BorderLayout());
         JButton chiudiButton = BackgroundPanel.createFlatButton("Chiudi", e -> dispose(), new Dimension(100, 40));
-        chiudiButton.setFont(new Font("Montserrat", Font.PLAIN, 18));
+        int ButtonFontDim = 18;
+		chiudiButton.setFont(new Font("Montserrat", Font.PLAIN, ButtonFontDim));
         chiudiButton.setForeground(Color.GRAY); // Sfondo grigio
         chiudiButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse
         southPanel.add(chiudiButton, BorderLayout.CENTER);

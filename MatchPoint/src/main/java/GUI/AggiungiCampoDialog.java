@@ -56,13 +56,14 @@ public class AggiungiCampoDialog extends JDialog {
 		
 		// Sezione 1: Selezione della tipologia del campo
 		JLabel tipoLabel = new JLabel("Tipologia Campo:");
-		tipoLabel.setFont(new Font(font, Font.BOLD, 18));
+		int ButtonFontDim = 18;
+		tipoLabel.setFont(new Font(font, Font.BOLD, ButtonFontDim));
 		gbc.gridx = 0;
 		gbc.gridy = row;
 		add(tipoLabel, gbc);
 
 		JComboBox<TipologiaCampo> tipoComboBox = new JComboBox<>(TipologiaCampo.values());
-		tipoComboBox.setFont(new Font(font, Font.PLAIN, 18));
+		tipoComboBox.setFont(new Font(font, Font.PLAIN, ButtonFontDim));
 		gbc.gridx = 1;
 		add(tipoComboBox, gbc);
 
@@ -74,7 +75,7 @@ public class AggiungiCampoDialog extends JDialog {
 
 		for (String campo : campiNumerici) {
 			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 18));
+			label.setFont(new Font("Montserrat", Font.BOLD, ButtonFontDim));
 			gbc.gridx = 0;
 			gbc.gridy = row;
 			gbc.gridwidth = 1;
@@ -82,7 +83,7 @@ public class AggiungiCampoDialog extends JDialog {
 			add(label, gbc);
 
 			JTextField field = new JTextField(30);
-			field.setFont(new Font(font, Font.PLAIN, 18));
+			field.setFont(new Font(font, Font.PLAIN, ButtonFontDim));
 
 			// Applica un filtro per accettare solo numeri
 			((PlainDocument) field.getDocument()).setDocumentFilter(new NumericDocumentFilter());
@@ -99,7 +100,7 @@ public class AggiungiCampoDialog extends JDialog {
 		copertoPanel.setBackground(getBackground());
 
 		JLabel copertoLabel = new JLabel("Coperto:");
-		copertoLabel.setFont(new Font(font, Font.BOLD, 18));
+		copertoLabel.setFont(new Font(font, Font.BOLD, ButtonFontDim));
 		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
 		GridBagConstraints copertoGbc = new GridBagConstraints();

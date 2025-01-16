@@ -53,7 +53,9 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         if (clearImageUrl != null) {
             clearImage = new ImageIcon(clearImageUrl).getImage();
         } else {
-            CustomMessage.show("Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png", "Errore", false);
+            String ImageNotFound = "Errore nel caricamento dell'immagine: " + "/GUI/immagini/sfondohome.png";
+			String er = "Errore";
+			CustomMessage.show(ImageNotFound, er, false);
         }
 
         // Configura layout e componenti
@@ -118,7 +120,8 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             prenotazioniArea.setText("");
             cardLayout.show(cardPanel, "createGiocatore");
         }, new Dimension(120, 30));
-        backButton.setFont(new Font("Arial", Font.BOLD, 18));
+        int ButtonFontDim = 18;
+		backButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
         backButton.setForeground(Color.GRAY);
         backButton.setBackground(Color.DARK_GRAY);
 
@@ -236,7 +239,8 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
         if (scrollPane != null) {
             scrollPane.setViewportView(contenitorePrenotazioni);
         } else {
-            CustomMessage.show("Errore: scrollPane non inizializzato correttamente.", "Errore", false);
+            String er = "Errore";
+			CustomMessage.show("Errore: scrollPane non inizializzato correttamente.", er, false);
         }
     }
 
@@ -350,10 +354,11 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Verifica se la prenotazione è già passata o se mancano meno di 24 ore
-                if (prenotazionePassata || menoDi24Ore) {
+                String er = "Errore";
+				if (prenotazionePassata || menoDi24Ore) {
                     CustomMessage.show(
                         "Non è possibile eliminare prenotazioni già passate o entro 24 ore",
-                        "Errore",
+                        er,
                         false // Colore rosso per errore
                     );
                     return; // Esci senza procedere
@@ -375,7 +380,7 @@ public class VediPrenotazioniGiocatorePanel extends JPanel {
                         // Se si verifica un errore durante l'eliminazione, mostra un messaggio di errore
                         CustomMessageWithChoice.show(
                             "Errore nell'eliminazione della prenotazione.",
-                            "Errore",
+                            er,
                             false // Colore rosso per errore
                         );
                         ex.printStackTrace();
