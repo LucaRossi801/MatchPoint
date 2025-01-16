@@ -11,7 +11,11 @@ import java.time.ZoneId;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.text.NavigationFilter;
+
 import org.jdesktop.swingx.JXDatePicker; // Assicurati di aggiungere questa libreria
+import org.jdesktop.swingx.JXMonthView;
+
 import dataBase.DataBase;
 import individui.Gestore;
 import individui.Giocatore;
@@ -24,106 +28,101 @@ import individui.Giocatore;
 public class Register {
 
 	/**
-	 * Crea un pannello di registrazione specifico per la tipologia di utente.
-	 *
-	 * @param tipologia La tipologia di utente da registrare ("Gestore" o
-	 *                  "Giocatore").
-	 * @return Il pannello di registrazione configurato.
-	 */
-	protected static JPanel createRegisterPanel(String tipologia) {
-		String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // connessione al database
-		JPanel panel = new JPanel() {
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				if (BackgroundPanel.clearImage != null) {
-					g.drawImage(BackgroundPanel.clearImage, 0, 0, getWidth(), getHeight(), this);
-				}
-			}
-		};
-		panel.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(10, 10, 10, 10); // Margini tra i componenti
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+     * Crea un pannello di registrazione specifico per la tipologia di utente.
+     *
+     * @param tipologia La tipologia di utente da registrare ("Gestore" o "Giocatore").
+     * @return Il pannello di registrazione configurato.
+     */
+    protected static JPanel createRegisterPanel(String tipologia) {
+        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // connessione al database
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (BackgroundPanel.clearImage != null) {
+                    g.drawImage(BackgroundPanel.clearImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Margini tra i componenti
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		JLabel titleLabel = new OutlinedLabel("Registrazione " + tipologia, Color.WHITE);
-		titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
+        JLabel titleLabel = new OutlinedLabel("Registrazione " + tipologia, Color.WHITE);
+        titleLabel.setFont(new Font("Montserrat", Font.BOLD, 30));
 
-		// Aggiungi il titolo in alto al centro
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2; // Il titolo occupa due colonne
-		gbc.anchor = GridBagConstraints.CENTER;
-		panel.add(titleLabel, gbc);
+        // Aggiungi il titolo in alto al centro
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // Il titolo occupa due colonne
+        gbc.anchor = GridBagConstraints.CENTER;
+        panel.add(titleLabel, gbc);
 
-		// Struttura dati per mappare i campi di input
-		Map<String, JComponent> fields = new HashMap<>();
+        // Struttura dati per mappare i campi di input
+        Map<String, JComponent> fields = new HashMap<>();
 
-		String[] campi;
-		if (tipologia.equals("Gestore")) {
-			campi = new String[] { "Nome", "Cognome", "DataNascita", "Email", "Username", "Password", "Certificazione",
-					"Competenze" };
-		} else {
-			campi = new String[] { "Nome", "Cognome", "DataNascita", "Email", "Username", "Password", "NomeSquadra" };
-		}
+        String[] campi;
+        if (tipologia.equals("Gestore")) {
+            campi = new String[] { "Nome", "Cognome", "DataNascita", "Email", "Username", "Password", "Certificazione",
+                    "Competenze" };
+        } else {
+            campi = new String[] { "Nome", "Cognome", "DataNascita", "Email", "Username", "Password", "NomeSquadra" };
+        }
 
-		gbc.gridwidth = 1; // Ogni etichetta e campo occupano una colonna
-		gbc.anchor = GridBagConstraints.WEST; // Allineamento a sinistra
-		int row = 1; // La riga parte da 1 (sotto il titolo)
+        gbc.gridwidth = 1; // Ogni etichetta e campo occupano una colonna
+        gbc.anchor = GridBagConstraints.WEST; // Allineamento a sinistra
+        int row = 1; // La riga parte da 1 (sotto il titolo)
 
-		for (String campo : campi) {
-			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 24));
-			gbc.gridx = 0;
-			gbc.gridy = row;
-			panel.add(label, gbc);
+        for (String campo : campi) {
+            JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
+            label.setFont(new Font("Montserrat", Font.BOLD, 24));
+            gbc.gridx = 0;
+            gbc.gridy = row;
+            panel.add(label, gbc);
 
-			JComponent inputField = null;
+            JComponent inputField = null;
 
-			if (campo.equals("Password")) {
-				inputField = new JPasswordField(20);
-				addCharacterLimit((JPasswordField) inputField, 20, panel);
-			} else if (campo.equals("DataNascita")) {
-				JXDatePicker datePicker = new JXDatePicker();
-				datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
-				datePicker.setFormats("dd-MM-yyyy");
-				LocalDateTime oraCorrente = LocalDateTime.now();
-				datePicker.getMonthView()
-						.setLowerBound(Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant()));
-				inputField = datePicker;
-			} else {
-				inputField = new JTextField(20);
-				int maxLength;
+            if (campo.equals("Password")) {
+                inputField = new JPasswordField(20);
+                addCharacterLimit((JPasswordField) inputField, 20, panel);
+            } else if (campo.equals("DataNascita")) {
+                // Creazione del JXDatePicker con la selezione dell'anno tramite JComboBox
+                JPanel datePanel =YearSelectorDatePicker.createDatePicker();
+                inputField = datePanel;  // Usa il pannello con il JXDatePicker e JComboBox
+            } else {
+                inputField = new JTextField(20);
+                int maxLength;
 
-				// Utilizza lo switch tradizionale
-				switch (campo) {
-				case "Nome":
-				case "Cognome":
-				case "Username":
-				case "NomeSquadra":
-				case "Certificazione":
-				case "Competenze":
-					maxLength = 20;
-					break;
-				case "Email":
-					maxLength = 40;
-					break;
-				default:
-					maxLength = 20; // Default per gli altri campi
-					break;
-				}
+                // Utilizza lo switch tradizionale
+                switch (campo) {
+                case "Nome":
+                case "Cognome":
+                case "Username":
+                case "NomeSquadra":
+                case "Certificazione":
+                case "Competenze":
+                    maxLength = 20;
+                    break;
+                case "Email":
+                    maxLength = 40;
+                    break;
+                default:
+                    maxLength = 20; // Default per gli altri campi
+                    break;
+                }
 
-				addCharacterLimit((JTextField) inputField, maxLength, panel);
-			}
+                addCharacterLimit((JTextField) inputField, maxLength, panel);
+            }
 
-			inputField.setFont(new Font("Arial", Font.PLAIN, 18));
-			gbc.gridx = 1;
-			panel.add(inputField, gbc);
+            inputField.setFont(new Font("Arial", Font.PLAIN, 18));
+            gbc.gridx = 1;
+            panel.add(inputField, gbc);
 
-			fields.put(campo, inputField);
+            fields.put(campo, inputField);
 
-			row++;
-		}
+            row++;
+        }
 
 		// Pulsante di registrazione
 		JButton registerButton = BackgroundPanel.createFlatButton("Register", e -> {
@@ -378,5 +377,63 @@ public class Register {
 			}
 		});
 	}
+	
+	public static class YearSelectorDatePicker {
+		 public static JPanel createDatePicker() {
+			        JPanel datePanel = new JPanel();
+			        datePanel.setLayout(new BorderLayout());
 
-}
+			        // Crea il JXDatePicker
+			        JXDatePicker datePicker = new JXDatePicker();
+			        datePicker.setFont(new Font("Arial", Font.PLAIN, 18));
+			        datePicker.setFormats("dd-MM-yyyy");
+
+			        // Imposta la data corrente come predefinita
+			        LocalDateTime oraCorrente = LocalDateTime.now();
+			        Date today = Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant());
+			        datePicker.setDate(today);
+
+			        // Imposta il limite massimo sulla data
+			        datePicker.getMonthView().setUpperBound(today);
+
+			        // Crea la JComboBox per gli anni
+			        JComboBox<Integer> yearComboBox = new JComboBox<>();
+			        int currentYear = oraCorrente.getYear();
+			        for (int year = currentYear; year >= 1900; year--) {
+			            yearComboBox.addItem(year);
+			        }
+
+			        // Imposta l'anno corrente come selezione predefinita
+			        yearComboBox.setSelectedItem(currentYear);
+
+			        // Listener per cambiare l'anno selezionato
+			        yearComboBox.addActionListener(e -> {
+			            int selectedYear = (int) yearComboBox.getSelectedItem();
+			            Calendar calendar = Calendar.getInstance();
+			            Date currentDate = datePicker.getDate();
+
+			            if (currentDate != null) {
+			                calendar.setTime(currentDate);
+			            } else {
+			                calendar.setTime(today); // Fallback alla data odierna se nulla
+			            }
+
+			            // Aggiorna l'anno mantenendo il giorno e mese attuali
+			            calendar.set(Calendar.YEAR, selectedYear);
+
+			            // Se la data supera il limite massimo, impostala al massimo consentito
+			            Date updatedDate = calendar.getTime();
+			            if (updatedDate.after(today)) {
+			                updatedDate = today;
+			            }
+
+			            datePicker.setDate(updatedDate);
+			        });
+
+			        // Aggiungi i componenti al pannello
+			        datePanel.add(yearComboBox, BorderLayout.NORTH);
+			        datePanel.add(datePicker, BorderLayout.CENTER);
+
+			        return datePanel;}
+		}
+	}
