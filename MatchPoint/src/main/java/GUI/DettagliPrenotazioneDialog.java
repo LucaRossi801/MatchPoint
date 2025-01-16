@@ -166,6 +166,12 @@ public class DettagliPrenotazioneDialog extends JDialog {
 	 */
 	private void salvaDettagliPrenotazione(ActionEvent e) {
 		try {
+			// Verifica che il campo data non sia vuoto
+	        if (datePicker.getDate() == null) {
+	            CustomMessage.show("Seleziona una data valida per la prenotazione.", "Errore", false);
+	            return; // Interrompe il salvataggio
+	        }
+			
 			// Recupera la nuova data, ora di inizio e ora di fine
 			LocalDateTime nuovaData = datePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 			String oraInizioString = oraInizioSpinner.getValue().toString(); // Ora di inizio come stringa
