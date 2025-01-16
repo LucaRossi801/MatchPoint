@@ -74,48 +74,22 @@ public class Register {
         gbc.anchor = GridBagConstraints.WEST; // Allineamento a sinistra
         int row = 1; // La riga parte da 1 (sotto il titolo)
 
-<<<<<<< Updated upstream
         for (String campo : campi) {
             JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
             label.setFont(new Font("Montserrat", Font.BOLD, 24));
             gbc.gridx = 0;
             gbc.gridy = row;
             panel.add(label, gbc);
-=======
-		int ButtonFontDim = 18;
-		for (String campo : campi) {
-			JLabel label = new OutlinedLabel(campo + ":", Color.BLACK);
-			label.setFont(new Font("Montserrat", Font.BOLD, 24));
-			gbc.gridx = 0;
-			gbc.gridy = row;
-			panel.add(label, gbc);
->>>>>>> Stashed changes
+
 
             JComponent inputField = null;
 
-<<<<<<< Updated upstream
             if (campo.equals("Password")) {
                 inputField = new JPasswordField(20);
                 addCharacterLimit((JPasswordField) inputField, 20, panel);
             }else if (campo.equals("DataNascita")) {
                 JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();
                 inputField = datePickerPanel;
-=======
-			if (campo.equals("Password")) {
-				inputField = new JPasswordField(20);
-				addCharacterLimit((JPasswordField) inputField, 20, panel);
-			} else if (campo.equals("DataNascita")) {
-				JXDatePicker datePicker = new JXDatePicker();
-				datePicker.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
-				datePicker.setFormats("dd-MM-yyyy");
-				LocalDateTime oraCorrente = LocalDateTime.now();
-				datePicker.getMonthView()
-						.setLowerBound(Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant()));
-				inputField = datePicker;
-			} else {
-				inputField = new JTextField(20);
-				int maxLength;
->>>>>>> Stashed changes
 
                 // Salva il riferimento al JXDatePicker per accedere in seguito
                 JXDatePicker datePicker = YearSelectorDatePicker.getDatePicker(datePickerPanel);
@@ -143,14 +117,8 @@ public class Register {
                     break;
                 }
 
-<<<<<<< Updated upstream
                 addCharacterLimit((JTextField) inputField, maxLength, panel);
             }
-=======
-			inputField.setFont(new Font("Arial", Font.PLAIN, ButtonFontDim));
-			gbc.gridx = 1;
-			panel.add(inputField, gbc);
->>>>>>> Stashed changes
 
             inputField.setFont(new Font("Arial", Font.PLAIN, 18));
             gbc.gridx = 1;
@@ -175,13 +143,8 @@ public class Register {
 				    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				    birthDate = sdf.format(datePicker.getDate());
 				} else {
-<<<<<<< Updated upstream
 				    CustomMessage.show("Compilare la data di nascita!", "Errore", false);
 				    return;
-=======
-					CustomMessage.show("Compilare la data di nascita!", er, false);
-					return;
->>>>>>> Stashed changes
 				}
 
 
@@ -262,7 +225,7 @@ public class Register {
 			resetFields(fields);
 		}, new Dimension(300, 50));
 
-		registerButton.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
+		registerButton.setFont(new Font("Arial", Font.BOLD, 18));
 		registerButton.setBackground(new Color(32, 178, 170));
 		registerButton.setForeground(new Color(220, 250, 245));
 		registerButton.setFocusPainted(false);
