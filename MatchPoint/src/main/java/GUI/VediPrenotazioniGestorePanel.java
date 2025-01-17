@@ -478,17 +478,32 @@ public class VediPrenotazioniGestorePanel extends JPanel {
 	}
 
 	/**
-	 * Raggruppa le prenotazioni per giorno.
+	 * Raggruppa le prenotazioni per giorno e le ordina per orario (più presto in basso).
 	 */
 	private Map<String, List<Prenotazione>> raggruppaPrenotazioniPerGiorno(List<Prenotazione> prenotazioni) {
-		Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
-		for (Prenotazione prenotazione : prenotazioni) {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			String giorno = prenotazione.getData().toLocalDate().format(formatter);
-			prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
-		}
-		return prenotazioniPerGiorno;
+	    Map<String, List<Prenotazione>> prenotazioniPerGiorno = new HashMap<>();
+
+	    for (Prenotazione prenotazione : prenotazioni) {
+	        // Ottieni la data in formato stringa
+	        String giorno = prenotazione.getData().toLocalDate().toString();
+
+	        // Aggiungi la prenotazione al giorno corrispondente
+	        prenotazioniPerGiorno.computeIfAbsent(giorno, k -> new ArrayList<>()).add(prenotazione);
+	    }
+
+	    // Ordina le prenotazioni per giorno
+	    for (List<Prenotazione> prenotazioniDelGiorno : prenotazioniPerGiorno.values()) {
+	        // Ordina in base all'orario di inizio (più presto in fondo)
+	        prenotazioniDelGiorno.sort((p1, p2) -> {
+	            LocalTime orario1 = p1.getOraInizio().toLocalTime();
+	            LocalTime orario2 = p2.getOraInizio().toLocalTime();
+	            return orario2.compareTo(orario1); // Invertito per avere le più tardi in alto
+	        });
+	    }
+
+	    return prenotazioniPerGiorno;
 	}
+
 
 	@Override
 	protected void paintComponent(Graphics g) {
