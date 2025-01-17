@@ -77,6 +77,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		centroSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		centroSelezionatoLabel.setForeground(Color.WHITE);
 		gbc.gridx = 1;
+		gbc.gridy = 1;
 		add(centroSelezionatoLabel, gbc);
 
 		buttonSelezioneCentro(gbc);
@@ -85,6 +86,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		campoSelezionatoLabel.setFont(new Font("Arial", Font.BOLD, ButtonFontDim));
 		campoSelezionatoLabel.setForeground(Color.WHITE);
 		gbc.gridx = 1;
+		gbc.gridy = 2;
 		add(campoSelezionatoLabel, gbc);
 
 		addDatePicker(gbc);
@@ -96,7 +98,6 @@ public class InserisciPrenotazionePanel extends JPanel {
 		gbc.gridx = 1;
 		oraInizioSpinner = createCustomTimeSpinner();
 		add(oraInizioSpinner, gbc);
-
 		gbc.gridx = 0;
 		gbc.gridy = 5;
 		add(new OutlinedLabel("Ora Fine:", Color.BLACK), gbc);
@@ -208,7 +209,7 @@ public class InserisciPrenotazionePanel extends JPanel {
 		String er = "Errore";
 		String NotSelected = "Non selezionato";
 		if (centroCorrente.equals(NotSelected)) {
-			JOptionPane.showMessageDialog(this, "Seleziona prima un centro.", er, JOptionPane.ERROR_MESSAGE);
+			CustomMessage.show("Seleziona prima un centro.", er, false);
 			return;
 		}
 
@@ -408,10 +409,11 @@ public class InserisciPrenotazionePanel extends JPanel {
 
 		// Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
 		String er = "Errore";
-		if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine())) {
+		if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine()) || (p.getOraInizio().equals(p.getOraFine()))) {
 			CustomMessage.show("L'ora di inizio deve essere precedente a quella di fine.", er, false);
 			return false;
 		}
+		
 
 		// Definisci gli orari limite (apertura alle 8:00 e chiusura a mezzanotte)
 		Time oraApertura = Time.valueOf("08:00:00");
