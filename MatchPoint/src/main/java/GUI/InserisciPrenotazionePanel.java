@@ -165,39 +165,44 @@ public class InserisciPrenotazionePanel extends JPanel {
 	 * disponibili dalle province e consente di scegliere un centro.
 	 */
 	private void apriSelezionaCentroDialog() {
-		String filePathProvince = "src/main/java/localizzazione/comuni.csv";
-		Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);
-		Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
-		Map<String, String> comuniByCentro = new HashMap<>();
+	    String filePathProvince = "src/main/java/localizzazione/comuni.csv";
+	    Map<String, List<String>> provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);
+	    Map<String, Map<String, Integer>> centriByProvince = new HashMap<>();
+	    Map<String, String> comuniByCentro = new HashMap<>();
 
-		// Verifica e popola la mappa dei centri
-		for (String provincia : provinceComuni.keySet()) {
-			Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
-			if (centri != null) { // Verifica che i centri siano disponibili
-				Map<String, Integer> centriMap = new HashMap<>();
-				for (CentroSportivo centro : centri.values()) {
-					centriMap.put(centro.getNome(), centro.getID());
-					comuniByCentro.put(centro.getNome(), centro.getComune());
-				}
-				centriByProvince.put(provincia, centriMap);
-			}
-		}
+	    // Ordina le province in ordine alfabetico
+	    List<String> provinceOrdinate = new ArrayList<>(provinceComuni.keySet());
+	    provinceOrdinate.sort(String::compareTo);
 
-		SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince,
-				comuniByCentro);
-		selezionaDialog.setVisible(true);
+	    // Verifica e popola la mappa dei centri
+	    for (String provincia : provinceOrdinate) {
+	        Map<String, CentroSportivo> centri = DataBase.getCentriSportiviPerProvincia(provincia);
+	        if (centri != null) { // Verifica che i centri siano disponibili
+	            Map<String, Integer> centriMap = new HashMap<>();
+	            for (CentroSportivo centro : centri.values()) {
+	                centriMap.put(centro.getNome(), centro.getID());
+	                comuniByCentro.put(centro.getNome(), centro.getComune());
+	            }
+	            centriByProvince.put(provincia, centriMap);
+	        }
+	    }
 
-		String centroSelezionato = selezionaDialog.getSelezione();
-		centroSelezionatoID = (Integer) selezionaDialog.getSelezioneID();
+	    SelezionaDialog selezionaDialog = new SelezionaDialog("Seleziona Centro", filePathProvince, centriByProvince,
+	            comuniByCentro);
+	    selezionaDialog.setVisible(true);
 
-		// Aggiorna la label in base alla selezione
-		if (centroSelezionato != null && centroSelezionatoID != null) {
-			centroSelezionatoLabel.setText(centroSelezionato);
-		} else {
-			String NotSelected = "Non selezionato";
-			centroSelezionatoLabel.setText(NotSelected);
-		}
+	    String centroSelezionato = selezionaDialog.getSelezione();
+	    centroSelezionatoID = (Integer) selezionaDialog.getSelezioneID();
+
+	    // Aggiorna la label in base alla selezione
+	    if (centroSelezionato != null && centroSelezionatoID != null) {
+	        centroSelezionatoLabel.setText(centroSelezionato);
+	    } else {
+	        String NotSelected = "Non selezionato";
+	        centroSelezionatoLabel.setText(NotSelected);
+	    }
 	}
+
 
 	/**
 	 * Apre il dialog per selezionare un campo sportivo associato al centro

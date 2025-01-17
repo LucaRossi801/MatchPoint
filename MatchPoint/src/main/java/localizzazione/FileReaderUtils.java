@@ -28,7 +28,7 @@ public class FileReaderUtils {
 	 */
 	public static Map<String, List<String>> leggiProvinceEComuni(String filePath) {
 		// Mappa per contenere le province e i rispettivi comuni
-		Map<String, List<String>> provinceComuni = new HashMap<>();
+		Map<String, List<String>> provinceComuni = new TreeMap<>();
 
 		// Utilizza un BufferedReader per leggere il file
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
