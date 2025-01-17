@@ -225,6 +225,7 @@ public class ModificaCentroPanel extends JPanel {
 	            }
 	            aggiornaDettagliCentro(); // Aggiorna dettagli del primo centro
 	        }
+
 	    }
 	}
 
@@ -327,7 +328,11 @@ public class ModificaCentroPanel extends JPanel {
 	                // Rimuovi il centro dalla mappa e aggiorna la ComboBox
 	                centriGestiti.remove(centroSelezionato);
 	                centriComboBox.removeItem(centroSelezionato);
-
+	                if (centriGestiti.isEmpty()) {
+	                	CustomMessage.show("Nessun centro trovato.", "Informazione", false);
+	        			BackgroundPanel.showPanel("createGestore");
+	        			return; // Interrompi il caricamento se non ci sono campi
+	                }
 	                // Eventuali ulteriori aggiornamenti dell'interfaccia
 	                
 	            } else {
