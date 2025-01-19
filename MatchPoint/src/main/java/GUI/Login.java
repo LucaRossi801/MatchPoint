@@ -67,11 +67,11 @@ public class Login {
 							resetFields();
 
 							// Determina il ruolo dell'utente
-							String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo
+							String ruolo = Utente.getRuoloUtente(username, password, null); // Funzione per ottenere il ruolo
 																						// dal database
 
 							login(username, ruolo);
-							Utente.login(username, password);
+							Utente.login(username, password, null);
 							if ("Gestore".equalsIgnoreCase(ruolo)) {
 								BackgroundPanel.showPanel("createGestore"); // Mostra pannello Gestore
 							} else if ("Giocatore".equalsIgnoreCase(ruolo)) {

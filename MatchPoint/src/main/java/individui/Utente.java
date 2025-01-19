@@ -4,7 +4,6 @@
 package individui;
 
 import java.sql.*;
-import java.sql.Date;
 
 import GUI.CustomMessage;
 import dataBase.DataBase;
@@ -39,38 +38,57 @@ public abstract class Utente {
      * @param password La password dell'utente.
      * @return >0 se il login ha successo, 0 se la password è errata, <0 se lo username non è presente.
      */
-    public static int login(String username, String password) {
+    public static int login(String username, String password, Connection testConnection) {
+        Connection conn = null;
+        boolean useTestConnection = (testConnection != null);
         String sql = "SELECT Password FROM Gestore WHERE Username ='" + username + "' UNION SELECT Password FROM Giocatore WHERE Username ='" + username + "'"; // Creazione query
-        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // Connessione al database
         String ris = "";
 
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try {
+            // Gestione della connessione
+            conn = useTestConnection ? testConnection : DriverManager.getConnection("jdbc:sqlite:src/main/java/dataBase/matchpointDB.db");
             ris = DataBase.eseguiSelect(conn, sql); // Esecuzione della query
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            // Chiusura della connessione se non è una connessione di test
+            if (!useTestConnection && conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        if (password.equals(ris)) { // Confronto con la password inserita
+        // Valutazione del risultato
+        if (password.equals(ris)) { // Password corretta
             return 1;
-        } else if (ris.equals("")) {
+        } else if (ris.equals("")) { // Username non trovato
             return -3;
-        } else {
+        } else { // Password errata
             return 0;
         }
     }
 
+
     /**
      * Metodo per ottenere il ruolo di un utente (Gestore o Giocatore).
      *
-     * @param username Lo username dell'utente.
-     * @param password La password dell'utente.
+     * @param username       Lo username dell'utente.
+     * @param password       La password dell'utente.
+     * @param testConnection Connessione di test (opzionale).
      * @return Il ruolo dell'utente ("Gestore", "Giocatore") oppure null se non trovato.
      */
-    public static String getRuoloUtente(String username, String password) {
+    public static String getRuoloUtente(String username, String password, Connection testConnection) {
         String ruolo = null;
-        String url = "jdbc:sqlite:src/main/java/dataBase/matchpointDB.db"; // Connessione al database
+        Connection conn = null;
+        boolean useTestConnection = (testConnection != null);
 
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try {
+            // Gestione della connessione
+            conn = useTestConnection ? testConnection : DriverManager.getConnection("jdbc:sqlite:src/main/java/dataBase/matchpointDB.db");
+
             // Query per verificare se l'utente è un Gestore
             String queryGestore = "SELECT username FROM Gestore WHERE username = '" + username + "' AND password = '" + password + "'";
             String risultatoGestore = DataBase.eseguiSelect(conn, queryGestore);
@@ -89,8 +107,18 @@ public abstract class Utente {
         } catch (SQLException e) {
             e.printStackTrace();
             CustomMessage.show("Errore durante il recupero del ruolo dell'utente!", "Errore", false);
+        } finally {
+            // Chiusura della connessione se non è una connessione di test
+            if (!useTestConnection && conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return ruolo; // Restituisce "Gestore", "Giocatore", oppure null se non trovato
     }
+
 }

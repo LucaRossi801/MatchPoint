@@ -67,11 +67,11 @@ import dataBase.Sessione;
 <span class="nc" id="L67">							resetFields();</span>
 
 							// Determina il ruolo dell'utente
-<span class="nc" id="L70">							String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo</span>
+<span class="nc" id="L70">							String ruolo = Utente.getRuoloUtente(username, password, null); // Funzione per ottenere il ruolo</span>
 																						// dal database
 
 <span class="nc" id="L73">							login(username, ruolo);</span>
-<span class="nc" id="L74">							Utente.login(username, password);</span>
+<span class="nc" id="L74">							Utente.login(username, password, null);</span>
 <span class="nc bnc" id="L75" title="All 2 branches missed.">							if (&quot;Gestore&quot;.equalsIgnoreCase(ruolo)) {</span>
 <span class="nc" id="L76">								BackgroundPanel.showPanel(&quot;createGestore&quot;); // Mostra pannello Gestore</span>
 <span class="nc bnc" id="L77" title="All 2 branches missed.">							} else if (&quot;Giocatore&quot;.equalsIgnoreCase(ruolo)) {</span>
@@ -268,4 +268,4 @@ import dataBase.Sessione;
 	}
 
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

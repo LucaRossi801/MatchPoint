@@ -31,7 +31,7 @@ public class Utente_Test {
     public void testLoginCredenzialiValide() throws Exception {
 
         // Esegue il login con le credenziali corrette
-        int risultato = Utente.login("mrossi", "password123");
+        int risultato = Utente.login("mrossi", "password123", dbUtil.getConnection());
 
         assertEquals(1, risultato); // Login dovrebbe avere successo
     }
@@ -42,7 +42,7 @@ public class Utente_Test {
     @Test
     public void testLoginUsernameInesistente() throws Exception {
         // Esegue il login con un username inesistente
-        int risultato = Utente.login("utente_non_esistente", "password123");
+        int risultato = Utente.login("utente_non_esistente", "password123", dbUtil.getConnection());
 
         assertEquals(-3, risultato); // Username non trovato
     }
@@ -53,7 +53,7 @@ public class Utente_Test {
     @Test
     public void testLoginPasswordErrata() throws Exception {
         // Esegue il login con una password errata
-        int risultato = Utente.login("mrossi", "errata");
+        int risultato = Utente.login("mrossi", "errata", dbUtil.getConnection());
 
         assertEquals(0, risultato); // Password errata
     }
@@ -64,7 +64,7 @@ public class Utente_Test {
     @Test
     public void testGetRuoloUtenteGestore() throws Exception {
         // Recupera il ruolo del gestore
-        String ruolo = Utente.getRuoloUtente("mrossi", "password123");
+        String ruolo = Utente.getRuoloUtente("mrossi", "password123", dbUtil.getConnection());
 
         assertEquals("Gestore", ruolo); // Dovrebbe restituire "Gestore"
     }
@@ -75,9 +75,9 @@ public class Utente_Test {
     @Test
     public void testGetRuoloUtenteGiocatore() throws Exception {
         // Recupera il ruolo del giocatore
-        String ruolo = Utente.getRuoloUtente("lverdi", "password789");
+        String ruolo = Utente.getRuoloUtente("lverdi", "password789", dbUtil.getConnection());
 
-        assertEquals("giocatore", ruolo); // Dovrebbe restituire "Giocatore"
+        assertEquals("Giocatore", ruolo); // Dovrebbe restituire "Giocatore"
     }
 
     /**
@@ -86,7 +86,7 @@ public class Utente_Test {
     @Test
     public void testGetRuoloUtenteCredenzialiErrate() throws Exception {
         // Recupera il ruolo con una password errata
-        String ruolo = Utente.getRuoloUtente("lverdi", "errata");
+        String ruolo = Utente.getRuoloUtente("lverdi", "errata", dbUtil.getConnection());
 
         assertNull(ruolo); // Dovrebbe restituire null
     }
@@ -97,7 +97,7 @@ public class Utente_Test {
     @Test
     public void testGetRuoloUtenteUsernameInesistente() throws Exception {
         // Recupera il ruolo di un utente inesistente
-        String ruolo = Utente.getRuoloUtente("nonEsiste", "password123");
+        String ruolo = Utente.getRuoloUtente("nonEsiste", "password123", dbUtil.getConnection());
 
         assertNull(ruolo); // Dovrebbe restituire null
     }
