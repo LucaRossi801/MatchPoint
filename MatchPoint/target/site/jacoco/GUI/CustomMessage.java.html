@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomMessage.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">CustomMessage.java</span></div><h1>CustomMessage.java</h1><pre class="source lang-java linenums">package GUI;
+
+import java.awt.*;
+import java.net.URL;
+import javax.swing.*;
+
+/**
+ * Classe utility per mostrare messaggi personalizzati in finestre di dialogo.
+ * Consente di visualizzare messaggi con titolo e design distinti per successo o
+ * errore.
+ */
+<span class="nc" id="L12">public class CustomMessage {</span>
+
+	/**
+	 * Mostra un messaggio personalizzato in una finestra di dialogo.
+	 *
+	 * @param message il messaggio da visualizzare
+	 * @param title   il titolo della finestra di dialogo
+	 * @param success {@code true} per un messaggio di successo (colore verde),
+	 *                {@code false} per un messaggio di errore (colore rosso)
+	 */
+	public static void show(String message, String title, boolean success) {
+		// Percorso dell'icona del logo
+<span class="nc" id="L24">		String logoPath = &quot;/GUI/immagini/icona.png&quot;;</span>
+
+		// Creazione della finestra di dialogo modale
+<span class="nc" id="L27">		JDialog dialog = new JDialog((Frame) null, title, true);</span>
+<span class="nc" id="L28">		dialog.setTitle(title);</span>
+<span class="nc" id="L29">		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L30">		dialog.setSize(400, 250); // Dimensioni della finestra di dialogo</span>
+<span class="nc" id="L31">		dialog.setLocationRelativeTo(null); // Centrare la finestra sullo schermo</span>
+<span class="nc" id="L32">		dialog.setLayout(new BorderLayout());</span>
+<span class="nc" id="L33">		dialog.setAlwaysOnTop(true); // Forza la finestra sopra tutte le altre</span>
+<span class="nc" id="L34">		dialog.toFront(); // Porta la finestra in primo piano</span>
+<span class="nc" id="L35">		dialog.repaint(); // Aggiorna graficamente la finestra</span>
+
+		// Imposta l'icona della finestra (se disponibile)
+<span class="nc bnc" id="L38" title="All 2 branches missed.">		if (logoPath != null) {</span>
+<span class="nc" id="L39">			URL iconURL = CustomMessage.class.getResource(logoPath);</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">			if (iconURL != null) {</span>
+<span class="nc" id="L41">				ImageIcon icon = new ImageIcon(iconURL);</span>
+<span class="nc" id="L42">				dialog.setIconImage(icon.getImage());</span>
+<span class="nc" id="L43">			} else {</span>
+<span class="nc" id="L44">				String IconNotFound = &quot;Icona non trovata: &quot;;</span>
+<span class="nc" id="L45">				String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L46">				CustomMessage.show(IconNotFound + logoPath, er, false);</span>
+			}
+		}
+
+		// Pannello principale con il colore di sfondo basato sul tipo di messaggio
+<span class="nc" id="L51">		JPanel panel = new JPanel();</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">		panel.setBackground(success ? new Color(34, 139, 34) : Color.RED); // Verde per successo, rosso per errore</span>
+<span class="nc" id="L53">		panel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L54">		dialog.add(panel);</span>
+
+		// Etichetta per il messaggio
+<span class="nc" id="L57">		JLabel messageLabel = new JLabel(&quot;&lt;html&gt;&lt;center&gt;&quot; + message + &quot;&lt;/center&gt;&lt;/html&gt;&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L58">		int LabelFontDim = 20;</span>
+<span class="nc" id="L59">		messageLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, LabelFontDim));</span>
+<span class="nc" id="L60">		messageLabel.setForeground(Color.WHITE); // Testo bianco</span>
+<span class="nc" id="L61">		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Margini</span>
+<span class="nc" id="L62">		panel.add(messageLabel, BorderLayout.CENTER);</span>
+
+<span class="nc" id="L64">		buttonOK(success, dialog, panel);</span>
+
+		// Mostra la finestra di dialogo
+<span class="nc" id="L67">		dialog.setVisible(true);</span>
+<span class="nc" id="L68">	}</span>
+
+	private static void buttonOK(boolean success, JDialog dialog, JPanel panel) {
+		// Pulsante &quot;OK&quot; per chiudere la finestra di dialogo
+<span class="nc" id="L72">		JButton okButton = new JButton(&quot;OK&quot;);</span>
+<span class="nc" id="L73">		int ButtonDFontDim = 14;</span>
+<span class="nc" id="L74">		okButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonDFontDim));</span>
+<span class="nc" id="L75">		okButton.setPreferredSize(new Dimension(80, 30)); // Dimensioni del pulsante</span>
+<span class="nc" id="L76">		okButton.setBackground(Color.WHITE); // Sfondo bianco per il pulsante</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">		okButton.setForeground(success ? new Color(32, 178, 170) : Color.RED); // Testo verde o rosso</span>
+<span class="nc" id="L78">		okButton.setFocusPainted(false); // Rimuove il bordo al focus</span>
+<span class="nc" id="L79">		okButton.addActionListener(e -&gt; dialog.dispose()); // Chiude la finestra al clic</span>
+
+		// Pannello contenente il pulsante &quot;OK&quot;
+<span class="nc" id="L82">		JPanel buttonPanel = new JPanel();</span>
+<span class="nc" id="L83">		buttonPanel.setOpaque(false); // Sfondo trasparente</span>
+<span class="nc" id="L84">		buttonPanel.add(okButton); // Aggiunge il pulsante al centro</span>
+<span class="nc" id="L85">		panel.add(buttonPanel, BorderLayout.SOUTH);</span>
+<span class="nc" id="L86">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

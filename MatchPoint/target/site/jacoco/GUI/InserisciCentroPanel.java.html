@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InserisciCentroPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">InserisciCentroPanel.java</span></div><h1>InserisciCentroPanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+
+import components.Campo;
+import dataBase.DataBase;
+import dataBase.Sessione;
+import localizzazione.FileReaderUtils;
+
+import java.awt.*;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+
+/**
+ * Classe responsabile della creazione del pannello per l'inserimento di un
+ * nuovo centro sportivo. Consente di selezionare nome, provincia, comune e
+ * campi sportivi associati.
+ */
+public class InserisciCentroPanel extends JPanel {
+	private Image background; // Immagine di sfondo
+	private JComboBox&lt;String&gt; provinciaComboBox; // Dropdown per la selezione della provincia
+	private JComboBox&lt;String&gt; comuneComboBox; // Dropdown per la selezione del comune
+
+	/**
+	 * Costruttore della classe. Inizializza il pannello con i componenti necessari
+	 * per l'inserimento del centro.
+	 *
+	 * @param cardLayout Gestore di layout per la navigazione tra pannelli.
+	 * @param cardPanel  Pannello principale contenente i vari componenti.
+	 */
+<span class="nc" id="L37">	public InserisciCentroPanel(CardLayout cardLayout, JPanel cardPanel) {</span>
+		// Carica dati dal file CSV
+<span class="nc" id="L39">		String filePath = &quot;src/main/java/localizzazione/comuni.csv&quot;; // Sostituisci con il percorso corretto</span>
+<span class="nc" id="L40">		Map&lt;String, List&lt;String&gt;&gt; provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);</span>
+
+		// Inizializza ComboBox
+<span class="nc" id="L43">		provinciaComboBox = new JComboBox&lt;&gt;(provinceComuni.keySet().toArray(new String[0]));</span>
+<span class="nc" id="L44">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L45">		provinciaComboBox.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L46">		comuneComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L47">		comuneComboBox.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, 18));</span>
+		// Resetta combobox
+<span class="nc" id="L49">		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia</span>
+<span class="nc" id="L50">		provinciaComboBox.addActionListener(e -&gt; {</span>
+<span class="nc" id="L51">			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();</span>
+<span class="nc" id="L52">			comuneComboBox.removeAllItems();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">			if (provinciaSelezionata != null) {</span>
+<span class="nc" id="L54">				List&lt;String&gt; comuni = provinceComuni.get(provinciaSelezionata);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">				if (comuni != null) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">					for (String comune : comuni) {</span>
+<span class="nc" id="L57">						comuneComboBox.addItem(comune);</span>
+<span class="nc" id="L58">						comuneComboBox.setSelectedIndex(-1); // Deseleziona i comuni</span>
+
+<span class="nc" id="L60">					}</span>
+				}
+			}
+<span class="nc" id="L63">		});</span>
+
+<span class="nc" id="L65">		JPanel riepilogoPanel = new JPanel();</span>
+<span class="nc" id="L66">		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L67">		riepilogoPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L69">		JScrollPane scrollPane = new JScrollPane(riepilogoPanel);</span>
+<span class="nc" id="L70">		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);</span>
+<span class="nc" id="L71">		scrollPane.setPreferredSize(new Dimension(350, 200));</span>
+
+		// Carica immagine di sfondo
+<span class="nc" id="L74">		URL backgroundUrl = getClass().getClassLoader().getResource(&quot;GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">		if (backgroundUrl != null) {</span>
+<span class="nc" id="L76">			background = new ImageIcon(backgroundUrl).getImage();</span>
+		} else {
+<span class="nc" id="L78">			String ImageNotFound = &quot;Errore nel caricamento dell'immagine di sfondo.&quot;;</span>
+<span class="nc" id="L79">			System.out.println(ImageNotFound);</span>
+		}
+
+		// Layout e configurazione
+<span class="nc" id="L83">		setLayout(new GridBagLayout());</span>
+<span class="nc" id="L84">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L85">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L86">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+		// Titolo
+<span class="nc" id="L89">		JLabel titleLabel = new OutlinedLabel(&quot;Inserisci Centro&quot;, Color.WHITE);</span>
+<span class="nc" id="L90">		titleLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 30));</span>
+
+<span class="nc" id="L92">		gbc.gridx = 0;</span>
+<span class="nc" id="L93">		gbc.gridy = 0;</span>
+<span class="nc" id="L94">		gbc.gridwidth = 2; // Il titolo occupa due colonne</span>
+<span class="nc" id="L95">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L96">		add(titleLabel, gbc);</span>
+
+		// Mappa per gestire i campi
+<span class="nc" id="L99">		Map&lt;String, JTextField&gt; fields = new HashMap&lt;&gt;();</span>
+
+		// Campi di testo
+<span class="nc" id="L102">		String[] campi = { &quot;NomeCentro&quot; };</span>
+<span class="nc" id="L103">		int row = 1; // Riga di partenza</span>
+
+<span class="nc" id="L105">		int LabeFontDim = 24;</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">		for (String campo : campi) {</span>
+			// Etichetta
+<span class="nc" id="L108">			JLabel label = new OutlinedLabel(campo + &quot;:&quot;, Color.BLACK);</span>
+<span class="nc" id="L109">			label.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, LabeFontDim));</span>
+<span class="nc" id="L110">			gbc.gridx = 0; // Colonna sinistra</span>
+<span class="nc" id="L111">			gbc.gridy = row;</span>
+<span class="nc" id="L112">			gbc.gridwidth = 1;</span>
+<span class="nc" id="L113">			gbc.anchor = GridBagConstraints.WEST;</span>
+<span class="nc" id="L114">			add(label, gbc);</span>
+
+			// Campo di input
+<span class="nc" id="L117">			JTextField inputField = new JTextField(20);</span>
+<span class="nc" id="L118">			inputField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L119">			gbc.gridx = 1; // Colonna destra</span>
+<span class="nc" id="L120">			add(inputField, gbc);</span>
+
+			// Salva il campo nella mappa
+<span class="nc" id="L123">			fields.put(campo, inputField);</span>
+
+<span class="nc" id="L125">			row++;</span>
+		}
+		// Provincia
+<span class="nc" id="L128">		JLabel provinciaLabel = new OutlinedLabel(&quot;Provincia:&quot;, Color.BLACK);</span>
+<span class="nc" id="L129">		provinciaLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, LabeFontDim));</span>
+<span class="nc" id="L130">		gbc.gridx = 0;</span>
+<span class="nc" id="L131">		gbc.gridy = row;</span>
+<span class="nc" id="L132">		add(provinciaLabel, gbc);</span>
+
+<span class="nc" id="L134">		gbc.gridx = 1;</span>
+<span class="nc" id="L135">		add(provinciaComboBox, gbc);</span>
+<span class="nc" id="L136">		row++;</span>
+
+		// Comune
+<span class="nc" id="L139">		JLabel comuneLabel = new OutlinedLabel(&quot;Comune:&quot;, Color.BLACK);</span>
+<span class="nc" id="L140">		comuneLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, LabeFontDim));</span>
+<span class="nc" id="L141">		gbc.gridx = 0;</span>
+<span class="nc" id="L142">		gbc.gridy = row;</span>
+<span class="nc" id="L143">		add(comuneLabel, gbc);</span>
+
+<span class="nc" id="L145">		gbc.gridx = 1;</span>
+<span class="nc" id="L146">		add(comuneComboBox, gbc);</span>
+<span class="nc" id="L147">		row++;</span>
+
+		// Bottone per aggiungere campo
+<span class="nc" id="L150">		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton(&quot;Aggiungi Campo&quot;, e -&gt; {</span>
+			// Passa riepilogoPanel invece di riepilogoArea
+<span class="nc" id="L152">			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);</span>
+<span class="nc" id="L153">		}, new Dimension(300, 50));</span>
+
+<span class="nc" id="L155">		aggiungiCampoButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L156">		aggiungiCampoButton.setBackground(new Color(32, 178, 170));</span>
+<span class="nc" id="L157">		aggiungiCampoButton.setForeground(new Color(220, 250, 245));</span>
+<span class="nc" id="L158">		aggiungiCampoButton.setFocusPainted(false);</span>
+
+<span class="nc" id="L160">		gbc.gridx = 0;</span>
+<span class="nc" id="L161">		gbc.gridy = row;</span>
+<span class="nc" id="L162">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L163">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L164">		add(aggiungiCampoButton, gbc);</span>
+<span class="nc" id="L165">		row++;</span>
+
+		// Aggiungi il JTextArea per il riepilogo
+<span class="nc" id="L168">		gbc.gridy = row;</span>
+<span class="nc" id="L169">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L170">		add(scrollPane, gbc);</span>
+
+		// Bottone Inserisci Centro
+<span class="nc" id="L173">		JButton inserisciCentroButton = BackgroundPanel.createFlatButton(&quot;Inserisci Centro&quot;, e -&gt; {</span>
+			// Recupera i dati inseriti e fai l'inserimento
+<span class="nc" id="L175">			String nomeCentro = fields.get(&quot;NomeCentro&quot;).getText();</span>
+<span class="nc" id="L176">			String provincia = (String) provinciaComboBox.getSelectedItem();</span>
+<span class="nc" id="L177">			String comune = (String) comuneComboBox.getSelectedItem();</span>
+
+			// Controlla se tutti i campi sono stati compilati
+<span class="nc" id="L180">			String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L181" title="All 10 branches missed.">			if (nomeCentro == null || provincia == null || comune == null || nomeCentro.isEmpty() || provincia.isEmpty()</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">					|| comune.isEmpty()) {</span>
+<span class="nc" id="L183">				String CompAll = &quot;Compila tutti i campi!&quot;;</span>
+<span class="nc" id="L184">				CustomMessage.show(CompAll, er, false);</span>
+<span class="nc" id="L185">				return;</span>
+			}
+			// aggiunge il centro sportivo al DB
+<span class="nc" id="L188">			DataBase.insert(nomeCentro, provincia, comune, Sessione.getId());</span>
+<span class="nc" id="L189">			String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L190">			CustomMessage.show(&quot;Centro inserito con successo!&quot;, S, true);</span>
+			// Cambia schermata
+<span class="nc" id="L192">			cardLayout.show(cardPanel, &quot;createGestore&quot;);</span>
+			// Resetta tutti i campi
+<span class="nc" id="L194">		    resetFields(fields, riepilogoPanel);</span>
+		    
+			// Seleziona ID del centro sportivo creato
+<span class="nc" id="L197">			String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L198">			String sql = &quot;SELECT ID FROM CentroSportivo WHERE Nome ='&quot; + nomeCentro + &quot;' AND Comune = '&quot; + comune + &quot;'&quot;;</span>
+<span class="nc" id="L199">			String ris = &quot;&quot;;</span>
+<span class="nc" id="L200">			try (Connection conn = DriverManager.getConnection(url)) {</span>
+<span class="nc" id="L201">				ris = DataBase.eseguiSelect(conn, sql);</span>
+<span class="nc" id="L202">			} catch (SQLException ex) {</span>
+<span class="nc" id="L203">				ex.printStackTrace();</span>
+<span class="nc" id="L204">				String DBerror = &quot;Errore di connessione al DataBase&quot;;</span>
+<span class="nc" id="L205">				CustomMessage.show(DBerror, er, false);</span>
+<span class="nc" id="L206">				return;</span>
+<span class="nc" id="L207">			}</span>
+<span class="nc" id="L208">			int idGestore = Integer.parseInt(ris);</span>
+			// aggiungi anche i campi al DB (se ci sono)
+<span class="nc" id="L210">			ArrayList&lt;Campo&gt; campiSelezionati = AggiungiCampoDialog.getCampi();</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">			for (Campo c : campiSelezionati) {</span>
+<span class="nc" id="L212">				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,</span>
+<span class="nc" id="L213">						c.larghezza, c.isCoperto(), idGestore);</span>
+<span class="nc" id="L214">			}</span>
+
+<span class="nc" id="L216">		}, new Dimension(300, 50));</span>
+
+<span class="nc" id="L218">		inserisciCentroButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L219">		inserisciCentroButton.setBackground(new Color(0, 128, 128));</span>
+<span class="nc" id="L220">		inserisciCentroButton.setForeground(Color.WHITE);</span>
+
+<span class="nc" id="L222">		gbc.gridy = row + 2;</span>
+<span class="nc" id="L223">		add(inserisciCentroButton, gbc);</span>
+
+		// Bottone Indietro
+<span class="nc" id="L226">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+			
+			// Resetta tutti i campi
+<span class="nc" id="L229">		    resetFields(fields, riepilogoPanel);</span>
+			// Svuota tutti i campi di input
+<span class="nc" id="L231">			fields.values().forEach(field -&gt; field.setText(&quot;&quot;));</span>
+
+			// Svuota i campi sportivi creati
+<span class="nc" id="L234">			AggiungiCampoDialog.getCampi().clear();</span>
+
+			// Rimuovi i pannelli dei campi dal riepilogo
+<span class="nc" id="L237">			riepilogoPanel.removeAll();</span>
+<span class="nc" id="L238">			riepilogoPanel.revalidate();</span>
+<span class="nc" id="L239">			riepilogoPanel.repaint();</span>
+
+			// Cambia schermata
+<span class="nc" id="L242">			cardLayout.show(cardPanel, &quot;createGestore&quot;);</span>
+<span class="nc" id="L243">		}, new Dimension(120, 30));</span>
+
+<span class="nc" id="L245">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L246">		backButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L247">		backButton.setBackground(Color.DARK_GRAY);</span>
+
+<span class="nc" id="L249">		gbc.gridy = row + 3;</span>
+<span class="nc" id="L250">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L251">		add(backButton, gbc);</span>
+
+<span class="nc" id="L253">	}</span>
+
+	/**
+	 * Resetta tutti i campi del pannello, inclusi JTextField, JComboBox e il
+	 * JTextArea.
+	 */
+	public void resetFields(Map&lt;String, JTextField&gt; fields, JPanel riepilogoPanel) {
+		// Pulisci i JTextField
+<span class="nc" id="L261">		fields.values().forEach(field -&gt; field.setText(&quot;&quot;));</span>
+
+		// Reset delle JComboBox
+<span class="nc" id="L264">		provinciaComboBox.setSelectedIndex(-1); // Deseleziona la provincia</span>
+<span class="nc" id="L265">		comuneComboBox.removeAllItems(); // Svuota i comuni</span>
+
+		// Rimuovi i pannelli dal riepilogo
+<span class="nc" id="L268">		riepilogoPanel.removeAll();</span>
+<span class="nc" id="L269">		riepilogoPanel.revalidate();</span>
+<span class="nc" id="L270">		riepilogoPanel.repaint();</span>
+<span class="nc" id="L271">	}</span>
+
+	/**
+	 * Override del metodo paintComponent per disegnare l'immagine di sfondo.
+	 *
+	 * @param g Oggetto Graphics utilizzato per disegnare il pannello.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L280">		super.paintComponent(g);</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">		if (background != null) {</span>
+<span class="nc" id="L282">			g.drawImage(background, 0, 0, getWidth(), getHeight(), this);</span>
+		}
+<span class="nc" id="L284">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

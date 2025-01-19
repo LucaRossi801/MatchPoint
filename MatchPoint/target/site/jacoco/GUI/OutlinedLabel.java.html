@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutlinedLabel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">OutlinedLabel.java</span></div><h1>OutlinedLabel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * Classe personalizzata per creare un'etichetta JLabel con testo bordato.
+ * Consente di avere un bordo di colore contrastante attorno al testo per una
+ * migliore leggibilità.
+ */
+public class OutlinedLabel extends JLabel {
+	private Color outlineColor; // Variabile d'istanza per il colore del contorno
+
+	/**
+	 * Costruttore per inizializzare l'etichetta bordata.
+	 * 
+	 * @param text  Il testo da visualizzare nell'etichetta.
+	 * @param color Il colore del testo principale. Deve essere {@code Color.BLACK}
+	 *              o {@code Color.WHITE}.
+	 * @throws IllegalArgumentException Se il colore passato non è supportato.
+	 */
+	public OutlinedLabel(String text, Color color) { // Si passa come variabile il colore che desidero interno (o nero
+														// con bordo bianco o viceversa)
+<span class="nc" id="L24">		super(text);</span>
+<span class="nc" id="L25">		setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 20)); // Font personalizzato</span>
+
+		// Imposta outlineColor e il colore del testo in base al parametro passato
+<span class="nc bnc" id="L28" title="All 2 branches missed.">		if (color == Color.WHITE) {</span>
+<span class="nc" id="L29">			this.outlineColor = Color.BLACK; // Colore del bordo nero</span>
+<span class="nc" id="L30">			setForeground(Color.WHITE); // Colore interno del testo</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">		} else if (color == Color.BLACK) {</span>
+<span class="nc" id="L32">			this.outlineColor = Color.WHITE; // Colore del bordo bianco</span>
+<span class="nc" id="L33">			setForeground(Color.BLACK); // Colore interno del testo</span>
+		} else {
+<span class="nc" id="L35">			throw new IllegalArgumentException(&quot;Colore non supportato. Usa Color.BLACK o Color.WHITE.&quot;);</span>
+		}
+<span class="nc" id="L37">	}</span>
+
+	/**
+	 * Override del metodo di rendering per disegnare il bordo attorno al testo.
+	 * 
+	 * @param g Il contesto grafico utilizzato per disegnare.
+	 */
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L45">		Graphics2D g2 = (Graphics2D) g.create();</span>
+<span class="nc" id="L46">		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);</span>
+
+<span class="nc" id="L48">		String text = getText();</span>
+<span class="nc bnc" id="L49" title="All 4 branches missed.">		if (text != null &amp;&amp; !text.isEmpty()) {</span>
+<span class="nc" id="L50">			FontMetrics fm = g2.getFontMetrics(getFont());</span>
+<span class="nc" id="L51">			int x = 0; // Posizione orizzontale</span>
+<span class="nc" id="L52">			int y = fm.getAscent(); // Posizione verticale</span>
+
+			// Disegna il bordo
+<span class="nc" id="L55">			g2.setColor(outlineColor);</span>
+<span class="nc" id="L56">			g2.drawString(text, x - 1, y - 1);</span>
+<span class="nc" id="L57">			g2.drawString(text, x + 1, y - 1);</span>
+<span class="nc" id="L58">			g2.drawString(text, x - 1, y + 1);</span>
+<span class="nc" id="L59">			g2.drawString(text, x + 1, y + 1);</span>
+
+			// Disegna il testo principale
+<span class="nc" id="L62">			g2.setColor(getForeground());</span>
+<span class="nc" id="L63">			g2.drawString(text, x, y);</span>
+		}
+
+<span class="nc" id="L66">		g2.dispose();</span>
+<span class="nc" id="L67">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

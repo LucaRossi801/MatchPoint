@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SelezionaDialog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">SelezionaDialog.java</span></div><h1>SelezionaDialog.java</h1><pre class="source lang-java linenums">package GUI;
+
+import localizzazione.FileReaderUtils;
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Classe SelezionaDialog rappresenta un dialogo per la selezione di un centro
+ * sportivo. Mostra una lista di province e, in base alla selezione, visualizza
+ * i centri disponibili.
+ */
+public class SelezionaDialog extends JDialog {
+<span class="nc" id="L15">	private String selezione = null;</span>
+<span class="nc" id="L16">	private Object selezioneID = null;</span>
+
+	/**
+	 * Costruttore per creare il dialogo di selezione dei centri sportivi.
+	 *
+	 * @param titolo           Il titolo del dialogo.
+	 * @param filePathProvince Il percorso del file CSV contenente province e
+	 *                         comuni.
+	 * @param centriByProvince Mappa delle province con i centri sportivi associati.
+	 * @param comuniByCentro   Mappa dei centri sportivi con i rispettivi comuni.
+	 */
+	public SelezionaDialog(String titolo, String filePathProvince, Map&lt;String, Map&lt;String, Integer&gt;&gt; centriByProvince,
+<span class="nc" id="L28">			Map&lt;String, String&gt; comuniByCentro) {</span>
+<span class="nc" id="L29">		setTitle(titolo);</span>
+<span class="nc" id="L30">		setModal(true);</span>
+<span class="nc" id="L31">		setSize(500, 400);</span>
+<span class="nc" id="L32">		setLayout(new BorderLayout());</span>
+
+		// Legge province e comuni dal file CSV
+<span class="nc" id="L35">		Map&lt;String, List&lt;String&gt;&gt; provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);</span>
+
+		// Creazione di un JPanel per la North con margini
+<span class="nc" id="L38">		JPanel northPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L39">		JComboBox&lt;String&gt; provinciaComboBox = new JComboBox&lt;&gt;(provinceComuni.keySet().toArray(new String[0]));</span>
+<span class="nc" id="L40">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L41">		provinciaComboBox.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L42">		northPanel.add(provinciaComboBox, BorderLayout.CENTER);</span>
+<span class="nc" id="L43">		northPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Margini personalizzati</span>
+<span class="nc" id="L44">		add(northPanel, BorderLayout.NORTH);</span>
+
+		// Pannello per visualizzare i centri
+<span class="nc" id="L47">		JPanel centriPanel = new JPanel();</span>
+<span class="nc" id="L48">		centriPanel.setLayout(new BoxLayout(centriPanel, BoxLayout.Y_AXIS));</span>
+
+		// Creazione dello JScrollPane
+<span class="nc" id="L51">		JScrollPane scrollPane = new JScrollPane(centriPanel);</span>
+		// Aggiungi margini vuoti all'interno dello JScrollPane
+<span class="nc" id="L53">		scrollPane.setViewportView(centriPanel);</span>
+<span class="nc" id="L54">		scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Aggiungi margini vuoti al viewport</span>
+<span class="nc" id="L55">		add(scrollPane, BorderLayout.CENTER);</span>
+
+		// Aggiorna i centri al cambio di provincia
+<span class="nc" id="L58">		provinciaComboBox.addActionListener(e -&gt; {</span>
+<span class="nc" id="L59">			String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">			if (provinciaSelezionata != null) {</span>
+<span class="nc" id="L61">				Map&lt;String, Integer&gt; centri = centriByProvince.get(provinciaSelezionata);</span>
+<span class="nc" id="L62">				aggiornaCentriPanel(centriPanel, centri, comuniByCentro);</span>
+			}
+<span class="nc" id="L64">		});</span>
+
+		// Imposta la provincia iniziale
+<span class="nc bnc" id="L67" title="All 2 branches missed.">		if (!provinceComuni.isEmpty()) {</span>
+<span class="nc" id="L68">			provinciaComboBox.setSelectedIndex(0);</span>
+		}
+
+		// Creazione del JPanel per la South con margini
+<span class="nc" id="L72">		JPanel southPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L73">		JButton chiudiButton = BackgroundPanel.createFlatButton(&quot;Chiudi&quot;, e -&gt; dispose(), new Dimension(100, 40));</span>
+<span class="nc" id="L74">		chiudiButton.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L75">		chiudiButton.setForeground(Color.GRAY); // Sfondo grigio</span>
+<span class="nc" id="L76">		chiudiButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L77">		southPanel.add(chiudiButton, BorderLayout.CENTER);</span>
+<span class="nc" id="L78">		southPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20)); // Margini personalizzati</span>
+<span class="nc" id="L79">		add(southPanel, BorderLayout.SOUTH);</span>
+
+<span class="nc" id="L81">		setLocationRelativeTo(null); // Centra il dialogo</span>
+<span class="nc" id="L82">	}</span>
+
+	/**
+	 * Aggiorna il pannello con la lista dei centri sportivi in base alla provincia
+	 * selezionata.
+	 *
+	 * @param centriPanel    Il pannello in cui visualizzare i centri.
+	 * @param centri         Mappa dei centri sportivi associati alla provincia
+	 *                       selezionata.
+	 * @param comuniByCentro Mappa dei centri sportivi con i rispettivi comuni.
+	 */
+	private void aggiornaCentriPanel(JPanel centriPanel, Map&lt;String, Integer&gt; centri,
+			Map&lt;String, String&gt; comuniByCentro) {
+<span class="nc" id="L95">		centriPanel.removeAll();</span>
+
+<span class="nc bnc" id="L97" title="All 2 branches missed.">		if (centri != null) {</span>
+			// Configura un layout flessibile
+<span class="nc" id="L99">			centriPanel.setLayout(new BoxLayout(centriPanel, BoxLayout.Y_AXIS));</span>
+
+			// Imposta un bordo vuoto per evitare che i contenuti tocchino i bordi dello
+			// scrollpane
+<span class="nc" id="L103">			centriPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</span>
+
+<span class="nc bnc" id="L105" title="All 2 branches missed.">			for (Map.Entry&lt;String, Integer&gt; entry : centri.entrySet()) {</span>
+<span class="nc" id="L106">				String centroNome = entry.getKey();</span>
+<span class="nc" id="L107">				Integer centroID = entry.getValue();</span>
+
+				// Crea un pannello singolo per il centro con larghezza dinamica
+<span class="nc" id="L110">				JPanel centroItemPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L111">				centroItemPanel</span>
+<span class="nc" id="L112">						.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK), // Bordo</span>
+																													// nero
+																													// esterno
+<span class="nc" id="L115">								BorderFactory.createEmptyBorder(10, 10, 10, 10) // Margini interni</span>
+						));
+<span class="nc" id="L117">				centroItemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50)); // Larghezza flessibile</span>
+<span class="nc" id="L118">				centroItemPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Allineamento a sinistra</span>
+
+<span class="nc" id="L120">				JLabel centroLabel = new JLabel(centroNome + &quot; (&quot; + comuniByCentro.get(centroNome) + &quot;)&quot;);</span>
+<span class="nc" id="L121">				centroLabel.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, 16));</span>
+
+				// Crea un FlatButton per &quot;Seleziona&quot;
+<span class="nc" id="L124">				JButton selezionaButton = BackgroundPanel.createFlatButton(&quot;V&quot;, e -&gt; {</span>
+<span class="nc" id="L125">					selezione = centroNome;</span>
+<span class="nc" id="L126">					selezioneID = centroID;</span>
+<span class="nc" id="L127">					dispose(); // Chiude il dialogo</span>
+<span class="nc" id="L128">				}, new Dimension(30, 25)); // Dimensioni ridotte</span>
+<span class="nc" id="L129">				int SelectButtonFontDim = 14;</span>
+<span class="nc" id="L130">				selezionaButton.setFont(new Font(&quot;Montserrat&quot;, Font.PLAIN, SelectButtonFontDim));</span>
+<span class="nc" id="L131">				selezionaButton.setBackground(new Color(34, 139, 34)); // Verde</span>
+<span class="nc" id="L132">				selezionaButton.setForeground(Color.WHITE);</span>
+
+				// Aggiungi i componenti al pannello
+<span class="nc" id="L135">				centroItemPanel.add(centroLabel, BorderLayout.CENTER);</span>
+<span class="nc" id="L136">				centroItemPanel.add(selezionaButton, BorderLayout.EAST);</span>
+
+				// Aggiungi il pannello al contenitore principale
+<span class="nc" id="L139">				centriPanel.add(centroItemPanel);</span>
+
+				// Spazio tra i centri
+<span class="nc" id="L142">				centriPanel.add(Box.createVerticalStrut(10));</span>
+<span class="nc" id="L143">			}</span>
+		}
+
+<span class="nc" id="L146">		centriPanel.revalidate();</span>
+<span class="nc" id="L147">		centriPanel.repaint();</span>
+<span class="nc" id="L148">	}</span>
+
+	/**
+	 * Restituisce il nome del centro sportivo selezionato.
+	 *
+	 * @return Il nome del centro sportivo selezionato, oppure null se nessuna
+	 *         selezione è stata effettuata.
+	 */
+	public String getSelezione() {
+<span class="nc" id="L157">		return selezione;</span>
+	}
+
+	/**
+	 * Restituisce l'ID del centro sportivo selezionato.
+	 *
+	 * @return L'ID del centro sportivo selezionato, oppure null se nessuna
+	 *         selezione è stata effettuata.
+	 */
+	public Object getSelezioneID() {
+<span class="nc" id="L167">		return selezioneID;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

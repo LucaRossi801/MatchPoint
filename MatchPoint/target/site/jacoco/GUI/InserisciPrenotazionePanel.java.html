@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InserisciPrenotazionePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">InserisciPrenotazionePanel.java</span></div><h1>InserisciPrenotazionePanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import org.jdesktop.swingx.JXDatePicker;
+
+import components.Campo;
+import components.CentroSportivo;
+import components.Prenotazione;
+import dataBase.DataBase;
+import dataBase.Sessione;
+import localizzazione.FileReaderUtils;
+
+import javax.swing.*;
+import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.Timer;
+
+import java.awt.*;
+import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.List;
+
+public class InserisciPrenotazionePanel extends JPanel {
+	private Image clearImage;
+
+	private JLabel centroSelezionatoLabel;
+	private JLabel campoSelezionatoLabel;
+	private Integer campoSelezionatoID;
+	private Integer centroSelezionatoID;
+	private JSpinner oraInizioSpinner;
+	private JSpinner oraFineSpinner;
+<span class="nc" id="L35">	JXDatePicker datePicker = new JXDatePicker();</span>
+
+	/**
+	 * Costruttore della classe InserisciPrenotazionePanel. Inizializza il pannello
+	 * per l'inserimento di una nuova prenotazione, con selezione di centro, campo,
+	 * data e orari.
+	 *
+	 * @param cardLayout Il layout per la gestione della navigazione tra pannelli.
+	 * @param cardPanel  Il pannello principale contenente i sottopannelli.
+	 */
+<span class="nc" id="L45">	public InserisciPrenotazionePanel(CardLayout cardLayout, JPanel cardPanel) {</span>
+		// Carica l'immagine di sfondo
+<span class="nc" id="L47">		URL clearImageUrl = getClass().getClassLoader().getResource(&quot;GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">		if (clearImageUrl != null) {</span>
+<span class="nc" id="L49">			clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+		} else {
+<span class="nc" id="L51">			String ImageNotFound = &quot;Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L52">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L53">			CustomMessage.show(ImageNotFound, er, false);</span>
+		}
+
+<span class="nc" id="L56">		setLayout(new GridBagLayout());</span>
+<span class="nc" id="L57">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L58">		gbc.insets = new Insets(15, 15, 15, 15);</span>
+<span class="nc" id="L59">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+		// Titolo
+<span class="nc" id="L62">		JLabel titolo = new JLabel(&quot;Inserisci Prenotazione&quot;, JLabel.CENTER);</span>
+<span class="nc" id="L63">		titolo.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 28));</span>
+<span class="nc" id="L64">		titolo.setForeground(Color.WHITE);</span>
+<span class="nc" id="L65">		gbc.gridwidth = 3;</span>
+<span class="nc" id="L66">		gbc.gridx = 0;</span>
+<span class="nc" id="L67">		gbc.gridy = 0;</span>
+<span class="nc" id="L68">		add(titolo, gbc);</span>
+
+<span class="nc" id="L70">		gbc.gridwidth = 1;</span>
+
+<span class="nc" id="L72">		buttonSelezioneCampo(gbc);</span>
+
+<span class="nc" id="L74">		String NotSelected = &quot;Non selezionato&quot;;</span>
+<span class="nc" id="L75">		centroSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);</span>
+<span class="nc" id="L76">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L77">		centroSelezionatoLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L78">		centroSelezionatoLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L79">		gbc.gridx = 1;</span>
+<span class="nc" id="L80">		gbc.gridy = 1;</span>
+<span class="nc" id="L81">		add(centroSelezionatoLabel, gbc);</span>
+
+<span class="nc" id="L83">		buttonSelezioneCentro(gbc);</span>
+
+<span class="nc" id="L85">		campoSelezionatoLabel = new JLabel(NotSelected, JLabel.LEFT);</span>
+<span class="nc" id="L86">		campoSelezionatoLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L87">		campoSelezionatoLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L88">		gbc.gridx = 1;</span>
+<span class="nc" id="L89">		gbc.gridy = 2;</span>
+<span class="nc" id="L90">		add(campoSelezionatoLabel, gbc);</span>
+
+<span class="nc" id="L92">		addDatePicker(gbc);</span>
+
+		// Spinner per orario di inizio e fine
+<span class="nc" id="L95">		gbc.gridx = 0;</span>
+<span class="nc" id="L96">		gbc.gridy = 4;</span>
+<span class="nc" id="L97">		add(new OutlinedLabel(&quot;Ora Inizio:&quot;, Color.BLACK), gbc);</span>
+<span class="nc" id="L98">		gbc.gridx = 1;</span>
+<span class="nc" id="L99">		oraInizioSpinner = createCustomTimeSpinner();</span>
+<span class="nc" id="L100">		add(oraInizioSpinner, gbc);</span>
+<span class="nc" id="L101">		gbc.gridx = 0;</span>
+<span class="nc" id="L102">		gbc.gridy = 5;</span>
+<span class="nc" id="L103">		add(new OutlinedLabel(&quot;Ora Fine:&quot;, Color.BLACK), gbc);</span>
+<span class="nc" id="L104">		gbc.gridx = 1;</span>
+<span class="nc" id="L105">		oraFineSpinner = createCustomTimeSpinner();</span>
+<span class="nc" id="L106">		add(oraFineSpinner, gbc);</span>
+
+<span class="nc" id="L108">		buttonRiepilogo(gbc);</span>
+
+<span class="nc" id="L110">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+<span class="nc" id="L111">			resetFields(); // Pulisce i campi</span>
+<span class="nc" id="L112">			BackgroundPanel.showPanel(&quot;createGiocatore&quot;);</span>
+<span class="nc" id="L113">		}, new Dimension(150, 30));</span>
+<span class="nc" id="L114">		backButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L115">		backButton.setBackground(Color.DARK_GRAY);</span>
+<span class="nc" id="L116">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L117">		gbc.gridy = 7;</span>
+<span class="nc" id="L118">		add(backButton, gbc);</span>
+<span class="nc" id="L119">	}</span>
+
+	private void addDatePicker(GridBagConstraints gbc) {
+		// Date Picker per la selezione della data
+<span class="nc" id="L123">		datePicker.setFormats(new SimpleDateFormat(&quot;dd-MM-yyyy&quot;));</span>
+<span class="nc" id="L124">		datePicker.setDate(new Date());</span>
+<span class="nc" id="L125">		gbc.gridx = 0;</span>
+<span class="nc" id="L126">		gbc.gridy = 3;</span>
+<span class="nc" id="L127">		add(new OutlinedLabel(&quot;Data:&quot;, Color.BLACK), gbc);</span>
+<span class="nc" id="L128">		gbc.gridx = 1;</span>
+<span class="nc" id="L129">		LocalDateTime oraCorrente = LocalDateTime.now();</span>
+<span class="nc" id="L130">		datePicker.getMonthView()</span>
+<span class="nc" id="L131">				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));</span>
+<span class="nc" id="L132">		add(datePicker, gbc);</span>
+<span class="nc" id="L133">	}</span>
+	
+	// Bottone &quot;Riepilogo&quot;
+	private void buttonRiepilogo(GridBagConstraints gbc) {
+<span class="nc" id="L137">		JButton riepilogoButton = BackgroundPanel.createFlatButton(&quot;Mostra Riepilogo&quot;, e -&gt; mostraRiepilogo(datePicker),</span>
+				new Dimension(150, 50));
+<span class="nc" id="L139">		gbc.gridx = 0;</span>
+<span class="nc" id="L140">		gbc.gridy = 6;</span>
+<span class="nc" id="L141">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L142">		add(riepilogoButton, gbc);</span>
+<span class="nc" id="L143">	}</span>
+
+	private void buttonSelezioneCampo(GridBagConstraints gbc) {
+		// Bottone per selezionare il campo
+<span class="nc" id="L147">		JButton selezionaCampoButton = BackgroundPanel.createFlatButton(&quot;Seleziona Campo&quot;,</span>
+<span class="nc" id="L148">				e -&gt; apriSelezionaCampoDialog(), new Dimension(300, 50));</span>
+<span class="nc" id="L149">		gbc.gridx = 0;</span>
+<span class="nc" id="L150">		gbc.gridy = 2;</span>
+<span class="nc" id="L151">		add(selezionaCampoButton, gbc);</span>
+<span class="nc" id="L152">	}</span>
+
+	private void buttonSelezioneCentro(GridBagConstraints gbc) {
+		// Bottone per selezionare il centro
+<span class="nc" id="L156">		JButton selezionaCentroButton = BackgroundPanel.createFlatButton(&quot;Seleziona Centro&quot;,</span>
+<span class="nc" id="L157">				e -&gt; apriSelezionaCentroDialog(), new Dimension(300, 50));</span>
+<span class="nc" id="L158">		gbc.gridx = 0;</span>
+<span class="nc" id="L159">		gbc.gridy = 1;</span>
+<span class="nc" id="L160">		add(selezionaCentroButton, gbc);</span>
+<span class="nc" id="L161">	}</span>
+
+	/**
+	 * Apre il dialog per selezionare il centro sportivo. Carica i dati dei centri
+	 * disponibili dalle province e consente di scegliere un centro.
+	 */
+	private void apriSelezionaCentroDialog() {
+<span class="nc" id="L168">	    String filePathProvince = &quot;src/main/java/localizzazione/comuni.csv&quot;;</span>
+<span class="nc" id="L169">	    Map&lt;String, List&lt;String&gt;&gt; provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePathProvince);</span>
+<span class="nc" id="L170">	    Map&lt;String, Map&lt;String, Integer&gt;&gt; centriByProvince = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L171">	    Map&lt;String, String&gt; comuniByCentro = new HashMap&lt;&gt;();</span>
+
+	    // Ordina le province in ordine alfabetico
+<span class="nc" id="L174">	    List&lt;String&gt; provinceOrdinate = new ArrayList&lt;&gt;(provinceComuni.keySet());</span>
+<span class="nc" id="L175">	    provinceOrdinate.sort(String::compareTo);</span>
+
+	    // Verifica e popola la mappa dei centri
+<span class="nc bnc" id="L178" title="All 2 branches missed.">	    for (String provincia : provinceOrdinate) {</span>
+<span class="nc" id="L179">	        Map&lt;String, CentroSportivo&gt; centri = DataBase.getCentriSportiviPerProvincia(provincia);</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">	        if (centri != null) { // Verifica che i centri siano disponibili</span>
+<span class="nc" id="L181">	            Map&lt;String, Integer&gt; centriMap = new HashMap&lt;&gt;();</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">	            for (CentroSportivo centro : centri.values()) {</span>
+<span class="nc" id="L183">	                centriMap.put(centro.getNome(), centro.getID());</span>
+<span class="nc" id="L184">	                comuniByCentro.put(centro.getNome(), centro.getComune());</span>
+<span class="nc" id="L185">	            }</span>
+<span class="nc" id="L186">	            centriByProvince.put(provincia, centriMap);</span>
+	        }
+<span class="nc" id="L188">	    }</span>
+
+<span class="nc" id="L190">	    SelezionaDialog selezionaDialog = new SelezionaDialog(&quot;Seleziona Centro&quot;, filePathProvince, centriByProvince,</span>
+	            comuniByCentro);
+<span class="nc" id="L192">	    selezionaDialog.setVisible(true);</span>
+
+<span class="nc" id="L194">	    String centroSelezionato = selezionaDialog.getSelezione();</span>
+<span class="nc" id="L195">	    centroSelezionatoID = (Integer) selezionaDialog.getSelezioneID();</span>
+
+	    // Aggiorna la label in base alla selezione
+<span class="nc bnc" id="L198" title="All 4 branches missed.">	    if (centroSelezionato != null &amp;&amp; centroSelezionatoID != null) {</span>
+<span class="nc" id="L199">	        centroSelezionatoLabel.setText(centroSelezionato);</span>
+	    } else {
+<span class="nc" id="L201">	        String NotSelected = &quot;Non selezionato&quot;;</span>
+<span class="nc" id="L202">	        centroSelezionatoLabel.setText(NotSelected);</span>
+	    }
+<span class="nc" id="L204">	}</span>
+
+
+	/**
+	 * Apre il dialog per selezionare un campo sportivo associato al centro
+	 * selezionato. Verifica che un centro sia stato selezionato prima di procedere.
+	 */
+	private void apriSelezionaCampoDialog() {
+<span class="nc" id="L212">		String centroCorrente = centroSelezionatoLabel.getText().trim();</span>
+
+<span class="nc" id="L214">		String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L215">		String NotSelected = &quot;Non selezionato&quot;;</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">		if (centroCorrente.equals(NotSelected)) {</span>
+<span class="nc" id="L217">			CustomMessage.show(&quot;Seleziona prima un centro.&quot;, er, false);</span>
+<span class="nc" id="L218">			return;</span>
+		}
+
+<span class="nc" id="L221">		CentroSportivo centro = DataBase.getCentroByName(centroCorrente);</span>
+<span class="nc bnc" id="L222" title="All 2 branches missed.">		if (centro == null) {</span>
+<span class="nc" id="L223">			JOptionPane.showMessageDialog(this, &quot;Errore nel recupero del centro selezionato.&quot;, er,</span>
+					JOptionPane.ERROR_MESSAGE);
+<span class="nc" id="L225">			return;</span>
+		}
+
+<span class="nc" id="L228">		Map&lt;String, Integer&gt; campi = DataBase.getCampiCentroMappa(centro.getID());</span>
+<span class="nc bnc" id="L229" title="All 4 branches missed.">		if (campi == null || campi.isEmpty()) {</span>
+<span class="nc" id="L230">			JOptionPane.showMessageDialog(this, &quot;Nessun campo disponibile per il centro selezionato.&quot;, er,</span>
+					JOptionPane.ERROR_MESSAGE);
+<span class="nc" id="L232">			return;</span>
+		}
+
+<span class="nc" id="L235">		SelezionaCampoDialog selezionaCampoDialog = new SelezionaCampoDialog(&quot;Seleziona Campo&quot;, campi);</span>
+<span class="nc" id="L236">		selezionaCampoDialog.setVisible(true);</span>
+
+<span class="nc" id="L238">		String campoSelezionato = selezionaCampoDialog.getSelezione();</span>
+<span class="nc" id="L239">		campoSelezionatoID = selezionaCampoDialog.getSelezioneID();</span>
+
+<span class="nc bnc" id="L241" title="All 4 branches missed.">		if (campoSelezionato != null &amp;&amp; campoSelezionatoID != null) {</span>
+<span class="nc" id="L242">			campoSelezionatoLabel.setText(campoSelezionato);</span>
+		} else {
+<span class="nc" id="L244">			campoSelezionatoLabel.setText(NotSelected);</span>
+		}
+<span class="nc" id="L246">	}</span>
+
+	/**
+	 * Mostra un riepilogo dei dettagli della prenotazione selezionata. Include
+	 * centro, campo, data, orari e costo, con opzione per confermare la
+	 * prenotazione.
+	 *
+	 * @param datePicker Il selettore della data utilizzato per la prenotazione.
+	 */
+	private void mostraRiepilogo(JXDatePicker datePicker) {
+
+		// Controlli preliminari
+<span class="nc" id="L258">		String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">		if (campoSelezionatoID == null) {</span>
+<span class="nc" id="L260">			CustomMessage.show(&quot;Seleziona un campo prima di procedere.&quot;, er, false);</span>
+<span class="nc" id="L261">			return;</span>
+		}
+
+<span class="nc bnc" id="L264" title="All 2 branches missed.">		if (datePicker.getDate() == null) {</span>
+<span class="nc" id="L265">			CustomMessage.show(&quot;Seleziona una data valida.&quot;, er, false);</span>
+<span class="nc" id="L266">			return;</span>
+		}
+		// Calcola l'orario attuale e la data/orario della prenotazione
+<span class="nc" id="L269">		LocalDateTime now = LocalDateTime.now();</span>
+<span class="nc" id="L270">		LocalDateTime dataOraPrenotazione = datePicker.getDate().toInstant().atZone(ZoneId.systemDefault())</span>
+<span class="nc" id="L271">				.toLocalDateTime().withHour(Integer.parseInt(((String) oraInizioSpinner.getValue()).split(&quot;:&quot;)[0]))</span>
+<span class="nc" id="L272">				.withMinute(Integer.parseInt(((String) oraInizioSpinner.getValue()).split(&quot;:&quot;)[1]));</span>
+
+		// Verifica se mancano meno di 24 ore
+<span class="nc bnc" id="L275" title="All 2 branches missed.">		if (now.plusHours(24).isAfter(dataOraPrenotazione)) {</span>
+<span class="nc" id="L276">			CustomMessage.show(&quot;Non è possibile effettuare prenotazioni con meno di 24 ore di preavviso.&quot;, &quot;Errore&quot;,</span>
+					false);
+<span class="nc" id="L278">			return;</span>
+		}
+
+		try {
+			// Ottieni i valori degli spinner e convertili in Time
+<span class="nc" id="L283">			String oraInizioString = (String) oraInizioSpinner.getValue() + &quot;:00&quot;;</span>
+<span class="nc" id="L284">			String oraFineString = (String) oraFineSpinner.getValue() + &quot;:00&quot;;</span>
+<span class="nc" id="L285">			java.sql.Time oraInizio = java.sql.Time.valueOf(oraInizioString);</span>
+<span class="nc" id="L286">			java.sql.Time oraFine = java.sql.Time.valueOf(oraFineString);</span>
+
+			// Converte la data dal JXDatePicker in java.sql.Date
+<span class="nc" id="L289">			java.sql.Date dataPrenotazione = new java.sql.Date(datePicker.getDate().getTime());</span>
+
+			// Ottieni gli ID necessari
+<span class="nc" id="L292">			int idSessione = Sessione.getId();</span>
+
+			// Crea l'oggetto Prenotazione
+<span class="nc" id="L295">			Prenotazione prenotazione = new Prenotazione(dataPrenotazione, oraInizio, oraFine, idSessione,</span>
+<span class="nc" id="L296">					campoSelezionatoID);</span>
+
+			// Calcola il costo della prenotazione
+<span class="nc" id="L299">			double costo = DettagliPrenotazioneDialog.calcolaCosto(prenotazione);</span>
+
+			// Formattazione dei dettagli per il riepilogo
+<span class="nc" id="L302">			String riepilogoCentro = &quot;Centro: &quot; + centroSelezionatoLabel.getText();</span>
+<span class="nc" id="L303">			String riepilogoCampo = &quot;Campo: &quot; + campoSelezionatoLabel.getText();</span>
+<span class="nc" id="L304">			String riepilogoData = &quot;Data: &quot; + new SimpleDateFormat(&quot;dd-MM-yyyy&quot;).format(dataPrenotazione);</span>
+<span class="nc" id="L305">			String riepilogoOrario = &quot;Orario: &quot; + oraInizio.toString() + &quot; - &quot; + oraFine.toString();</span>
+<span class="nc" id="L306">			String riepilogoCosto = &quot;Costo: €&quot; + costo;</span>
+
+			// Pannello principale con GridBagLayout
+<span class="nc" id="L309">			JPanel mainPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L310">			GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L311">			gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L312">			gbc.insets = new Insets(10, 10, 10, 10); // Margini generali</span>
+
+			// Aggiungi le etichette al pannello
+<span class="nc" id="L315">			JLabel labelCentro = new JLabel(riepilogoCentro);</span>
+<span class="nc" id="L316">			JLabel labelCampo = new JLabel(riepilogoCampo);</span>
+<span class="nc" id="L317">			JLabel labelData = new JLabel(riepilogoData);</span>
+<span class="nc" id="L318">			JLabel labelOrario = new JLabel(riepilogoOrario);</span>
+<span class="nc" id="L319">			JLabel labelCosto = new JLabel(riepilogoCosto);</span>
+
+			// Imposta font e allineamento per le etichette
+<span class="nc" id="L322">			int ButtonFontDim = 18;</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">			for (JLabel label : new JLabel[] { labelCentro, labelCampo, labelData, labelOrario, labelCosto }) {</span>
+<span class="nc" id="L324">				label.setFont(new Font(&quot;Segoe UI&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L325">				label.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+			}
+
+			// Posizionamento etichette
+<span class="nc" id="L329">			gbc.gridy = 0;</span>
+<span class="nc" id="L330">			mainPanel.add(labelCentro, gbc);</span>
+<span class="nc" id="L331">			gbc.gridy = 1;</span>
+<span class="nc" id="L332">			mainPanel.add(labelCampo, gbc);</span>
+<span class="nc" id="L333">			gbc.gridy = 2;</span>
+<span class="nc" id="L334">			mainPanel.add(labelData, gbc);</span>
+<span class="nc" id="L335">			gbc.gridy = 3;</span>
+<span class="nc" id="L336">			mainPanel.add(labelOrario, gbc);</span>
+<span class="nc" id="L337">			gbc.gridy = 4;</span>
+<span class="nc" id="L338">			mainPanel.add(labelCosto, gbc);</span>
+
+			// Aggiungi uno spazio
+<span class="nc" id="L341">			gbc.gridy = 5;</span>
+<span class="nc" id="L342">			mainPanel.add(Box.createVerticalStrut(5), gbc);</span>
+
+			// Creazione della finestra di dialogo
+<span class="nc" id="L345">			JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), &quot;Riepilogo Prenotazione&quot;,</span>
+					true);
+<span class="nc" id="L347">			dialog.getContentPane().add(mainPanel);</span>
+<span class="nc" id="L348">			dialog.setSize(700, 500);</span>
+<span class="nc" id="L349">			dialog.setLocationRelativeTo(this);</span>
+
+			// Verifica disponibilità e gestione pulsanti
+<span class="nc bnc" id="L352" title="All 2 branches missed.">			if (!verificaDisponibilita(prenotazione)) {</span>
+<span class="nc" id="L353">				dialog.dispose();</span>
+<span class="nc" id="L354">				return;</span>
+			}
+
+<span class="nc" id="L357">			JButton confermaButton = BackgroundPanel.createFlatButton(&quot;Conferma Prenotazione&quot;, e -&gt; {</span>
+				try {
+<span class="nc" id="L359">					GestorePagamenti gestorePagamenti = new GestorePagamenti();</span>
+
+					// Mostra la schermata di pagamento
+<span class="nc" id="L362">					gestorePagamenti.mostraSchermataPagamento(prenotazione, 0);</span>
+
+					// Pausa di 3 secondi
+<span class="nc" id="L365">					Thread.sleep(3000); // Pausa di 3 secondi (3000 millisecondi)</span>
+
+					// Verifica se il pagamento è stato effettuato
+<span class="nc bnc" id="L368" title="All 2 branches missed.">					if (gestorePagamenti.isPagamentoEffettuato()) {</span>
+						// Inserimento prenotazione solo se il pagamento è confermato
+<span class="nc" id="L370">						DataBase.inserisciPrenotazione(prenotazione);</span>
+<span class="nc" id="L371">						CustomMessage.show(&quot;Prenotazione confermata!&quot;, &quot;Conferma&quot;, true);</span>
+<span class="nc" id="L372">						dialog.dispose(); // Chiude il dialogo</span>
+					} else {
+<span class="nc" id="L374">						CustomMessage.show(&quot;Pagamento non riuscito. Riprova.&quot;, er, false);</span>
+					}
+<span class="nc" id="L376">				} catch (SQLException ex) {</span>
+<span class="nc" id="L377">					ex.printStackTrace();</span>
+<span class="nc" id="L378">					CustomMessage.show(&quot;Errore nel database: &quot; + ex.getMessage(), er, false);</span>
+<span class="nc" id="L379">				} catch (Exception ex) {</span>
+<span class="nc" id="L380">					ex.printStackTrace();</span>
+<span class="nc" id="L381">					CustomMessage.show(&quot;Errore imprevisto: &quot; + ex.getMessage(), er, false);</span>
+<span class="nc" id="L382">				}</span>
+<span class="nc" id="L383">				resetFields();</span>
+<span class="nc" id="L384">			}, new Dimension(400, 50));</span>
+
+<span class="nc" id="L386">			confermaButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+
+<span class="nc" id="L388">			JButton chiudiButton = BackgroundPanel.createFlatButton(&quot;Chiudi&quot;, e -&gt; dialog.dispose(),</span>
+					new Dimension(400, 30));
+<span class="nc" id="L390">			chiudiButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L391">			chiudiButton.setBackground(Color.DARK_GRAY);</span>
+<span class="nc" id="L392">			chiudiButton.setForeground(Color.GRAY);</span>
+
+<span class="nc" id="L394">			gbc.gridy = 6;</span>
+<span class="nc" id="L395">			gbc.gridwidth = 2;</span>
+<span class="nc" id="L396">			mainPanel.add(confermaButton, gbc);</span>
+<span class="nc" id="L397">			gbc.gridy = 7;</span>
+<span class="nc" id="L398">			mainPanel.add(chiudiButton, gbc);</span>
+
+<span class="nc" id="L400">			dialog.setVisible(true);</span>
+<span class="nc" id="L401">		} catch (Exception e) {</span>
+<span class="nc" id="L402">			e.printStackTrace();</span>
+<span class="nc" id="L403">		}</span>
+<span class="nc" id="L404">	}</span>
+
+	/**
+	 * Verifica la disponibilità del campo per la prenotazione richiesta. Controlla
+	 * sovrapposizioni con altre prenotazioni e validità degli orari.
+	 *
+	 * @param p La prenotazione da verificare.
+	 * @return true se il campo è disponibile, false altrimenti.
+	 */
+	public static boolean verificaDisponibilita(Prenotazione p) {
+
+		// Controllo preliminare: verifica che oraInizio non sia successiva a oraFine
+<span class="nc" id="L416">		String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L417" title="All 8 branches missed.">		if (p.getOraInizio() == null || p.getOraFine() == null || p.getOraInizio().after(p.getOraFine()) || (p.getOraInizio().equals(p.getOraFine()))) {</span>
+<span class="nc" id="L418">			CustomMessage.show(&quot;L'ora di inizio deve essere precedente a quella di fine.&quot;, er, false);</span>
+<span class="nc" id="L419">			return false;</span>
+		}
+		
+
+		// Definisci gli orari limite (apertura alle 8:00 e chiusura a mezzanotte)
+<span class="nc" id="L424">		Time oraApertura = Time.valueOf(&quot;08:00:00&quot;);</span>
+<span class="nc" id="L425">		Time oraChiusura = Time.valueOf(&quot;23:00:00&quot;);</span>
+
+		// Controlla che gli orari di inizio e fine siano all'interno dell'intervallo
+<span class="nc bnc" id="L428" title="All 4 branches missed.">		if (p.getOraInizio().before(oraApertura) || p.getOraFine().after(oraChiusura)) {</span>
+<span class="nc bnc" id="L429" title="All 2 branches missed.">			if (p.getOraInizio().before(oraApertura)) {</span>
+<span class="nc" id="L430">				CustomMessage.show(&quot;Il campo apre alle 8:00. Seleziona un orario valido.&quot;, er, false);</span>
+<span class="nc bnc" id="L431" title="All 2 branches missed.">			} else if (p.getOraFine().after(oraChiusura)) {</span>
+<span class="nc" id="L432">				CustomMessage.show(&quot;Il campo chiude alle 23. Seleziona un orario valido.&quot;, er, false);</span>
+			}
+<span class="nc" id="L434">			return false;</span>
+		}
+
+		// Recupera il campo associato
+<span class="nc" id="L438">		Campo campo = DataBase.getCampoById(p.getCampoId());</span>
+<span class="nc bnc" id="L439" title="All 2 branches missed.">		if (campo == null) {</span>
+<span class="nc" id="L440">			CustomMessage.show(&quot;Campo non trovato.&quot;, er, false);</span>
+<span class="nc" id="L441">			return false;</span>
+		}
+
+		// Recupera tutte le prenotazioni esistenti per lo stesso campo e data
+<span class="nc" id="L445">		List&lt;Prenotazione&gt; prenotazioniEsistenti = DataBase.getPrenotazioniByCampo(campo.getCentroId(), p.getCampoId());</span>
+
+		// Controlla sovrapposizioni con le prenotazioni esistenti
+<span class="nc bnc" id="L448" title="All 2 branches missed.">		for (Prenotazione prenotazione : prenotazioniEsistenti) {</span>
+
+			// Escludi la prenotazione corrente dal controllo
+<span class="nc bnc" id="L451" title="All 2 branches missed.">			if (prenotazione.getId() == p.getId()) {</span>
+<span class="nc" id="L452">				continue; // Salta la prenotazione corrente</span>
+			}
+
+			// Verifica che la data sia la stessa
+<span class="nc bnc" id="L456" title="All 2 branches missed.">			if (!prenotazione.getData().equals(p.getData())) {</span>
+<span class="nc" id="L457">				continue; // Salta le prenotazioni di date diverse</span>
+			}
+
+			// Recupera gli orari della prenotazione esistente
+<span class="nc" id="L461">			Time oraInizioEsistente = prenotazione.getOraInizio();</span>
+<span class="nc" id="L462">			Time oraFineEsistente = prenotazione.getOraFine();</span>
+
+			// Controlla sovrapposizione
+<span class="nc bnc" id="L465" title="All 2 branches missed.">			if (isOverlapping(p.getOraInizio(), p.getOraFine(), oraInizioEsistente, oraFineEsistente)) {</span>
+<span class="nc" id="L466">				CustomMessage.show(&quot;Il campo non è disponibile per l'orario selezionato.&quot;, &quot;Attenzione&quot;, false);</span>
+
+<span class="nc" id="L468">				return false;</span>
+			}
+<span class="nc" id="L470">		}</span>
+
+		// Nessuna sovrapposizione trovata, campo disponibile
+<span class="nc" id="L473">		return true;</span>
+	}
+
+	/**
+	 * Controlla se due intervalli di tempo si sovrappongono.
+	 *
+	 * @param start1 L'ora di inizio del primo intervallo.
+	 * @param end1   L'ora di fine del primo intervallo.
+	 * @param start2 L'ora di inizio del secondo intervallo.
+	 * @param end2   L'ora di fine del secondo intervallo.
+	 * @return true se gli intervalli si sovrappongono, false altrimenti.
+	 */
+	private static boolean isOverlapping(Time start1, Time end1, Time start2, Time end2) {
+		// Verifica se l'intervallo [start1, end1] si sovrappone a [start2, end2]
+<span class="nc bnc" id="L487" title="All 4 branches missed.">		return !end1.before(start2) &amp;&amp; !start1.after(end2);</span>
+	}
+
+	/**
+	 * Crea uno spinner personalizzato per la selezione di orari. Gli orari
+	 * disponibili includono incrementi di 30 minuti.
+	 *
+	 * @return Un oggetto JSpinner configurato.
+	 */
+	private JSpinner createCustomTimeSpinner() {
+<span class="nc" id="L497">		List&lt;String&gt; times = generateTimeValues();</span>
+<span class="nc" id="L498">		JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));</span>
+<span class="nc" id="L499">		timeSpinner.setValue(&quot;08:00&quot;);</span>
+<span class="nc" id="L500">		((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);</span>
+<span class="nc" id="L501">		return timeSpinner;</span>
+	}
+
+	/**
+	 * Genera una lista di orari incrementati di 30 minuti.
+	 *
+	 * @return Una lista di stringhe che rappresentano gli orari.
+	 */
+	private List&lt;String&gt; generateTimeValues() {
+<span class="nc" id="L510">		List&lt;String&gt; times = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">		for (int h = 0; h &lt; 24; h++) {</span>
+<span class="nc" id="L512">			times.add(String.format(&quot;%02d:00&quot;, h));</span>
+<span class="nc" id="L513">			times.add(String.format(&quot;%02d:30&quot;, h));</span>
+		}
+<span class="nc" id="L515">		return times;</span>
+	}
+
+	/**
+	 * Resetta tutti i campi del pannello.
+	 */
+	private void resetFields() {
+<span class="nc" id="L522">		centroSelezionatoLabel.setText(&quot;Non selezionato&quot;);</span>
+<span class="nc" id="L523">		campoSelezionatoLabel.setText(&quot;Non selezionato&quot;);</span>
+<span class="nc" id="L524">		datePicker.setDate(null); // Imposta la data a null per pulirla</span>
+<span class="nc" id="L525">		oraInizioSpinner.setValue(&quot;08:00&quot;);</span>
+<span class="nc" id="L526">		oraFineSpinner.setValue(&quot;09:00&quot;);</span>
+<span class="nc" id="L527">	}</span>
+
+	/**
+	 * Override del metodo paintComponent per disegnare l'immagine di sfondo.
+	 *
+	 * @param g L'oggetto Graphics utilizzato per il rendering.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L536">		super.paintComponent(g);</span>
+<span class="nc bnc" id="L537" title="All 2 branches missed.">		if (clearImage != null) {</span>
+<span class="nc" id="L538">			g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+		}
+<span class="nc" id="L540">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

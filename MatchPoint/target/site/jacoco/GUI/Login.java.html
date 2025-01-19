@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Login.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">Login.java</span></div><h1>Login.java</h1><pre class="source lang-java linenums">package GUI;
+
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
+
+import individui.Utente;
+import dataBase.DataBase;
+import dataBase.Sessione;
+
+/**
+ * Classe per la gestione del pannello di login dell'applicazione. Fornisce
+ * funzionalità per autenticare gli utenti e navigare tra i pannelli. Supporta
+ * la validazione delle credenziali tramite un database SQLite.
+ */
+<span class="nc" id="L16">public class Login {</span>
+
+	private static JTextField usernameField;
+	private static JPasswordField passwordField;
+
+	/**
+	 * Crea il pannello di login con campi per l'username e la password. Il pannello
+	 * include pulsanti per il login e per tornare indietro.
+	 *
+	 * @return Il pannello di login configurato.
+	 */
+	protected static JPanel createLoginPanel() {
+<span class="nc" id="L28">		JPanel panel = new JPanel() {</span>
+			@Override
+			protected void paintComponent(Graphics g) {
+<span class="nc" id="L31">				super.paintComponent(g);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">				if (BackgroundPanel.clearImage != null) {</span>
+<span class="nc" id="L33">					g.drawImage(BackgroundPanel.clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+				}
+<span class="nc" id="L35">			}</span>
+		};
+<span class="nc" id="L37">		panel.setLayout(new GridBagLayout());</span>
+<span class="nc" id="L38">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L39">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L40">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L42">		JLabel titleLabel = new OutlinedLabel(&quot;Login&quot;, Color.WHITE);</span>
+<span class="nc" id="L43">		titleLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 30));</span>
+
+<span class="nc" id="L45">		JLabel usernameLabel = new OutlinedLabel(&quot;Username:&quot;, Color.BLACK);</span>
+<span class="nc" id="L46">		usernameLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L47">		usernameField = new JTextField(20);</span>
+<span class="nc" id="L48">		usernameField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+
+<span class="nc" id="L50">		JLabel passwordLabel = new OutlinedLabel(&quot;Password:&quot;, Color.BLACK);</span>
+<span class="nc" id="L51">		passwordLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L52">		passwordField = new JPasswordField(20);</span>
+<span class="nc" id="L53">		passwordField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+
+		// Crea il pulsante &quot;Login&quot; utilizzando createFlatButton
+<span class="nc" id="L56">		JButton loginButton = BackgroundPanel.createFlatButton(&quot;Login&quot;, // Testo del pulsante</span>
+				e -&gt; { // Azione associata al pulsante
+<span class="nc bnc" id="L58" title="All 2 branches missed.">					if (checkEmptyFields(usernameField, passwordField)) {</span>
+<span class="nc" id="L59">						String username = usernameField.getText();</span>
+<span class="nc" id="L60">						String password = new String(passwordField.getPassword());</span>
+
+<span class="nc" id="L62">						String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">						if (validateCredentials(username, password)) {</span>
+<span class="nc" id="L64">							String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L65">							String SuccessL = &quot;Login effettuato con successo!&quot;;</span>
+<span class="nc" id="L66">							CustomMessage.show(SuccessL, S, true);</span>
+<span class="nc" id="L67">							resetFields();</span>
+
+							// Determina il ruolo dell'utente
+<span class="nc" id="L70">							String ruolo = Utente.getRuoloUtente(username, password); // Funzione per ottenere il ruolo</span>
+																						// dal database
+
+<span class="nc" id="L73">							login(username, ruolo);</span>
+<span class="nc" id="L74">							Utente.login(username, password);</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">							if (&quot;Gestore&quot;.equalsIgnoreCase(ruolo)) {</span>
+<span class="nc" id="L76">								BackgroundPanel.showPanel(&quot;createGestore&quot;); // Mostra pannello Gestore</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">							} else if (&quot;Giocatore&quot;.equalsIgnoreCase(ruolo)) {</span>
+<span class="nc" id="L78">								BackgroundPanel.showPanel(&quot;createGiocatore&quot;); // Mostra pannello Giocatore</span>
+							} else {
+<span class="nc" id="L80">								CustomMessage.show(&quot;Ruolo sconosciuto! Contatta l'amministratore.&quot;, er, false);</span>
+							}
+<span class="nc" id="L82">						} else {</span>
+<span class="nc" id="L83">							CustomMessage.show(&quot;Username o password errati!&quot;, er, false);</span>
+						}
+					}
+<span class="nc" id="L86">				}, new Dimension(100, 40) // Dimensione del pulsante</span>
+		);
+
+		// Esegui il login quando premi Invio
+<span class="nc" id="L90">		usernameField.addActionListener(e -&gt; loginButton.doClick());</span>
+		// Esegui il login quando premi Invio
+<span class="nc" id="L92">		passwordField.addActionListener(e -&gt; loginButton.doClick());</span>
+
+		// Personalizza ulteriormente il pulsante
+<span class="nc" id="L95">		loginButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 20));</span>
+<span class="nc" id="L96">		loginButton.setBackground(new Color(32, 178, 170));</span>
+<span class="nc" id="L97">		loginButton.setForeground(new Color(220, 250, 245));</span>
+<span class="nc" id="L98">		loginButton.setFocusPainted(false);</span>
+
+		// Posizionamento componenti
+<span class="nc" id="L101">		posizionamentoComponenti(panel, gbc, titleLabel, usernameLabel, passwordLabel, loginButton);</span>
+
+<span class="nc" id="L103">		return panel;</span>
+	}
+
+	private static void posizionamentoComponenti(JPanel panel, GridBagConstraints gbc, JLabel titleLabel,
+			JLabel usernameLabel, JLabel passwordLabel, JButton loginButton) {
+		// Aggiungi il titolo (Login)
+<span class="nc" id="L109">		gbc.gridx = 0; // Colonna</span>
+<span class="nc" id="L110">		gbc.gridy = 0; // Riga</span>
+<span class="nc" id="L111">		gbc.gridwidth = 2; // Il titolo occupa entrambe le colonne</span>
+<span class="nc" id="L112">		gbc.anchor = GridBagConstraints.CENTER; // Centrato</span>
+<span class="nc" id="L113">		panel.add(titleLabel, gbc);</span>
+
+		// Aggiungi l'etichetta e il campo per il nome utente
+<span class="nc" id="L116">		gbc.gridwidth = 1; // Torna a occupare una colonna</span>
+<span class="nc" id="L117">		gbc.anchor = GridBagConstraints.WEST; // Allineato a sinistra</span>
+<span class="nc" id="L118">		gbc.gridx = 0;</span>
+<span class="nc" id="L119">		gbc.gridy = 1;</span>
+<span class="nc" id="L120">		panel.add(usernameLabel, gbc);</span>
+
+<span class="nc" id="L122">		gbc.gridx = 1; // Campo di testo accanto all'etichetta</span>
+<span class="nc" id="L123">		panel.add(usernameField, gbc);</span>
+
+		// Aggiungi l'etichetta e il campo per la password
+<span class="nc" id="L126">		gbc.gridx = 0;</span>
+<span class="nc" id="L127">		gbc.gridy = 2;</span>
+<span class="nc" id="L128">		panel.add(passwordLabel, gbc);</span>
+
+<span class="nc" id="L130">		gbc.gridx = 1;</span>
+<span class="nc" id="L131">		panel.add(passwordField, gbc);</span>
+
+		// Aggiungi il pulsante di login
+<span class="nc" id="L134">		gbc.gridx = 0;</span>
+<span class="nc" id="L135">		gbc.gridy = 3;</span>
+<span class="nc" id="L136">		gbc.gridwidth = 2; // Il pulsante di login occupa entrambe le colonne</span>
+<span class="nc" id="L137">		gbc.anchor = GridBagConstraints.CENTER; // Centrato</span>
+<span class="nc" id="L138">		panel.add(loginButton, gbc);</span>
+
+		// Aggiungi il pulsante &quot;Back&quot;
+<span class="nc" id="L141">		gbc.gridx = 0;</span>
+<span class="nc" id="L142">		gbc.gridy = 4; // Riga successiva</span>
+<span class="nc" id="L143">		gbc.gridwidth = 2; // Anche il pulsante &quot;Back&quot; occupa entrambe le colonne</span>
+<span class="nc" id="L144">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L145">		panel.add(createBackButton(usernameField, passwordField), gbc);</span>
+<span class="nc" id="L146">	}</span>
+
+	/**
+	 * Resetta i campi di input (username e password) del pannello di login.
+	 * Utilizzato per svuotare i campi dopo un'azione di login o back.
+	 */
+	public static void resetFields() {
+<span class="nc bnc" id="L153" title="All 2 branches missed.">		if (usernameField != null) {</span>
+<span class="nc" id="L154">			usernameField.setText(&quot;&quot;);</span>
+		}
+<span class="nc bnc" id="L156" title="All 2 branches missed.">		if (passwordField != null) {</span>
+<span class="nc" id="L157">			passwordField.setText(&quot;&quot;);</span>
+		}
+<span class="nc" id="L159">	}</span>
+
+	/**
+	 * Controlla se i campi di input per l'username e la password sono vuoti. Mostra
+	 * un messaggio di errore se uno dei campi è vuoto.
+	 *
+	 * @param usernameField Il campo di testo per l'username.
+	 * @param passwordField Il campo di password.
+	 * @return true se entrambi i campi sono compilati, false altrimenti.
+	 */
+	private static boolean checkEmptyFields(JTextField usernameField, JPasswordField passwordField) {
+<span class="nc" id="L170">		String username = usernameField.getText().trim();</span>
+<span class="nc" id="L171">		String password = new String(passwordField.getPassword()).trim();</span>
+
+<span class="nc" id="L173">		String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">		if (username.isEmpty()) {</span>
+<span class="nc" id="L175">			CustomMessage.show(&quot;Il campo 'Username' non può essere vuoto!&quot;, er, false);</span>
+<span class="nc" id="L176">			return false;</span>
+		}
+
+<span class="nc bnc" id="L179" title="All 2 branches missed.">		if (password.isEmpty()) {</span>
+<span class="nc" id="L180">			CustomMessage.show(&quot;Il campo 'Password' non può essere vuoto!&quot;, er, false);</span>
+<span class="nc" id="L181">			return false;</span>
+		}
+
+<span class="nc" id="L184">		return true;</span>
+	}
+
+	/**
+	 * Crea un pulsante &quot;Back&quot; che permette di tornare al pannello principale.
+	 * Resetta i campi di input e termina la sessione corrente.
+	 *
+	 * @param usernameField Il campo di testo per l'username.
+	 * @param passwordField Il campo di password.
+	 * @return Il pulsante &quot;Back&quot; configurato.
+	 */
+	protected static JButton createBackButton(JTextField usernameField, JPasswordField passwordField) {
+		// Utilizza createFlatButton per creare un pulsante &quot;Back&quot;
+<span class="nc" id="L197">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, // Testo del pulsante</span>
+				e -&gt; {
+					// Resetta i campi di input
+<span class="nc" id="L200">					usernameField.setText(&quot;&quot;);</span>
+<span class="nc" id="L201">					passwordField.setText(&quot;&quot;);</span>
+
+					// Cambia pannello
+<span class="nc" id="L204">					BackgroundPanel.showPanel(&quot;main&quot;);</span>
+<span class="nc" id="L205">					Sessione.logout();</span>
+<span class="nc" id="L206">				}, new Dimension(120, 30) // Dimensione del pulsante</span>
+		);
+
+		// Personalizzazioni specifiche per il pulsante &quot;Back&quot;
+<span class="nc" id="L210">		backButton.setForeground(Color.GRAY); // Sfondo grigio</span>
+<span class="nc" id="L211">		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L212">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L213">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+
+<span class="nc" id="L215">		return backButton;</span>
+	}
+
+	/**
+	 * Esegue il login di un utente, creando una nuova sessione. Salva i dettagli
+	 * della sessione nel database.
+	 *
+	 * @param username  L'username dell'utente che effettua il login.
+	 * @param tipologia La tipologia dell'utente (ad esempio, &quot;Gestore&quot; o
+	 *                  &quot;Giocatore&quot;).
+	 */
+	public static void login(String username, String tipologia) {
+		try {
+<span class="nc" id="L228">			Sessione.login(username, tipologia); // Esegui il login</span>
+<span class="nc" id="L229">		} catch (SQLException e) {</span>
+<span class="nc" id="L230">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L231">			CustomMessage.show(&quot;Errore di login&quot;, er, false);</span>
+<span class="nc" id="L232">		}</span>
+<span class="nc" id="L233">	}</span>
+
+	/**
+	 * Valida le credenziali dell'utente (username e password) accedendo al
+	 * database. Verifica che l'utente esista e che le credenziali siano corrette.
+	 *
+	 * @param username L'username da verificare.
+	 * @param password La password da verificare.
+	 * @return true se le credenziali sono valide, false altrimenti.
+	 */
+	private static boolean validateCredentials(String username, String password) {
+<span class="nc" id="L244">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L246">		String query = &quot;SELECT COUNT(*) FROM (&quot; + &quot;    SELECT Username, Password FROM Gestore &quot; + &quot;    UNION ALL &quot;</span>
+				+ &quot;    SELECT Username, Password FROM Giocatore&quot; + &quot;) AS Utenti &quot;
+				+ &quot;WHERE Username = ? AND Password = ?&quot;;
+
+<span class="nc" id="L250">		try (Connection conn = DriverManager.getConnection(url)) {</span>
+<span class="nc" id="L251">			try (PreparedStatement pstmt = conn.prepareStatement(query)) {</span>
+<span class="nc" id="L252">				pstmt.setString(1, username);</span>
+<span class="nc" id="L253">				pstmt.setString(2, password);</span>
+
+<span class="nc" id="L255">				ResultSet rs = pstmt.executeQuery();</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">				if (rs.next()) {</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">					return rs.getInt(1) &gt; 0; // Ritorna true se esiste almeno un risultato</span>
+				}
+			}
+<span class="nc" id="L260">		} catch (SQLException e) {</span>
+<span class="nc" id="L261">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L262">			String DBerror = &quot;Errore nel connettersi al database: &quot;;</span>
+<span class="nc" id="L263">			JOptionPane.showMessageDialog(null, DBerror + e.getMessage(), er,</span>
+					JOptionPane.ERROR_MESSAGE);
+<span class="nc" id="L265">			e.printStackTrace();</span>
+<span class="nc" id="L266">		}</span>
+<span class="nc" id="L267">		return false; // False se le credenziali non sono valide o si verifica un errore</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

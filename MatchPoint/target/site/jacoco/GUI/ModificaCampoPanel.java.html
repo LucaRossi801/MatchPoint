@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModificaCampoPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">ModificaCampoPanel.java</span></div><h1>ModificaCampoPanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
+import javax.swing.text.PlainDocument;
+
+import components.Campo;
+import components.TipologiaCampo;
+import dataBase.DataBase;
+
+import java.awt.*;
+import java.net.URL;
+import java.util.List;
+
+/**
+ * Classe per la gestione dell'interfaccia grafica per la modifica dei campi
+ * sportivi. Consente agli utenti di visualizzare, modificare e rimuovere campi
+ * sportivi associati a un determinato centro sportivo.
+ */
+public class ModificaCampoPanel extends JPanel {
+	private Image clearImage;
+	private JComboBox&lt;String&gt; campiComboBox;
+	private JComboBox&lt;TipologiaCampo&gt; tipologiaField;
+	private JTextField costoOraNotturnaField, costoOraDiurnaField, lunghezzaField, larghezzaField;
+<span class="nc" id="L28">	private JToggleButton switchButton = new JToggleButton();</span>
+	private JButton salvaCampoButton;
+	private Integer centroId;
+	private static List&lt;Campo&gt; campi; // Lista dei campi del centro
+<span class="nc" id="L32">	private boolean isCoperto = false; // Variabile di istanza per gestire lo stato &quot;Coperto&quot;</span>
+
+	/**
+	 * Costruttore per inizializzare il pannello di modifica del campo.
+	 * 
+	 * @param centroId L'ID del centro sportivo a cui sono associati i campi.
+	 */
+<span class="nc" id="L39">	public ModificaCampoPanel(Integer centroId) {</span>
+<span class="nc" id="L40">		this.centroId = centroId;</span>
+
+		// Carica l'immagine di sfondo
+<span class="nc" id="L43">		String er = &quot;Errore&quot;;</span>
+		try {
+<span class="nc" id="L45">			URL clearImageUrl = getClass().getResource(&quot;/GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">			if (clearImageUrl != null) {</span>
+<span class="nc" id="L47">				clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+			} else {
+<span class="nc" id="L49">				String ImageNotFound = &quot;Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L50">				CustomMessage.show(ImageNotFound, er,</span>
+						false);
+			}
+<span class="nc" id="L53">		} catch (Exception e) {</span>
+<span class="nc" id="L54">			CustomMessage.show(&quot;Eccezione durante il caricamento dell'immagine: &quot; + e.getMessage(), er, false);</span>
+<span class="nc" id="L55">		}</span>
+
+<span class="nc" id="L57">		setLayout(new GridBagLayout());</span>
+<span class="nc" id="L58">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L59">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L60">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+		// Carica i campi del centro
+<span class="nc" id="L63">		caricaCampi();</span>
+
+		// Pannello superiore per selezione del campo
+<span class="nc" id="L66">		JPanel selezioneCampoPanel = new JPanel(new FlowLayout());</span>
+<span class="nc" id="L67">		selezioneCampoPanel.setBackground(new Color(32, 178, 170)); // Sfondo verde</span>
+
+<span class="nc" id="L69">		JLabel campoLabel = new OutlinedLabel(&quot;Seleziona Campo:&quot;, Color.WHITE);</span>
+<span class="nc" id="L70">		campoLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24)); // Font come richiesto</span>
+<span class="nc" id="L71">		campoLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L72">		selezioneCampoPanel.add(campoLabel);</span>
+
+<span class="nc" id="L74">		campiComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L75">		campiComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18)); // Font coerente con il design</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">		for (Campo campo : campi) {</span>
+			// Formattazione: &quot;TipologiaCampo (LunghezzaxLarghezza)&quot;
+<span class="nc" id="L78">			String item = String.format(&quot;%s (%dx%d)&quot;, campo.getTipologiaCampo().toString(), campo.getLunghezza(),</span>
+<span class="nc" id="L79">					campo.getLarghezza());</span>
+<span class="nc" id="L80">			campiComboBox.addItem(item);</span>
+<span class="nc" id="L81">		}</span>
+<span class="nc" id="L82">		campiComboBox.addActionListener(e -&gt; aggiornaDettagliCampo());</span>
+<span class="nc" id="L83">		selezioneCampoPanel.add(campiComboBox);</span>
+
+		// Posiziona il pannello superiore per la selezione del campo
+<span class="nc" id="L86">		gbc.gridx = 0;</span>
+<span class="nc" id="L87">		gbc.gridy = 0;</span>
+<span class="nc" id="L88">		gbc.gridwidth = 2; // Occupa due colonne</span>
+<span class="nc" id="L89">		add(selezioneCampoPanel, gbc);</span>
+<span class="nc" id="L90">		gbc.gridwidth = 1; // Occupa due colonne</span>
+		// TextField per gli attributi del campo
+<span class="nc" id="L92">		JLabel tipologiaLabel = new OutlinedLabel(&quot;Tipologia:&quot;, Color.BLACK);</span>
+<span class="nc" id="L93">		gbc.gridx = 0;</span>
+<span class="nc" id="L94">		gbc.gridy = 1;</span>
+<span class="nc" id="L95">		add(tipologiaLabel, gbc);</span>
+
+<span class="nc" id="L97">		tipologiaField = new JComboBox&lt;&gt;(TipologiaCampo.values());</span>
+<span class="nc" id="L98">		tipologiaField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L99">		gbc.gridx = 1;</span>
+<span class="nc" id="L100">		add(tipologiaField, gbc);</span>
+
+		// Metodo per aggiungere il filtro di controllo ai campi
+<span class="nc" id="L103">		DocumentFilter numericFilter = new DocumentFilter() {</span>
+<span class="nc" id="L104">			private final int limit = 5;</span>
+
+			@Override
+			public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+					throws BadLocationException {
+<span class="nc bnc" id="L109" title="All 2 branches missed.">				if (isValidInput(fb.getDocument().getLength(), string)) {</span>
+<span class="nc" id="L110">					super.insertString(fb, offset, string, attr);</span>
+				}
+<span class="nc" id="L112">			}</span>
+
+			@Override
+			public void replace(FilterBypass fb, int offset, int length, String string, AttributeSet attrs)
+					throws BadLocationException {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">				if (isValidInput(fb.getDocument().getLength() - length, string)) {</span>
+<span class="nc" id="L118">					super.replace(fb, offset, length, string, attrs);</span>
+				}
+<span class="nc" id="L120">			}</span>
+
+			private boolean isValidInput(int currentLength, String string) {
+				// Verifica che la lunghezza totale non superi il limite
+<span class="nc bnc" id="L124" title="All 2 branches missed.">				if (currentLength + string.length() &gt; limit) {</span>
+<span class="nc" id="L125">					return false;</span>
+				}
+				// Verifica che la stringa sia numerica
+<span class="nc" id="L128">				return string.matches(&quot;\\d*&quot;);</span>
+			}
+		};
+
+		// Crea e configura i campi con il filtro
+<span class="nc" id="L133">		costoOraNotturnaField = creaCampo(&quot;Costo Ora Notturna:&quot;, 2, gbc, Color.BLACK);</span>
+<span class="nc" id="L134">		((PlainDocument) costoOraNotturnaField.getDocument()).setDocumentFilter(numericFilter);</span>
+
+<span class="nc" id="L136">		costoOraDiurnaField = creaCampo(&quot;Costo Ora Diurna:&quot;, 3, gbc, Color.BLACK);</span>
+<span class="nc" id="L137">		((PlainDocument) costoOraDiurnaField.getDocument()).setDocumentFilter(numericFilter);</span>
+
+<span class="nc" id="L139">		lunghezzaField = creaCampo(&quot;Lunghezza:&quot;, 4, gbc, Color.BLACK);</span>
+<span class="nc" id="L140">		((PlainDocument) lunghezzaField.getDocument()).setDocumentFilter(numericFilter);</span>
+
+<span class="nc" id="L142">		larghezzaField = creaCampo(&quot;Larghezza:&quot;, 5, gbc, Color.BLACK);</span>
+<span class="nc" id="L143">		((PlainDocument) larghezzaField.getDocument()).setDocumentFilter(numericFilter);</span>
+
+		// Pannello per Coperto
+<span class="nc" id="L146">		JPanel copertoPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L147">		copertoPanel.setOpaque(false); // Rendi trasparente il pannello</span>
+
+		// Etichetta &quot;Coperto:&quot;
+<span class="nc" id="L150">		JLabel copertoLabel = new OutlinedLabel(&quot;Coperto:&quot;, Color.BLACK);</span>
+<span class="nc" id="L151">		copertoLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L152">		copertoLabel.setHorizontalAlignment(SwingConstants.LEFT); // Allineamento testo</span>
+<span class="nc" id="L153">		copertoLabel.setForeground(Color.BLACK); // Testo nero per leggibilità</span>
+
+		// Configura GridBagConstraints per il pannello Coperto
+<span class="nc" id="L156">		GridBagConstraints copertoGbc = new GridBagConstraints();</span>
+<span class="nc" id="L157">		copertoGbc.insets = new Insets(0, 10, 0, 10); // Margini uniformi</span>
+<span class="nc" id="L158">		copertoGbc.anchor = GridBagConstraints.WEST; // Allineamento sinistra</span>
+<span class="nc" id="L159">		copertoGbc.gridx = 0; // Colonna 0</span>
+<span class="nc" id="L160">		copertoGbc.gridy = 0;</span>
+<span class="nc" id="L161">		copertoPanel.add(copertoLabel, copertoGbc); // Aggiungi etichetta</span>
+
+<span class="nc" id="L163">		buttonSwitchCoperto();</span>
+
+		// Aggiungi il pulsante al pannello con le stesse impostazioni
+<span class="nc" id="L166">		copertoGbc.gridx = 1; // Colonna 1 per lo switch</span>
+<span class="nc" id="L167">		copertoPanel.add(switchButton, copertoGbc);</span>
+
+		// Creazione delle icone per gli stati
+<span class="nc" id="L170">		Icon offIcon = new Icon() {</span>
+			@Override
+			public void paintIcon(Component c, Graphics g, int x, int y) {
+<span class="nc" id="L173">				Graphics2D g2d = (Graphics2D) g;</span>
+<span class="nc" id="L174">				g2d.setColor(Color.LIGHT_GRAY); // Sfondo spento</span>
+<span class="nc" id="L175">				g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);</span>
+
+<span class="nc" id="L177">				g2d.setColor(Color.WHITE); // Pallino</span>
+<span class="nc" id="L178">				g2d.fillOval(x + 2, y + 2, 21, 21);</span>
+<span class="nc" id="L179">			}</span>
+
+			@Override
+			public int getIconWidth() {
+<span class="nc" id="L183">				return 50;</span>
+			}
+
+			@Override
+			public int getIconHeight() {
+<span class="nc" id="L188">				return 25;</span>
+			}
+		};
+
+<span class="nc" id="L192">		Icon onIcon = new Icon() {</span>
+			@Override
+			public void paintIcon(Component c, Graphics g, int x, int y) {
+<span class="nc" id="L195">				Graphics2D g2d = (Graphics2D) g;</span>
+<span class="nc" id="L196">				g2d.setColor(new Color(50, 200, 50)); // Sfondo acceso</span>
+<span class="nc" id="L197">				g2d.fillRoundRect(x, y, getIconWidth(), getIconHeight(), 25, 25);</span>
+
+<span class="nc" id="L199">				g2d.setColor(Color.WHITE); // Pallino</span>
+<span class="nc" id="L200">				g2d.fillOval(x + 26, y + 2, 21, 21);</span>
+<span class="nc" id="L201">			}</span>
+
+			@Override
+			public int getIconWidth() {
+<span class="nc" id="L205">				return 50;</span>
+			}
+
+			@Override
+			public int getIconHeight() {
+<span class="nc" id="L210">				return 25;</span>
+			}
+		};
+
+		// Assegna le icone agli stati
+<span class="nc" id="L215">		switchButton.setIcon(offIcon); // Stato non selezionato</span>
+<span class="nc" id="L216">		switchButton.setSelectedIcon(onIcon); // Stato selezionato</span>
+
+		// Aggiorna il valore di isCoperto in base allo stato
+<span class="nc" id="L219">		switchButton.addActionListener(e -&gt; isCoperto = switchButton.isSelected());</span>
+
+		// Aggiungi lo switch al pannello
+<span class="nc" id="L222">		copertoGbc.gridx = 1; // Colonna 1</span>
+<span class="nc" id="L223">		copertoPanel.add(switchButton, copertoGbc);</span>
+
+		// Aggiungi il pannello Coperto alla finestra principale
+<span class="nc" id="L226">		gbc.gridx = 0;</span>
+<span class="nc" id="L227">		gbc.gridy = 6;</span>
+<span class="nc" id="L228">		gbc.gridwidth = 2; // Il pannello occupa due colonne</span>
+<span class="nc" id="L229">		add(copertoPanel, gbc);</span>
+
+<span class="nc" id="L231">		JButton eliminaCampoButton = BackgroundPanel.createFlatButton(&quot;Elimina campo selezionato&quot;, e -&gt; {</span>
+			// Mostra finestra di conferma
+<span class="nc" id="L233">			boolean conferma = CustomMessageWithChoice.show(&quot;Sei sicuro di voler eliminare il campo selezionato?&quot;,</span>
+					&quot;Attenzione&quot;, false);
+
+			// Controlla la risposta dell'utente
+<span class="nc bnc" id="L237" title="All 2 branches missed.">			if (conferma == true) {</span>
+<span class="nc" id="L238">				eliminaCampo();</span>
+			} else {
+<span class="nc" id="L240">				CustomMessage.show(&quot;Cancellazione annullata.&quot;, &quot;Attenzione&quot;, false);</span>
+			}
+<span class="nc" id="L242">		}, new Dimension(150, 40));</span>
+<span class="nc" id="L243">		gbc.gridx = 0;</span>
+<span class="nc" id="L244">		gbc.gridy = 7;</span>
+<span class="nc" id="L245">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L246">		eliminaCampoButton.setBackground(Color.RED); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L247">		add(eliminaCampoButton, gbc);</span>
+
+<span class="nc" id="L249">		salvaCampoButton = BackgroundPanel.createFlatButton(&quot;Salva Modifiche&quot;, e -&gt; {</span>
+<span class="nc" id="L250">			salvaModificheCampo();</span>
+<span class="nc" id="L251">		}, new Dimension(150, 50));</span>
+<span class="nc" id="L252">		gbc.gridx = 0;</span>
+<span class="nc" id="L253">		gbc.gridy = 8;</span>
+<span class="nc" id="L254">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L255">		add(salvaCampoButton, gbc);</span>
+
+<span class="nc" id="L257">		buttonBack(gbc);</span>
+
+		// Carica i dettagli del primo campo
+<span class="nc" id="L260">		aggiornaDettagliCampo();</span>
+<span class="nc" id="L261">	}</span>
+
+	private void buttonBack(GridBagConstraints gbc) {
+<span class="nc" id="L264">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+<span class="nc" id="L265">			BackgroundPanel.showPanel(&quot;modificaCentro&quot;); // Torna al pannello di login</span>
+<span class="nc" id="L266">		}, new Dimension(150, 30) // Dimensione personalizzata del bottone</span>
+		);
+		// Personalizza colore per il pulsante &quot;Back&quot;
+<span class="nc" id="L269">		backButton.setForeground(Color.GRAY); // Sfondo grigio</span>
+<span class="nc" id="L270">		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L271">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18)); // Font più piccolo per il pulsante &quot;Back&quot;</span>
+<span class="nc" id="L272">		gbc.gridy = 10; // Quarta riga</span>
+<span class="nc" id="L273">		add(backButton, gbc);</span>
+<span class="nc" id="L274">	}</span>
+
+	// Switch per Coperto
+	private void buttonSwitchCoperto() {
+<span class="nc" id="L278">		switchButton.setPreferredSize(new Dimension(50, 25));</span>
+<span class="nc" id="L279">		switchButton.setFocusPainted(false);</span>
+<span class="nc" id="L280">		switchButton.setBorder(BorderFactory.createEmptyBorder()); // Rimuovi bordi</span>
+<span class="nc" id="L281">		switchButton.setBackground(null); // Rimuovi lo sfondo</span>
+<span class="nc" id="L282">		switchButton.setContentAreaFilled(false); // Disabilita l'area di contenuto</span>
+<span class="nc" id="L283">		switchButton.setOpaque(false); // Rendi trasparente il bottone</span>
+<span class="nc" id="L284">	}</span>
+
+	/**
+	 * Crea un campo di input con un'etichetta personalizzata.
+	 * 
+	 * @param labelText  Il testo dell'etichetta.
+	 * @param gridY      La posizione verticale nel layout.
+	 * @param gbc        Le impostazioni di layout per posizionare il campo.
+	 * @param labelColor Il colore del testo dell'etichetta.
+	 * @return Il campo di input creato.
+	 */
+	private JTextField creaCampo(String labelText, int gridY, GridBagConstraints gbc, Color labelColor) {
+<span class="nc" id="L296">		JLabel label = new OutlinedLabel(labelText, labelColor); // Usa OutlinedLabel con il colore specificato</span>
+<span class="nc" id="L297">		gbc.gridx = 0;</span>
+<span class="nc" id="L298">		gbc.gridy = gridY;</span>
+<span class="nc" id="L299">		add(label, gbc);</span>
+
+<span class="nc" id="L301">		JTextField textField = new JTextField(15);</span>
+<span class="nc" id="L302">		textField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L303">		gbc.gridx = 1;</span>
+<span class="nc" id="L304">		add(textField, gbc);</span>
+
+<span class="nc" id="L306">		return textField;</span>
+	}
+
+	/**
+	 * Carica i campi associati al centro sportivo dal database.
+	 */
+	private void caricaCampi() {
+		// Recupera i campi associati al centro dal database
+<span class="nc" id="L314">		campi = DataBase.getCampiById(centroId);</span>
+
+		// Controllo se la lista dei campi è vuota
+<span class="nc bnc" id="L317" title="All 4 branches missed.">		if (campi == null || campi.isEmpty()) {</span>
+<span class="nc" id="L318">			CustomMessage.show(&quot;Nessun campo trovato per il centro selezionato.&quot;, &quot;Informazione&quot;, false);</span>
+<span class="nc" id="L319">			BackgroundPanel.showPanel(&quot;modificaCentro&quot;);</span>
+<span class="nc" id="L320">			return; // Interrompi il caricamento se non ci sono campi</span>
+		}
+<span class="nc" id="L322">	}</span>
+
+	/**
+	 * Aggiorna la ComboBox.
+	 */
+	private void aggiornaComboBox() {
+<span class="nc" id="L328">		campiComboBox.removeAllItems(); // Svuota la ComboBox</span>
+
+		// Aggiungi i campi alla ComboBox
+<span class="nc bnc" id="L331" title="All 2 branches missed.">		for (Campo campo : campi) {</span>
+<span class="nc" id="L332">			String item = String.format(&quot;%s (%dx%d)&quot;, campo.getTipologiaCampo().toString(), campo.getLunghezza(),</span>
+<span class="nc" id="L333">					campo.getLarghezza());</span>
+<span class="nc" id="L334">			campiComboBox.addItem(item);</span>
+<span class="nc" id="L335">		}</span>
+
+		// Controllo se la lista dei campi è vuota
+<span class="nc bnc" id="L338" title="All 2 branches missed.">		if (campi.isEmpty()) {</span>
+			// CustomMessage.show(&quot;Nessun campo disponibile. Torna alla schermata
+			// precedente.&quot;, &quot;Informazione&quot;, false);
+<span class="nc" id="L341">			BackgroundPanel.showPanel(&quot;modificaCentro&quot;);</span>
+		} else {
+			// Aggiorna i dettagli del primo campo
+<span class="nc" id="L344">			aggiornaDettagliCampo();</span>
+		}
+<span class="nc" id="L346">	}</span>
+
+	/**
+	 * Aggiorna i dettagli del campo selezionato nella ComboBox.
+	 */
+	private void aggiornaDettagliCampo() {
+<span class="nc" id="L352">		int index = campiComboBox.getSelectedIndex();</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">		if (index &gt;= 0) {</span>
+<span class="nc" id="L354">			Campo campo = campi.get(index);</span>
+<span class="nc" id="L355">			tipologiaField.setSelectedItem(TipologiaCampo.valueOf(campo.getTipologiaCampo()));</span>
+<span class="nc" id="L356">			costoOraNotturnaField.setText(String.valueOf(campo.getCostoOraNotturna()));</span>
+<span class="nc" id="L357">			costoOraDiurnaField.setText(String.valueOf(campo.getCostoOraDiurna()));</span>
+<span class="nc" id="L358">			lunghezzaField.setText(String.valueOf(campo.getLunghezza()));</span>
+<span class="nc" id="L359">			larghezzaField.setText(String.valueOf(campo.getLarghezza()));</span>
+
+			// Aggiorna lo stato dello switch
+<span class="nc" id="L362">			isCoperto = campo.isCoperto();</span>
+<span class="nc" id="L363">			switchButton.setSelected(isCoperto); // Imposta lo stato dello switch</span>
+		}
+<span class="nc" id="L365">	}</span>
+
+	/**
+	 * Elimina il campo selezionato dalla lista e dal database.
+	 */
+	private void eliminaCampo() {
+<span class="nc" id="L371">		int index = campiComboBox.getSelectedIndex();</span>
+<span class="nc" id="L372">		String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">		if (index &gt;= 0) {</span>
+<span class="nc" id="L374">			Campo campo = campi.get(index);</span>
+<span class="nc bnc" id="L375" title="All 2 branches missed.">			if (DataBase.eliminaCampo(centroId, campo.getId())) {</span>
+<span class="nc" id="L376">				String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L377">				CustomMessage.show(&quot;Campo Eliminato Correttamente!&quot;, S, true);</span>
+
+				// Aggiorna la lista dei campi
+<span class="nc" id="L380">				caricaCampi();</span>
+
+				// Aggiorna la JComboBox
+<span class="nc" id="L383">				aggiornaComboBox();</span>
+<span class="nc" id="L384">			} else {</span>
+<span class="nc" id="L385">				CustomMessage.show(&quot;Errore durante l'eliminazione&quot;, er, false);</span>
+			}
+<span class="nc" id="L387">		} else {</span>
+<span class="nc" id="L388">			CustomMessage.show(&quot;Nessun campo selezionato per l'eliminazione.&quot;, er, false);</span>
+		}
+<span class="nc" id="L390">	}</span>
+
+	/**
+	 * Salva le modifiche apportate ai dettagli del campo selezionato.
+	 */
+	private void salvaModificheCampo() {
+<span class="nc" id="L396">		int index = campiComboBox.getSelectedIndex();</span>
+<span class="nc bnc" id="L397" title="All 2 branches missed.">		if (index &gt;= 0) {</span>
+<span class="nc" id="L398">			Campo campo = campi.get(index);</span>
+
+<span class="nc" id="L400">			String er = &quot;Errore&quot;;</span>
+			try {
+				// Aggiorna i valori del campo
+<span class="nc" id="L403">				campo.setTipologiaCampo(TipologiaCampo.valueOf(tipologiaField.getSelectedItem().toString()));</span>
+<span class="nc" id="L404">				campo.setCostoOraNotturna(Integer.parseInt(costoOraNotturnaField.getText()));</span>
+<span class="nc" id="L405">				campo.setCostoOraDiurna(Integer.parseInt(costoOraDiurnaField.getText()));</span>
+<span class="nc" id="L406">				campo.setLunghezza(Integer.parseInt(lunghezzaField.getText()));</span>
+<span class="nc" id="L407">				campo.setLarghezza(Integer.parseInt(larghezzaField.getText()));</span>
+<span class="nc" id="L408">				campo.setCoperto(isCoperto); // Passa il valore dello slider</span>
+
+				// Salva le modifiche nel database
+<span class="nc" id="L411">				boolean success = DataBase.updateCampo(campo);</span>
+<span class="nc bnc" id="L412" title="All 2 branches missed.">				if (success) {</span>
+<span class="nc" id="L413">					String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L414">					String SuccessMod = &quot;Modifiche salvate con successo.&quot;;</span>
+<span class="nc" id="L415">					CustomMessage.show(SuccessMod, S, true);</span>
+<span class="nc" id="L416">					BackgroundPanel.showPanel(&quot;modificaCentro&quot;);</span>
+<span class="nc" id="L417">				} else {</span>
+<span class="nc" id="L418">					String Moderror = &quot;Errore nel salvataggio delle modifiche.&quot;;</span>
+<span class="nc" id="L419">					CustomMessage.show(Moderror, er, false);</span>
+				}
+<span class="nc" id="L421">			} catch (Exception e) {</span>
+<span class="nc" id="L422">				String CompAll = &quot;Compila tutti i campi!&quot;;</span>
+<span class="nc" id="L423">				CustomMessage.show(CompAll, er, false);</span>
+<span class="nc" id="L424">			}</span>
+		}
+<span class="nc" id="L426">	}</span>
+
+	/**
+	 * Disegna l'immagine di sfondo del pannello.
+	 * 
+	 * @param g Il contesto grafico utilizzato per il rendering.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L435">		super.paintComponent(g);</span>
+<span class="nc bnc" id="L436" title="All 2 branches missed.">		if (clearImage != null) {</span>
+<span class="nc" id="L437">			g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+		}
+<span class="nc" id="L439">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

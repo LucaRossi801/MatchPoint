@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sessione.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">dataBase</a> &gt; <span class="el_source">Sessione.java</span></div><h1>Sessione.java</h1><pre class="source lang-java linenums">package dataBase;
+
+import java.sql.SQLException;
+
+/**
+ * Classe Sessione
+ * &lt;p&gt;
+ * Questa classe gestisce le informazioni relative alla sessione dell'utente
+ * attualmente loggato. Tiene traccia dell'ID, dello username e della tipologia
+ * dell'utente (ad esempio, &quot;Gestore&quot; o &quot;Giocatore&quot;).
+ * &lt;/p&gt;
+ */
+public class Sessione {
+	private static int id; // ID dell'utente loggato
+	private static String username; // Username dell'utente loggato
+	private static String tipologia; // Categoria dell'utente (&quot;Gestore&quot; o &quot;Giocatore&quot;)
+
+	/**
+	 * Costruttore di default
+	 * &lt;p&gt;
+	 * Inizializza i campi della sessione con valori predefiniti.
+	 * &lt;/p&gt;
+	 */
+<span class="nc" id="L24">	public Sessione() {</span>
+<span class="nc" id="L25">		id = 0;</span>
+<span class="nc" id="L26">		username = null;</span>
+<span class="nc" id="L27">		tipologia = null;</span>
+<span class="nc" id="L28">	}</span>
+
+	/**
+	 * Metodo per effettuare il login.
+	 * &lt;p&gt;
+	 * Memorizza le informazioni dell'utente loggato, come lo username, la tipologia
+	 * e l'ID ottenuto dal database.
+	 * &lt;/p&gt;
+	 *
+	 * @param username  lo username dell'utente che effettua il login.
+	 * @param tipologia la tipologia dell'utente (&quot;Gestore&quot; o &quot;Giocatore&quot;).
+	 * @throws SQLException se si verifica un errore durante l'accesso al database.
+	 */
+	public static void login(String username, String tipologia) throws SQLException {
+<span class="fc" id="L42">		Sessione.username = username;</span>
+<span class="fc" id="L43">		Sessione.tipologia = tipologia;</span>
+<span class="fc" id="L44">		id = DataBase.getIdUtente(username, tipologia);</span>
+<span class="fc" id="L45">	}</span>
+
+	/**
+	 * Metodo per effettuare il logout.
+	 * &lt;p&gt;
+	 * Resetta i dati della sessione, come lo username, la tipologia e l'ID.
+	 * &lt;/p&gt;
+	 */
+	public static void logout() {
+<span class="fc" id="L54">		id = -9; // Valore arbitrario per indicare il logout</span>
+<span class="fc" id="L55">		username = null;</span>
+<span class="fc" id="L56">		tipologia = null;</span>
+<span class="fc" id="L57">	}</span>
+
+	/**
+	 * Restituisce lo username dell'utente attualmente loggato.
+	 *
+	 * @return lo username dell'utente loggato, oppure {@code null} se nessun utente
+	 *         è loggato.
+	 */
+	public static String getUsername() {
+<span class="fc" id="L66">		return username;</span>
+	}
+
+	/**
+	 * Restituisce l'ID dell'utente attualmente loggato.
+	 *
+	 * @return l'ID dell'utente loggato, oppure {@code 0} o un valore arbitrario se
+	 *         nessun utente è loggato.
+	 */
+	public static int getId() {
+<span class="fc" id="L76">		return id;</span>
+	}
+
+	/**
+	 * Restituisce la tipologia dell'utente attualmente loggato.
+	 *
+	 * @return la tipologia dell'utente loggato, oppure {@code null} se nessun
+	 *         utente è loggato.
+	 */
+	public static String getTipologia() {
+<span class="fc" id="L86">		return tipologia;</span>
+	}
+
+	/**
+	 * Verifica se un utente è loggato.
+	 *
+	 * @return {@code true} se un utente è loggato; {@code false} altrimenti.
+	 */
+	public static boolean isUtenteLoggato() {
+<span class="pc bpc" id="L95" title="1 of 4 branches missed.">		return username != null &amp;&amp; tipologia != null;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

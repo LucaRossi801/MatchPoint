@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Register.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">Register.java</span></div><h1>Register.java</h1><pre class="source lang-java linenums">package GUI;
+
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.Timer;
+import javax.swing.text.NavigationFilter;
+
+import org.jdesktop.swingx.JXDatePicker; // Assicurati di aggiungere questa libreria
+import org.jdesktop.swingx.JXMonthView;
+
+import dataBase.DataBase;
+import individui.Gestore;
+import individui.Giocatore;
+
+/**
+ * Classe Register che fornisce un pannello grafico per la registrazione di
+ * utenti. Gestisce la registrazione di Gestori e Giocatori con validazioni e
+ * salvataggio nel database.
+ */
+<span class="nc" id="L28">public class Register {</span>
+
+	/**
+     * Crea un pannello di registrazione specifico per la tipologia di utente.
+     *
+     * @param tipologia La tipologia di utente da registrare (&quot;Gestore&quot; o &quot;Giocatore&quot;).
+     * @return Il pannello di registrazione configurato.
+     */
+    protected static JPanel createRegisterPanel(String tipologia) {
+<span class="nc" id="L37">        String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;; // connessione al database</span>
+<span class="nc" id="L38">        JPanel panel = new JPanel() {</span>
+            @Override
+            protected void paintComponent(Graphics g) {
+<span class="nc" id="L41">                super.paintComponent(g);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                if (BackgroundPanel.clearImage != null) {</span>
+<span class="nc" id="L43">                    g.drawImage(BackgroundPanel.clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+                }
+<span class="nc" id="L45">            }</span>
+        };
+<span class="nc" id="L47">        panel.setLayout(new GridBagLayout());</span>
+<span class="nc" id="L48">        GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L49">        gbc.insets = new Insets(10, 10, 10, 10); // Margini tra i componenti</span>
+<span class="nc" id="L50">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L52">        JLabel titleLabel = new OutlinedLabel(&quot;Registrazione &quot; + tipologia, Color.WHITE);</span>
+<span class="nc" id="L53">        titleLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 30));</span>
+
+        // Aggiungi il titolo in alto al centro
+<span class="nc" id="L56">        gbc.gridx = 0;</span>
+<span class="nc" id="L57">        gbc.gridy = 0;</span>
+<span class="nc" id="L58">        gbc.gridwidth = 2; // Il titolo occupa due colonne</span>
+<span class="nc" id="L59">        gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L60">        panel.add(titleLabel, gbc);</span>
+
+        // Struttura dati per mappare i campi di input
+<span class="nc" id="L63">        Map&lt;String, JComponent&gt; fields = new HashMap&lt;&gt;();</span>
+
+        String[] campi;
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (tipologia.equals(&quot;Gestore&quot;)) {</span>
+<span class="nc" id="L67">            campi = new String[] { &quot;Nome&quot;, &quot;Cognome&quot;, &quot;DataNascita&quot;, &quot;Email&quot;, &quot;Username&quot;, &quot;Password&quot;, &quot;Certificazione&quot;,</span>
+                    &quot;Competenze&quot; };
+        } else {
+<span class="nc" id="L70">            campi = new String[] { &quot;Nome&quot;, &quot;Cognome&quot;, &quot;DataNascita&quot;, &quot;Email&quot;, &quot;Username&quot;, &quot;Password&quot;, &quot;NomeSquadra&quot; };</span>
+        }
+
+<span class="nc" id="L73">        gbc.gridwidth = 1; // Ogni etichetta e campo occupano una colonna</span>
+<span class="nc" id="L74">        gbc.anchor = GridBagConstraints.WEST; // Allineamento a sinistra</span>
+<span class="nc" id="L75">        int row = 1; // La riga parte da 1 (sotto il titolo)</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        for (String campo : campi) {</span>
+<span class="nc" id="L78">            JLabel label = new OutlinedLabel(campo + &quot;:&quot;, Color.BLACK);</span>
+<span class="nc" id="L79">            label.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L80">            gbc.gridx = 0;</span>
+<span class="nc" id="L81">            gbc.gridy = row;</span>
+<span class="nc" id="L82">            panel.add(label, gbc);</span>
+
+
+<span class="nc" id="L85">            JComponent inputField = null;</span>
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">            if (campo.equals(&quot;Password&quot;)) {</span>
+<span class="nc" id="L88">                inputField = new JPasswordField(20);</span>
+<span class="nc" id="L89">                addCharacterLimit((JPasswordField) inputField, 20, panel);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            }else if (campo.equals(&quot;DataNascita&quot;)) {</span>
+<span class="nc" id="L91">                JPanel datePickerPanel = YearSelectorDatePicker.createDatePicker();</span>
+<span class="nc" id="L92">                inputField = datePickerPanel;</span>
+
+                // Salva il riferimento al JXDatePicker per accedere in seguito
+<span class="nc" id="L95">                JXDatePicker datePicker = YearSelectorDatePicker.getDatePicker(datePickerPanel);</span>
+<span class="nc" id="L96">                fields.put(&quot;DataNascitaPicker&quot;, datePicker); // Salva il JXDatePicker</span>
+            
+<span class="nc" id="L98">            } else {</span>
+<span class="nc" id="L99">                inputField = new JTextField(20);</span>
+                int maxLength;
+
+                // Utilizza lo switch tradizionale
+<span class="nc bnc" id="L103" title="All 3 branches missed.">                switch (campo) {</span>
+                case &quot;Nome&quot;:
+                case &quot;Cognome&quot;:
+                case &quot;Username&quot;:
+                case &quot;NomeSquadra&quot;:
+                case &quot;Certificazione&quot;:
+                case &quot;Competenze&quot;:
+<span class="nc" id="L110">                    maxLength = 20;</span>
+<span class="nc" id="L111">                    break;</span>
+                case &quot;Email&quot;:
+<span class="nc" id="L113">                    maxLength = 40;</span>
+<span class="nc" id="L114">                    break;</span>
+                default:
+<span class="nc" id="L116">                    maxLength = 20; // Default per gli altri campi</span>
+                    break;
+                }
+
+<span class="nc" id="L120">                addCharacterLimit((JTextField) inputField, maxLength, panel);</span>
+            }
+
+<span class="nc" id="L123">            inputField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L124">            gbc.gridx = 1;</span>
+<span class="nc" id="L125">            panel.add(inputField, gbc);</span>
+
+<span class="nc" id="L127">            fields.put(campo, inputField);</span>
+
+<span class="nc" id="L129">            row++;</span>
+        }
+
+		// Pulsante di registrazione
+<span class="nc" id="L133">		JButton registerButton = BackgroundPanel.createFlatButton(&quot;Register&quot;, e -&gt; {</span>
+<span class="nc" id="L134">			String er = &quot;Errore&quot;;</span>
+			try {
+				// Leggi i valori dai campi
+<span class="nc" id="L137">				String name = ((JTextField) fields.get(&quot;Nome&quot;)).getText().trim();</span>
+<span class="nc" id="L138">				String surname = ((JTextField) fields.get(&quot;Cognome&quot;)).getText().trim();</span>
+<span class="nc" id="L139">				String birthDate = null;</span>
+
+<span class="nc" id="L141">				JXDatePicker datePicker = (JXDatePicker) fields.get(&quot;DataNascitaPicker&quot;);				</span>
+<span class="nc bnc" id="L142" title="All 4 branches missed.">				if (datePicker != null &amp;&amp; datePicker.getDate() != null) {</span>
+<span class="nc" id="L143">				    SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+<span class="nc" id="L144">				    birthDate = sdf.format(datePicker.getDate());</span>
+<span class="nc" id="L145">				} else {</span>
+<span class="nc" id="L146">				    CustomMessage.show(&quot;Compilare la data di nascita!&quot;, &quot;Errore&quot;, false);</span>
+<span class="nc" id="L147">				    return;</span>
+				}
+
+
+<span class="nc" id="L151">				String email = ((JTextField) fields.get(&quot;Email&quot;)).getText().trim();</span>
+<span class="nc" id="L152">				String username = ((JTextField) fields.get(&quot;Username&quot;)).getText().trim();</span>
+<span class="nc" id="L153">				String password = new String(((JPasswordField) fields.get(&quot;Password&quot;)).getPassword()).trim();</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">				String certifications = tipologia.equals(&quot;Gestore&quot;)</span>
+<span class="nc" id="L155">						? ((JTextField) fields.get(&quot;Certificazione&quot;)).getText().trim()</span>
+						: null;
+<span class="nc bnc" id="L157" title="All 2 branches missed.">				String competences = tipologia.equals(&quot;Gestore&quot;)</span>
+<span class="nc" id="L158">						? ((JTextField) fields.get(&quot;Competenze&quot;)).getText().trim()</span>
+						: null;
+
+				// Controlla se ci sono campi vuoti
+<span class="nc" id="L162">				String CompAll = &quot;Tutti i campi devono essere compilati!&quot;;</span>
+<span class="nc bnc" id="L163" title="All 10 branches missed.">				if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty()</span>
+<span class="nc bnc" id="L164" title="All 6 branches missed.">						|| (tipologia.equals(&quot;Gestore&quot;) &amp;&amp; (certifications.isEmpty() || competences.isEmpty()))) {</span>
+<span class="nc" id="L165">					CustomMessage.show(CompAll, er, false);</span>
+<span class="nc" id="L166">					return;</span>
+				}
+
+				// Controlla se lo username è già presente nel database
+<span class="nc" id="L170">				String sql = &quot;SELECT Password FROM Gestore WHERE Username ='&quot; + username</span>
+						+ &quot;' UNION SELECT Password FROM Giocatore WHERE Username ='&quot; + username + &quot;'&quot;;
+<span class="nc" id="L172">				String ris = &quot;&quot;;</span>
+<span class="nc" id="L173">				String DBerror = &quot;Errore di connessione al DataBase&quot;;</span>
+<span class="nc" id="L174">				try (Connection conn = DriverManager.getConnection(url)) {</span>
+<span class="nc" id="L175">					ris = DataBase.eseguiSelect(conn, sql);</span>
+<span class="nc" id="L176">				} catch (SQLException ex) {</span>
+<span class="nc" id="L177">					ex.printStackTrace();</span>
+<span class="nc" id="L178">					CustomMessage.show(DBerror, er, false);</span>
+<span class="nc" id="L179">					return;</span>
+<span class="nc" id="L180">				}</span>
+
+<span class="nc bnc" id="L182" title="All 2 branches missed.">				if (!ris.isEmpty()) {</span>
+<span class="nc" id="L183">					CustomMessage.show(&quot;Lo username '&quot; + username + &quot;' è già in uso!&quot;, er, false);</span>
+<span class="nc" id="L184">					return;</span>
+				}
+
+				// Controlla se l'email è già presente nel database
+<span class="nc" id="L188">				String emailSql = &quot;SELECT Email FROM Gestore WHERE Email ='&quot; + email</span>
+						+ &quot;' UNION SELECT Email FROM Giocatore WHERE Email ='&quot; + email + &quot;'&quot;;
+<span class="nc" id="L190">				String emailRis = &quot;&quot;;</span>
+<span class="nc" id="L191">				try (Connection conn = DriverManager.getConnection(url)) {</span>
+<span class="nc" id="L192">					emailRis = DataBase.eseguiSelect(conn, emailSql);</span>
+<span class="nc" id="L193">				} catch (SQLException ex) {</span>
+<span class="nc" id="L194">					ex.printStackTrace();</span>
+<span class="nc" id="L195">					CustomMessage.show(DBerror, er, false);</span>
+<span class="nc" id="L196">					return;</span>
+<span class="nc" id="L197">				}</span>
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">				if (!emailRis.isEmpty()) {</span>
+<span class="nc" id="L200">					CustomMessage.show(&quot;L'email '&quot; + email + &quot;' è già in uso!&quot;, er, false);</span>
+<span class="nc" id="L201">					return;</span>
+				}
+
+				// Chiama il metodo di registrazione per i Gestori o Giocatori
+<span class="nc bnc" id="L205" title="All 2 branches missed.">				if (tipologia.equals(&quot;Gestore&quot;)) {</span>
+<span class="nc" id="L206">					Gestore.registrazione(name, surname, birthDate, email, username, password, certifications,</span>
+							competences, null);
+				} else {
+<span class="nc" id="L209">					String teamName = ((JTextField) fields.get(&quot;NomeSquadra&quot;)).getText().trim();</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">					if (teamName.isEmpty()) {</span>
+<span class="nc" id="L211">						CustomMessage.show(CompAll, er, false);</span>
+<span class="nc" id="L212">						return;</span>
+					}
+<span class="nc" id="L214">					try (Connection conn = DriverManager.getConnection(url)) {</span>
+<span class="nc" id="L215">					    Giocatore.registrazione(conn, name, surname, birthDate, email, username, password, teamName);</span>
+					}
+				}
+<span class="nc" id="L218">				CustomMessage.show(&quot;Registrazione effettuata con successo!&quot;, &quot;Successo&quot;, true);</span>
+<span class="nc" id="L219">				BackgroundPanel.showPanel(&quot;login&quot;);</span>
+<span class="nc" id="L220">			} catch (Exception ex) {</span>
+<span class="nc" id="L221">				CustomMessage.show(&quot;Errore durante la registrazione&quot;, er, false);</span>
+<span class="nc" id="L222">			}</span>
+
+			// Pulizia campi
+<span class="nc" id="L225">			resetFields(fields);</span>
+<span class="nc" id="L226">		}, new Dimension(300, 50));</span>
+
+<span class="nc" id="L228">		registerButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L229">		registerButton.setBackground(new Color(32, 178, 170));</span>
+<span class="nc" id="L230">		registerButton.setForeground(new Color(220, 250, 245));</span>
+<span class="nc" id="L231">		registerButton.setFocusPainted(false);</span>
+
+<span class="nc" id="L233">		gbc.gridx = 0;</span>
+<span class="nc" id="L234">		gbc.gridy = row;</span>
+<span class="nc" id="L235">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L236">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L237">		panel.add(registerButton, gbc);</span>
+
+		// Pulsante &quot;Back&quot;
+<span class="nc" id="L240">		gbc.gridy = row + 1;</span>
+<span class="nc" id="L241">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L242">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L243">		panel.add(createBackButton(fields), gbc);</span>
+
+<span class="nc" id="L245">		return panel;</span>
+	}
+
+	/**
+	 * Crea un pulsante &quot;Back&quot; che resetta i campi e torna al pannello principale.
+	 *
+	 * @param fields Una mappa contenente i campi di input del form di
+	 *               registrazione.
+	 * @return Il pulsante &quot;Back&quot; configurato.
+	 */
+	protected static JButton createBackButton(Map&lt;String, JComponent&gt; fields) {
+		// Usa createFlatButton per creare il pulsante &quot;Back&quot;
+<span class="nc" id="L257">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, // Testo del pulsante</span>
+				e -&gt; {
+					// Pulizia campi
+<span class="nc" id="L260">					resetFields(fields);</span>
+
+					// Cambia pannello
+<span class="nc" id="L263">					BackgroundPanel.showPanel(&quot;main&quot;);</span>
+<span class="nc" id="L264">				}, new Dimension(120, 30) // Dimensione del pulsante</span>
+		);
+
+		// Personalizzazioni specifiche per il pulsante &quot;Back&quot;
+<span class="nc" id="L268">		backButton.setForeground(Color.GRAY); // Testo grigio</span>
+<span class="nc" id="L269">		backButton.setBackground(Color.DARK_GRAY); // Sfondo scuro</span>
+<span class="nc" id="L270">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L271">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+
+<span class="nc" id="L273">		return backButton;</span>
+	}
+
+	/**
+	 * Formatter per i campi di data nel formato &quot;dd-MM-yyyy&quot;.
+	 */
+<span class="nc" id="L279">	public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {</span>
+<span class="nc" id="L280">		private String datePattern = &quot;dd-MM-yyyy&quot;; // Cambia il formato a dd-MM-yyyy</span>
+<span class="nc" id="L281">		private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);</span>
+
+		/**
+		 * Converte una stringa in un oggetto Date.
+		 *
+		 * @param text La stringa rappresentante la data.
+		 * @return Un oggetto Date.
+		 * @throws ParseException Se la stringa non rispetta il formato.
+		 */
+		@Override
+		public Object stringToValue(String text) throws ParseException {
+<span class="nc" id="L292">			return dateFormatter.parse(text); // Converte la stringa in un oggetto Date</span>
+		}
+
+		/**
+		 * Converte un oggetto Date in una stringa nel formato &quot;dd-MM-yyyy&quot;.
+		 *
+		 * @param value L'oggetto Date.
+		 * @return La stringa rappresentante la data.
+		 */
+		@Override
+		public String valueToString(Object value) {
+<span class="nc bnc" id="L303" title="All 2 branches missed.">			if (value != null) {</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">				if (value instanceof GregorianCalendar) {</span>
+<span class="nc" id="L305">					GregorianCalendar calendar = (GregorianCalendar) value;</span>
+<span class="nc" id="L306">					return dateFormatter.format(calendar.getTime()); // Usa il formato dd-MM-yyyy</span>
+				}
+			}
+<span class="nc" id="L309">			return &quot;Seleziona da calendario&quot;;</span>
+		}
+
+	}
+
+	/**
+	 * Resetta tutti i campi di input in una mappa fornita.
+	 *
+	 * @param fields Una mappa con i campi di input (JTextField, JPasswordField,
+	 *               JXDatePicker).
+	 */
+	public static void resetFields(Map&lt;String, JComponent&gt; fields) {
+<span class="nc" id="L321">		fields.forEach((key, field) -&gt; {</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">			if (field instanceof JTextField) {</span>
+<span class="nc" id="L323">				((JTextField) field).setText(&quot;&quot;); // Resetta il testo</span>
+<span class="nc bnc" id="L324" title="All 2 branches missed.">			} else if (field instanceof JPasswordField) {</span>
+<span class="nc" id="L325">				((JPasswordField) field).setText(&quot;&quot;); // Resetta la password</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">			} else if (field instanceof JXDatePicker) {</span>
+<span class="nc" id="L327">				((JXDatePicker) field).setDate(null); // Resetta la data</span>
+			}
+<span class="nc" id="L329">		});</span>
+<span class="nc" id="L330">	}</span>
+
+	/**
+	 * Aggiunge un limite massimo di caratteri a un campo di input JTextField.
+	 * Mostra un messaggio di avviso se si supera il limite.
+	 *
+	 * @param field          Il JTextField a cui applicare il limite.
+	 * @param maxLength      Il numero massimo di caratteri consentiti.
+	 * @param containerPanel Il pannello contenitore per posizionare l'etichetta di
+	 *                       avviso.
+	 */
+	private static void addCharacterLimit(JTextField field, int maxLength, JPanel containerPanel) {
+		// Crea la JLabel per il messaggio di avviso
+<span class="nc" id="L343">		JLabel warningLabel = new JLabel();</span>
+<span class="nc" id="L344">		warningLabel.setForeground(Color.RED);</span>
+<span class="nc" id="L345">		warningLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 12));</span>
+<span class="nc" id="L346">		warningLabel.setPreferredSize(new Dimension(200, 20)); // Imposta una larghezza fissa per la label</span>
+<span class="nc" id="L347">		warningLabel.setHorizontalAlignment(SwingConstants.LEFT);</span>
+<span class="nc" id="L348">		warningLabel.setVisible(false); // Nascondi inizialmente</span>
+
+		// Usa un layout null per avere un controllo assoluto sulla posizione
+<span class="nc" id="L351">		JPanel fieldPanel = new JPanel();</span>
+<span class="nc" id="L352">		fieldPanel.setLayout(null); // Layout assoluto</span>
+<span class="nc" id="L353">		fieldPanel.setOpaque(false); // Non colorare il pannello</span>
+
+		// Imposta la posizione e la dimensione della JTextField
+<span class="nc" id="L356">		field.setBounds(0, 0, 200, 30); // Cambia queste dimensioni e posizione in base alle tue esigenze</span>
+<span class="nc" id="L357">		fieldPanel.add(field); // Aggiungi la JTextField al pannello</span>
+
+		// Imposta la posizione e la dimensione della JLabel
+<span class="nc" id="L360">		warningLabel.setBounds(210, 5, 200, 20); // Cambia queste coordinate per regolare la posizione della scritta</span>
+<span class="nc" id="L361">		fieldPanel.add(warningLabel); // Aggiungi la JLabel al pannello</span>
+
+		// Configura il layout principale per il pannello
+<span class="nc" id="L364">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L365">		gbc.gridx = 1; // Posiziona nella colonna giusta</span>
+<span class="nc" id="L366">		gbc.gridy = GridBagConstraints.RELATIVE; // Riga successiva</span>
+<span class="nc" id="L367">		gbc.fill = GridBagConstraints.HORIZONTAL; // Riempie orizzontalmente</span>
+<span class="nc" id="L368">		gbc.insets = new Insets(5, 0, 5, 0); // Imposta margini</span>
+<span class="nc" id="L369">		containerPanel.add(fieldPanel, gbc); // Aggiungi il pannello al container</span>
+
+		// Listener per limitare i caratteri
+<span class="nc" id="L372">		field.addKeyListener(new java.awt.event.KeyAdapter() {</span>
+			@Override
+			public void keyTyped(java.awt.event.KeyEvent e) {
+<span class="nc bnc" id="L375" title="All 2 branches missed.">				if (field.getText().length() &gt;= maxLength) {</span>
+<span class="nc" id="L376">					e.consume(); // Ignora ulteriori input</span>
+<span class="nc" id="L377">					warningLabel.setText(&quot;Massimo &quot; + maxLength + &quot; caratteri!&quot;);</span>
+<span class="nc" id="L378">					warningLabel.setVisible(true);</span>
+
+					// Nascondi la scritta dopo 1.5 secondi
+<span class="nc" id="L381">					Timer timer = new Timer(1500, evt -&gt; warningLabel.setVisible(false));</span>
+<span class="nc" id="L382">					timer.setRepeats(false);</span>
+<span class="nc" id="L383">					timer.start();</span>
+<span class="nc" id="L384">				} else {</span>
+<span class="nc" id="L385">					warningLabel.setVisible(false); // Nascondi se sotto il limite</span>
+				}
+<span class="nc" id="L387">			}</span>
+		});
+<span class="nc" id="L389">	}</span>
+	
+<span class="nc" id="L391">	public static class YearSelectorDatePicker {</span>
+	    private static final String DATE_PICKER_KEY = &quot;DatePicker&quot;;
+
+	    public static JPanel createDatePicker() {
+<span class="nc" id="L395">	        JPanel datePanel = new JPanel();</span>
+<span class="nc" id="L396">	        datePanel.setLayout(new BorderLayout());</span>
+
+	        // Crea il JXDatePicker
+<span class="nc" id="L399">	        JXDatePicker datePicker = new JXDatePicker();</span>
+<span class="nc" id="L400">	        datePicker.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L401">	        datePicker.setFormats(&quot;dd-MM-yyyy&quot;);</span>
+
+	        // Imposta la data corrente come predefinita
+<span class="nc" id="L404">	        LocalDateTime oraCorrente = LocalDateTime.now();</span>
+<span class="nc" id="L405">	        Date today = Date.from(oraCorrente.atZone(ZoneId.systemDefault()).toInstant());</span>
+<span class="nc" id="L406">	        datePicker.setDate(today);</span>
+
+	        // Imposta il limite massimo sulla data
+<span class="nc" id="L409">	        datePicker.getMonthView().setUpperBound(today);</span>
+
+	        // Aggiungi il JXDatePicker al pannello e salvalo come proprietà
+<span class="nc" id="L412">	        datePanel.putClientProperty(DATE_PICKER_KEY, datePicker);</span>
+
+	        // Crea la JComboBox per gli anni
+<span class="nc" id="L415">	        JComboBox&lt;Integer&gt; yearComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L416">	        int currentYear = oraCorrente.getYear();</span>
+<span class="nc bnc" id="L417" title="All 2 branches missed.">	        for (int year = currentYear; year &gt;= 1900; year--) {</span>
+<span class="nc" id="L418">	            yearComboBox.addItem(year);</span>
+	        }
+
+	        // Imposta l'anno corrente come selezione predefinita
+<span class="nc" id="L422">	        yearComboBox.setSelectedItem(currentYear);</span>
+
+	        // Listener per cambiare l'anno selezionato
+<span class="nc" id="L425">	        yearComboBox.addActionListener(e -&gt; {</span>
+<span class="nc" id="L426">	            int selectedYear = (int) yearComboBox.getSelectedItem();</span>
+<span class="nc" id="L427">	            Calendar calendar = Calendar.getInstance();</span>
+<span class="nc" id="L428">	            Date currentDate = datePicker.getDate();</span>
+
+<span class="nc bnc" id="L430" title="All 2 branches missed.">	            if (currentDate != null) {</span>
+<span class="nc" id="L431">	                calendar.setTime(currentDate);</span>
+	            } else {
+<span class="nc" id="L433">	                calendar.setTime(today); // Fallback alla data odierna se nulla</span>
+	            }
+
+	            // Aggiorna l'anno mantenendo il giorno e mese attuali
+<span class="nc" id="L437">	            calendar.set(Calendar.YEAR, selectedYear);</span>
+
+	            // Se la data supera il limite massimo, impostala al massimo consentito
+<span class="nc" id="L440">	            Date updatedDate = calendar.getTime();</span>
+<span class="nc bnc" id="L441" title="All 2 branches missed.">	            if (updatedDate.after(today)) {</span>
+<span class="nc" id="L442">	                updatedDate = today;</span>
+	            }
+
+<span class="nc" id="L445">	            datePicker.setDate(updatedDate);</span>
+<span class="nc" id="L446">	        });</span>
+
+	        // Aggiungi i componenti al pannello
+<span class="nc" id="L449">	        datePanel.add(yearComboBox, BorderLayout.NORTH);</span>
+<span class="nc" id="L450">	        datePanel.add(datePicker, BorderLayout.CENTER);</span>
+
+<span class="nc" id="L452">	        return datePanel;</span>
+	    }
+
+	    public static JXDatePicker getDatePicker(JPanel datePanel) {
+<span class="nc" id="L456">	        return (JXDatePicker) datePanel.getClientProperty(DATE_PICKER_KEY);</span>
+	    }
+	}
+	}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VediPrenotazioniGiocatorePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">VediPrenotazioniGiocatorePanel.java</span></div><h1>VediPrenotazioniGiocatorePanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import components.Campo;
+import components.CentroSportivo;
+import dataBase.DataBase;
+import dataBase.Sessione;
+import components.Prenotazione;
+
+/**
+ * Classe VediPrenotazioniGiocatorePanel
+ * 
+ * Questa classe rappresenta un pannello per i giocatori che consente di visualizzare
+ * e gestire le prenotazioni associate all'utente corrente. Include funzionalità per
+ * mostrare le prenotazioni ordinate, raggruppate per giorno, e opzioni di gestione
+ * come eliminare una prenotazione o visualizzarne i dettagli.
+ */
+public class VediPrenotazioniGiocatorePanel extends JPanel {
+    private static JScrollPane scrollPane;
+	private static JTextArea prenotazioniArea;
+	private Map&lt;String, CentroSportivo&gt; centriSportivi;
+    private Image clearImage;
+
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+    
+    /**
+     * Costruttore del pannello per la visualizzazione delle prenotazioni del giocatore.
+     *
+     * @param cardLayout Il CardLayout utilizzato per la navigazione tra i pannelli.
+     * @param cardPanel  Il contenitore dei pannelli (card panel).
+     */
+<span class="nc" id="L47">    public VediPrenotazioniGiocatorePanel(CardLayout cardLayout, JPanel cardPanel) {</span>
+<span class="nc" id="L48">        this.cardLayout = cardLayout;</span>
+<span class="nc" id="L49">        this.cardPanel = cardPanel;</span>
+
+        // Caricamento dello sfondo
+<span class="nc" id="L52">        URL clearImageUrl = getClass().getResource(&quot;/GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (clearImageUrl != null) {</span>
+<span class="nc" id="L54">            clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+        } else {
+<span class="nc" id="L56">            String ImageNotFound = &quot;Errore nel caricamento dell'immagine: &quot; + &quot;/GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L57">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L58">			CustomMessage.show(ImageNotFound, er, false);</span>
+        }
+
+        // Configura layout e componenti
+<span class="nc" id="L62">        setLayout(new GridBagLayout());</span>
+<span class="nc" id="L63">        GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L64">        gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L65">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+        // Area per visualizzare le prenotazioni
+<span class="nc" id="L68">        prenotazioniArea = new JTextArea();</span>
+<span class="nc" id="L69">        prenotazioniArea.setOpaque(false); // Rendi completamente trasparente</span>
+<span class="nc" id="L70">        prenotazioniArea.setBackground(new Color(255, 255, 255, 180)); // Sfondo semitrasparente</span>
+<span class="nc" id="L71">        prenotazioniArea.setForeground(Color.BLACK); // Colore del testo</span>
+<span class="nc" id="L72">        prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</span>
+
+        // Configurazione dello JScrollPane
+<span class="nc" id="L75">        scrollPane = new JScrollPane(prenotazioniArea) {</span>
+            @Override
+            protected void paintComponent(Graphics g) {
+<span class="nc" id="L78">                Graphics2D g2d = (Graphics2D) g.create();</span>
+<span class="nc" id="L79">                g2d.setColor(new Color(180, 180, 180, 150)); // Grigio chiaro semitrasparente</span>
+<span class="nc" id="L80">                g2d.fillRect(0, 0, getWidth(), getHeight());</span>
+<span class="nc" id="L81">                g2d.dispose();</span>
+<span class="nc" id="L82">                super.paintComponent(g);</span>
+<span class="nc" id="L83">            }</span>
+        };
+
+        // Imposta lo sfondo del viewport (interno)
+<span class="nc" id="L87">        scrollPane.getViewport().setOpaque(true);</span>
+<span class="nc" id="L88">        scrollPane.getViewport().setBackground(new Color(230, 230, 230, 180)); // Grigio molto chiaro semitrasparente</span>
+
+        // Rendi il `JScrollPane` opaco
+<span class="nc" id="L91">        scrollPane.setOpaque(false);</span>
+
+        // Configurazione dei bordi e della dimensione
+<span class="nc" id="L94">        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);</span>
+<span class="nc" id="L95">        scrollPane.setPreferredSize(new Dimension(900, 600));</span>
+<span class="nc" id="L96">        scrollPane.setBorder(BorderFactory.createTitledBorder(</span>
+<span class="nc" id="L97">                BorderFactory.createLineBorder(Color.GRAY, 2), // Colore del bordo grigio scuro</span>
+                &quot;Prenotazioni Giorno per Giorno&quot;,
+                0,
+                0,
+                new Font(&quot;Arial&quot;, Font.BOLD, 14),
+                Color.GRAY
+        ));
+        
+        // Modifica la velocità dello scrolling
+<span class="nc" id="L106">        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Incremento per ogni &quot;tick&quot; della rotella</span>
+<span class="nc" id="L107">        scrollPane.getVerticalScrollBar().setBlockIncrement(60); // Incremento per clic nella barra</span>
+
+        // Aggiungi lo JScrollPane al layout
+<span class="nc" id="L110">        gbc.gridx = 0;</span>
+<span class="nc" id="L111">        gbc.gridy = 0;</span>
+<span class="nc" id="L112">        gbc.gridwidth = 2;</span>
+<span class="nc" id="L113">        gbc.weightx = 0;</span>
+<span class="nc" id="L114">        gbc.weighty = 0;</span>
+<span class="nc" id="L115">        gbc.fill = GridBagConstraints.NONE;</span>
+<span class="nc" id="L116">        add(scrollPane, gbc);</span>
+
+<span class="nc" id="L118">        buttonBack(cardLayout, cardPanel, gbc);</span>
+
+<span class="nc" id="L120">        aggiornaPrenotazioni();</span>
+<span class="nc" id="L121">    }</span>
+
+    // Bottone Indietro
+	private void buttonBack(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc) {
+<span class="nc" id="L125">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+<span class="nc" id="L126">            prenotazioniArea.setText(&quot;&quot;);</span>
+<span class="nc" id="L127">            cardLayout.show(cardPanel, &quot;createGiocatore&quot;);</span>
+<span class="nc" id="L128">        }, new Dimension(120, 30));</span>
+<span class="nc" id="L129">        int ButtonFontDim = 18;</span>
+<span class="nc" id="L130">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L131">        backButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L132">        backButton.setBackground(Color.DARK_GRAY);</span>
+
+<span class="nc" id="L134">        gbc.gridy = 1;</span>
+<span class="nc" id="L135">        gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L136">        add(backButton, gbc);</span>
+<span class="nc" id="L137">	}</span>
+
+ 
+    /**
+     * Aggiorna l'area di visualizzazione con le prenotazioni dell'utente corrente.
+     */
+    public static void aggiornaPrenotazioni() {
+        // Ripulisce l'area di prenotazioni
+        try {
+<span class="nc" id="L146">			prenotazioniArea.setText(&quot;&quot;);</span>
+<span class="nc" id="L147">		} catch (Exception e) {</span>
+<span class="nc" id="L148">			e.printStackTrace();</span>
+<span class="nc" id="L149">		}</span>
+
+        // Recupera l'ID utente della sessione corrente
+<span class="nc" id="L152">        int utenteID = Sessione.getId();</span>
+
+        // Recupera tutte le prenotazioni dell'utente
+<span class="nc" id="L155">        List&lt;Prenotazione&gt; prenotazioni = DataBase.getAllPrenotazioni(utenteID);</span>
+
+        // Ordina le prenotazioni per data e ora
+<span class="nc" id="L158">        prenotazioni.sort((p1, p2) -&gt; {</span>
+<span class="nc" id="L159">            LocalDateTime dt1 = LocalDateTime.of(p1.getData().toLocalDate(), p1.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L160">            LocalDateTime dt2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L161">            return dt2.compareTo(dt1); // Ordina per data e ora in ordine decrescente</span>
+        });
+
+
+        // Raggruppa le prenotazioni per giorno
+<span class="nc" id="L166">        Map&lt;String, List&lt;Prenotazione&gt;&gt; prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);</span>
+
+        // Ordina le date in ordine cronologico
+<span class="nc" id="L169">        List&lt;String&gt; giorniOrdinati = new ArrayList&lt;&gt;(prenotazioniPerGiorno.keySet());</span>
+        
+        
+<span class="nc" id="L172">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;);</span>
+
+	     // Converti le date in LocalDate per ordinamento corretto
+<span class="nc" id="L175">	     List&lt;LocalDate&gt; dateOrdinabili = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">	     for (String giorno : giorniOrdinati) {</span>
+<span class="nc" id="L177">	         dateOrdinabili.add(LocalDate.parse(giorno, formatter));</span>
+<span class="nc" id="L178">	     }</span>
+	
+	     // Ordina le date in ordine cronologico decrescente
+<span class="nc" id="L181">	     dateOrdinabili.sort(Collections.reverseOrder());</span>
+	
+	     // Riconverti le date in stringhe
+<span class="nc" id="L184">	     giorniOrdinati.clear();</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">	     for (LocalDate data : dateOrdinabili) {</span>
+<span class="nc" id="L186">	         giorniOrdinati.add(data.format(formatter));</span>
+<span class="nc" id="L187">	     }</span>
+
+        // Crea il pannello contenitore per le prenotazioni
+<span class="nc" id="L190">        JPanel contenitorePrenotazioni = new JPanel();</span>
+<span class="nc" id="L191">        contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L192">        contenitorePrenotazioni.setOpaque(false);</span>
+
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (prenotazioni.isEmpty()) {</span>
+<span class="nc" id="L195">            JPanel panelVuoto = new JPanel();</span>
+<span class="nc" id="L196">            panelVuoto.setLayout(new GridBagLayout());</span>
+<span class="nc" id="L197">            panelVuoto.setOpaque(false); // Rende il pannello trasparente</span>
+
+<span class="nc" id="L199">            JLabel messaggioVuoto = new JLabel(&quot;Non ci sono prenotazioni per l'utente corrente.&quot;);</span>
+<span class="nc" id="L200">            messaggioVuoto.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L201">            messaggioVuoto.setForeground(Color.GRAY); // Colore del testo</span>
+<span class="nc" id="L202">            messaggioVuoto.setOpaque(false); // Rende la label trasparente</span>
+
+<span class="nc" id="L204">            panelVuoto.add(messaggioVuoto);</span>
+
+            // Aggiorna il contenuto dello scrollPane
+<span class="nc" id="L207">            scrollPane.setViewportView(panelVuoto);</span>
+<span class="nc" id="L208">            return;</span>
+        }
+
+
+
+        
+        // Popola il contenitore con le prenotazioni
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for (String giorno : giorniOrdinati) {</span>
+<span class="nc" id="L216">            List&lt;Prenotazione&gt; prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);</span>
+
+<span class="nc" id="L218">            creazioneHeader(contenitorePrenotazioni, giorno);</span>
+
+            // Ordina le prenotazioni del giorno in ordine crescente di orario
+<span class="nc" id="L221">            contenitorePrenotazioni.add(creaLineaSeparatrice());</span>
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">            for (Prenotazione prenotazione : prenotazioniDelGiorno) {</span>
+<span class="nc" id="L224">                Campo campo = DataBase.getCampoById(prenotazione.getCampoId());</span>
+<span class="nc" id="L225">                CentroSportivo centro = DataBase.getCentroByCampo(prenotazione.getCampoId());</span>
+<span class="nc" id="L226">                JPanel cardPrenotazione = creaCardPrenotazione(prenotazione, campo, centro);</span>
+<span class="nc" id="L227">                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));</span>
+<span class="nc" id="L228">                contenitorePrenotazioni.add(cardPrenotazione);</span>
+<span class="nc" id="L229">            }</span>
+
+            // Spazio e separatore tra i gruppi di giorni
+<span class="nc" id="L232">            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));</span>
+<span class="nc" id="L233">            contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());</span>
+<span class="nc" id="L234">        }</span>
+
+
+        // Aggiorna la viewport dello scrollPane
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (scrollPane != null) {</span>
+<span class="nc" id="L239">            scrollPane.setViewportView(contenitorePrenotazioni);</span>
+        } else {
+<span class="nc" id="L241">            String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L242">			CustomMessage.show(&quot;Errore: scrollPane non inizializzato correttamente.&quot;, er, false);</span>
+        }
+<span class="nc" id="L244">    }</span>
+
+	private static void creazioneHeader(JPanel contenitorePrenotazioni, String giorno) {
+		// Header per il giorno
+<span class="nc" id="L248">		JLabel headerGiorno = new JLabel(&quot;Prenotazioni per il giorno: &quot; + giorno);</span>
+<span class="nc" id="L249">		headerGiorno.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18));</span>
+<span class="nc" id="L250">		headerGiorno.setForeground(new Color(16, 139, 135));</span>
+<span class="nc" id="L251">		headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L252">		contenitorePrenotazioni.add(headerGiorno);</span>
+<span class="nc" id="L253">	}</span>
+
+
+    /**
+     * Crea un pannello rettangolare per rappresentare una prenotazione.
+     *
+     * @param prenotazione La prenotazione da visualizzare.
+     * @param campo        Il campo associato alla prenotazione.
+     * @param centro       Il centro sportivo associato alla prenotazione.
+     * @return Un pannello configurato per visualizzare i dettagli della prenotazione.
+     */
+    private static JPanel creaCardPrenotazione(Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+<span class="nc" id="L265">        JPanel card = new JPanel(new GridBagLayout());</span>
+
+        // Configura data e orari della prenotazione
+<span class="nc" id="L268">        LocalDateTime oraCorrente = LocalDateTime.now();</span>
+<span class="nc" id="L269">        LocalDateTime inizioPrenotazione = LocalDateTime.of(prenotazione.getData().toLocalDate(), prenotazione.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L270">        LocalDateTime finePrenotazione = LocalDateTime.of(prenotazione.getData().toLocalDate(), prenotazione.getOraFine().toLocalTime());</span>
+
+<span class="nc" id="L272">        boolean prenotazionePassata = finePrenotazione.isBefore(oraCorrente);</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">        boolean menoDi24Ore = !prenotazionePassata &amp;&amp;</span>
+<span class="nc bnc" id="L274" title="All 2 branches missed.">                              inizioPrenotazione.isAfter(oraCorrente) &amp;&amp;</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">                              inizioPrenotazione.isBefore(oraCorrente.plusHours(24));</span>
+
+        // Applicazione sfondo basata sullo stato della prenotazione
+<span class="nc bnc" id="L278" title="All 2 branches missed.">        if (prenotazionePassata) {</span>
+<span class="nc" id="L279">            card.setBackground(new Color(200, 200, 200)); // Grigio</span>
+<span class="nc bnc" id="L280" title="All 2 branches missed.">        } else if (menoDi24Ore) {</span>
+<span class="nc" id="L281">            card.setBackground(new Color(253, 218, 13)); // Giallo</span>
+        } else {
+<span class="nc" id="L283">            card.setBackground(new Color(230, 240, 250)); // Blu chiaro</span>
+        }
+
+<span class="nc" id="L286">        card.setBorder(BorderFactory.createCompoundBorder(</span>
+<span class="nc" id="L287">                BorderFactory.createLineBorder(new Color(16, 139, 135), 2),</span>
+<span class="nc" id="L288">                BorderFactory.createEmptyBorder(10, 10, 10, 10)</span>
+        ));
+
+        // Imposta dimensione massima del pannello
+<span class="nc" id="L292">        card.setMaximumSize(new Dimension(750, 100));</span>
+
+        // Layout e configurazione dei componenti
+<span class="nc" id="L295">        GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L296">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L297">        gbc.insets = new Insets(5, 5, 5, 5);</span>
+
+<span class="nc" id="L299">        posizioneOrario(prenotazione, card, gbc);</span>
+
+<span class="nc" id="L301">        barraVerticale(card, gbc);</span>
+
+<span class="nc" id="L303">        posizioneLocalità(centro, card, gbc);</span>
+
+<span class="nc" id="L305">        posizioneDurata(prenotazione, card, gbc);</span>
+
+<span class="nc" id="L307">        posizioneTipologiaCampo(campo, card, gbc);</span>
+
+<span class="nc" id="L309">        posizioneCosto(prenotazione, card, gbc);</span>
+        
+        // Aggiungi l'icona del cestino in fondo a destra
+<span class="nc" id="L312">        gbc.gridx = 3;</span>
+<span class="nc" id="L313">        gbc.gridy = 1;</span>
+<span class="nc" id="L314">        gbc.weightx = 0;</span>
+<span class="nc" id="L315">        gbc.anchor = GridBagConstraints.EAST;</span>
+
+     // Carica l'immagine come ImageIcon
+<span class="nc" id="L318">        ImageIcon trashIcon = new ImageIcon(VediPrenotazioniGiocatorePanel.class.getResource(&quot;/GUI/immagini/trashIcon.png&quot;));</span>
+
+        // Ridimensiona l'immagine
+<span class="nc" id="L321">        Image img = trashIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH); // Cambia la dimensione come desiderato</span>
+<span class="nc" id="L322">        trashIcon = new ImageIcon(img);</span>
+
+        // Crea il JLabel con l'icona ridimensionata
+<span class="nc" id="L325">        JLabel trashIconLabel = new JLabel(trashIcon);</span>
+
+        // Impostare la dimensione e la posizione dell'icona
+<span class="nc" id="L328">        trashIconLabel.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 24)); // Imposta una dimensione adeguata</span>
+<span class="nc" id="L329">        trashIconLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Cambia il cursore al passaggio del mouse</span>
+
+<span class="nc" id="L331">        trashIconLabel.addMouseListener(new MouseAdapter() {</span>
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Verifica se la prenotazione è già passata o se mancano meno di 24 ore
+<span class="nc" id="L335">                String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L336" title="All 4 branches missed.">				if (prenotazionePassata || menoDi24Ore) {</span>
+<span class="nc" id="L337">                    CustomMessage.show(</span>
+                        &quot;Non è possibile eliminare prenotazioni già passate o entro 24 ore&quot;,
+                        er,
+                        false // Colore rosso per errore
+                    );
+<span class="nc" id="L342">                    return; // Esci senza procedere</span>
+                }
+
+                // Mostra il messaggio di conferma tramite CustomMessageWithChoice
+<span class="nc" id="L346">                boolean conferma = CustomMessageWithChoice.show(</span>
+                    &quot;Sei sicuro di voler cancellare questa prenotazione?&quot;,
+                    &quot;Conferma Cancellazione&quot;,
+                    false // Utilizza il colore rosso per il messaggio di errore
+                );
+
+<span class="nc bnc" id="L352" title="All 2 branches missed.">                if (conferma) {</span>
+                    // L'utente ha confermato la cancellazione, quindi procedi con l'eliminazione
+                    try {
+<span class="nc" id="L355">                        DataBase.eliminaPrenotazione(prenotazione); // Elimina la prenotazione</span>
+<span class="nc" id="L356">                        aggiornaPrenotazioni(); // Aggiorna l'elenco delle prenotazioni dopo l'eliminazione</span>
+<span class="nc" id="L357">                    } catch (SQLException ex) {</span>
+                        // Se si verifica un errore durante l'eliminazione, mostra un messaggio di errore
+<span class="nc" id="L359">                        CustomMessageWithChoice.show(</span>
+                            &quot;Errore nell'eliminazione della prenotazione.&quot;,
+                            er,
+                            false // Colore rosso per errore
+                        );
+<span class="nc" id="L364">                        ex.printStackTrace();</span>
+<span class="nc" id="L365">                    }</span>
+                } else {
+                    // L'utente ha annullato l'operazione
+<span class="nc" id="L368">                    CustomMessage.show(</span>
+                        &quot;Cancellazione annullata.&quot;,
+                        &quot;Annullato&quot;,
+                        false // Colore rosso per errore (oppure puoi usare un colore neutro)
+                    );
+                }
+<span class="nc" id="L374">            }</span>
+        });
+
+<span class="nc" id="L377">        card.add(trashIconLabel, gbc);</span>
+
+        // Aggiunge azione clic per mostrare i dettagli
+<span class="nc" id="L380">        card.addMouseListener(new MouseAdapter() {</span>
+            @Override
+            public void mouseClicked(MouseEvent e) {
+<span class="nc" id="L383">                mostraDettagliPrenotazione(scrollPane, prenotazione, campo, centro);</span>
+<span class="nc" id="L384">            }</span>
+        });
+
+<span class="nc" id="L387">        return card;</span>
+    }
+
+	private static void posizioneCosto(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Costo (in basso, centrato)
+<span class="nc" id="L392">        gbc.gridy = 2;</span>
+<span class="nc" id="L393">        card.add(new JLabel(&quot;  💶 Costo: €&quot; + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);</span>
+<span class="nc" id="L394">	}</span>
+
+	private static void posizioneTipologiaCampo(Campo campo, JPanel card, GridBagConstraints gbc) {
+		// Tipo di campo (con dimensioni tra parentesi, sotto la durata)
+<span class="nc" id="L398">        gbc.gridx = 1;</span>
+<span class="nc" id="L399">        gbc.gridy = 1;</span>
+<span class="nc" id="L400">        gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L401">        card.add(new JLabel(&quot;  ⚽ &quot; + campo.getTipologiaCampo() + &quot; (&quot; + campo.getLunghezza() + &quot;x&quot; + campo.getLarghezza() + &quot;)&quot;), gbc);</span>
+<span class="nc" id="L402">	}</span>
+
+	private static void posizioneDurata(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Durata (centrata)
+<span class="nc" id="L406">        gbc.gridx = 1;</span>
+<span class="nc" id="L407">        gbc.gridy = 0;</span>
+<span class="nc" id="L408">        gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L409">        gbc.weightx = 0.5;</span>
+<span class="nc" id="L410">        card.add(new JLabel(&quot;  🕒 Durata: &quot; + prenotazione.getDurataInFormatoOreMinuti()), gbc);</span>
+<span class="nc" id="L411">	}</span>
+
+	private static void posizioneLocalità(CentroSportivo centro, JPanel card, GridBagConstraints gbc) {
+		// Località (a destra, metà altezza)
+<span class="nc" id="L415">        gbc.gridx = 2;</span>
+<span class="nc" id="L416">        gbc.gridy = 1;</span>
+<span class="nc" id="L417">        gbc.gridheight = 1; // Ripristina l'altezza a una riga</span>
+<span class="nc" id="L418">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L419">        gbc.anchor = GridBagConstraints.EAST;</span>
+<span class="nc" id="L420">        card.add(new JLabel(&quot;📍 Località: &quot; + centro.getComune() + &quot;, &quot; + centro.getProvincia()), gbc);</span>
+<span class="nc" id="L421">	}</span>
+    
+    // Barra verticale (separator) spostata leggermente più a sinistra
+	private static void barraVerticale(JPanel card, GridBagConstraints gbc) {
+<span class="nc" id="L425">		gbc.gridx = 1;</span>
+<span class="nc" id="L426">        gbc.gridy = 0;</span>
+<span class="nc" id="L427">        gbc.gridheight = 3; // Occupa tre righe</span>
+<span class="nc" id="L428">        gbc.fill = GridBagConstraints.VERTICAL;</span>
+<span class="nc" id="L429">        gbc.weightx = 0;</span>
+<span class="nc" id="L430">        gbc.insets = new Insets(0, 0, 0, 30); // Aggiunto un piccolo offset a sinistra</span>
+<span class="nc" id="L431">        JSeparator separator = new JSeparator(SwingConstants.VERTICAL);</span>
+<span class="nc" id="L432">        separator.setForeground(Color.GRAY);</span>
+<span class="nc" id="L433">        card.add(separator, gbc);</span>
+<span class="nc" id="L434">	}</span>
+
+	private static void posizioneOrario(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Orario (a sinistra, metà altezza)
+<span class="nc" id="L438">        gbc.gridx = 0;</span>
+<span class="nc" id="L439">        gbc.gridy = 1;</span>
+<span class="nc" id="L440">        gbc.anchor = GridBagConstraints.WEST;</span>
+<span class="nc" id="L441">        gbc.weightx = 1;</span>
+<span class="nc" id="L442">        card.add(new JLabel(&quot;⏰ Orario: &quot; + prenotazione.getOraInizio() + &quot; - &quot; + prenotazione.getOraFine()), gbc);</span>
+<span class="nc" id="L443">	}</span>
+
+    /**
+     * Raggruppa le prenotazioni per giorno.
+     *
+     * @param prenotazioni La lista di prenotazioni da raggruppare.
+     * @return Una mappa che associa ogni giorno alle prenotazioni relative.
+     */
+    private static Map&lt;String, List&lt;Prenotazione&gt;&gt; raggruppaPrenotazioniPerGiorno(List&lt;Prenotazione&gt; prenotazioni) {
+<span class="nc" id="L452">        Map&lt;String, List&lt;Prenotazione&gt;&gt; prenotazioniPerGiorno = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L453">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd-MM-yyyy&quot;);</span>
+<span class="nc bnc" id="L454" title="All 2 branches missed.">        for (Prenotazione prenotazione : prenotazioni) {</span>
+<span class="nc" id="L455">            String giorno = prenotazione.getData().toLocalDate().format(formatter);</span>
+<span class="nc" id="L456">            prenotazioniPerGiorno.computeIfAbsent(giorno, k -&gt; new ArrayList&lt;&gt;()).add(prenotazione);</span>
+<span class="nc" id="L457">        }</span>
+
+        // Ordinamento delle prenotazioni per giorno in ordine decrescente (ora più tardi prima)
+<span class="nc bnc" id="L460" title="All 2 branches missed.">        for (List&lt;Prenotazione&gt; prenotazioniDelGiorno : prenotazioniPerGiorno.values()) {</span>
+<span class="nc" id="L461">            prenotazioniDelGiorno.sort((p1, p2) -&gt; {</span>
+<span class="nc" id="L462">                LocalDateTime ora1 = LocalDateTime.of(p1.getData().toLocalDate(), p1.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L463">                LocalDateTime ora2 = LocalDateTime.of(p2.getData().toLocalDate(), p2.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L464">                return ora2.compareTo(ora1); // Ordinamento decrescente per orario</span>
+            });
+<span class="nc" id="L466">        }</span>
+
+<span class="nc" id="L468">        return prenotazioniPerGiorno;</span>
+    }
+
+    /**
+     * Crea una linea separatrice sottile.
+     *
+     * @return Un oggetto JSeparator configurato.
+     */
+    private static JSeparator creaLineaSeparatrice() {
+<span class="nc" id="L477">        JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);</span>
+<span class="nc" id="L478">        separatore.setForeground(new Color(16, 139, 135));</span>
+<span class="nc" id="L479">        separatore.setPreferredSize(new Dimension(800, 2)); // Linea sottile</span>
+<span class="nc" id="L480">        return separatore;</span>
+    }
+    
+    /**
+     * Crea una linea separatrice più spessa per separare i gruppi di giorni.
+     *
+     * @return Un oggetto JSeparator configurato.
+     */
+    private static JSeparator creaLineaSeparatriceSpessa() {
+<span class="nc" id="L489">        JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);</span>
+<span class="nc" id="L490">        separatore.setForeground(new Color(16, 139, 135)); // Colore della linea</span>
+<span class="nc" id="L491">        separatore.setPreferredSize(new Dimension(800, 5)); // Altezza maggiore</span>
+<span class="nc" id="L492">        return separatore;</span>
+    }
+
+    /**
+     * Mostra una finestra di dialogo con i dettagli di una prenotazione.
+     *
+     * @param parentComponent Il componente principale che richiama la finestra di dialogo.
+     * @param prenotazione    La prenotazione da visualizzare.
+     * @param campo           Il campo associato alla prenotazione.
+     * @param centro          Il centro sportivo associato alla prenotazione.
+     */
+    private static void mostraDettagliPrenotazione(Component parentComponent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+<span class="nc" id="L504">        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(parentComponent);</span>
+<span class="nc" id="L505">        DettagliPrenotazioneDialog dialog = new DettagliPrenotazioneDialog(parentFrame, prenotazione, campo, centro);</span>
+<span class="nc" id="L506">        dialog.setVisible(true);</span>
+<span class="nc" id="L507">    }</span>
+    
+    /**
+     * Sovrascrive il metodo paintComponent per disegnare lo sfondo personalizzato.
+     *
+     * @param g L'oggetto Graphics utilizzato per disegnare il pannello.
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+<span class="nc" id="L516">        super.paintComponent(g);</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">        if (clearImage != null) {</span>
+<span class="nc" id="L518">            g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+        }
+<span class="nc" id="L520">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

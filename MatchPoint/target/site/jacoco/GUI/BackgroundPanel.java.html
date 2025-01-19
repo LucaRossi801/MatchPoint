@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BackgroundPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">BackgroundPanel.java</span></div><h1>BackgroundPanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import com.formdev.flatlaf.FlatLightLaf;
+import dataBase.DataBase;
+
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.net.URL;
+
+/**
+ * Classe che gestisce il pannello principale della GUI, utilizzando un layout a
+ * schede (CardLayout) per navigare tra le diverse schermate dell'applicazione.
+ */
+public class BackgroundPanel extends JPanel {
+	protected static CardLayout cardLayout; // Gestore di layout a schede per la navigazione tra i pannelli.
+	protected static JPanel cardPanel; // Pannello contenitore per i diversi pannelli.
+	protected JPanel homePanel; // Pannello per la homepage.
+	protected JPanel mainPanel; // Pannello per la vista principale (con immagine nitida e bottoni).
+	protected static JPanel loginPanel; // Pannello per la vista di login.
+	protected static JPanel playerRegisterPanel; // Pannello per la registrazione dei giocatori.
+	protected static JPanel managerRegisterPanel; // Pannello per la registrazione dei gestori.
+	protected Image backgroundImage; // Immagine di sfondo per il pannello home.
+	protected static Image clearImage; // Immagine nitida per il pannello principale.
+
+	protected boolean isVisible; // Stato per la visibilità della scritta lampeggiante.
+	protected Timer blinkTimer; // Timer per gestire il lampeggiamento della scritta.
+	protected int blinkInterval; // Intervallo di tempo per il lampeggiamento.
+
+	protected JButton registerButton; // Bottone per il &quot;Register&quot;
+	protected JButton loginButton; // Bottone per il &quot;Login&quot;
+
+	/**
+	 * Costruttore della classe BackgroundPanel.
+	 *
+	 * @param blurredImagePath Il percorso dell'immagine sfocata per la homepage.
+	 * @param clearImagePath   Il percorso dell'immagine nitida per il pannello
+	 *                         principale.
+	 */
+<span class="nc" id="L40">	protected BackgroundPanel(String blurredImagePath, String clearImagePath) {</span>
+		// Imposta il tema FlatLaf
+		try {
+<span class="nc" id="L43">			UIManager.setLookAndFeel(new FlatLightLaf()); // Usa FlatLightLaf o FlatDarkLaf</span>
+<span class="nc" id="L44">		} catch (UnsupportedLookAndFeelException e) {</span>
+<span class="nc" id="L45">			e.printStackTrace();</span>
+<span class="nc" id="L46">		}</span>
+
+		// Usa CardLayout per gestire le diverse viste
+<span class="nc" id="L49">		cardLayout = new CardLayout();</span>
+<span class="nc" id="L50">		cardPanel = new JPanel(cardLayout);</span>
+
+		// Crea i pannelli per le diverse viste
+<span class="nc" id="L53">		homePanel = createHomePanel(blurredImagePath);</span>
+<span class="nc" id="L54">		mainPanel = createMainPanel(clearImagePath);</span>
+<span class="nc" id="L55">		loginPanel = Login.createLoginPanel();</span>
+<span class="nc" id="L56">		playerRegisterPanel = Register.createRegisterPanel(&quot;Giocatore&quot;);</span>
+<span class="nc" id="L57">		managerRegisterPanel = Register.createRegisterPanel(&quot;Gestore&quot;);</span>
+
+		// Aggiungi i pannelli al CardLayout
+<span class="nc" id="L60">		cardPanel.add(homePanel, &quot;home&quot;);</span>
+<span class="nc" id="L61">		cardPanel.add(mainPanel, &quot;main&quot;);</span>
+<span class="nc" id="L62">		cardPanel.add(loginPanel, &quot;login&quot;);</span>
+<span class="nc" id="L63">		cardPanel.add(playerRegisterPanel, &quot;playerRegister&quot;);</span>
+<span class="nc" id="L64">		cardPanel.add(managerRegisterPanel, &quot;managerRegister&quot;);</span>
+<span class="nc" id="L65">		cardPanel.add(new CreateGestorePanel(cardLayout, cardPanel), &quot;createGestore&quot;);</span>
+<span class="nc" id="L66">		cardPanel.add(new InserisciPrenotazionePanel(cardLayout, cardPanel), &quot;inserisciPrenotazione&quot;);</span>
+<span class="nc" id="L67">		cardPanel.add(new CreateGiocatorePanel(cardLayout, cardPanel), &quot;createGiocatore&quot;);</span>
+<span class="nc" id="L68">		cardPanel.add(new InserisciCentroPanel(cardLayout, cardPanel), &quot;inserisciCentro&quot;);</span>
+
+		// Imposta la vista iniziale come la homepage
+<span class="nc" id="L71">		cardLayout.show(cardPanel, &quot;home&quot;);</span>
+
+		// Imposta il layout del pannello principale
+<span class="nc" id="L74">		setLayout(new BorderLayout());</span>
+<span class="nc" id="L75">		add(cardPanel, BorderLayout.CENTER);</span>
+<span class="nc" id="L76">	}</span>
+
+	/**
+	 * Crea il pannello della homepage con immagine sfocata e scritta lampeggiante.
+	 *
+	 * @param blurredImagePath Il percorso dell'immagine sfocata.
+	 * @return Il pannello della homepage.
+	 */
+	private JPanel createHomePanel(String blurredImagePath) {
+<span class="nc" id="L85">		JPanel panel = new JPanel() {</span>
+			@Override
+			protected void paintComponent(Graphics g) {
+<span class="nc" id="L88">				super.paintComponent(g);</span>
+
+				// Disegna l'immagine sfocata
+<span class="nc bnc" id="L91" title="All 2 branches missed.">				if (backgroundImage != null) {</span>
+<span class="nc" id="L92">					g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);</span>
+				} else {
+<span class="nc" id="L94">					String BlurryNotFound = &quot;Immagine sfocata non trovata!&quot;;</span>
+<span class="nc" id="L95">					String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L96">					CustomMessage.show(BlurryNotFound, er, false);</span>
+				}
+
+				// Disegna la scritta &quot;MATCHPOINT&quot; in alto, centrata con contorno nero e stile
+				// moderno
+<span class="nc" id="L101">				Graphics2D g2d = (Graphics2D) g;</span>
+<span class="nc" id="L102">				g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);</span>
+
+				// Font moderno e dimensione
+<span class="nc" id="L105">				Font modernFont = new Font(&quot;SansSerif&quot;, Font.BOLD, 100);</span>
+<span class="nc" id="L106">				g2d.setFont(modernFont);</span>
+
+<span class="nc" id="L108">				String matchPointText = &quot;MATCHPOINT&quot;;</span>
+<span class="nc" id="L109">				FontMetrics metrics = g2d.getFontMetrics(modernFont);</span>
+<span class="nc" id="L110">				int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;</span>
+<span class="nc" id="L111">				int y = 150; // Posizione in altezza</span>
+
+				// Contorno nero
+<span class="nc" id="L114">				g2d.setColor(new Color(0, 0, 0, 120)); // Nero con maggiore opacità</span>
+<span class="nc" id="L115">				g2d.drawString(matchPointText, x + 6, y + 6);</span>
+
+				// Gradiente moderno per il testo
+<span class="nc" id="L118">				GradientPaint gradient = new GradientPaint(x, y, new Color(50, 220, 210),</span>
+<span class="nc" id="L119">						x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) // Sfumatura</span>
+				);
+<span class="nc" id="L121">				g2d.setPaint(gradient);</span>
+<span class="nc" id="L122">				g2d.drawString(matchPointText, x, y);</span>
+
+				// Scritta &quot;Clicca ovunque per continuare&quot;
+<span class="nc" id="L125">				cliccaPerContinuare(g);</span>
+<span class="nc" id="L126">			}</span>
+
+			private void cliccaPerContinuare(Graphics g) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">				if (isVisible) {</span>
+<span class="nc" id="L130">					g.setColor(Color.BLACK);</span>
+<span class="nc" id="L131">					g.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L132">					String ClickToContinue = &quot;Clicca ovunque per continuare!&quot;;</span>
+<span class="nc" id="L133">					String text = ClickToContinue.toUpperCase();</span>
+<span class="nc" id="L134">					FontMetrics metricsText = g.getFontMetrics();</span>
+<span class="nc" id="L135">					int xText = (getWidth() - metricsText.stringWidth(text)) / 2;</span>
+<span class="nc" id="L136">					int yText = (int) (getHeight() * 0.75);</span>
+<span class="nc" id="L137">					g.drawString(text, xText, yText);</span>
+				}
+<span class="nc" id="L139">			}</span>
+		};
+
+		// Carica l'immagine sfocata
+<span class="nc" id="L143">		URL blurredImageUrl = getClass().getResource(blurredImagePath);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">		if (blurredImageUrl != null) {</span>
+<span class="nc" id="L145">			this.backgroundImage = new ImageIcon(blurredImageUrl).getImage();</span>
+		} else {
+<span class="nc" id="L147">			String BlurryNotFound = &quot;Errore nel caricamento dell'immagine : &quot;;</span>
+<span class="nc" id="L148">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L149">			CustomMessage.show(BlurryNotFound + blurredImagePath, er, false);</span>
+		}
+
+		// Timer per il lampeggiamento della scritta
+<span class="nc" id="L153">		timerBlink();</span>
+
+		// Aggiungi il mouse listener
+<span class="nc" id="L156">		panel.addMouseListener(new java.awt.event.MouseAdapter() {</span>
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+<span class="nc" id="L158">				cardLayout.show(cardPanel, &quot;main&quot;); // Passa alla vista principale</span>
+<span class="nc" id="L159">			}</span>
+		});
+
+<span class="nc" id="L162">		return panel;</span>
+	}
+
+	private void timerBlink() {
+<span class="nc" id="L166">		blinkTimer = new Timer(blinkInterval, e -&gt; {</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">			isVisible = !isVisible;</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">			blinkInterval = isVisible ? 300 : 800;</span>
+<span class="nc" id="L169">			blinkTimer.setDelay(blinkInterval);</span>
+<span class="nc" id="L170">			repaint();</span>
+<span class="nc" id="L171">		});</span>
+<span class="nc" id="L172">		blinkTimer.start();</span>
+<span class="nc" id="L173">	}</span>
+
+	/**
+	 * Crea il pannello principale con immagine nitida e bottoni per la navigazione.
+	 *
+	 * @param clearImagePath Il percorso dell'immagine nitida.
+	 * @return Il pannello principale.
+	 */
+	private JPanel createMainPanel(String clearImagePath) {
+<span class="nc" id="L182">		JPanel panel = new JPanel(new GridBagLayout()) {</span>
+			@Override
+			protected void paintComponent(Graphics g) {
+<span class="nc" id="L185">				super.paintComponent(g);</span>
+
+				// Disegna l'immagine nitida
+<span class="nc bnc" id="L188" title="All 2 branches missed.">				if (clearImage != null) {</span>
+<span class="nc" id="L189">					g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+					// Disegna la scritta &quot;MATCHPOINT&quot; in alto, centrata con contorno nero e stile
+					// moderno
+<span class="nc" id="L192">					Graphics2D g2d = (Graphics2D) g;</span>
+<span class="nc" id="L193">					g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);</span>
+
+					// Font moderno e dimensione
+<span class="nc" id="L196">					Font modernFont = new Font(&quot;SansSerif&quot;, Font.BOLD, 100);</span>
+<span class="nc" id="L197">					g2d.setFont(modernFont);</span>
+
+<span class="nc" id="L199">					String matchPointText = &quot;MATCHPOINT&quot;;</span>
+<span class="nc" id="L200">					FontMetrics metrics = g2d.getFontMetrics(modernFont);</span>
+<span class="nc" id="L201">					int x = (getWidth() - metrics.stringWidth(matchPointText)) / 2;</span>
+<span class="nc" id="L202">					int y = 150; // Altezza regolata per posizionare più in alto il testo</span>
+
+					// Ombra più visibile
+<span class="nc" id="L205">					g2d.setColor(new Color(0, 0, 0, 120)); // Nero con maggiore opacità</span>
+<span class="nc" id="L206">					g2d.drawString(matchPointText, x + 6, y + 6);</span>
+
+					// Gradiente moderno per il testo
+<span class="nc" id="L209">					GradientPaint gradient = new GradientPaint(x, y, new Color(50, 220, 210), // Colore più deciso</span>
+<span class="nc" id="L210">							x + metrics.stringWidth(matchPointText), y, new Color(20, 150, 140) // Sfumatura</span>
+					);
+<span class="nc" id="L212">					g2d.setPaint(gradient);</span>
+<span class="nc" id="L213">					g2d.drawString(matchPointText, x, y);</span>
+				}
+<span class="nc" id="L215">			}</span>
+		};
+
+		// Carica l'immagine nitida
+<span class="nc" id="L219">		URL clearImageUrl = getClass().getResource(clearImagePath);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">		if (clearImageUrl != null) {</span>
+<span class="nc" id="L221">			this.clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+		} else {
+<span class="nc" id="L223">			String ImageNotFound = &quot;Errore nel caricamento dell'immagine : &quot;;</span>
+<span class="nc" id="L224">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L225">			CustomMessage.show(ImageNotFound + clearImagePath, er, false);</span>
+		}
+
+<span class="nc" id="L228">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L229">		gbc.insets = new Insets(10, 10, 10, 10); // Margini uniformi</span>
+<span class="nc" id="L230">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L231">		gbc.weightx = 0;</span>
+<span class="nc" id="L232">		gbc.weighty = 0;</span>
+
+		// Spazio vuoto (utilizzando un pannello invisibile)
+<span class="nc" id="L235">		JPanel spacer = new JPanel();</span>
+<span class="nc" id="L236">		spacer.setOpaque(false); // Rende il pannello trasparente</span>
+<span class="nc" id="L237">		spacer.setPreferredSize(new Dimension(1, 400)); // Altezza dello spazio</span>
+<span class="nc" id="L238">		gbc.gridx = 0;</span>
+<span class="nc" id="L239">		gbc.gridy = 0; // Prima riga</span>
+<span class="nc" id="L240">		gbc.gridwidth = 2; // Occupa entrambe le colonne</span>
+<span class="nc" id="L241">		panel.add(spacer, gbc);</span>
+
+		// Bottone &quot;Register Giocatore&quot;
+<span class="nc" id="L244">		gbc.gridx = 0;</span>
+<span class="nc" id="L245">		gbc.gridy = 1; // Riga successiva</span>
+<span class="nc" id="L246">		gbc.gridwidth = 1; // Reset larghezza</span>
+<span class="nc" id="L247">		gbc.anchor = GridBagConstraints.CENTER; // Allineamento centrale</span>
+<span class="nc" id="L248">		Dimension largeButtonSize = new Dimension(250, 80);</span>
+<span class="nc" id="L249">		JButton registerGiocatoreButton = createFlatButton(&quot;Register Giocatore&quot;,</span>
+<span class="nc" id="L250">				e -&gt; cardLayout.show(cardPanel, &quot;playerRegister&quot;), largeButtonSize);</span>
+<span class="nc" id="L251">		panel.add(registerGiocatoreButton, gbc);</span>
+
+		// Bottone &quot;Register Gestore&quot;
+<span class="nc" id="L254">		gbc.gridx = 1; // Colonna successiva</span>
+<span class="nc" id="L255">		gbc.gridy = 1;</span>
+<span class="nc" id="L256">		JButton registerGestoreButton = createFlatButton(&quot;Register Gestore&quot;,</span>
+<span class="nc" id="L257">				e -&gt; cardLayout.show(cardPanel, &quot;managerRegister&quot;), largeButtonSize);</span>
+<span class="nc" id="L258">		panel.add(registerGestoreButton, gbc);</span>
+
+		// Bottone &quot;Login&quot;
+<span class="nc" id="L261">		gbc.gridx = 0;</span>
+<span class="nc" id="L262">		gbc.gridy = 2; // Riga successiva</span>
+<span class="nc" id="L263">		gbc.gridwidth = 2; // Occupa entrambe le colonne</span>
+<span class="nc" id="L264">		JButton loginButton = createFlatButton(&quot;Login&quot;, e -&gt; cardLayout.show(cardPanel, &quot;login&quot;),</span>
+				new Dimension(250, 80));
+<span class="nc" id="L266">		panel.add(loginButton, gbc);</span>
+
+		// Bottone &quot;Quit&quot;
+<span class="nc" id="L269">		gbc.gridx = 0;</span>
+<span class="nc" id="L270">		gbc.gridy = 3; // Riga successiva sotto il bottone &quot;Login&quot;</span>
+<span class="nc" id="L271">		gbc.gridwidth = 2; // Centrare il bottone</span>
+<span class="nc" id="L272">		JButton quitButton = createFlatButton(&quot;Quit&quot;, e -&gt; System.exit(0), new Dimension(300, 40)); // Azione per</span>
+																									// chiudere
+																									// l'applicazione
+<span class="nc" id="L275">		quitButton.setForeground(Color.GRAY); // Sfondo grigio</span>
+<span class="nc" id="L276">		quitButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L277">		panel.add(quitButton, gbc);</span>
+
+<span class="nc" id="L279">		return panel;</span>
+	}
+
+	/**
+	 * Mostra un pannello specifico dato il suo nome.
+	 *
+	 * @param name Il nome del pannello da mostrare.
+	 */
+	protected static void showPanel(String name) {
+		try {
+<span class="nc" id="L289">			cardLayout.show(cardPanel, name);</span>
+<span class="nc" id="L290">		} catch (Exception e) {</span>
+<span class="nc" id="L291">			e.printStackTrace();</span>
+<span class="nc" id="L292">		}</span>
+<span class="nc" id="L293">	}</span>
+
+	/**
+	 * Crea un bottone con stile FlatLaf.
+	 *
+	 * @param text   Il testo del bottone.
+	 * @param action L'azione da eseguire al click.
+	 * @param size   La dimensione del bottone.
+	 * @return Il bottone creato.
+	 */
+	public static JButton createFlatButton(String text, ActionListener action, Dimension size) {
+<span class="nc" id="L304">		JButton button = new JButton(text);</span>
+<span class="nc" id="L305">		button.addActionListener(action);</span>
+
+		// Imposta stile FlatLaf
+<span class="nc" id="L308">		button.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 22)); // Font più grande per i pulsanti più grandi</span>
+<span class="nc" id="L309">		button.putClientProperty(&quot;JButton.buttonType&quot;, &quot;roundRect&quot;); // Tipo di bottone arrotondato</span>
+<span class="nc" id="L310">		button.setBackground(new Color(32, 178, 170)); // Colore sfondo</span>
+<span class="nc" id="L311">		button.putClientProperty(&quot;JButton.hoverBackgroundColor&quot;, new Color(28, 144, 138)); // Colore al passaggio del</span>
+																							// mouse
+
+<span class="nc" id="L314">		button.setForeground(new Color(220, 250, 245)); // Colore del testo</span>
+<span class="nc" id="L315">		button.setFocusPainted(false); // Rimuove il bordo al click</span>
+
+<span class="nc" id="L317">		button.setPreferredSize(size); // Dimensione personalizzata</span>
+<span class="nc" id="L318">		return button;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

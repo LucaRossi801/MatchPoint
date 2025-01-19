@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VediPrenotazioniGestorePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">VediPrenotazioniGestorePanel.java</span></div><h1>VediPrenotazioniGestorePanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import components.Campo;
+import components.CentroSportivo;
+import dataBase.DataBase;
+import dataBase.Sessione;
+import components.Prenotazione;
+
+/**
+ * Classe VediPrenotazioniGestorePanel
+ * 
+ * Questa classe rappresenta un pannello per i gestori che consente di
+ * visualizzare le prenotazioni associate ai centri e campi sportivi gestiti.
+ * Include funzionalità per selezionare un centro sportivo, scegliere un campo,
+ * e visualizzare una lista dettagliata delle prenotazioni raggruppate per
+ * giorno.
+ */
+public class VediPrenotazioniGestorePanel extends JPanel {
+	private JComboBox&lt;String&gt; centriComboBox;
+	private JComboBox&lt;Campo&gt; campiComboBox;
+	private JTextArea prenotazioniArea;
+	private Map&lt;String, CentroSportivo&gt; centriSportivi;
+	private Image clearImage;
+
+	private CardLayout cardLayout;
+	private JPanel cardPanel;
+
+	/**
+	 * Costruttore per il pannello delle prenotazioni del gestore.
+	 *
+	 * @param cardLayout Il CardLayout utilizzato per la navigazione tra i pannelli.
+	 * @param cardPanel  Il contenitore dei pannelli (card panel).
+	 */
+<span class="nc" id="L49">	public VediPrenotazioniGestorePanel(CardLayout cardLayout, JPanel cardPanel) {</span>
+<span class="nc" id="L50">		this.cardLayout = cardLayout;</span>
+<span class="nc" id="L51">		this.cardPanel = cardPanel;</span>
+
+		// Caricamento dello sfondo
+<span class="nc" id="L54">		URL clearImageUrl = getClass().getResource(&quot;/GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L55" title="All 2 branches missed.">		if (clearImageUrl != null) {</span>
+<span class="nc" id="L56">			clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+		} else {
+<span class="nc" id="L58">			String ImageNotFound = &quot;Errore nel caricamento dell'immagine: &quot; + &quot;/GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L59">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L60">			CustomMessage.show(ImageNotFound, er,</span>
+					false);
+		}
+
+		// Configura layout e componenti
+<span class="nc" id="L65">		setLayout(new GridBagLayout());</span>
+<span class="nc" id="L66">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L67">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L68">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+		// Pannello superiore
+<span class="nc" id="L71">		JPanel topPanel = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L72">		topPanel.setOpaque(false);</span>
+
+		// Caricamento delle icone ridimensionate
+<span class="nc" id="L75">		ImageIcon centroIcon = loadScaledIcon(&quot;/GUI/immagini/centroIcon.png&quot;, 70, 70);</span>
+<span class="nc" id="L76">		ImageIcon campoIcon = loadScaledIcon(&quot;/GUI/immagini/campoIcon.png&quot;, 70, 70);</span>
+
+		// Etichetta per il centro sportivo
+<span class="nc" id="L79">		JPanel centriPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L80">		centriPanel.setOpaque(false);</span>
+<span class="nc" id="L81">		JLabel centriLabel = new JLabel(&quot;Seleziona Centro Sportivo:&quot;, centroIcon, JLabel.LEFT);</span>
+<span class="nc" id="L82">		centriLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L83">		centriPanel.add(centriLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L84">		gbc.gridx = 0;</span>
+<span class="nc" id="L85">		gbc.gridy = 0;</span>
+<span class="nc" id="L86">		topPanel.add(centriPanel, gbc);</span>
+
+<span class="nc" id="L88">		comboBoxCentri(gbc, topPanel);</span>
+
+		// Etichetta per il campo sportivo
+<span class="nc" id="L91">		JPanel campiPanel = new JPanel(new BorderLayout());</span>
+<span class="nc" id="L92">		campiPanel.setOpaque(false);</span>
+<span class="nc" id="L93">		JLabel campiLabel = new JLabel(&quot;Seleziona Campo:&quot;, campoIcon, JLabel.LEFT);</span>
+<span class="nc" id="L94">		campiLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L95">		campiPanel.add(campiLabel, BorderLayout.WEST);</span>
+<span class="nc" id="L96">		gbc.gridx = 0;</span>
+<span class="nc" id="L97">		gbc.gridy = 1;</span>
+<span class="nc" id="L98">		topPanel.add(campiPanel, gbc);</span>
+		
+<span class="nc" id="L100">		comboBoxCampi(gbc, topPanel);</span>
+		
+		// Aggiungi il pannello superiore al layout principale
+<span class="nc" id="L103">		gbc.gridx = 0;</span>
+<span class="nc" id="L104">		gbc.gridy = 0;</span>
+<span class="nc" id="L105">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L106">		add(topPanel, gbc);</span>
+
+		// Area per visualizzare le prenotazioni
+<span class="nc" id="L109">		prenotazioniArea = new JTextArea();</span>
+<span class="nc" id="L110">		prenotazioniArea.setOpaque(false); // Rendi completamente trasparente</span>
+<span class="nc" id="L111">		prenotazioniArea.setBackground(new Color(255, 255, 255, 180)); // Sfondo semitrasparente</span>
+<span class="nc" id="L112">		prenotazioniArea.setForeground(Color.BLACK); // Colore del testo</span>
+<span class="nc" id="L113">		prenotazioniArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</span>
+
+		// Configurazione dello JScrollPane
+<span class="nc" id="L116">		JScrollPane scrollPane = new JScrollPane(prenotazioniArea) {</span>
+			@Override
+			protected void paintComponent(Graphics g) {
+<span class="nc" id="L119">				Graphics2D g2d = (Graphics2D) g.create();</span>
+				// Colore per il contorno (più chiaro)
+<span class="nc" id="L121">				g2d.setColor(new Color(180, 180, 180, 150)); // Grigio chiaro semitrasparente</span>
+<span class="nc" id="L122">				g2d.fillRect(0, 0, getWidth(), getHeight());</span>
+<span class="nc" id="L123">				g2d.dispose();</span>
+<span class="nc" id="L124">				super.paintComponent(g);</span>
+<span class="nc" id="L125">			}</span>
+		};
+
+		// Imposta lo sfondo del viewport (interno)
+<span class="nc" id="L129">		scrollPane.getViewport().setOpaque(true);</span>
+<span class="nc" id="L130">		scrollPane.getViewport().setBackground(new Color(230, 230, 230, 180)); // Grigio molto chiaro semitrasparente</span>
+
+		// Rendi il `JScrollPane` opaco
+<span class="nc" id="L133">		scrollPane.setOpaque(false);</span>
+
+		// Configurazione dei bordi e della dimensione
+<span class="nc" id="L136">		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);</span>
+<span class="nc" id="L137">		scrollPane.setPreferredSize(new Dimension(900, 400));</span>
+<span class="nc" id="L138">		scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 2), // Colore</span>
+																												// del
+																												// bordo
+																												// grigio
+																												// scuro
+				&quot;Prenotazioni Giorno per Giorno&quot;, 0, 0, new Font(&quot;Arial&quot;, Font.BOLD, 14), Color.GRAY));
+
+		// Modifica la velocità dello scrolling
+<span class="nc" id="L146">		scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Incremento per ogni &quot;tick&quot; della rotella</span>
+<span class="nc" id="L147">		scrollPane.getVerticalScrollBar().setBlockIncrement(60); // Incremento per clic nella barra</span>
+
+		// Aggiungi lo JScrollPane al layout
+<span class="nc" id="L150">		gbc.gridx = 0;</span>
+<span class="nc" id="L151">		gbc.gridy = 1;</span>
+<span class="nc" id="L152">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L153">		gbc.weightx = 0;</span>
+<span class="nc" id="L154">		gbc.weighty = 0;</span>
+<span class="nc" id="L155">		gbc.fill = GridBagConstraints.NONE;</span>
+<span class="nc" id="L156">		add(scrollPane, gbc);</span>
+
+		// Bottone Indietro
+<span class="nc" id="L159">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+			// Resetta i campi del pannello
+<span class="nc" id="L161">			centriComboBox.setSelectedIndex(-1);</span>
+<span class="nc" id="L162">			campiComboBox.removeAllItems();</span>
+<span class="nc" id="L163">			prenotazioniArea.setText(&quot;&quot;);</span>
+
+			// Cambia schermata al card layout
+<span class="nc" id="L166">			cardLayout.show(cardPanel, &quot;createGestore&quot;);</span>
+<span class="nc" id="L167">		}, new Dimension(120, 30));</span>
+<span class="nc" id="L168">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L169">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L170">		backButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L171">		backButton.setBackground(Color.DARK_GRAY);</span>
+
+<span class="nc" id="L173">		gbc.gridy = 2;</span>
+<span class="nc" id="L174">		gbc.anchor = GridBagConstraints.CENTER;</span>
+<span class="nc" id="L175">		add(backButton, gbc);</span>
+
+<span class="nc" id="L177">		aggiornaCampi();</span>
+<span class="nc" id="L178">	}</span>
+
+	private void comboBoxCampi(GridBagConstraints gbc, JPanel topPanel) {
+		// ComboBox per i campi sportivi
+<span class="nc" id="L182">		campiComboBox = new JComboBox&lt;&gt;();</span>
+		
+<span class="nc" id="L184">		campiComboBox.setPreferredSize(new Dimension(200, 30));</span>
+<span class="nc" id="L185">		campiComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 14));</span>
+<span class="nc" id="L186">		campiComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));</span>
+<span class="nc" id="L187">		gbc.gridx = 1;</span>
+<span class="nc" id="L188">		topPanel.add(campiComboBox, gbc);</span>
+<span class="nc" id="L189">		campiComboBox.addItemListener(e -&gt; aggiornaPrenotazioni());</span>
+<span class="nc" id="L190">	}</span>
+
+	private void comboBoxCentri(GridBagConstraints gbc, JPanel topPanel) {
+		// ComboBox per i centri sportivi
+<span class="nc" id="L194">		centriComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L195">		caricaCentriSportivi();</span>
+<span class="nc" id="L196">		centriComboBox.addItemListener(e -&gt; aggiornaCampi());</span>
+<span class="nc" id="L197">		centriComboBox.setPreferredSize(new Dimension(200, 30));</span>
+<span class="nc" id="L198">		centriComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 14));</span>
+<span class="nc" id="L199">		centriComboBox.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));</span>
+<span class="nc" id="L200">		gbc.gridx = 1;</span>
+<span class="nc" id="L201">		topPanel.add(centriComboBox, gbc);</span>
+<span class="nc" id="L202">		centriComboBox.addItemListener(e -&gt; aggiornaPrenotazioni());</span>
+<span class="nc" id="L203">	}</span>
+
+	/**
+	 * Metodo per caricare e ridimensionare un'icona.
+	 *
+	 * @param path   Il percorso dell'immagine.
+	 * @param width  Larghezza desiderata.
+	 * @param height Altezza desiderata.
+	 * @return Un oggetto ImageIcon ridimensionato.
+	 */
+	private ImageIcon loadScaledIcon(String path, int width, int height) {
+<span class="nc" id="L214">		URL imageUrl = getClass().getResource(path);</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">		if (imageUrl != null) {</span>
+<span class="nc" id="L216">			ImageIcon icon = new ImageIcon(imageUrl);</span>
+<span class="nc" id="L217">			Image scaledImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);</span>
+<span class="nc" id="L218">			return new ImageIcon(scaledImage);</span>
+		} else {
+<span class="nc" id="L220">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L221">			CustomMessage.show(&quot;Errore nel caricamento dell'immagine: &quot; + path, er, false);</span>
+<span class="nc" id="L222">			return null;</span>
+		}
+	}
+
+	/**
+	 * Classe per personalizzare l'aspetto della barra di scorrimento.
+	 */
+<span class="nc" id="L229">	class ModernScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {</span>
+		@Override
+		protected void configureScrollBarColors() {
+<span class="nc" id="L232">			this.thumbColor = new Color(200, 200, 200);</span>
+<span class="nc" id="L233">		}</span>
+
+		@Override
+		protected JButton createDecreaseButton(int orientation) {
+<span class="nc" id="L237">			return createInvisibleButton();</span>
+		}
+
+		@Override
+		protected JButton createIncreaseButton(int orientation) {
+<span class="nc" id="L242">			return createInvisibleButton();</span>
+		}
+
+		private JButton createInvisibleButton() {
+<span class="nc" id="L246">			JButton button = new JButton();</span>
+<span class="nc" id="L247">			button.setPreferredSize(new Dimension(0, 0));</span>
+<span class="nc" id="L248">			button.setMinimumSize(new Dimension(0, 0));</span>
+<span class="nc" id="L249">			button.setMaximumSize(new Dimension(0, 0));</span>
+<span class="nc" id="L250">			return button;</span>
+		}
+	}
+
+	/**
+	 * Carica i centri sportivi nel JComboBox.
+	 */
+	private void caricaCentriSportivi() {
+<span class="nc" id="L258">		centriSportivi = DataBase.getCentriSportiviGestiti(Sessione.getId()); // Ottieni i dati dalla sessione</span>
+<span class="nc" id="L259">		centriComboBox.removeAllItems();</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">		for (CentroSportivo centro : centriSportivi.values()) {</span>
+<span class="nc" id="L261">			centriComboBox.addItem(centro.getNome());</span>
+<span class="nc" id="L262">		}</span>
+<span class="nc" id="L263">	}</span>
+
+	/**
+	 * Aggiorna i campi sportivi in base al centro selezionato.
+	 */
+	private void aggiornaCampi() {
+<span class="nc" id="L269">		String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+
+<span class="nc bnc" id="L271" title="All 2 branches missed.">		if (centroSelezionato != null) {</span>
+<span class="nc" id="L272">			CentroSportivo centro = centriSportivi.get(centroSelezionato);</span>
+
+<span class="nc bnc" id="L274" title="All 2 branches missed.">			if (centro != null) {</span>
+				try {
+					// Recupera i campi per il centro selezionato
+<span class="nc" id="L277">					List&lt;Campo&gt; campi = DataBase.getCampiById(centro.getID());</span>
+<span class="nc" id="L278">					campiComboBox.removeAllItems();</span>
+
+<span class="nc bnc" id="L280" title="All 2 branches missed.">					for (Campo campo : campi) {</span>
+<span class="nc" id="L281">						campiComboBox.addItem(campo);</span>
+<span class="nc" id="L282">					}</span>
+<span class="nc" id="L283">				} catch (Exception e) {</span>
+<span class="nc" id="L284">					e.printStackTrace();</span>
+<span class="nc" id="L285">					String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L286">					JOptionPane.showMessageDialog(this, &quot;Errore durante il caricamento dei campi. Riprovare.&quot;, er,</span>
+							JOptionPane.ERROR_MESSAGE);
+<span class="nc" id="L288">				}</span>
+			}
+<span class="nc" id="L290">		} else {</span>
+<span class="nc" id="L291">			campiComboBox.removeAllItems();</span>
+		}
+
+<span class="nc" id="L294">		aggiornaPrenotazioni(); // Aggiorna le prenotazioni per il campo selezionato</span>
+<span class="nc" id="L295">	}</span>
+
+	/**
+	 * Aggiorna l'area delle prenotazioni in base al campo selezionato.
+	 */
+	private void aggiornaPrenotazioni() {
+	    // Recupera il centro selezionato e il campo selezionato
+<span class="nc" id="L302">	    String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+<span class="nc" id="L303">	    Campo campoSelezionato = (Campo) campiComboBox.getSelectedItem();</span>
+
+	    // Reset dell'area delle prenotazioni
+<span class="nc" id="L306">	    prenotazioniArea.setText(&quot;&quot;); // Reset area di testo per messaggio</span>
+
+	    // Verifica che un centro e un campo siano selezionati
+<span class="nc bnc" id="L309" title="All 4 branches missed.">	    if (centroSelezionato == null || campoSelezionato == null) {</span>
+<span class="nc" id="L310">	        prenotazioniArea.setText(&quot;Seleziona un centro sportivo e un campo per visualizzare le prenotazioni.&quot;);</span>
+<span class="nc" id="L311">	        return;</span>
+	    }
+
+	    // Contenitore delle prenotazioni
+<span class="nc" id="L315">	    JPanel contenitorePrenotazioni = new JPanel();</span>
+<span class="nc" id="L316">	    contenitorePrenotazioni.setLayout(new BoxLayout(contenitorePrenotazioni, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L317">	    contenitorePrenotazioni.setOpaque(false); // Assicurati che sia trasparente</span>
+
+	    try {
+	        // Ottieni gli ID del centro e del campo
+<span class="nc" id="L321">	        int centroId = centriSportivi.get(centroSelezionato).getID();</span>
+<span class="nc" id="L322">	        int campoId = campoSelezionato.getId();</span>
+
+	        // Recupera le prenotazioni dal database
+<span class="nc" id="L325">	        List&lt;Prenotazione&gt; prenotazioni = DataBase.getPrenotazioniByCampo(centroId, campoId);</span>
+
+	        // Se la lista delle prenotazioni è vuota
+<span class="nc bnc" id="L328" title="All 2 branches missed.">	        if (prenotazioni.isEmpty()) {</span>
+	            // Mostra il messaggio nell'area delle prenotazioni
+<span class="nc" id="L330">	            prenotazioniArea.setText(&quot;Nessuna prenotazione per questo campo.&quot;);</span>
+<span class="nc" id="L331">	            prenotazioniArea.setEditable(false); // Rende l'area non modificabile</span>
+
+	            // Rimuovi tutti i componenti precedenti dal contenitore
+<span class="nc" id="L334">	            contenitorePrenotazioni.removeAll();  </span>
+<span class="nc" id="L335">	            contenitorePrenotazioni.revalidate(); // Ricalcola il layout</span>
+<span class="nc" id="L336">	            contenitorePrenotazioni.repaint();    // Ridisegna il contenitore</span>
+
+	            // Aggiorna il JScrollPane con il contenitore vuoto
+<span class="nc" id="L339">	            JScrollPane scrollPane = (JScrollPane) getComponent(1);</span>
+<span class="nc" id="L340">	            scrollPane.setViewportView(contenitorePrenotazioni); // Imposta il contenitore vuoto</span>
+
+<span class="nc" id="L342">	            return; // Esci dalla funzione poiché non ci sono prenotazioni</span>
+	        }
+
+	        // Raggruppa le prenotazioni per giorno
+<span class="nc" id="L346">	        Map&lt;String, List&lt;Prenotazione&gt;&gt; prenotazioniPerGiorno = raggruppaPrenotazioniPerGiorno(prenotazioni);</span>
+
+	        // Ordina i giorni in ordine decrescente
+<span class="nc" id="L349">	        List&lt;String&gt; giorniOrdinati = new ArrayList&lt;&gt;(prenotazioniPerGiorno.keySet());</span>
+<span class="nc" id="L350">	        Collections.sort(giorniOrdinati, Collections.reverseOrder());</span>
+
+	        // Aggiungi le prenotazioni per giorno
+<span class="nc bnc" id="L353" title="All 2 branches missed.">	        for (String giorno : giorniOrdinati) {</span>
+<span class="nc" id="L354">	            List&lt;Prenotazione&gt; prenotazioniDelGiorno = prenotazioniPerGiorno.get(giorno);</span>
+
+	            // Header per il giorno
+<span class="nc" id="L357">	            JLabel headerGiorno = new JLabel(&quot;Prenotazioni per il giorno: &quot; + giorno);</span>
+				
+<span class="nc" id="L359">	            int ButtonFontDim = 18;</span>
+<span class="nc" id="L360">				headerGiorno.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L361">	            headerGiorno.setForeground(new Color(16, 139, 135));</span>
+<span class="nc" id="L362">	            headerGiorno.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L363">	            contenitorePrenotazioni.add(headerGiorno);</span>
+
+	            // Linea separatrice tra il giorno e le prenotazioni
+<span class="nc" id="L366">	            contenitorePrenotazioni.add(creaLineaSeparatrice());</span>
+<span class="nc" id="L367">	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio tra prenotazioni</span>
+	            // Aggiungi prenotazioni per il giorno
+<span class="nc bnc" id="L369" title="All 2 branches missed.">	            for (Prenotazione prenotazione : prenotazioniDelGiorno) {</span>
+<span class="nc" id="L370">	                JPanel cardPrenotazione = creaCardPrenotazione(prenotazione);</span>
+<span class="nc" id="L371">	                cardPrenotazione.setAlignmentX(Component.CENTER_ALIGNMENT);</span>
+<span class="nc" id="L372">	                contenitorePrenotazioni.add(cardPrenotazione);</span>
+<span class="nc" id="L373">	                contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10))); // Spazio tra prenotazioni</span>
+<span class="nc" id="L374">	            }</span>
+
+	            // Aggiungi una linea separatrice tra i giorni
+<span class="nc" id="L377">	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 10)));</span>
+<span class="nc" id="L378">	            contenitorePrenotazioni.add(creaLineaSeparatriceSpessa());</span>
+<span class="nc" id="L379">	            contenitorePrenotazioni.add(Box.createRigidArea(new Dimension(0, 15)));</span>
+<span class="nc" id="L380">	        }</span>
+
+	        // Aggiungi il contenitore al JScrollPane
+<span class="nc" id="L383">	        JScrollPane scrollPane = (JScrollPane) getComponent(1);</span>
+<span class="nc" id="L384">	        scrollPane.setViewportView(contenitorePrenotazioni); // Imposta il contenitore aggiornato</span>
+
+<span class="nc" id="L386">	        prenotazioniArea.setText(&quot;&quot;);  // Reset dell'area delle prenotazioni</span>
+<span class="nc" id="L387">	        prenotazioniArea.setEditable(false); // Rende l'area non modificabile</span>
+
+<span class="nc" id="L389">	    } catch (Exception e) {</span>
+<span class="nc" id="L390">	        e.printStackTrace();</span>
+<span class="nc" id="L391">	        prenotazioniArea.setText(&quot;Errore durante il caricamento delle prenotazioni.&quot;);</span>
+<span class="nc" id="L392">	    }</span>
+<span class="nc" id="L393">	}</span>
+
+
+
+
+	/**
+	 * Crea una linea separatrice originale tra i giorni.
+	 */
+	private JSeparator creaLineaSeparatrice() {
+<span class="nc" id="L402">		JSeparator separatore = new JSeparator(SwingConstants.HORIZONTAL);</span>
+<span class="nc" id="L403">		separatore.setForeground(new Color(16, 139, 135));</span>
+<span class="nc" id="L404">		separatore.setMaximumSize(new Dimension(800, 2)); // Limita la larghezza</span>
+<span class="nc" id="L405">		separatore.setPreferredSize(new Dimension(800, 2)); // Imposta una dimensione preferita</span>
+<span class="nc" id="L406">		separatore.setAlignmentX(Component.CENTER_ALIGNMENT); // Centra il separatore</span>
+<span class="nc" id="L407">		return separatore;</span>
+	}
+
+	/**
+	 * Crea una linea separatrice più spessa tra i gruppi di prenotazioni.
+	 */
+	private JPanel creaLineaSeparatriceSpessa() {
+<span class="nc" id="L414">		JPanel separatore = new JPanel();</span>
+<span class="nc" id="L415">		separatore.setMaximumSize(new Dimension(800, 4)); // Limita la larghezza</span>
+<span class="nc" id="L416">		separatore.setPreferredSize(new Dimension(800, 4)); // Altezza maggiore per una linea più evidente</span>
+<span class="nc" id="L417">		separatore.setBackground(new Color(16, 139, 135)); // Colore della linea</span>
+<span class="nc" id="L418">		return separatore;</span>
+	}
+
+	/**
+	 * Crea un pannello per rappresentare una prenotazione.
+	 */
+	private JPanel creaCardPrenotazione(Prenotazione prenotazione) {
+<span class="nc" id="L425">		JPanel card = new JPanel(new GridBagLayout());</span>
+
+		// Recupera la data e l'orario di fine della prenotazione
+<span class="nc" id="L428">		Date dataPrenotazione = prenotazione.getData();</span>
+<span class="nc" id="L429">		Time oraInizio = prenotazione.getOraInizio();</span>
+<span class="nc" id="L430">		Time oraFine = prenotazione.getOraFine();</span>
+
+		// Converte java.sql.Date in LocalDate
+<span class="nc" id="L433">		LocalDate localDate = dataPrenotazione.toLocalDate();</span>
+
+		// Converte Time in LocalTime
+<span class="nc" id="L436">		LocalTime localTimeInizio = oraInizio.toLocalTime();</span>
+<span class="nc" id="L437">		LocalTime localTimeFine = oraFine.toLocalTime();</span>
+
+		// Combina LocalDate e LocalTime per ottenere un LocalDateTime
+<span class="nc" id="L440">		LocalDateTime inizioPrenotazione = localDate.atTime(localTimeInizio);</span>
+<span class="nc" id="L441">		LocalDateTime finePrenotazione = localDate.atTime(localTimeFine);</span>
+
+		// Controlla se la prenotazione è passata
+<span class="nc" id="L444">		LocalDateTime oraCorrente = LocalDateTime.now();</span>
+<span class="nc" id="L445">		boolean prenotazionePassata = finePrenotazione.isBefore(oraCorrente);</span>
+
+		// Crea la card con un colore di sfondo a seconda dello stato della prenotazione
+<span class="nc bnc" id="L448" title="All 2 branches missed.">		card.setBackground(prenotazionePassata ? new Color(200, 200, 200) : new Color(230, 240, 250));</span>
+<span class="nc" id="L449">		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(16, 139, 135), 2),</span>
+<span class="nc" id="L450">				BorderFactory.createEmptyBorder(10, 10, 10, 10)));</span>
+
+		// Ridotto la larghezza massima del rettangolo
+<span class="nc" id="L453">		card.setMaximumSize(new Dimension(750, 100));</span>
+
+		// Configurazione layout della card
+<span class="nc" id="L456">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L457">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L458">		gbc.insets = new Insets(5, 5, 5, 5);</span>
+
+<span class="nc" id="L460">		creazioneEtichette(prenotazione, card, gbc);</span>
+
+<span class="nc" id="L462">		return card;</span>
+	}
+
+	private void creazioneEtichette(Prenotazione prenotazione, JPanel card, GridBagConstraints gbc) {
+		// Ora inizio - Ora fine
+<span class="nc" id="L467">		gbc.gridx = 0;</span>
+<span class="nc" id="L468">		gbc.gridy = 0;</span>
+<span class="nc" id="L469">		card.add(new JLabel(&quot;⏰ Orario: &quot; + prenotazione.getOraInizio() + &quot; - &quot; + prenotazione.getOraFine()), gbc);</span>
+
+		// Durata
+<span class="nc" id="L472">		gbc.gridx = 1;</span>
+<span class="nc" id="L473">		card.add(new JLabel(&quot;🕒 Durata: &quot; + prenotazione.getDurataInFormatoOreMinuti() + &quot; h&quot;), gbc);</span>
+
+		// Costo
+<span class="nc" id="L476">		gbc.gridx = 2;</span>
+<span class="nc" id="L477">		card.add(new JLabel(&quot;💶 Costo: €&quot; + DettagliPrenotazioneDialog.calcolaCosto(prenotazione)), gbc);</span>
+<span class="nc" id="L478">	}</span>
+
+	/**
+	 * Raggruppa le prenotazioni per giorno e le ordina per orario (più presto in basso).
+	 */
+	private Map&lt;String, List&lt;Prenotazione&gt;&gt; raggruppaPrenotazioniPerGiorno(List&lt;Prenotazione&gt; prenotazioni) {
+<span class="nc" id="L484">	    Map&lt;String, List&lt;Prenotazione&gt;&gt; prenotazioniPerGiorno = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L486" title="All 2 branches missed.">	    for (Prenotazione prenotazione : prenotazioni) {</span>
+	        // Ottieni la data in formato stringa
+<span class="nc" id="L488">	        String giorno = prenotazione.getData().toLocalDate().toString();</span>
+
+	        // Aggiungi la prenotazione al giorno corrispondente
+<span class="nc" id="L491">	        prenotazioniPerGiorno.computeIfAbsent(giorno, k -&gt; new ArrayList&lt;&gt;()).add(prenotazione);</span>
+<span class="nc" id="L492">	    }</span>
+
+	    // Ordina le prenotazioni per giorno
+<span class="nc bnc" id="L495" title="All 2 branches missed.">	    for (List&lt;Prenotazione&gt; prenotazioniDelGiorno : prenotazioniPerGiorno.values()) {</span>
+	        // Ordina in base all'orario di inizio (più presto in fondo)
+<span class="nc" id="L497">	        prenotazioniDelGiorno.sort((p1, p2) -&gt; {</span>
+<span class="nc" id="L498">	            LocalTime orario1 = p1.getOraInizio().toLocalTime();</span>
+<span class="nc" id="L499">	            LocalTime orario2 = p2.getOraInizio().toLocalTime();</span>
+<span class="nc" id="L500">	            return orario2.compareTo(orario1); // Invertito per avere le più tardi in alto</span>
+	        });
+<span class="nc" id="L502">	    }</span>
+
+<span class="nc" id="L504">	    return prenotazioniPerGiorno;</span>
+	}
+
+
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L510">		super.paintComponent(g);</span>
+<span class="nc" id="L511">		Graphics2D g2d = (Graphics2D) g.create();</span>
+
+		// Colore verde acqua semitrasparente
+<span class="nc" id="L514">		Color semiTransparentAqua = new Color(16, 139, 135, 128); // RGB (16, 139, 135) con trasparenza (128)</span>
+
+		// Disegna un rettangolo trasparente sopra lo sfondo
+<span class="nc" id="L517">		g2d.setColor(semiTransparentAqua);</span>
+<span class="nc" id="L518">		g2d.fillRect(0, 0, getWidth(), getHeight());</span>
+
+		// Disegna l'immagine di sfondo
+<span class="nc bnc" id="L521" title="All 2 branches missed.">		if (clearImage != null) {</span>
+<span class="nc" id="L522">			g2d.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+
+		}
+
+<span class="nc" id="L526">		g2d.dispose();</span>
+<span class="nc" id="L527">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

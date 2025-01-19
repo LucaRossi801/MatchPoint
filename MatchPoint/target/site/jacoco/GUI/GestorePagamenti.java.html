@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestorePagamenti.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">GestorePagamenti.java</span></div><h1>GestorePagamenti.java</h1><pre class="source lang-java linenums">package GUI;
+
+import components.Prenotazione;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+/**
+ * Classe che gestisce il pagamento e il rimborso per una prenotazione. Mostra
+ * dialoghi per la conferma di pagamento e gestisce eventuali differenze di
+ * costo in caso di modifiche alla prenotazione.
+ */
+<span class="nc" id="L14">public class GestorePagamenti {</span>
+	private JDialog pagamentoDialog; // Dialogo per il pagamento
+	private JPanel mainPanel; // Pannello principale
+	private boolean pagamentoEffettuato; // Stato del pagamento
+	private Timer timeoutTimer; // Timer per il timeout del pagamento
+
+	/**
+	 * Ritorna lo stato del pagamento.
+	 *
+	 * @return true se il pagamento è stato effettuato con successo, altrimenti
+	 *         false.
+	 */
+	public boolean isPagamentoEffettuato() {
+<span class="nc" id="L27">		return pagamentoEffettuato;</span>
+	}
+
+	/**
+	 * Mostra la schermata di pagamento per una prenotazione.
+	 *
+	 * @param prenotazione La prenotazione per la quale eseguire il pagamento.
+	 * @param vecchioCosto Il costo precedente della prenotazione, se modificata.
+	 */
+	public void mostraSchermataPagamento(Prenotazione prenotazione, double vecchioCosto) {
+<span class="nc" id="L37">		pagamentoEffettuato = false; // Stato iniziale del pagamento</span>
+<span class="nc" id="L38">		double costo = DettagliPrenotazioneDialog.calcolaCosto(prenotazione);</span>
+
+		// Inizializza il dialogo
+<span class="nc" id="L41">		pagamentoDialog = new JDialog((Frame) null, &quot;Pagamento&quot;, true); // Modale</span>
+<span class="nc" id="L42">		pagamentoDialog.setSize(450, 250);</span>
+<span class="nc" id="L43">		pagamentoDialog.setLocationRelativeTo(null); // Centra la finestra</span>
+<span class="nc" id="L44">		pagamentoDialog.setLayout(new BorderLayout());</span>
+<span class="nc" id="L45">		pagamentoDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);</span>
+
+		// Inizializza il pannello principale
+<span class="nc" id="L48">		mainPanel = new JPanel();</span>
+<span class="nc" id="L49">		mainPanel.setBackground(new Color(255, 255, 153)); // Giallo chiaro</span>
+<span class="nc" id="L50">		mainPanel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L51">		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Margini interni</span>
+<span class="nc" id="L52">		pagamentoDialog.add(mainPanel);</span>
+
+		// Etichetta del messaggio
+<span class="nc" id="L55">		String InsertCard = &quot;&lt;/b&gt;.&lt;br&gt;Inserire la carta per continuare.&lt;/center&gt;&lt;/html&gt;&quot;;</span>
+<span class="nc" id="L56">		int ButtonFontDim = 18;</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">		if (vecchioCosto != 0) {</span>
+<span class="nc" id="L58">			JLabel messaggio = new JLabel(&quot;&lt;html&gt;&lt;center&gt;La differenza dovuta è di &lt;b&gt;€ &quot; + (costo - vecchioCosto)</span>
+					+ InsertCard, SwingConstants.CENTER);
+<span class="nc" id="L60">			messaggio.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L61">			messaggio.setForeground(Color.DARK_GRAY); // Colore del testo</span>
+<span class="nc" id="L62">			mainPanel.add(messaggio, BorderLayout.CENTER);</span>
+<span class="nc" id="L63">		} else {</span>
+<span class="nc" id="L64">			JLabel messaggio = new JLabel(&quot;&lt;html&gt;&lt;center&gt;Il pagamento è di &lt;b&gt;€ &quot; + costo</span>
+					+ InsertCard, SwingConstants.CENTER);
+<span class="nc" id="L66">			messaggio.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L67">			messaggio.setForeground(Color.DARK_GRAY); // Colore del testo</span>
+<span class="nc" id="L68">			mainPanel.add(messaggio, BorderLayout.CENTER);</span>
+		}
+
+<span class="nc" id="L71">		timerTimeoutStart();</span>
+
+		// Listener per il clic del mouse
+<span class="nc" id="L74">		pagamentoDialog.addMouseListener(new MouseAdapter() {</span>
+			@Override
+			public void mouseClicked(MouseEvent e) {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">				if (timeoutTimer != null) {</span>
+<span class="nc" id="L78">					timeoutTimer.stop(); // Ferma il timer</span>
+				}
+<span class="nc bnc" id="L80" title="All 6 branches missed.">				if (e.getX() &gt;= 0 &amp;&amp; e.getX() &lt;= pagamentoDialog.getWidth() &amp;&amp; e.getY() &gt;= 0</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">						&amp;&amp; e.getY() &lt;= pagamentoDialog.getHeight()) {</span>
+<span class="nc" id="L82">					pagamentoEffettuato = true; // Pagamento riuscito</span>
+<span class="nc" id="L83">					mostraSchermataConferma(true);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">					if (vecchioCosto != 0) {</span>
+<span class="nc" id="L85">						Timer timer = new Timer(3000, ec -&gt; {</span>
+<span class="nc" id="L86">							String SuccessP = &quot;Prenotazione modificata con successo!&quot;;</span>
+<span class="nc" id="L87">							String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L88">							CustomMessage.show(SuccessP, S, true);</span>
+<span class="nc" id="L89">						});</span>
+
+<span class="nc" id="L91">						timer.setRepeats(false); // Impedisce che il timer si ripeta</span>
+<span class="nc" id="L92">						timer.start(); // Avvia il timer</span>
+<span class="nc" id="L93">					}</span>
+				} else {
+<span class="nc" id="L95">					pagamentoEffettuato = false; // Pagamento fallito</span>
+<span class="nc" id="L96">					mostraSchermataConferma(false);</span>
+				}
+<span class="nc" id="L98">			}</span>
+		});
+
+<span class="nc" id="L101">		pagamentoDialog.setVisible(true); // Mostra il dialogo e aspetta</span>
+<span class="nc" id="L102">	}</span>
+
+	private void timerTimeoutStart() {
+		// Inizializza il timer per il timeout
+<span class="nc" id="L106">		timeoutTimer = new Timer(30000, e -&gt; {</span>
+<span class="nc" id="L107">			pagamentoEffettuato = false; // Pagamento fallito</span>
+<span class="nc" id="L108">			mostraSchermataConferma(false);</span>
+<span class="nc" id="L109">			pagamentoDialog.dispose();</span>
+<span class="nc" id="L110">		});</span>
+<span class="nc" id="L111">		timeoutTimer.setRepeats(false); // Una sola esecuzione</span>
+<span class="nc" id="L112">		timeoutTimer.start(); // Avvia il timer</span>
+<span class="nc" id="L113">	}</span>
+
+	/**
+	 * Mostra la schermata di conferma per il pagamento.
+	 *
+	 * @param successo true se il pagamento è stato effettuato, false altrimenti.
+	 */
+	private void mostraSchermataConferma(boolean successo) {
+<span class="nc bnc" id="L121" title="All 2 branches missed.">		if (mainPanel != null) {</span>
+			// Cambia il colore del pannello in base al risultato
+<span class="nc bnc" id="L123" title="All 2 branches missed.">			mainPanel.setBackground(successo ? new Color(34, 139, 34) : new Color(255, 69, 0)); // Verde o rosso</span>
+
+			// Aggiorna il messaggio
+<span class="nc bnc" id="L126" title="All 2 branches missed.">			for (Component component : mainPanel.getComponents()) {</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">				if (component instanceof JLabel) {</span>
+<span class="nc" id="L128">					JLabel label = (JLabel) component;</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">					label.setText(</span>
+							&quot;&lt;html&gt;&lt;center&gt;&quot; + (successo ? &quot;Pagamento effettuato con successo!&quot; : &quot;Pagamento fallito&quot;)
+									+ &quot;&lt;/center&gt;&lt;/html&gt;&quot;);
+<span class="nc" id="L132">					label.setForeground(Color.WHITE); // Colore del testo per contrasto</span>
+<span class="nc" id="L133">					label.repaint(); // Aggiorna il label</span>
+				}
+			}
+
+<span class="nc" id="L137">			mainPanel.repaint(); // Aggiorna il pannello visivamente</span>
+
+			// Usa un Timer per chiudere il dialogo dopo 3 secondi
+<span class="nc" id="L140">			Timer timer = new Timer(3000, e -&gt; {</span>
+
+<span class="nc" id="L142">				pagamentoDialog.dispose(); // Chiudi la finestra di rimborso</span>
+
+<span class="nc" id="L144">			});</span>
+
+<span class="nc" id="L146">			timer.setRepeats(false); // Impedisce che il timer venga ripetuto</span>
+<span class="nc" id="L147">			timer.start(); // Avvia il timer</span>
+		}
+<span class="nc" id="L149">	}</span>
+
+	/**
+	 * Gestisce il pagamento per una prenotazione modificata.
+	 *
+	 * @param nuovaPrenotazione   La nuova prenotazione con i dettagli aggiornati.
+	 * @param vecchiaPrenotazione La prenotazione precedente da confrontare.
+	 */
+	public void gestisciPagamentoModificato(Prenotazione nuovaPrenotazione, Prenotazione vecchiaPrenotazione) {
+<span class="nc" id="L158">		double nuovoCosto = DettagliPrenotazioneDialog.calcolaCosto(nuovaPrenotazione);</span>
+<span class="nc" id="L159">		double vecchioCosto = DettagliPrenotazioneDialog.calcolaCosto(vecchiaPrenotazione);</span>
+
+		// Gestione pagamento in caso di aumento del costo
+<span class="nc bnc" id="L162" title="All 2 branches missed.">		if (nuovoCosto &gt; vecchioCosto) {</span>
+<span class="nc" id="L163">			mostraSchermataPagamento(nuovaPrenotazione, vecchioCosto);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">		} else if (nuovoCosto &lt; vecchioCosto) {</span>
+<span class="nc" id="L165">			double differenza = vecchioCosto - nuovoCosto;</span>
+
+			// Mostra una finestra di conferma per il rimborso
+<span class="nc" id="L168">			boolean scelta = CustomMessageWithChoice</span>
+<span class="nc" id="L169">					.show(&quot;Il costo è diminuito di € &quot; + differenza + &quot;. Vuoi un rimborso?&quot;, &quot;Rimborso&quot;, true // Successo</span>
+																												// (verde)
+					);
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">			if (scelta) {</span>
+
+<span class="nc" id="L175">				mostraSchermataRimborso(differenza);</span>
+			}
+		}
+<span class="nc" id="L178">	}</span>
+
+	/**
+	 * Mostra una finestra per il rimborso di un importo.
+	 *
+	 * @param rimborso L'importo da rimborsare.
+	 */
+	private static void mostraSchermataRimborso(double rimborso) {
+		// Crea una finestra per il rimborso
+<span class="nc" id="L187">		JFrame rimborsoFrame = new JFrame(&quot;Rimborso&quot;);</span>
+<span class="nc" id="L188">		rimborsoFrame.setSize(400, 200);</span>
+<span class="nc" id="L189">		rimborsoFrame.setLocationRelativeTo(null); // Centra la finestra</span>
+<span class="nc" id="L190">		rimborsoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</span>
+
+		// Crea il messaggio di rimborso
+<span class="nc" id="L193">		JLabel messaggio = new JLabel(&quot;Rimborso di € &quot; + rimborso + &quot; effettuato.&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L194">		messaggio.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 16));</span>
+<span class="nc" id="L195">		messaggio.setForeground(Color.WHITE); // Colore del testo</span>
+
+		// Imposta il colore del background (verde per successo)
+<span class="nc" id="L198">		JPanel contentPane = new JPanel();</span>
+<span class="nc" id="L199">		contentPane.setBackground(new Color(34, 139, 34)); // Verde chiaro</span>
+<span class="nc" id="L200">		contentPane.setLayout(new BorderLayout());</span>
+<span class="nc" id="L201">		contentPane.add(messaggio, BorderLayout.CENTER);</span>
+
+		// Imposta il contenuto del frame
+<span class="nc" id="L204">		rimborsoFrame.setContentPane(contentPane);</span>
+
+		// Forza la finestra a rimanere sopra tutte le altre finestre
+<span class="nc" id="L207">		rimborsoFrame.setAlwaysOnTop(true);</span>
+
+		// Mostra la finestra
+<span class="nc" id="L210">		rimborsoFrame.setVisible(true);</span>
+
+<span class="nc" id="L212">		timer3Seconds(rimborsoFrame);</span>
+
+<span class="nc" id="L214">	}</span>
+
+	private static void timer3Seconds(JFrame rimborsoFrame) {
+		// Timer per chiudere la finestra dopo 3 secondi
+<span class="nc" id="L218">		Timer timer = new Timer(3000, e -&gt; {</span>
+<span class="nc" id="L219">			rimborsoFrame.dispose(); // Chiudi la finestra di rimborso</span>
+
+<span class="nc" id="L221">			String SuccessP = &quot;Prenotazione modificata con successo!&quot;;</span>
+<span class="nc" id="L222">			String S = &quot;Successo&quot;;</span>
+<span class="nc" id="L223">			CustomMessage.show(SuccessP, S, true);</span>
+
+<span class="nc" id="L225">		});</span>
+
+<span class="nc" id="L227">		timer.setRepeats(false); // Impedisce che il timer venga ripetuto</span>
+<span class="nc" id="L228">		timer.start(); // Avvia il timer</span>
+<span class="nc" id="L229">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

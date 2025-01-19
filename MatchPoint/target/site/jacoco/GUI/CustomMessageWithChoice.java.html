@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomMessageWithChoice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">CustomMessageWithChoice.java</span></div><h1>CustomMessageWithChoice.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+<span class="nc" id="L7">public class CustomMessageWithChoice {</span>
+
+	/**
+	 * Mostra un messaggio personalizzato con opzioni di scelta (Sì/No).
+	 * 
+	 * @param message il messaggio da visualizzare
+	 * @param title   il titolo della finestra di dialogo
+	 * @param success true per un messaggio di successo (verde), false per errore (errore)
+	 * @return true se l'utente sceglie &quot;Sì&quot;, false altrimenti
+	 */
+	public static boolean show(String message, String title, boolean success) {
+		// Percorso del logo
+<span class="nc" id="L19">		String logoPath = &quot;/GUI/immagini/icona.png&quot;;</span>
+
+<span class="nc" id="L21">		JDialog dialog = new JDialog((Frame) null, title, true); // Modale</span>
+<span class="nc" id="L22">		dialog.setTitle(title);</span>
+<span class="nc" id="L23">		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);</span>
+<span class="nc" id="L24">		dialog.setSize(400, 250);</span>
+<span class="nc" id="L25">		dialog.setLocationRelativeTo(null);</span>
+<span class="nc" id="L26">		dialog.setLayout(new BorderLayout());</span>
+<span class="nc" id="L27">		dialog.setAlwaysOnTop(true);</span>
+
+		// Imposta l'icona della finestra
+<span class="nc bnc" id="L30" title="All 2 branches missed.">		if (logoPath != null) {</span>
+<span class="nc" id="L31">			URL iconURL = CustomMessage.class.getResource(logoPath);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">			if (iconURL != null) {</span>
+<span class="nc" id="L33">				ImageIcon icon = new ImageIcon(iconURL);</span>
+<span class="nc" id="L34">				dialog.setIconImage(icon.getImage());</span>
+<span class="nc" id="L35">			} else {</span>
+<span class="nc" id="L36">				String IconNotFound = &quot;Icona non trovata: &quot;;</span>
+<span class="nc" id="L37">				String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L38">				CustomMessage.show(IconNotFound + logoPath, er, false);</span>
+			}
+		}
+
+		// Imposta il colore di sfondo
+<span class="nc" id="L43">		JPanel panel = new JPanel();</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">		panel.setBackground(success ? new Color(34, 139, 34) : Color.RED);</span>
+<span class="nc" id="L45">		panel.setLayout(new BorderLayout());</span>
+<span class="nc" id="L46">		dialog.add(panel);</span>
+
+		// Testo del messaggio
+<span class="nc" id="L49">		JLabel messageLabel = new JLabel(&quot;&lt;html&gt;&lt;center&gt;&quot; + message + &quot;&lt;/center&gt;&lt;/html&gt;&quot;, SwingConstants.CENTER);</span>
+<span class="nc" id="L50">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L51">		messageLabel.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L52">		messageLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L53">		messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));</span>
+<span class="nc" id="L54">		panel.add(messageLabel, BorderLayout.CENTER);</span>
+
+		// Pulsanti Sì e No
+<span class="nc" id="L57">		JButton yesButton = new JButton(&quot;Sì&quot;);</span>
+<span class="nc" id="L58">		int ButtonDFontDim = 14;</span>
+<span class="nc" id="L59">		yesButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonDFontDim));</span>
+<span class="nc" id="L60">		yesButton.setBackground(Color.WHITE);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">		yesButton.setForeground(success ? new Color(32, 178, 170) : Color.RED);</span>
+
+<span class="nc" id="L63">		JButton noButton = new JButton(&quot;No&quot;);</span>
+<span class="nc" id="L64">		noButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonDFontDim));</span>
+<span class="nc" id="L65">		noButton.setBackground(Color.WHITE);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">		noButton.setForeground(success ? new Color(32, 178, 170) : Color.RED);</span>
+
+		// Pannello pulsanti
+<span class="nc" id="L69">		JPanel buttonPanel = new JPanel();</span>
+<span class="nc" id="L70">		buttonPanel.setOpaque(false);</span>
+<span class="nc" id="L71">		buttonPanel.add(yesButton);</span>
+<span class="nc" id="L72">		buttonPanel.add(noButton);</span>
+<span class="nc" id="L73">		panel.add(buttonPanel, BorderLayout.SOUTH);</span>
+
+		// Variabile di stato
+<span class="nc" id="L76">		final boolean[] userChoice = { false };</span>
+
+		// Aggiungi action listener
+<span class="nc" id="L79">		yesButton.addActionListener(e -&gt; {</span>
+<span class="nc" id="L80">			userChoice[0] = true;</span>
+<span class="nc" id="L81">			dialog.dispose();</span>
+<span class="nc" id="L82">		});</span>
+
+<span class="nc" id="L84">		noButton.addActionListener(e -&gt; dialog.dispose());</span>
+
+<span class="nc" id="L86">		dialog.setVisible(true);</span>
+<span class="nc" id="L87">		return userChoice[0];</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gestore.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">individui</a> &gt; <span class="el_source">Gestore.java</span></div><h1>Gestore.java</h1><pre class="source lang-java linenums">/**
+ * Il package individui contiene la definizione delle classi relative agli individui.
+ */
+package individui;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import dataBase.DataBase;
+
+/**
+ * La classe Gestore rappresenta un utente di tipo gestore nel sistema.
+ * Estende la classe Utente e include attributi aggiuntivi come certificazione e competenze.
+ */
+public class Gestore extends Utente {
+
+    public String certificazione;
+    public String competenze;
+
+    /**
+     * Costruttore di default per la classe Gestore.
+     */
+    public Gestore() {
+<span class="nc" id="L27">        super();</span>
+<span class="nc" id="L28">    }</span>
+
+    /**
+     * Registra un nuovo Gestore nel sistema.
+     *
+     * @param nome          Il nome dell'utente.
+     * @param cognome       Il cognome dell'utente.
+     * @param dataNascita   La data di nascita dell'utente in formato &quot;yyyy-MM-dd&quot;.
+     * @param email         L'email dell'utente.
+     * @param username      Lo username dell'utente.
+     * @param password      La password dell'utente.
+     * @param certificazioni Le certificazioni dell'utente.
+     * @param competenze    Le competenze dell'utente.
+     * @return 1 se la registrazione ha successo, -3 se lo username è già in uso.
+     */
+    public static int registrazione(String nome, String cognome, String dataNascita, String email, String username, String password, String certificazioni, String competenze, Connection testConnection) {
+<span class="fc" id="L44">        Connection conn = null;</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        boolean useTestConnection = (testConnection != null);</span>
+        int eta;
+
+        // Calcolo dell'età basato sulla data di nascita
+<span class="fc" id="L49">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L50">        LocalDate nascita = LocalDate.parse(dataNascita, formatter);</span>
+<span class="fc" id="L51">        LocalDate oggi = LocalDate.now();</span>
+<span class="fc" id="L52">        Period periodo = Period.between(nascita, oggi);</span>
+<span class="fc" id="L53">        eta = periodo.getYears();</span>
+
+        // Query per verificare se lo username esiste già
+<span class="fc" id="L56">        String sql = &quot;SELECT Password FROM Gestore WHERE Username ='&quot; + username + &quot;' UNION SELECT Password FROM Giocatore WHERE Username ='&quot; + username + &quot;'&quot;;</span>
+<span class="fc" id="L57">        String ris = &quot;&quot;;</span>
+
+        try {
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">            conn = useTestConnection ? testConnection : DriverManager.getConnection(&quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;);</span>
+<span class="fc" id="L61">            ris = DataBase.eseguiSelect(conn, sql); // Esecuzione della query</span>
+<span class="nc" id="L62">        } catch (SQLException e) {</span>
+<span class="nc" id="L63">            e.printStackTrace();</span>
+        } finally {
+<span class="pc bpc" id="L65" title="3 of 4 branches missed.">            if (!useTestConnection &amp;&amp; conn != null) {</span>
+                try {
+<span class="nc" id="L67">                    conn.close();</span>
+<span class="nc" id="L68">                } catch (SQLException e) {</span>
+<span class="nc" id="L69">                    e.printStackTrace();</span>
+<span class="nc" id="L70">                }</span>
+            }
+        }
+
+        // Se lo username non esiste, registra il nuovo utente
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (ris.equals(&quot;&quot;)) {</span>
+            try {
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">                if (!useTestConnection) {</span>
+<span class="nc" id="L78">                    conn = DriverManager.getConnection(&quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;);</span>
+                }
+<span class="fc" id="L80">                DataBase.insert(conn, nome, cognome, dataNascita, eta, email, username, password, certificazioni, competenze);</span>
+<span class="nc" id="L81">            } catch (SQLException e) {</span>
+<span class="nc" id="L82">                e.printStackTrace();</span>
+            } finally {
+<span class="pc bpc" id="L84" title="3 of 4 branches missed.">                if (!useTestConnection &amp;&amp; conn != null) {</span>
+                    try {
+<span class="nc" id="L86">                        conn.close();</span>
+<span class="nc" id="L87">                    } catch (SQLException e) {</span>
+<span class="nc" id="L88">                        e.printStackTrace();</span>
+<span class="nc" id="L89">                    }</span>
+                }
+            }
+<span class="fc" id="L92">            return 1;</span>
+        } else {
+<span class="fc" id="L94">            return -3;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

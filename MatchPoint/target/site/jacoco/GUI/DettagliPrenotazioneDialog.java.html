@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DettagliPrenotazioneDialog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">DettagliPrenotazioneDialog.java</span></div><h1>DettagliPrenotazioneDialog.java</h1><pre class="source lang-java linenums">package GUI;
+
+import org.jdesktop.swingx.JXDatePicker;
+import components.Campo;
+import components.CentroSportivo;
+import components.Prenotazione;
+import dataBase.DataBase;
+import dataBase.Sessione;
+
+import javax.swing.*;
+import javax.swing.JSpinner.DefaultEditor;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Time;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * Finestra di dialogo per visualizzare e modificare i dettagli di una
+ * prenotazione. Permette di aggiornare la data, l'ora di inizio e di fine di
+ * una prenotazione solo se la prenotazione è modificabile (almeno 24 ore prima
+ * dell'inizio).
+ */
+public class DettagliPrenotazioneDialog extends JDialog {
+	private JXDatePicker datePicker; // Componente per selezionare la data
+	private JSpinner oraInizioSpinner; // Spinner per selezionare l'orario di inizio
+	private JSpinner oraFineSpinner; // Spinner per selezionare l'orario di fine
+	private JButton salvaButton; // Bottone per salvare i dettagli della prenotazione
+	private Campo campo; // Campo associato alla prenotazione
+	private CentroSportivo centro; // Centro sportivo associato alla prenotazione
+	private int id; // ID della prenotazione
+<span class="nc" id="L39">	private LocalDateTime oraCorrente = LocalDateTime.now();</span>
+
+	/**
+	 * Costruttore per creare la finestra di dialogo dei dettagli di una
+	 * prenotazione.
+	 *
+	 * @param parent       La finestra padre (JFrame) da cui viene aperto il
+	 *                     dialogo.
+	 * @param prenotazione La prenotazione da visualizzare/modificare.
+	 * @param campo        Il campo sportivo associato alla prenotazione.
+	 * @param centro       Il centro sportivo associato alla prenotazione.
+	 */
+	public DettagliPrenotazioneDialog(JFrame parent, Prenotazione prenotazione, Campo campo, CentroSportivo centro) {
+<span class="nc" id="L52">		super(parent, &quot;Dettagli Prenotazione&quot;, true);</span>
+<span class="nc" id="L53">		this.campo = campo;</span>
+<span class="nc" id="L54">		this.centro = centro;</span>
+<span class="nc" id="L55">		this.id = prenotazione.getId();</span>
+		// Configurazione del layout principale
+<span class="nc" id="L57">		setLayout(new BorderLayout());</span>
+<span class="nc" id="L58">		setSize(700, 500); // Dimensione del dialogo</span>
+<span class="nc" id="L59">		setLocationRelativeTo(parent);</span>
+
+		// Pannello superiore con dettagli della prenotazione
+<span class="nc" id="L62">		JPanel panelDettagli = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L63">		panelDettagli.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));</span>
+<span class="nc" id="L64">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L65">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L66">		gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+
+		// Calcolo delle condizioni per abilitare/disabilitare i campi
+<span class="nc" id="L69">		LocalDateTime oraCorrente = LocalDateTime.now();</span>
+<span class="nc" id="L70">		LocalDateTime inizioPrenotazione = LocalDateTime.of(prenotazione.getData().toLocalDate(),</span>
+<span class="nc" id="L71">				prenotazione.getOraInizio().toLocalTime());</span>
+<span class="nc" id="L72">		boolean modificabile = inizioPrenotazione.isAfter(oraCorrente.plusHours(24));</span>
+
+		// Centro Sportivo
+<span class="nc" id="L75">		gbc.gridx = 0;</span>
+<span class="nc" id="L76">		gbc.gridy = 0;</span>
+<span class="nc" id="L77">		panelDettagli.add(createLabel(&quot;Centro Sportivo:&quot;), gbc);</span>
+<span class="nc" id="L78">		gbc.gridx = 1;</span>
+<span class="nc" id="L79">		panelDettagli.add(createValueLabel(centro.getNome()), gbc);</span>
+
+		// Campo
+<span class="nc" id="L82">		gbc.gridx = 0;</span>
+<span class="nc" id="L83">		gbc.gridy++;</span>
+<span class="nc" id="L84">		panelDettagli.add(createLabel(&quot;Campo:&quot;), gbc);</span>
+<span class="nc" id="L85">		gbc.gridx = 1;</span>
+<span class="nc" id="L86">		panelDettagli.add(createValueLabel(campo.getTipologiaCampo()), gbc);</span>
+
+		// Data
+<span class="nc" id="L89">		gbc.gridx = 0;</span>
+<span class="nc" id="L90">		gbc.gridy++;</span>
+<span class="nc" id="L91">		panelDettagli.add(createLabel(&quot;Data:&quot;), gbc);</span>
+<span class="nc" id="L92">		gbc.gridx = 1;</span>
+
+<span class="nc" id="L94">		datePicker = new JXDatePicker();</span>
+<span class="nc" id="L95">		datePicker.setDate(prenotazione.getData());</span>
+<span class="nc" id="L96">		datePicker.setEnabled(modificabile);</span>
+<span class="nc" id="L97">		datePicker.setFormats(&quot;dd-MM-yyyy&quot;);</span>
+<span class="nc" id="L98">		datePicker.getMonthView()</span>
+<span class="nc" id="L99">				.setLowerBound(Date.from(oraCorrente.plusHours(24).atZone(ZoneId.systemDefault()).toInstant()));</span>
+<span class="nc" id="L100">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L101">		datePicker.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, ButtonFontDim));</span>
+
+<span class="nc" id="L103">		panelDettagli.add(datePicker, gbc);</span>
+
+		// Ora Inizio
+<span class="nc" id="L106">		gbc.gridx = 0;</span>
+<span class="nc" id="L107">		gbc.gridy++;</span>
+<span class="nc" id="L108">		panelDettagli.add(createLabel(&quot;Ora Inizio:&quot;), gbc);</span>
+<span class="nc" id="L109">		gbc.gridx = 1;</span>
+<span class="nc" id="L110">		oraInizioSpinner = createCustomTimeSpinner();</span>
+<span class="nc" id="L111">		oraInizioSpinner.setValue(formatTime(prenotazione.getOraInizio().toLocalTime())); // Imposta l'orario della</span>
+																							// prenotazione
+<span class="nc" id="L113">		oraInizioSpinner.setEnabled(modificabile);</span>
+<span class="nc" id="L114">		panelDettagli.add(oraInizioSpinner, gbc);</span>
+
+		// Ora Fine
+<span class="nc" id="L117">		gbc.gridx = 0;</span>
+<span class="nc" id="L118">		gbc.gridy++;</span>
+<span class="nc" id="L119">		panelDettagli.add(createLabel(&quot;Ora Fine:&quot;), gbc);</span>
+<span class="nc" id="L120">		gbc.gridx = 1;</span>
+<span class="nc" id="L121">		oraFineSpinner = createCustomTimeSpinner();</span>
+<span class="nc" id="L122">		oraFineSpinner.setValue(formatTime(prenotazione.getOraFine().toLocalTime())); // Imposta l'orario della</span>
+																						// prenotazione
+<span class="nc" id="L124">		oraFineSpinner.setEnabled(modificabile);</span>
+<span class="nc" id="L125">		panelDettagli.add(oraFineSpinner, gbc);</span>
+
+		// Costo
+<span class="nc" id="L128">		gbc.gridx = 0;</span>
+<span class="nc" id="L129">		gbc.gridy++;</span>
+<span class="nc" id="L130">		panelDettagli.add(createLabel(&quot;Costo:&quot;), gbc);</span>
+<span class="nc" id="L131">		gbc.gridx = 1;</span>
+<span class="nc" id="L132">		panelDettagli.add(createValueLabel(&quot;€&quot; + calcolaCosto(prenotazione)), gbc);</span>
+
+<span class="nc" id="L134">		add(panelDettagli, BorderLayout.CENTER);</span>
+
+		// Pannello inferiore con pulsanti centrati verticalmente
+<span class="nc" id="L137">		JPanel panelBottoni = new JPanel(new GridBagLayout());</span>
+<span class="nc" id="L138">		GridBagConstraints gbcBottoni = new GridBagConstraints();</span>
+<span class="nc" id="L139">		gbcBottoni.insets = new Insets(10, 0, 10, 0);</span>
+<span class="nc" id="L140">		gbcBottoni.fill = GridBagConstraints.HORIZONTAL;</span>
+
+<span class="nc" id="L142">		buttonSalva(modificabile, panelBottoni, gbcBottoni);</span>
+
+<span class="nc" id="L144">		buttonBack(ButtonFontDim, panelBottoni, gbcBottoni);</span>
+
+<span class="nc" id="L146">		add(panelBottoni, BorderLayout.SOUTH);</span>
+<span class="nc" id="L147">	}</span>
+
+	private void buttonSalva(boolean modificabile, JPanel panelBottoni, GridBagConstraints gbcBottoni) {
+		// Bottone &quot;Salva&quot;
+<span class="nc" id="L151">		salvaButton = BackgroundPanel.createFlatButton(&quot;Salva&quot;, this::salvaDettagliPrenotazione,</span>
+				new Dimension(200, 40));
+<span class="nc" id="L153">		salvaButton.setBackground(new Color(32, 178, 170)); // Verde acqua</span>
+<span class="nc" id="L154">		salvaButton.setEnabled(modificabile);</span>
+<span class="nc" id="L155">		gbcBottoni.gridy = 0;</span>
+<span class="nc" id="L156">		panelBottoni.add(salvaButton, gbcBottoni);</span>
+<span class="nc" id="L157">	}</span>
+
+	private void buttonBack(int ButtonFontDim, JPanel panelBottoni, GridBagConstraints gbcBottoni) {
+		// Bottone &quot;Chiudi&quot;
+<span class="nc" id="L161">		JButton chiudiButton = BackgroundPanel.createFlatButton(&quot;Chiudi&quot;, e -&gt; dispose(), new Dimension(200, 30));</span>
+<span class="nc" id="L162">		chiudiButton.setBackground(Color.DARK_GRAY);</span>
+<span class="nc" id="L163">		chiudiButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L164">		chiudiButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim));</span>
+<span class="nc" id="L165">		gbcBottoni.gridy++;</span>
+<span class="nc" id="L166">		panelBottoni.add(chiudiButton, gbcBottoni);</span>
+<span class="nc" id="L167">	}</span>
+
+	/**
+	 * Salva i dettagli aggiornati di una prenotazione. Recupera i nuovi dati
+	 * inseriti dall'utente, verifica la disponibilità del campo e gestisce
+	 * eventuali pagamenti o aggiornamenti nel database.
+	 * 
+	 * @param e L'evento associato all'azione del pulsante &quot;Salva&quot;.
+	 */
+	private void salvaDettagliPrenotazione(ActionEvent e) {
+<span class="nc" id="L177">		String er = &quot;Errore&quot;;</span>
+		try {
+			// Verifica che il campo data non sia vuoto
+<span class="nc bnc" id="L180" title="All 2 branches missed.">	        if (datePicker.getDate() == null) {</span>
+<span class="nc" id="L181">	            CustomMessage.show(&quot;Seleziona una data valida per la prenotazione.&quot;, &quot;Errore&quot;, false);</span>
+<span class="nc" id="L182">	            return; // Interrompe il salvataggio</span>
+	        }
+			
+			// Recupera la nuova data, ora di inizio e ora di fine
+<span class="nc" id="L186">			LocalDateTime nuovaData = datePicker.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();</span>
+<span class="nc" id="L187">			String oraInizioString = oraInizioSpinner.getValue().toString(); // Ora di inizio come stringa</span>
+<span class="nc" id="L188">			String oraFineString = oraFineSpinner.getValue().toString(); // Ora di fine come stringa</span>
+
+			// Assicurati che le stringhe siano nel formato corretto &quot;HH:mm:ss&quot;
+<span class="nc" id="L191">			Time nuovaOraInizio = Time.valueOf(oraInizioString + &quot;:00&quot;); // Aggiungi &quot;:00&quot; per i secondi</span>
+<span class="nc" id="L192">			Time nuovaOraFine = Time.valueOf(oraFineString + &quot;:00&quot;); // Aggiungi &quot;:00&quot; per i secondi</span>
+<span class="nc" id="L193">			LocalDateTime nuovaOraInizioDateTime = nuovaData.withHour(nuovaOraInizio.getHours()).withMinute(nuovaOraInizio.getMinutes());</span>
+
+			// Recupera l'ID dell'utente e dell'ID del campo dalla prenotazione
+<span class="nc" id="L196">			int utenteID = Sessione.getId(); // ID utente della prenotazione</span>
+<span class="nc" id="L197">			int campoID = campo.getId(); // ID campo della prenotazione</span>
+			
+			// Verifica se la nuova ora di inizio è almeno 24 ore dopo l'ora corrente
+<span class="nc bnc" id="L200" title="All 2 branches missed.">			if (nuovaOraInizioDateTime.isBefore(oraCorrente.plusHours(24))) {</span>
+<span class="nc" id="L201">			    CustomMessage.show(&quot;L'ora di inizio deve essere almeno 24 ore dopo l'ora attuale.&quot;, &quot;Attenzione&quot;, false);</span>
+<span class="nc" id="L202">			    return; // Interrompe il salvataggio</span>
+			}
+
+			// Crea una nuova prenotazione basata sui dati inseriti
+<span class="nc" id="L206">			Prenotazione nuovaPrenotazione = new Prenotazione(this.id, Date.valueOf(nuovaData.toLocalDate()), // Converti Local Date in Date</span>
+																												
+					nuovaOraInizio, nuovaOraFine, utenteID, // ID utente dalla prenotazione
+					campoID // ID campo dalla prenotazione
+			);
+
+			// Verifica la disponibilità usando il metodo della classe Prenotazione
+<span class="nc bnc" id="L213" title="All 2 branches missed.">			if (InserisciPrenotazionePanel.verificaDisponibilita(nuovaPrenotazione)) {</span>
+				try {
+					// Recupera la prenotazione precedente dal database
+<span class="nc" id="L216">					Prenotazione vecchiaPrenotazione = DataBase.getPrenotazioneById(this.id);</span>
+
+					// Inizializza il gestore dei pagamenti
+<span class="nc" id="L219">					GestorePagamenti gestorePagamenti = new GestorePagamenti();</span>
+
+					// Gestisci il pagamento modificato
+<span class="nc" id="L222">					gestorePagamenti.gestisciPagamentoModificato(nuovaPrenotazione, vecchiaPrenotazione);</span>
+
+					// Aggiorna la prenotazione nel database
+<span class="nc" id="L225">					DataBase.updatePrenotazione(nuovaPrenotazione);</span>
+
+<span class="nc" id="L227">					VediPrenotazioniGiocatorePanel.aggiornaPrenotazioni();</span>
+
+<span class="nc" id="L229">				} catch (SQLException exc) {</span>
+<span class="nc" id="L230">					exc.printStackTrace();</span>
+<span class="nc" id="L231">					CustomMessage.show(&quot;Errore durante il salvataggio della prenotazione.&quot;, er, false);</span>
+<span class="nc" id="L232">				}</span>
+			} 
+<span class="nc" id="L234">		} catch (Exception ex) {</span>
+			// Mostra un messaggio di errore se qualcosa va storto
+<span class="nc" id="L236">			String Saveerror = &quot;Errore nel salvataggio dei dati: &quot;;</span>
+<span class="nc" id="L237">			CustomMessage.show(Saveerror + ex.getMessage(), er, false);</span>
+<span class="nc" id="L238">		}</span>
+<span class="nc" id="L239">		dispose(); // Chiude la finestra dopo il salvataggio</span>
+<span class="nc" id="L240">	}</span>
+
+	/**
+	 * Crea un'etichetta JLabel con testo specificato e stile predefinito.
+	 * 
+	 * @param text Il testo da visualizzare sull'etichetta.
+	 * @return Un'istanza di JLabel con il testo e lo stile specificato.
+	 */
+	private JLabel createLabel(String text) {
+<span class="nc" id="L249">		JLabel label = new JLabel(text);</span>
+<span class="nc" id="L250">		int LabelFontDim = 20;</span>
+<span class="nc" id="L251">		label.setFont(new Font(&quot;Arial&quot;, Font.BOLD, LabelFontDim));</span>
+<span class="nc" id="L252">		return label;</span>
+	}
+
+	/**
+	 * Crea un'etichetta JLabel per visualizzare un valore con stile predefinito.
+	 * 
+	 * @param text Il valore da visualizzare sull'etichetta.
+	 * @return Un'istanza di JLabel con il valore e lo stile specificato.
+	 */
+	private JLabel createValueLabel(String text) {
+<span class="nc" id="L262">		JLabel label = new JLabel(text);</span>
+<span class="nc" id="L263">		int LabelFontDim = 20;</span>
+<span class="nc" id="L264">		label.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, LabelFontDim));</span>
+<span class="nc" id="L265">		return label;</span>
+	}
+
+	/**
+	 * Crea un JSpinner personalizzato per la selezione di orari. Gli orari
+	 * disponibili sono generati automaticamente con incrementi di 30 minuti.
+	 * 
+	 * @return Un'istanza di JSpinner configurata con orari personalizzati.
+	 */
+	private JSpinner createCustomTimeSpinner() {
+<span class="nc" id="L275">		List&lt;String&gt; times = generateTimeValues();</span>
+<span class="nc" id="L276">		JSpinner timeSpinner = new JSpinner(new SpinnerListModel(times));</span>
+<span class="nc" id="L277">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L278">		timeSpinner.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, ButtonFontDim));</span>
+<span class="nc" id="L279">		((DefaultEditor) timeSpinner.getEditor()).getTextField().setEditable(false);</span>
+<span class="nc" id="L280">		return timeSpinner;</span>
+	}
+
+	/**
+	 * Genera una lista di valori orari in formato &quot;HH:mm&quot;, con incrementi di 30
+	 * minuti.
+	 * 
+	 * @return Una lista di stringhe rappresentanti gli orari disponibili.
+	 */
+	private List&lt;String&gt; generateTimeValues() {
+<span class="nc" id="L290">		List&lt;String&gt; times = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L291" title="All 2 branches missed.">		for (int h = 0; h &lt; 24; h++) {</span>
+<span class="nc" id="L292">			times.add(String.format(&quot;%02d:00&quot;, h));</span>
+<span class="nc" id="L293">			times.add(String.format(&quot;%02d:30&quot;, h));</span>
+		}
+<span class="nc" id="L295">		return times;</span>
+	}
+
+	/**
+	 * Formatta un'istanza di {@link LocalTime} nel formato &quot;HH:mm&quot;.
+	 * 
+	 * @param time L'oggetto LocalTime da formattare.
+	 * @return Una stringa rappresentante l'orario nel formato &quot;HH:mm&quot;.
+	 */
+	private String formatTime(LocalTime time) {
+<span class="nc" id="L305">		return String.format(&quot;%02d:%02d&quot;, time.getHour(), time.getMinute());</span>
+	}
+
+	/**
+	 * Calcola il costo di una prenotazione in base agli orari e ai costi del campo.
+	 * Il costo varia tra tariffa diurna e notturna, in base agli orari di
+	 * prenotazione.
+	 * 
+	 * @param p La prenotazione per cui calcolare il costo.
+	 * @return Il costo totale della prenotazione.
+	 */
+	public static double calcolaCosto(Prenotazione p) {
+		// Recupera il campo a cui è stata effettuata la prenotazione
+<span class="nc" id="L318">		Campo campo = DataBase.getCampoById(p.getCampoId());</span>
+<span class="nc" id="L319">		int costoOraNotturna = campo.getCostoOraNotturna();</span>
+<span class="nc" id="L320">		int costoOraDiurna = campo.getCostoOraDiurna();</span>
+
+		// Calcola la durata in millisecondi
+<span class="nc" id="L323">		long durataInMillis = p.getOraFine().getTime() - p.getOraInizio().getTime();</span>
+
+		// Converte la durata in minuti
+<span class="nc" id="L326">		long durataInMinuti = durataInMillis / 60000;</span>
+
+		// Definire gli orari limite per la divisione tra giorno e notte
+<span class="nc" id="L329">		Time ore18 = Time.valueOf(&quot;18:00:00&quot;);</span>
+
+		// Calcolare la durata delle ore diurne e notturne
+<span class="nc" id="L332">		double costoTotale = 0.0;</span>
+
+		// Se la prenotazione finisce prima delle 18:00
+<span class="nc bnc" id="L335" title="All 2 branches missed.">		if (p.getOraFine().before(ore18)) {</span>
+<span class="nc" id="L336">			costoTotale = (durataInMinuti / 60.0) * costoOraDiurna;</span>
+		}
+		// Se la prenotazione inizia dopo le 18:00
+<span class="nc bnc" id="L339" title="All 2 branches missed.">		else if (p.getOraInizio().after(ore18)) {</span>
+<span class="nc" id="L340">			costoTotale = (durataInMinuti / 60.0) * costoOraNotturna;</span>
+		}
+		// Altrimenti la prenotazione è divisa tra giorno e notte
+		else {
+			// Ore diurne (dalla partenza fino alle 18:00)
+<span class="nc" id="L345">			long minutiDiurni = Duration.between(p.getOraInizio().toLocalTime(), ore18.toLocalTime()).toMinutes();</span>
+<span class="nc" id="L346">			costoTotale += (minutiDiurni / 60.0) * costoOraDiurna;</span>
+
+			// Ore notturne (dalle 18:00 in poi)
+<span class="nc" id="L349">			long minutiNotturni = durataInMinuti - minutiDiurni;</span>
+<span class="nc" id="L350">			costoTotale += (minutiNotturni / 60.0) * costoOraNotturna;</span>
+		}
+
+<span class="nc" id="L353">		return costoTotale;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

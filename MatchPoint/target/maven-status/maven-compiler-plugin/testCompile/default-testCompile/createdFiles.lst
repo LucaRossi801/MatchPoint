@@ -3,3 +3,5 @@ components_Test\Campo_Test.class
 components_Test\InMemoryDatabaseUtil.class
 components_Test\CentroSportivo_Test.class
 components_Test\Prenotazione_Test.class
+individui_Test\Gestore_Test.class
+individui_Test\Giocatore_Test.class

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CreateGestorePanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">CreateGestorePanel.java</span></div><h1>CreateGestorePanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import dataBase.DataBase;
+import dataBase.Sessione;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
+
+/**
+ * Classe che rappresenta il pannello per la gestione delle operazioni di un
+ * gestore. Questo pannello include opzioni per: - Inserire un centro sportivo.
+ * - Modificare un centro sportivo. - Visualizzare le prenotazioni. - Tornare
+ * indietro al login.
+ */
+public class CreateGestorePanel extends JPanel {
+	private Image clearImage; // Immagine di sfondo nitida per il pannello.
+
+	/**
+	 * Costruttore della classe CreateGestorePanel.
+	 *
+	 * @param cardLayout Gestore del layout a schede (CardLayout) per la navigazione
+	 *                   tra pannelli.
+	 * @param cardPanel  Pannello principale contenitore dei diversi pannelli.
+	 */
+<span class="nc" id="L27">	public CreateGestorePanel(CardLayout cardLayout, JPanel cardPanel) {</span>
+		// Carica l'immagine di sfondo.
+<span class="nc" id="L29">		URL clearImageUrl = getClass().getClassLoader().getResource(&quot;GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc" id="L30">		String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">		if (clearImageUrl != null) {</span>
+<span class="nc" id="L32">			clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+		} else {
+<span class="nc" id="L34">			String ImageNotFound = &quot;Errore nel caricamento dell'immagine: GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L35">			CustomMessage.show(ImageNotFound, er, false);</span>
+		}
+
+		// Imposta il layout.
+<span class="nc" id="L39">		setLayout(new GridBagLayout());</span>
+<span class="nc" id="L40">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L41">		gbc.insets = new Insets(20, 0, 20, 0); // Maggiore spaziatura tra i pulsanti.</span>
+<span class="nc" id="L42">		gbc.gridx = 0; // Centra i pulsanti orizzontalmente.</span>
+
+<span class="nc" id="L44">		Dimension buttonSize = new Dimension(400, 120); // Dimensioni personalizzate per i pulsanti.</span>
+
+<span class="nc" id="L46">		buttonInserisciCentro(cardLayout, cardPanel, gbc, buttonSize);</span>
+
+<span class="nc" id="L48">		buttonModificaCentro(cardLayout, cardPanel, er, gbc, buttonSize);</span>
+
+<span class="nc" id="L50">		buttonVediPrenotazioni(cardLayout, cardPanel, er, gbc, buttonSize);</span>
+
+<span class="nc" id="L52">		buttonBack(gbc);</span>
+<span class="nc" id="L53">	}</span>
+
+	private void buttonBack(GridBagConstraints gbc) {
+		// Crea il pulsante &quot;Back&quot;.
+<span class="nc" id="L57">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+<span class="nc" id="L58">			Login.resetFields(); // Svuota i campi di testo.</span>
+<span class="nc" id="L59">			BackgroundPanel.showPanel(&quot;login&quot;); // Torna al pannello di login.</span>
+<span class="nc" id="L60">		}, new Dimension(150, 50) // Dimensione personalizzata del bottone.</span>
+		);
+
+		// Personalizza colore per il pulsante &quot;Back&quot;.
+<span class="nc" id="L64">		backButton.setForeground(Color.GRAY);</span>
+<span class="nc" id="L65">		backButton.setBackground(Color.DARK_GRAY);</span>
+<span class="nc" id="L66">		int ButtonFontDim = 18;</span>
+<span class="nc" id="L67">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, ButtonFontDim)); // Font più piccolo per il pulsante &quot;Back&quot;.</span>
+<span class="nc" id="L68">		gbc.gridy = 3; // Quarta riga.</span>
+<span class="nc" id="L69">		add(backButton, gbc);</span>
+<span class="nc" id="L70">	}</span>
+
+	private void buttonVediPrenotazioni(CardLayout cardLayout, JPanel cardPanel, String er, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il terzo pulsante &quot;Vedi Prenotazioni&quot;.
+<span class="nc" id="L75">		JButton vediPrenotazioniButton = BackgroundPanel.createFlatButton(&quot;Vedi Prenotazioni&quot;, e -&gt; {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">			if (!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {</span>
+<span class="nc" id="L77">				VediPrenotazioniGestorePanel panel = new VediPrenotazioniGestorePanel(cardLayout, cardPanel);</span>
+<span class="nc" id="L78">				BackgroundPanel.cardPanel.add(panel, &quot;vediPrenotazioniGestore&quot;);</span>
+<span class="nc" id="L79">				cardLayout.show(cardPanel, &quot;vediPrenotazioniGestore&quot;);</span>
+<span class="nc" id="L80">			} else {</span>
+<span class="nc" id="L81">				CustomMessage.show(&quot;Non esistono centri registrati!&quot;, er, false);</span>
+			}
+<span class="nc" id="L83">		}, buttonSize);</span>
+<span class="nc" id="L84">		vediPrenotazioniButton.setForeground(new Color(220, 250, 245));</span>
+
+		// Aggiungi l'icona al pulsante.
+<span class="nc" id="L87">		ImageIcon listIcon = caricaIcona(&quot;/GUI/immagini/list_icon.png&quot;);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		if (listIcon != null) {</span>
+<span class="nc" id="L89">			vediPrenotazioniButton.setIcon(listIcon);</span>
+<span class="nc" id="L90">			vediPrenotazioniButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.</span>
+<span class="nc" id="L91">			vediPrenotazioniButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.</span>
+		}
+<span class="nc" id="L93">		gbc.gridy = 2; // Terza riga.</span>
+<span class="nc" id="L94">		add(vediPrenotazioniButton, gbc);</span>
+<span class="nc" id="L95">	}</span>
+
+	private void buttonModificaCentro(CardLayout cardLayout, JPanel cardPanel, String er, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il secondo pulsante &quot;Modifica Centro&quot;.
+<span class="nc" id="L100">		JButton modificaCentroButton = BackgroundPanel.createFlatButton(&quot;Modifica Centro&quot;, e -&gt; {</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">			if (!(DataBase.getCentriSportiviGestiti(Sessione.getId()).isEmpty())) {</span>
+<span class="nc" id="L102">				ModificaCentroPanel modificaCentroPanel = new ModificaCentroPanel();</span>
+<span class="nc" id="L103">				BackgroundPanel.cardPanel.add(modificaCentroPanel, &quot;modificaCentro&quot;);</span>
+<span class="nc" id="L104">				cardLayout.show(cardPanel, &quot;modificaCentro&quot;);</span>
+<span class="nc" id="L105">			} else {</span>
+<span class="nc" id="L106">				CustomMessage.show(&quot;Non esistono centri registrati!&quot;, er, false);</span>
+			}
+<span class="nc" id="L108">		}, buttonSize);</span>
+<span class="nc" id="L109">		modificaCentroButton.setForeground(new Color(220, 250, 245));</span>
+
+		// Aggiungi l'icona al pulsante.
+<span class="nc" id="L112">		ImageIcon editIcon = caricaIcona(&quot;/GUI/immagini/edit_icon.png&quot;);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">		if (editIcon != null) {</span>
+<span class="nc" id="L114">			modificaCentroButton.setIcon(editIcon);</span>
+<span class="nc" id="L115">			modificaCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.</span>
+<span class="nc" id="L116">			modificaCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.</span>
+		}
+<span class="nc" id="L118">		gbc.gridy = 1; // Seconda riga.</span>
+<span class="nc" id="L119">		add(modificaCentroButton, gbc);</span>
+<span class="nc" id="L120">	}</span>
+
+	private void buttonInserisciCentro(CardLayout cardLayout, JPanel cardPanel, GridBagConstraints gbc,
+			Dimension buttonSize) {
+		// Crea il primo pulsante &quot;Inserisci Centro&quot;.
+<span class="nc" id="L125">		JButton inserisciCentroButton = BackgroundPanel.createFlatButton(&quot;Inserisci Centro&quot;,</span>
+<span class="nc" id="L126">				e -&gt; cardLayout.show(cardPanel, &quot;inserisciCentro&quot;), buttonSize);</span>
+<span class="nc" id="L127">		inserisciCentroButton.setForeground(new Color(220, 250, 245));</span>
+
+		// Aggiungi l'icona al pulsante.
+<span class="nc" id="L130">		ImageIcon addIcon = caricaIcona(&quot;/GUI/immagini/add_icon.png&quot;);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">		if (addIcon != null) {</span>
+<span class="nc" id="L132">			inserisciCentroButton.setIcon(addIcon);</span>
+<span class="nc" id="L133">			inserisciCentroButton.setHorizontalTextPosition(SwingConstants.RIGHT); // Testo a destra dell'icona.</span>
+<span class="nc" id="L134">			inserisciCentroButton.setIconTextGap(15); // Spaziatura tra l'icona e il testo.</span>
+		}
+<span class="nc" id="L136">		gbc.gridy = 0; // Prima riga.</span>
+<span class="nc" id="L137">		add(inserisciCentroButton, gbc);</span>
+<span class="nc" id="L138">	}</span>
+
+	/**
+	 * Carica un'icona dal percorso specificato e la ridimensiona.
+	 *
+	 * @param percorso Il percorso dell'icona.
+	 * @return L'icona ridimensionata o null se non trovata.
+	 */
+	private ImageIcon caricaIcona(String percorso) {
+<span class="nc" id="L147">		URL iconUrl = getClass().getResource(percorso);</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">		if (iconUrl != null) {</span>
+<span class="nc" id="L149">			ImageIcon icon = new ImageIcon(iconUrl);</span>
+			// Ridimensiona l'immagine.
+<span class="nc" id="L151">			Image scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);</span>
+<span class="nc" id="L152">			return new ImageIcon(scaledImage);</span>
+		} else {
+<span class="nc" id="L154">			String IconNotFound = &quot;Errore nel caricamento dell'icona: &quot;;</span>
+<span class="nc" id="L155">			String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L156">			CustomMessage.show(IconNotFound + percorso, er, false);</span>
+<span class="nc" id="L157">			return null; // Restituisci null se l'icona non viene trovata.</span>
+		}
+	}
+
+	/**
+	 * Disegna l'immagine di sfondo nel pannello.
+	 *
+	 * @param g Il contesto grafico.
+	 */
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L168">		super.paintComponent(g);</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">		if (clearImage != null) {</span>
+<span class="nc" id="L170">			g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+		}
+<span class="nc" id="L172">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

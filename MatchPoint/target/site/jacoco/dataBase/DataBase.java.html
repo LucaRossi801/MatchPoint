@@ -1,0 +1,870 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataBase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">dataBase</a> &gt; <span class="el_source">DataBase.java</span></div><h1>DataBase.java</h1><pre class="source lang-java linenums">package dataBase;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import components.Campo;
+import components.CentroSportivo;
+import components.Prenotazione;
+import components.TipologiaCampo;
+
+/**
+ * Classe DataBase
+ * &lt;p&gt;
+ * Fornisce metodi per l'interazione con il database SQLite, inclusi CRUD per
+ * utenti, centri sportivi, campi, prenotazioni e altre entità.
+ * &lt;/p&gt;
+ */
+<span class="nc" id="L23">public class DataBase {</span>
+
+	/**
+	 * Inserisce un nuovo gestore nella tabella Gestore.
+	 *
+	 * @param conn           Connessione al database.
+	 * @param nome           Nome del gestore.
+	 * @param cognome        Cognome del gestore.
+	 * @param data           Data di nascita del gestore.
+	 * @param eta            Età del gestore.
+	 * @param email          Email del gestore.
+	 * @param username       Username del gestore.
+	 * @param password       Password del gestore.
+	 * @param certificazioni Certificazioni del gestore.
+	 * @param competenze     Competenze del gestore.
+	 * @throws SQLException In caso di errore nella query SQL.
+	 */
+	public static void insert(Connection conn, String nome, String cognome, String data, int eta, String email,
+			String username, String password, String certificazioni, String competenze) throws SQLException {
+<span class="fc" id="L42">		String sql = &quot;INSERT INTO Gestore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, Certificazione, Competenze) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L43">		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L44">			pstmt.setString(1, nome);</span>
+<span class="fc" id="L45">			pstmt.setString(2, cognome);</span>
+<span class="fc" id="L46">			pstmt.setString(3, data);</span>
+<span class="fc" id="L47">			pstmt.setInt(4, eta);</span>
+<span class="fc" id="L48">			pstmt.setString(5, email);</span>
+<span class="fc" id="L49">			pstmt.setString(6, username);</span>
+<span class="fc" id="L50">			pstmt.setString(7, password);</span>
+<span class="fc" id="L51">			pstmt.setString(8, certificazioni);</span>
+<span class="fc" id="L52">			pstmt.setString(9, competenze);</span>
+<span class="fc" id="L53">			pstmt.executeUpdate();</span>
+		}
+<span class="fc" id="L55">	}</span>
+
+	/**
+	 * Ottiene l'ID di un utente dal database.
+	 *
+	 * @param username  Username dell'utente.
+	 * @param tipologia Tipologia dell'utente (es. &quot;Gestore&quot;, &quot;Giocatore&quot;).
+	 * @return L'ID dell'utente o -8 in caso di errore.
+	 * @throws SQLException In caso di errore nella query SQL.
+	 */
+	public static int getIdUtente(String username, String tipologia) throws SQLException {
+<span class="fc" id="L66">		String query = &quot;SELECT ID FROM &quot; + tipologia + &quot; WHERE username = ?&quot;;</span>
+<span class="fc" id="L67">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="fc" id="L68">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="fc" id="L69">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+<span class="fc" id="L70">			stmt.setString(1, username);</span>
+<span class="fc" id="L71">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">			if (rs.next()) {</span>
+<span class="nc" id="L74">				return rs.getInt(&quot;ID&quot;); // Restituisce l'ID dell'utente</span>
+			}
+		}
+<span class="fc" id="L77">		return -8;</span>
+	}
+
+	/**
+	 * Inserisce un nuovo giocatore nella tabella Giocatore.
+	 *
+	 * @param conn        Connessione al database.
+	 * @param nome        Nome del giocatore.
+	 * @param cognome     Cognome del giocatore.
+	 * @param dataNascita Data di nascita del giocatore.
+	 * @param eta         Età del giocatore.
+	 * @param email       Email del giocatore.
+	 * @param username    Username del giocatore.
+	 * @param password    Password del giocatore.
+	 * @param nomeSquadra Nome della squadra del giocatore.
+	 * @throws SQLException In caso di errore nella query SQL.
+	 */
+	public static void insert(Connection conn, String nome, String cognome, String dataNascita, int eta, String email,
+			String username, String password, String nomeSquadra) throws SQLException {
+<span class="fc" id="L96">		String sql = &quot;INSERT INTO Giocatore(Nome, Cognome, DataNascita, Eta, Email, Username, Password, NomeSquadra) VALUES (?, ?, ?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L97">		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="fc" id="L98">			pstmt.setString(1, nome);</span>
+<span class="fc" id="L99">			pstmt.setString(2, cognome);</span>
+<span class="fc" id="L100">			pstmt.setString(3, dataNascita);</span>
+<span class="fc" id="L101">			pstmt.setInt(4, eta);</span>
+<span class="fc" id="L102">			pstmt.setString(5, email);</span>
+<span class="fc" id="L103">			pstmt.setString(6, username);</span>
+<span class="fc" id="L104">			pstmt.setString(7, password);</span>
+<span class="fc" id="L105">			pstmt.setString(8, nomeSquadra);</span>
+<span class="fc" id="L106">			pstmt.executeUpdate();</span>
+		}
+<span class="fc" id="L108">	}</span>
+
+	/**
+	 * Esegue una query SELECT sul database e restituisce un ResultSet.
+	 * &lt;p&gt;
+	 * Nota: Il chiamante è responsabile della chiusura del ResultSet restituito.
+	 * &lt;/p&gt;
+	 *
+	 * @param conn Connessione al database.
+	 * @param sql  Query SQL da eseguire.
+	 * @return Il ResultSet contenente i risultati della query.
+	 * @throws SQLException In caso di errore nella query SQL.
+	 */
+	private static ResultSet select(Connection conn, String sql) throws SQLException {
+<span class="fc" id="L122">		Statement stmt = conn.createStatement();</span>
+<span class="fc" id="L123">		return stmt.executeQuery(sql); // Il chiamante è responsabile della chiusura</span>
+	}
+
+	/**
+	 * Esegue una query SELECT e restituisce i risultati in formato stringa.
+	 *
+	 * @param conn Connessione al database.
+	 * @param sql  Query SQL da eseguire.
+	 * @return I risultati della query in formato stringa.
+	 * @throws SQLException In caso di errore nella query SQL.
+	 */
+	public static String eseguiSelect(Connection conn, String sql) throws SQLException {
+<span class="fc" id="L135">		ResultSet rs = select(conn, sql);</span>
+<span class="fc" id="L136">		StringBuilder sb = new StringBuilder();</span>
+
+		// Itera sulle righe del ResultSet e costruisce la stringa
+<span class="fc bfc" id="L139" title="All 2 branches covered.">		while (rs.next()) {</span>
+			// Ottieni il numero di colonne dinamicamente
+<span class="fc" id="L141">			ResultSetMetaData metaData = rs.getMetaData();</span>
+<span class="fc" id="L142">			int columnCount = metaData.getColumnCount();</span>
+
+			// Concatenazione dei valori di ogni colonna della riga
+<span class="fc bfc" id="L145" title="All 2 branches covered.">			for (int i = 1; i &lt;= columnCount; i++) {</span>
+<span class="fc" id="L146">				sb.append(rs.getString(i)); // Valore della colonna</span>
+<span class="pc bpc" id="L147" title="1 of 2 branches missed.">				if (i &lt; columnCount) {</span>
+<span class="nc" id="L148">					sb.append(&quot; &quot;); // Separatore tra le colonne</span>
+				}
+			}
+<span class="fc" id="L151">			sb.append(&quot;\n&quot;); // Separatore tra le righe</span>
+<span class="fc" id="L152">		}</span>
+
+<span class="fc" id="L154">		return sb.toString().trim(); // Rimuove l'ultima nuova riga in eccesso</span>
+	}
+
+	/**
+	 * Ottiene i centri sportivi gestiti da un gestore specifico.
+	 *
+	 * @param gestoreId ID del gestore.
+	 * @return Una mappa con i nomi dei centri come chiavi e oggetti CentroSportivo
+	 *         come valori.
+	 */
+	public static Map&lt;String, CentroSportivo&gt; getCentriSportiviGestiti(int gestoreId) {
+<span class="nc" id="L165">		Map&lt;String, CentroSportivo&gt; centri = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L166">		String query = &quot;SELECT ID, Nome, Provincia, Comune FROM CentroSportivo WHERE Gestore = ?&quot;;</span>
+<span class="nc" id="L167">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L168">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L169">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L171">			stmt.setInt(1, gestoreId);</span>
+<span class="nc" id="L172">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L174" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L175">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L176">				String nome = rs.getString(&quot;Nome&quot;);</span>
+<span class="nc" id="L177">				String provincia = rs.getString(&quot;Provincia&quot;);</span>
+<span class="nc" id="L178">				String comune = rs.getString(&quot;Comune&quot;);</span>
+
+				// Crea l'oggetto CentroSportivo
+<span class="nc" id="L181">				CentroSportivo centro = new CentroSportivo(id, nome, provincia, comune); // Gestore può essere impostato</span>
+																							// successivamente
+<span class="nc" id="L183">				centri.put(nome, centro); // Usa il nome come chiave</span>
+<span class="nc" id="L184">			}</span>
+
+<span class="nc" id="L186">		} catch (SQLException e) {</span>
+<span class="nc" id="L187">			e.printStackTrace();</span>
+<span class="nc" id="L188">		}</span>
+<span class="nc" id="L189">		return centri;</span>
+	}
+
+	/**
+	 * Ottiene i campi di un centro sportivo specifico.
+	 *
+	 * @param centroId ID del centro sportivo.
+	 * @return Una lista di oggetti Campo.
+	 */
+	public static List&lt;Campo&gt; getCampiById(int centroId) {
+<span class="nc" id="L199">		List&lt;Campo&gt; campi = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L200">		String query = &quot;SELECT * FROM Campo WHERE CentroSportivo = ?&quot;;</span>
+<span class="nc" id="L201">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L202">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L203">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L205">			stmt.setInt(1, centroId);</span>
+<span class="nc" id="L206">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L208" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L209">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L210">				String tipologia = rs.getString(&quot;Tipologia&quot;);</span>
+<span class="nc" id="L211">				int costoOraNotturna = rs.getInt(&quot;CostoOraNotturna&quot;);</span>
+<span class="nc" id="L212">				int costoOraDiurna = rs.getInt(&quot;CostoOraDiurna&quot;);</span>
+<span class="nc" id="L213">				int lunghezza = rs.getInt(&quot;Lunghezza&quot;);</span>
+<span class="nc" id="L214">				int larghezza = rs.getInt(&quot;Larghezza&quot;);</span>
+<span class="nc" id="L215">				boolean coperto = rs.getBoolean(&quot;Coperto&quot;);</span>
+
+				// Crea l'oggetto CentroSportivo
+<span class="nc" id="L218">				Campo campo = new Campo(id, TipologiaCampo.valueOf(tipologia), costoOraNotturna, costoOraDiurna,</span>
+						lunghezza, larghezza, coperto);// Gestore può essere impostato successivamente
+<span class="nc" id="L220">				campi.add(campo); // Usa il nome come chiave</span>
+<span class="nc" id="L221">			}</span>
+
+<span class="nc" id="L223">		} catch (SQLException e) {</span>
+<span class="nc" id="L224">			e.printStackTrace();</span>
+<span class="nc" id="L225">		}</span>
+<span class="nc" id="L226">		return campi;</span>
+	}
+
+	/**
+	 * Ottiene una mappa dei campi di un centro sportivo, con descrizioni come
+	 * chiavi e ID come valori.
+	 *
+	 * @param centroId ID del centro sportivo.
+	 * @return Una mappa dei campi con descrizioni e ID.
+	 */
+	public static Map&lt;String, Integer&gt; getCampiCentroMappa(int centroId) {
+<span class="nc" id="L237">		Map&lt;String, Integer&gt; campiMappa = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L238">		String query = &quot;SELECT ID, Tipologia, Lunghezza, Larghezza FROM Campo WHERE CentroSportivo = ?&quot;;</span>
+<span class="nc" id="L239">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L241">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L242">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L244">			stmt.setInt(1, centroId); // Imposta l'ID del centro sportivo nella query</span>
+<span class="nc" id="L245">			ResultSet rs = stmt.executeQuery();</span>
+
+			// Elenco di campi recuperati dal database
+<span class="nc bnc" id="L248" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L249">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L250">				String tipologia = rs.getString(&quot;Tipologia&quot;);</span>
+<span class="nc" id="L251">				int lunghezza = rs.getInt(&quot;Lunghezza&quot;);</span>
+<span class="nc" id="L252">				int larghezza = rs.getInt(&quot;Larghezza&quot;);</span>
+
+				// Crea un nome descrittivo per il campo combinando la tipologia e le dimensioni
+<span class="nc" id="L255">				String nome = String.format(&quot;%s (%dx%d)&quot;, tipologia, lunghezza, larghezza);</span>
+
+				// Aggiungi il nome del campo e l'ID alla mappa
+<span class="nc" id="L258">				campiMappa.put(nome, id);</span>
+<span class="nc" id="L259">			}</span>
+
+<span class="nc" id="L261">		} catch (SQLException e) {</span>
+<span class="nc" id="L262">			e.printStackTrace();</span>
+<span class="nc" id="L263">		}</span>
+
+		// Ritorna la mappa con nome e ID dei campi
+<span class="nc" id="L266">		return campiMappa;</span>
+	}
+
+	/**
+	 * Aggiorna le informazioni di un centro sportivo.
+	 *
+	 * @param centroId  ID del centro sportivo.
+	 * @param nome      Nuovo nome del centro.
+	 * @param provincia Nuova provincia del centro.
+	 * @param comune    Nuovo comune del centro.
+	 * @return True se l'aggiornamento è avvenuto con successo, false altrimenti.
+	 */
+	public static boolean updateCentroSportivo(int centroId, String nome, String provincia, String comune) {
+<span class="nc" id="L279">		String query = &quot;UPDATE CentroSportivo SET Nome = ?, Provincia = ?, Comune = ? WHERE ID = ?&quot;;</span>
+<span class="nc" id="L280">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L281">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L282">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L284">			stmt.setString(1, nome);</span>
+<span class="nc" id="L285">			stmt.setString(2, provincia);</span>
+<span class="nc" id="L286">			stmt.setString(3, comune);</span>
+<span class="nc" id="L287">			stmt.setInt(4, centroId);</span>
+
+<span class="nc" id="L289">			int rowsUpdated = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">			return rowsUpdated &gt; 0; // True se l'aggiornamento è andato a buon fine</span>
+
+<span class="nc" id="L292">		} catch (SQLException e) {</span>
+<span class="nc" id="L293">			e.printStackTrace();</span>
+<span class="nc" id="L294">			return false;</span>
+		}
+	}
+
+	/**
+	 * Elimina un campo specifico da un centro sportivo.
+	 *
+	 * @param centroID         ID del centro sportivo.
+	 * @param campoSelezionato ID del campo da eliminare.
+	 * @return True se l'eliminazione è avvenuta con successo, false altrimenti.
+	 */
+	public static boolean eliminaCampo(int centroID, int campoSelezionato) {
+<span class="nc" id="L306">		String query = &quot;DELETE FROM Campo WHERE CentroSportivo = ? AND ID = ?&quot;;</span>
+<span class="nc" id="L307">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L308">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L309">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+<span class="nc" id="L310">			stmt.setInt(1, centroID);</span>
+<span class="nc" id="L311">			stmt.setInt(2, campoSelezionato);</span>
+<span class="nc" id="L312">			int rowsAffected = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L313" title="All 2 branches missed.">			return rowsAffected &gt; 0; // True se almeno una riga è stata eliminata</span>
+<span class="nc" id="L314">		} catch (SQLException e) {</span>
+<span class="nc" id="L315">			e.printStackTrace();</span>
+<span class="nc" id="L316">			return false; // In caso di errore</span>
+		}
+	}
+
+	/**
+	 * Elimina un centro sportivo specifico.
+	 *
+	 * @param centroID ID del centro sportivo da eliminare.
+	 * @return True se l'eliminazione è avvenuta con successo, false altrimenti.
+	 */
+	public static boolean eliminaCentro(int centroID) {
+<span class="nc" id="L327">		String query = &quot;DELETE FROM CentroSportivo WHERE ID = ?&quot;;</span>
+<span class="nc" id="L328">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L329">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L330">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+<span class="nc" id="L331">			stmt.setInt(1, centroID);</span>
+<span class="nc" id="L332">			int rowsAffected = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">			return rowsAffected &gt; 0; // True se almeno una riga è stata eliminata</span>
+<span class="nc" id="L334">		} catch (SQLException e) {</span>
+<span class="nc" id="L335">			e.printStackTrace();</span>
+<span class="nc" id="L336">			return false; // In caso di errore</span>
+		}
+	}
+
+	/**
+	 * Modifica il nome di un campo in un centro sportivo.
+	 *
+	 * @param centroID         ID del centro sportivo.
+	 * @param campoSelezionato Nome attuale del campo.
+	 * @param nuovoNome        Nuovo nome del campo.
+	 * @return True se l'aggiornamento è avvenuto con successo, false altrimenti.
+	 */
+	public boolean modificaCampo(int centroID, String campoSelezionato, String nuovoNome) {
+<span class="nc" id="L349">		String query = &quot;UPDATE Campo SET Nome = ? WHERE CentroSportivo = ? AND Nome = ?&quot;;</span>
+<span class="nc" id="L350">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L351">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L352">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+<span class="nc" id="L353">			stmt.setString(1, nuovoNome);</span>
+<span class="nc" id="L354">			stmt.setInt(2, centroID);</span>
+<span class="nc" id="L355">			stmt.setString(3, campoSelezionato);</span>
+<span class="nc" id="L356">			int rowsAffected = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">			return rowsAffected &gt; 0; // True se almeno una riga è stata aggiornata</span>
+<span class="nc" id="L358">		} catch (SQLException e) {</span>
+<span class="nc" id="L359">			e.printStackTrace();</span>
+<span class="nc" id="L360">			return false; // In caso di errore</span>
+		}
+	}
+
+	/**
+	 * Aggiunge un nuovo campo a un centro sportivo.
+	 *
+	 * @param centroID   ID del centro sportivo.
+	 * @param nuovoCampo Nome del nuovo campo.
+	 * @return True se l'inserimento è avvenuto con successo, false altrimenti.
+	 */
+	public boolean aggiungiCampo(int centroID, String nuovoCampo) {
+<span class="nc" id="L372">		String query = &quot;INSERT INTO Campo (CentroSportivo, Nome) VALUES (?, ?)&quot;;</span>
+<span class="nc" id="L373">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L374">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L375">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+<span class="nc" id="L376">			stmt.setInt(1, centroID);</span>
+<span class="nc" id="L377">			stmt.setString(2, nuovoCampo);</span>
+<span class="nc" id="L378">			int rowsAffected = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">			return rowsAffected &gt; 0; // True se una riga è stata aggiunta</span>
+<span class="nc" id="L380">		} catch (SQLException e) {</span>
+<span class="nc" id="L381">			e.printStackTrace();</span>
+<span class="nc" id="L382">			return false; // In caso di errore</span>
+		}
+	}
+
+	/**
+	 * Inserisce un nuovo centro sportivo nel database.
+	 *
+	 * @param nome      Nome del centro sportivo.
+	 * @param provincia Provincia del centro sportivo.
+	 * @param comune    Comune del centro sportivo.
+	 * @param gestore   ID del gestore associato al centro sportivo.
+	 */
+	public static void insert(String nome, String provincia, String comune, int gestore) {
+<span class="nc" id="L395">		String sql = &quot;INSERT INTO CentroSportivo(Nome, Provincia, Comune, Gestore) VALUES (?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L396">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L397">		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L398">			pstmt.setString(1, nome);</span>
+<span class="nc" id="L399">			pstmt.setString(2, provincia);</span>
+<span class="nc" id="L400">			pstmt.setString(3, comune);</span>
+<span class="nc" id="L401">			pstmt.setInt(4, gestore);</span>
+<span class="nc" id="L402">			pstmt.executeUpdate();</span>
+<span class="nc" id="L403">		} catch (SQLException e) {</span>
+<span class="nc" id="L404">			e.printStackTrace();</span>
+<span class="nc" id="L405">		}</span>
+<span class="nc" id="L406">	}</span>
+
+	/**
+	 * Inserisce un nuovo campo nel database.
+	 *
+	 * @param tipologia        Tipologia del campo.
+	 * @param costoOraNotturna Costo per ora notturna.
+	 * @param costoOraDiurna   Costo per ora diurna.
+	 * @param lunghezza        Lunghezza del campo.
+	 * @param larghezza        Larghezza del campo.
+	 * @param coperto          Stato &quot;Coperto&quot; del campo.
+	 * @param centro           ID del centro sportivo associato.
+	 */
+	public static void insert(String tipologia, int CostoOraNotturna, int costoOraDiurna, int lunghezza, int larghezza,
+			boolean coperto, int centro) {
+<span class="nc" id="L421">		String sql = &quot;INSERT INTO Campo(Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo) VALUES (?, ?, ?, ?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L422">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L423">		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L424">			pstmt.setString(1, tipologia);</span>
+<span class="nc" id="L425">			pstmt.setInt(2, CostoOraNotturna);</span>
+<span class="nc" id="L426">			pstmt.setInt(3, costoOraDiurna);</span>
+<span class="nc" id="L427">			pstmt.setInt(4, lunghezza);</span>
+<span class="nc" id="L428">			pstmt.setInt(5, larghezza);</span>
+<span class="nc" id="L429">			pstmt.setBoolean(6, coperto);</span>
+<span class="nc" id="L430">			pstmt.setInt(7, centro);</span>
+<span class="nc" id="L431">			pstmt.executeUpdate();</span>
+<span class="nc" id="L432">		} catch (SQLException e) {</span>
+<span class="nc" id="L433">			e.printStackTrace();</span>
+<span class="nc" id="L434">		}</span>
+<span class="nc" id="L435">	}</span>
+
+	/**
+	 * Aggiorna i dettagli di un campo nel database.
+	 *
+	 * @param campo Oggetto Campo contenente i nuovi dettagli da aggiornare.
+	 * @return True se l'aggiornamento è avvenuto con successo, false altrimenti.
+	 */
+	public static boolean updateCampo(Campo campo) {
+		// Query per aggiornare i dettagli del campo
+<span class="nc" id="L445">		String query = &quot;UPDATE Campo SET Tipologia = ?, CostoOraNotturna = ?, CostoOraDiurna = ?, &quot;</span>
+				+ &quot;Lunghezza = ?, Larghezza = ?, Coperto = ? WHERE ID = ?&quot;;
+<span class="nc" id="L447">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L449">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L450">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+			// Imposta i parametri della query
+<span class="nc" id="L453">			stmt.setString(1, campo.getTipologiaCampo().toString()); // Tipologia come stringa</span>
+<span class="nc" id="L454">			stmt.setInt(2, campo.getCostoOraNotturna()); // Costo ora notturna</span>
+<span class="nc" id="L455">			stmt.setInt(3, campo.getCostoOraDiurna()); // Costo ora diurna</span>
+<span class="nc" id="L456">			stmt.setInt(4, campo.getLunghezza()); // Lunghezza</span>
+<span class="nc" id="L457">			stmt.setInt(5, campo.getLarghezza()); // Larghezza</span>
+<span class="nc" id="L458">			stmt.setBoolean(6, campo.isCoperto()); // Coperto (booleano)</span>
+<span class="nc" id="L459">			stmt.setInt(7, campo.getId()); // ID del campo</span>
+
+			// Esegui l'update e verifica il numero di righe aggiornate
+<span class="nc" id="L462">			int rowsUpdated = stmt.executeUpdate();</span>
+<span class="nc bnc" id="L463" title="All 2 branches missed.">			return rowsUpdated &gt; 0; // True se almeno una riga è stata aggiornata</span>
+
+<span class="nc" id="L465">		} catch (SQLException e) {</span>
+<span class="nc" id="L466">			e.printStackTrace(); // Stampa l'errore per il debug</span>
+<span class="nc" id="L467">			return false;</span>
+		}
+	}
+
+	/**
+	 * Ottiene le prenotazioni associate a un campo specifico in un centro sportivo.
+	 *
+	 * @param centroId ID del centro sportivo.
+	 * @param campoId  ID del campo sportivo.
+	 * @return Lista di oggetti Prenotazione associati al campo.
+	 */
+	public static List&lt;Prenotazione&gt; getPrenotazioniByCampo(int centroId, int campoId) {
+<span class="nc" id="L479">		List&lt;Prenotazione&gt; prenotazioni = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L480">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L482">		String query = &quot;SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo &quot; + &quot;FROM Prenotazione p &quot;</span>
+				+ &quot;JOIN Campo c ON p.Campo = c.ID &quot; + &quot;WHERE c.ID = ? AND c.CentroSportivo = ?&quot;;
+<span class="nc" id="L484">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L485">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L487">			stmt.setInt(1, campoId);</span>
+<span class="nc" id="L488">			stmt.setInt(2, centroId);</span>
+
+<span class="nc" id="L490">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L492" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L493">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L494">				String dataString = rs.getString(&quot;Data&quot;); // Ottieni la stringa della data</span>
+
+				// Definisci il formato del database (dd-MM-yyyy)
+<span class="nc" id="L497">				SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span>
+				try {
+					// Parse la stringa nella data
+<span class="nc" id="L500">					Date parsedDate = sdf.parse(dataString);</span>
+
+					// Converti la data in java.sql.Date
+<span class="nc" id="L503">					java.sql.Date data = new java.sql.Date(parsedDate.getTime());</span>
+
+<span class="nc" id="L505">					String oraInizioString = rs.getString(&quot;OraInizio&quot;);</span>
+<span class="nc" id="L506">					String oraFineString = rs.getString(&quot;OraFine&quot;);</span>
+
+					// Aggiungi i secondi se non ci sono
+<span class="nc bnc" id="L509" title="All 2 branches missed.">					if (oraInizioString.length() == 5) {</span>
+<span class="nc" id="L510">						oraInizioString += &quot;:00&quot;; // Aggiungi &quot;:00&quot; per i secondi</span>
+					}
+<span class="nc bnc" id="L512" title="All 2 branches missed.">					if (oraFineString.length() == 5) {</span>
+<span class="nc" id="L513">						oraFineString += &quot;:00&quot;; // Aggiungi &quot;:00&quot; per i secondi</span>
+					}
+
+<span class="nc" id="L516">					Time oraInizio = Time.valueOf(oraInizioString);</span>
+<span class="nc" id="L517">					Time oraFine = Time.valueOf(oraFineString);</span>
+
+<span class="nc" id="L519">					int utenteID = rs.getInt(&quot;Utente&quot;);</span>
+<span class="nc" id="L520">					int campoID = rs.getInt(&quot;Campo&quot;);</span>
+
+					// Crea l'oggetto Prenotazione
+<span class="nc" id="L523">					Prenotazione prenotazione = new Prenotazione(id, data, oraInizio, oraFine, utenteID, campoID);</span>
+<span class="nc" id="L524">					prenotazioni.add(prenotazione);</span>
+<span class="nc" id="L525">				} catch (Exception e) {</span>
+<span class="nc" id="L526">					e.printStackTrace();</span>
+<span class="nc" id="L527">				}</span>
+<span class="nc" id="L528">			}</span>
+<span class="nc" id="L529">		} catch (SQLException e) {</span>
+<span class="nc" id="L530">			e.printStackTrace();</span>
+<span class="nc" id="L531">		}</span>
+
+<span class="nc" id="L533">		return prenotazioni;</span>
+	}
+
+	/**
+	 * Ottiene tutte le prenotazioni di un utente specifico.
+	 *
+	 * @param utenteID ID dell'utente.
+	 * @return Lista di oggetti Prenotazione associati all'utente.
+	 */
+	public static List&lt;Prenotazione&gt; getAllPrenotazioni(int utenteID) {
+<span class="nc" id="L543">		List&lt;Prenotazione&gt; prenotazioni = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L544">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L546">		String query = &quot;SELECT p.ID, p.Data, p.OraInizio, p.OraFine, p.Utente, p.Campo &quot; + &quot;FROM Prenotazione p &quot;</span>
+				+ &quot;WHERE p.Utente = ?&quot;;
+
+<span class="nc" id="L549">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L550">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L552">			stmt.setInt(1, utenteID);</span>
+<span class="nc" id="L553">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L555" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L556">				String dataString = rs.getString(&quot;Data&quot;);</span>
+
+				// Definisci il formato della data
+<span class="nc" id="L559">				SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;); // Formato corretto per il parsing</span>
+
+	            try {
+	                // Converte la stringa in un oggetto java.util.Date
+<span class="nc" id="L563">	                java.util.Date dataUtil = sdf.parse(dataString);</span>
+
+					// Converte java.util.Date in java.sql.Date
+<span class="nc" id="L566">					java.sql.Date data = new java.sql.Date(dataUtil.getTime());</span>
+
+<span class="nc" id="L568">					int ID = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L569">					String oraInizioString = rs.getString(&quot;OraInizio&quot;);</span>
+<span class="nc" id="L570">					String oraFineString = rs.getString(&quot;OraFine&quot;);</span>
+
+					// Aggiungi &quot;:00&quot; se non presente
+<span class="nc bnc" id="L573" title="All 2 branches missed.">					if (oraInizioString.length() == 5) {</span>
+<span class="nc" id="L574">						oraInizioString += &quot;:00&quot;;</span>
+					}
+<span class="nc bnc" id="L576" title="All 2 branches missed.">					if (oraFineString.length() == 5) {</span>
+<span class="nc" id="L577">						oraFineString += &quot;:00&quot;;</span>
+					}
+
+					// Converte le ore in oggetti Time
+<span class="nc" id="L581">					Time oraInizio = Time.valueOf(oraInizioString);</span>
+<span class="nc" id="L582">					Time oraFine = Time.valueOf(oraFineString);</span>
+
+<span class="nc" id="L584">					int campoID = rs.getInt(&quot;Campo&quot;);</span>
+
+					// Crea l'oggetto Prenotazione
+<span class="nc" id="L587">					Prenotazione prenotazione = new Prenotazione(ID, data, oraInizio, oraFine, utenteID, campoID);</span>
+<span class="nc" id="L588">					prenotazioni.add(prenotazione);</span>
+<span class="nc" id="L589">				} catch (Exception e) {</span>
+<span class="nc" id="L590">					e.printStackTrace();</span>
+<span class="nc" id="L591">				}</span>
+<span class="nc" id="L592">			}</span>
+<span class="nc" id="L593">		} catch (SQLException e) {</span>
+<span class="nc" id="L594">			e.printStackTrace();</span>
+<span class="nc" id="L595">		}</span>
+
+<span class="nc" id="L597">		return prenotazioni;</span>
+	}
+
+	/**
+	 * Ottiene il centro sportivo associato a un campo specifico.
+	 *
+	 * @param campoId ID del campo sportivo.
+	 * @return Oggetto CentroSportivo associato al campo, o null se non trovato.
+	 */
+	public static CentroSportivo getCentroByCampo(int campoId) {
+<span class="nc" id="L607">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L609">		String query = &quot;SELECT c.ID, c.Nome, c.Provincia, c.Comune &quot; + &quot;FROM CentroSportivo c &quot;</span>
+				+ &quot;JOIN Campo ca ON c.ID = ca.CentroSportivo &quot; + &quot;WHERE ca.ID = ?&quot;;
+
+<span class="nc" id="L612">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L613">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L615">			stmt.setInt(1, campoId);</span>
+<span class="nc" id="L616">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L618" title="All 2 branches missed.">			if (rs.next()) {</span>
+<span class="nc" id="L619">				int centroID = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L620">				String nome = rs.getString(&quot;Nome&quot;);</span>
+<span class="nc" id="L621">				String provincia = rs.getString(&quot;Provincia&quot;);</span>
+<span class="nc" id="L622">				String comune = rs.getString(&quot;Comune&quot;);</span>
+
+				// Crea e restituisce un oggetto CentroSportivo
+<span class="nc" id="L625">				return new CentroSportivo(centroID, nome, provincia, comune);</span>
+			}
+<span class="nc" id="L627">		} catch (SQLException e) {</span>
+<span class="nc" id="L628">			e.printStackTrace();</span>
+<span class="nc" id="L629">		}</span>
+
+		// Se il campo non è associato a un centro sportivo, restituisci null
+<span class="nc" id="L632">		return null;</span>
+	}
+
+	/**
+	 * Ottiene un centro sportivo dal database in base al nome.
+	 *
+	 * @param nome Nome del centro sportivo.
+	 * @return Oggetto CentroSportivo corrispondente, o null se non trovato.
+	 */
+	public static CentroSportivo getCentroByName(String nome) {
+<span class="nc" id="L642">		CentroSportivo centro = null;</span>
+<span class="nc" id="L643">		Connection conn = null;</span>
+<span class="nc" id="L644">		PreparedStatement stmt = null;</span>
+<span class="nc" id="L645">		ResultSet resultSet = null;</span>
+
+		try {
+			// Query per trovare il centro sportivo con il nome specificato
+<span class="nc" id="L649">			String query = &quot;SELECT * FROM CentroSportivo WHERE Nome = ?&quot;;</span>
+<span class="nc" id="L650">			String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+			// Crea la connessione al database
+<span class="nc" id="L653">			conn = DriverManager.getConnection(url);</span>
+
+			// Prepara la query
+<span class="nc" id="L656">			stmt = conn.prepareStatement(query);</span>
+<span class="nc" id="L657">			stmt.setString(1, nome); // Imposta il parametro per il nome</span>
+
+			// Esegui la query
+<span class="nc" id="L660">			resultSet = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L662" title="All 2 branches missed.">			if (resultSet.next()) {</span>
+				// Crea un oggetto CentroSportivo dal risultato della query
+<span class="nc" id="L664">				centro = new CentroSportivo(resultSet.getInt(&quot;ID&quot;), // Supponendo che l'ID sia un intero</span>
+<span class="nc" id="L665">						resultSet.getString(&quot;Nome&quot;), resultSet.getString(&quot;Provincia&quot;), resultSet.getString(&quot;Comune&quot;));</span>
+			}
+<span class="nc" id="L667">		} catch (Exception e) {</span>
+<span class="nc" id="L668">			e.printStackTrace(); // Log dell'errore</span>
+		} finally {
+			try {
+				// Chiudi le risorse per evitare perdite
+<span class="nc bnc" id="L672" title="All 2 branches missed.">				if (resultSet != null)</span>
+<span class="nc" id="L673">					resultSet.close();</span>
+<span class="nc bnc" id="L674" title="All 2 branches missed.">				if (stmt != null)</span>
+<span class="nc" id="L675">					stmt.close();</span>
+<span class="nc bnc" id="L676" title="All 2 branches missed.">				if (conn != null)</span>
+<span class="nc" id="L677">					conn.close();</span>
+<span class="nc" id="L678">			} catch (SQLException e) {</span>
+<span class="nc" id="L679">				e.printStackTrace();</span>
+<span class="nc" id="L680">			}</span>
+		}
+<span class="nc" id="L682">		return centro; // Restituisce il centro o null se non trovato</span>
+	}
+
+	/**
+	 * Ottiene i centri sportivi filtrati per provincia.
+	 *
+	 * @param provinciaS Nome della provincia.
+	 * @return Mappa dei centri sportivi nella provincia specificata (nome -&gt;
+	 *         oggetto CentroSportivo).
+	 */
+	public static Map&lt;String, CentroSportivo&gt; getCentriSportiviPerProvincia(String provinciaS) {
+<span class="nc" id="L693">		Map&lt;String, CentroSportivo&gt; centri = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L694">		String query = &quot;SELECT ID, Nome, Provincia, Comune FROM CentroSportivo WHERE Provincia = ?&quot;;</span>
+<span class="nc" id="L695">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L696">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L697">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L699">			stmt.setString(1, provinciaS);</span>
+<span class="nc" id="L700">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L702" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L703">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L704">				String nome = rs.getString(&quot;Nome&quot;);</span>
+<span class="nc" id="L705">				String provincia = rs.getString(&quot;Provincia&quot;);</span>
+<span class="nc" id="L706">				String comune = rs.getString(&quot;Comune&quot;);</span>
+
+				// Crea l'oggetto CentroSportivo
+<span class="nc" id="L709">				CentroSportivo centro = new CentroSportivo(id, nome, provincia, comune); // Gestore può essere impostato</span>
+																							// successivamente
+<span class="nc" id="L711">				centri.put(nome, centro); // Usa il nome come chiave</span>
+<span class="nc" id="L712">			}</span>
+
+<span class="nc" id="L714">		} catch (SQLException e) {</span>
+<span class="nc" id="L715">			e.printStackTrace();</span>
+<span class="nc" id="L716">		}</span>
+<span class="nc" id="L717">		return centri;</span>
+	}
+
+	/**
+	 * Ottiene un campo sportivo dal database in base al suo ID.
+	 *
+	 * @param campoId ID del campo sportivo.
+	 * @return Oggetto Campo corrispondente, o null se non trovato.
+	 */
+	public static Campo getCampoById(int campoId) {
+<span class="nc" id="L727">		Campo campo = null;</span>
+<span class="nc" id="L728">		String query = &quot;SELECT ID, Tipologia, CostoOraNotturna, CostoOraDiurna, Lunghezza, Larghezza, Coperto, CentroSportivo FROM Campo c WHERE c.ID = ?&quot;;</span>
+<span class="nc" id="L729">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L730">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L731">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L733">			stmt.setInt(1, campoId);</span>
+<span class="nc" id="L734">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L736" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L737">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L738">				String tipologiaString = rs.getString(&quot;Tipologia&quot;);</span>
+<span class="nc" id="L739">				int costoOraNotturna = rs.getInt(&quot;CostoOraNotturna&quot;);</span>
+<span class="nc" id="L740">				int costoOraDiurna = rs.getInt(&quot;CostoOraDiurna&quot;);</span>
+<span class="nc" id="L741">				int lunghezza = rs.getInt(&quot;Lunghezza&quot;);</span>
+<span class="nc" id="L742">				int larghezza = rs.getInt(&quot;Larghezza&quot;);</span>
+<span class="nc" id="L743">				boolean coperto = rs.getBoolean(&quot;Coperto&quot;);</span>
+<span class="nc" id="L744">				int centro = rs.getInt(&quot;CentroSportivo&quot;);</span>
+
+				// Converti la stringa in TipologiaCampo
+				TipologiaCampo tipologia;
+				try {
+<span class="nc" id="L749">					tipologia = TipologiaCampo.valueOf(tipologiaString);</span>
+<span class="nc" id="L750">				} catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L751">					throw new RuntimeException(&quot;Tipologia non valida: &quot; + tipologiaString, e);</span>
+<span class="nc" id="L752">				}</span>
+
+				// Crea l'oggetto Campo
+<span class="nc" id="L755">				campo = new Campo(id, tipologia, costoOraNotturna, costoOraDiurna, lunghezza, larghezza, coperto,</span>
+						centro);
+<span class="nc" id="L757">			}</span>
+
+<span class="nc" id="L759">		} catch (SQLException e) {</span>
+<span class="nc" id="L760">			e.printStackTrace();</span>
+<span class="nc" id="L761">		}</span>
+<span class="nc" id="L762">		return campo;</span>
+	}
+
+	/**
+	 * Aggiorna i dettagli di una prenotazione esistente.
+	 *
+	 * @param prenotazione Oggetto Prenotazione contenente i nuovi dettagli da
+	 *                     aggiornare.
+	 * @throws SQLException In caso di errore nell'aggiornamento.
+	 */
+	public static void updatePrenotazione(Prenotazione prenotazione) throws SQLException {
+<span class="nc" id="L773">		String sql = &quot;UPDATE Prenotazione &quot; + &quot;SET Data = ?, OraInizio = ?, OraFine = ?&quot; + &quot;WHERE ID = ?&quot;;</span>
+<span class="nc" id="L774">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L776">		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+<span class="nc" id="L777">			pstmt.setString(1, prenotazione.getData().toString()); // Usa direttamente java.sql.Date</span>
+<span class="nc" id="L778">			pstmt.setString(2, prenotazione.getOraInizio().toString()); // java.sql.Time</span>
+<span class="nc" id="L779">			pstmt.setString(3, prenotazione.getOraFine().toString()); // java.sql.Time</span>
+<span class="nc" id="L780">			pstmt.setInt(4, prenotazione.getId()); // Imposta ID</span>
+<span class="nc" id="L781">			pstmt.executeUpdate();</span>
+		}
+<span class="nc" id="L783">	}</span>
+
+	/**
+	 * Inserisce una nuova prenotazione nel database.
+	 *
+	 * @param prenotazione Oggetto Prenotazione da inserire.
+	 * @throws SQLException In caso di errore nell'inserimento.
+	 */
+	public static void inserisciPrenotazione(Prenotazione prenotazione) throws SQLException {
+<span class="nc" id="L792">		String sql = &quot;INSERT INTO Prenotazione (Data, OraInizio, OraFine, Campo, Utente) VALUES (?, ?, ?, ?, ?)&quot;;</span>
+<span class="nc" id="L793">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L795">		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+
+			// Imposta i valori dei parametri nella query
+<span class="nc" id="L798">			pstmt.setString(1, prenotazione.getData().toString()); // Data in formato yyyy-MM-dd</span>
+<span class="nc" id="L799">			pstmt.setString(2, prenotazione.getOraInizio().toString()); // Ora in formato HH:mm:ss</span>
+<span class="nc" id="L800">			pstmt.setString(3, prenotazione.getOraFine().toString()); // Ora in formato HH:mm:ss</span>
+<span class="nc" id="L801">			pstmt.setInt(4, prenotazione.getCampoId()); // ID del campo</span>
+<span class="nc" id="L802">			pstmt.setInt(5, prenotazione.getUtenteId()); // ID dell'utente</span>
+
+			// Esegui la query
+<span class="nc" id="L805">			pstmt.executeUpdate();</span>
+		}
+<span class="nc" id="L807">	}</span>
+
+	/**
+	 * Ottiene una prenotazione dal database in base al suo ID.
+	 *
+	 * @param prenotazioneId ID della prenotazione.
+	 * @return Oggetto Prenotazione corrispondente, o null se non trovato.
+	 */
+	public static Prenotazione getPrenotazioneById(int prenotazioneId) {
+<span class="nc" id="L816">		Prenotazione prenotazione = null;</span>
+<span class="nc" id="L817">		String query = &quot;SELECT ID, Data, OraInizio, OraFine, Utente, Campo FROM Prenotazione p WHERE p.ID = ?&quot;;</span>
+<span class="nc" id="L818">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+<span class="nc" id="L819">		try (Connection conn = DriverManager.getConnection(url);</span>
+<span class="nc" id="L820">				PreparedStatement stmt = conn.prepareStatement(query)) {</span>
+
+<span class="nc" id="L822">			stmt.setInt(1, prenotazioneId);</span>
+<span class="nc" id="L823">			ResultSet rs = stmt.executeQuery();</span>
+
+<span class="nc bnc" id="L825" title="All 2 branches missed.">			while (rs.next()) {</span>
+<span class="nc" id="L826">				int id = rs.getInt(&quot;ID&quot;);</span>
+<span class="nc" id="L827">				String data = rs.getString(&quot;Data&quot;);</span>
+<span class="nc" id="L828">				String oraInizio = rs.getString(&quot;OraInizio&quot;);</span>
+<span class="nc" id="L829">				String oraFine = rs.getString(&quot;OraFine&quot;);</span>
+<span class="nc" id="L830">				int utenteId = rs.getInt(&quot;Utente&quot;);</span>
+<span class="nc" id="L831">				int campoId = rs.getInt(&quot;Campo&quot;);</span>
+
+<span class="nc" id="L833">				java.sql.Date d = java.sql.Date.valueOf(data);</span>
+<span class="nc" id="L834">				Time oi = Time.valueOf(oraInizio);</span>
+<span class="nc" id="L835">				Time of = Time.valueOf(oraFine);</span>
+				// Crea l'oggetto Prenotazione
+<span class="nc" id="L837">				prenotazione = new Prenotazione(id, d, oi, of, utenteId, campoId);</span>
+<span class="nc" id="L838">			}</span>
+
+<span class="nc" id="L840">		} catch (SQLException e) {</span>
+<span class="nc" id="L841">			e.printStackTrace();</span>
+<span class="nc" id="L842">		}</span>
+<span class="nc" id="L843">		return prenotazione;</span>
+	}
+
+	/**
+	 * Elimina una prenotazione dal database in base ai suoi dettagli.
+	 *
+	 * @param prenotazione Oggetto Prenotazione da eliminare.
+	 * @throws SQLException In caso di errore nell'eliminazione.
+	 */
+	public static void eliminaPrenotazione(Prenotazione prenotazione) throws SQLException {
+<span class="nc" id="L853">		String sql = &quot;DELETE FROM Prenotazione WHERE Data = ? AND OraInizio = ? AND Campo = ? AND Utente = ?&quot;;</span>
+<span class="nc" id="L854">		String url = &quot;jdbc:sqlite:src/main/java/dataBase/matchpointDB.db&quot;;</span>
+
+<span class="nc" id="L856">		try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(sql)) {</span>
+
+			// Imposta i valori dei parametri nella query
+<span class="nc" id="L859">			pstmt.setString(1, prenotazione.getData().toString()); // Data in formato yyyy-MM-dd</span>
+<span class="nc" id="L860">			pstmt.setString(2, prenotazione.getOraInizio().toString()); // Ora in formato HH:mm:ss</span>
+<span class="nc" id="L861">			pstmt.setInt(3, prenotazione.getCampoId()); // ID del campo</span>
+<span class="nc" id="L862">			pstmt.setInt(4, prenotazione.getUtenteId()); // ID dell'utente</span>
+
+			// Esegui la query
+<span class="nc" id="L865">			pstmt.executeUpdate();</span>
+		}
+<span class="nc" id="L867">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModificaCentroPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MatchPoint</a> &gt; <a href="index.source.html" class="el_package">GUI</a> &gt; <span class="el_source">ModificaCentroPanel.java</span></div><h1>ModificaCentroPanel.java</h1><pre class="source lang-java linenums">package GUI;
+
+import javax.swing.*;
+
+import components.Campo;
+import components.CentroSportivo;
+import dataBase.DataBase;
+import dataBase.Sessione;
+import localizzazione.FileReaderUtils;
+
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class ModificaCentroPanel extends JPanel {
+	private JComboBox&lt;String&gt; centriComboBox; // ComboBox per selezione centri
+	private JComboBox&lt;String&gt; provinciaComboBox; // ComboBox per selezione centri
+	private JComboBox&lt;String&gt; comuneComboBox; // ComboBox per selezione centri
+	private JTextField nomeField, provinciaField, comuneField;
+	private JButton salvaButton, modificaCampiButton;
+	private Map&lt;String, CentroSportivo&gt; centriGestiti; // Mappa nome-centro
+	private Integer utenteId; // ID dell'utente loggato
+	private DataBase dataBase; // Database di riferimento
+	private Image clearImage;
+	private JPanel riepilogoPanel; // Rendi riepilogoPanel una variabile di istanza
+	private Map&lt;String, List&lt;String&gt;&gt; provinceComuni; // Mappa province -&gt; comuni
+
+<span class="nc" id="L34">	public ModificaCentroPanel() {</span>
+		// Carica i dati delle province e comuni
+<span class="nc" id="L36">		String filePath = &quot;src/main/java/localizzazione/comuni.csv&quot;; </span>
+<span class="nc" id="L37">        provinceComuni = FileReaderUtils.leggiProvinceEComuni(filePath);</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        if (provinceComuni == null || provinceComuni.isEmpty()) {</span>
+<span class="nc" id="L39">            System.err.println(&quot;Errore: la mappa provinceComuni è vuota o null.&quot;);</span>
+<span class="nc" id="L40">            provinceComuni = new HashMap&lt;&gt;(); // Prevenire errori futuri</span>
+        }
+		
+		// Carica l'immagine di sfondo
+<span class="nc" id="L44">		riepilogoPanel = new JPanel();</span>
+<span class="nc" id="L45">		riepilogoPanel.setLayout(new BoxLayout(riepilogoPanel, BoxLayout.Y_AXIS));</span>
+<span class="nc" id="L46">		riepilogoPanel.setBackground(Color.WHITE);</span>
+
+<span class="nc" id="L48">		JScrollPane scrollPane = new JScrollPane(riepilogoPanel);</span>
+<span class="nc" id="L49">		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);</span>
+<span class="nc" id="L50">		scrollPane.setPreferredSize(new Dimension(350, 200));</span>
+
+		try {
+<span class="nc" id="L53">			URL clearImageUrl = getClass().getResource(&quot;/GUI/immagini/sfondohome.png&quot;);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">			if (clearImageUrl != null) {</span>
+<span class="nc" id="L55">				clearImage = new ImageIcon(clearImageUrl).getImage();</span>
+			} else {
+<span class="nc" id="L57">				String ImageNotFound = &quot;Errore nel caricamento dell'immagine: /GUI/immagini/sfondohome.png&quot;;</span>
+<span class="nc" id="L58">				System.err.println(ImageNotFound);</span>
+			}
+<span class="nc" id="L60">		} catch (Exception e) {</span>
+<span class="nc" id="L61">			System.err.println(&quot;Eccezione durante il caricamento dell'immagine: &quot; + e.getMessage());</span>
+<span class="nc" id="L62">		}</span>
+
+<span class="nc" id="L64">		setLayout(new GridBagLayout()); // Imposta il layout principale come GridBagLayout</span>
+<span class="nc" id="L65">		setBackground(new Color(240, 248, 255));</span>
+<span class="nc" id="L66">		GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L67">		gbc.insets = new Insets(10, 10, 10, 10);</span>
+<span class="nc" id="L68">		gbc.fill = GridBagConstraints.HORIZONTAL; // Riempie orizzontalmente</span>
+
+		// Inizializza ID utente dalla sessione
+<span class="nc" id="L71">		utenteId = Sessione.getId();</span>
+
+		// Pannello superiore per selezione del centro
+<span class="nc" id="L74">		JPanel selezionePanel = new JPanel(new FlowLayout());</span>
+<span class="nc" id="L75">		selezionePanel.setBackground(new Color(32, 178, 170)); // Sfondo verde</span>
+<span class="nc" id="L76">		JLabel selezionaLabel = new OutlinedLabel(&quot;Seleziona Centro:&quot;, Color.WHITE);</span>
+<span class="nc" id="L77">		selezionaLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L78">		selezionaLabel.setForeground(Color.WHITE);</span>
+<span class="nc" id="L79">		selezionePanel.add(selezionaLabel);</span>
+		
+<span class="nc" id="L81">		centriComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L82">		centriComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L83">		centriComboBox.addActionListener(e -&gt; aggiornaDettagliCentro());</span>
+<span class="nc" id="L84">		selezionePanel.add(centriComboBox);</span>
+
+		// Posiziona il pannello superiore
+<span class="nc" id="L87">		gbc.gridx = 0;</span>
+<span class="nc" id="L88">		gbc.gridy = 0;</span>
+<span class="nc" id="L89">		gbc.gridwidth = 2; // Occupa due colonne</span>
+<span class="nc" id="L90">		add(selezionePanel, gbc);</span>
+
+		// Campo Nome
+<span class="nc" id="L93">		JLabel nomeLabel = new OutlinedLabel(&quot;Nome:&quot;, Color.BLACK);</span>
+<span class="nc" id="L94">		nomeLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L95">		gbc.gridx = 0;</span>
+<span class="nc" id="L96">		gbc.gridy = 1;</span>
+<span class="nc" id="L97">		gbc.gridwidth = 1;</span>
+<span class="nc" id="L98">		gbc.anchor = GridBagConstraints.WEST;</span>
+<span class="nc" id="L99">		add(nomeLabel, gbc);</span>
+
+<span class="nc" id="L101">		nomeField = new JTextField(20);</span>
+<span class="nc" id="L102">		nomeField.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L103">		gbc.gridx = 1;</span>
+<span class="nc" id="L104">		gbc.gridy = 1;</span>
+<span class="nc" id="L105">		gbc.gridwidth = 1;</span>
+<span class="nc" id="L106">		gbc.anchor = GridBagConstraints.EAST;</span>
+<span class="nc" id="L107">		add(nomeField, gbc);</span>
+
+		// Campo Provincia
+<span class="nc" id="L110">        JLabel provinciaLabel = new OutlinedLabel(&quot;Provincia:&quot;, Color.BLACK);</span>
+<span class="nc" id="L111">        provinciaLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L112">        gbc.gridx = 0;</span>
+<span class="nc" id="L113">        gbc.gridy = 2;</span>
+<span class="nc" id="L114">        add(provinciaLabel, gbc);</span>
+
+<span class="nc" id="L116">        provinciaComboBox = new JComboBox&lt;&gt;(provinceComuni.keySet().toArray(new String[0]));</span>
+<span class="nc" id="L117">        provinciaComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L118">        provinciaComboBox.addActionListener(e -&gt; aggiornaComuni());</span>
+<span class="nc" id="L119">        gbc.gridx = 1;</span>
+<span class="nc" id="L120">        add(provinciaComboBox, gbc);</span>
+
+        // Campo Comune
+<span class="nc" id="L123">        JLabel comuneLabel = new OutlinedLabel(&quot;Comune:&quot;, Color.BLACK);</span>
+<span class="nc" id="L124">        comuneLabel.setFont(new Font(&quot;Montserrat&quot;, Font.BOLD, 24));</span>
+<span class="nc" id="L125">        gbc.gridx = 0;</span>
+<span class="nc" id="L126">        gbc.gridy = 3;</span>
+<span class="nc" id="L127">        add(comuneLabel, gbc);</span>
+
+<span class="nc" id="L129">        comuneComboBox = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L130">        comuneComboBox.setFont(new Font(&quot;Arial&quot;, Font.PLAIN, 18));</span>
+<span class="nc" id="L131">        gbc.gridx = 1;</span>
+<span class="nc" id="L132">        add(comuneComboBox, gbc);</span>
+
+		// Pulsante Modifica Campi
+<span class="nc" id="L135">		modificaCampiButton = BackgroundPanel.createFlatButton(&quot;Modifica campi&quot;, e -&gt; modificaCampi(),</span>
+				new Dimension(200, 40));
+<span class="nc" id="L137">		gbc.gridx = 0;</span>
+<span class="nc" id="L138">		gbc.gridy = 4;</span>
+<span class="nc" id="L139">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L140">		gbc.anchor = GridBagConstraints.EAST;</span>
+<span class="nc" id="L141">		add(modificaCampiButton, gbc);</span>
+		
+<span class="nc" id="L143">		gbc.gridy = 6;</span>
+<span class="nc" id="L144">		gbc.gridwidth = 2;</span>
+<span class="nc" id="L145">		add(scrollPane, gbc);</span>
+<span class="nc" id="L146">		AggiungiCampoDialog.clear();</span>
+<span class="nc" id="L147">		JButton aggiungiCampoButton = BackgroundPanel.createFlatButton(&quot;Aggiungi campo&quot;, e-&gt; {// Passa riepilogoPanel invece di riepilogoArea</span>
+<span class="nc" id="L148">			new AggiungiCampoDialog(SwingUtilities.getWindowAncestor(this), riepilogoPanel);</span>
+<span class="nc" id="L149">		}, new Dimension(200, 40));</span>
+<span class="nc" id="L150">       gbc.gridx = 0;</span>
+<span class="nc" id="L151">       gbc.gridy = 5;</span>
+<span class="nc" id="L152">       gbc.gridwidth = 2;</span>
+<span class="nc" id="L153">       add(aggiungiCampoButton, gbc);</span>
+       
+<span class="nc" id="L155">       JButton eliminaCampoButton = BackgroundPanel.createFlatButton(&quot;Elimina centro selezionato&quot;, e-&gt; {</span>
+<span class="nc" id="L156">       	eliminaCentro();</span>
+      	 
+<span class="nc" id="L158">      }, new Dimension(150, 40));</span>
+<span class="nc" id="L159">      gbc.gridx = 0;</span>
+<span class="nc" id="L160">      gbc.gridy = 7;</span>
+<span class="nc" id="L161">      gbc.gridwidth = 2;</span>
+<span class="nc" id="L162">      eliminaCampoButton.setBackground(Color.RED); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L163">      add(eliminaCampoButton, gbc);</span>
+       
+		
+<span class="nc" id="L166">       buttonSalvaModifiche(gbc);</span>
+		
+<span class="nc" id="L168">	buttonBack(gbc);</span>
+
+		// Carica i centri sportivi gestiti
+<span class="nc" id="L171">		caricaCentriGestiti();</span>
+<span class="nc" id="L172">	}</span>
+
+	private void buttonBack(GridBagConstraints gbc) {
+		//pulsante Back
+<span class="nc" id="L176">		JButton backButton = BackgroundPanel.createFlatButton(&quot;Back&quot;, e -&gt; {</span>
+<span class="nc" id="L177">			BackgroundPanel.showPanel(&quot;createGestore&quot;); // Torna al pannello di login</span>
+<span class="nc" id="L178">			resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo</span>
+<span class="nc" id="L179">		}, new Dimension(150, 30) // Dimensione personalizzata del bottone</span>
+		);
+		// Personalizza colore per il pulsante &quot;Back&quot;
+<span class="nc" id="L182">		backButton.setForeground(Color.GRAY); // Sfondo grigio</span>
+<span class="nc" id="L183">		backButton.setBackground(Color.DARK_GRAY); // Sfondo al passaggio del mouse</span>
+<span class="nc" id="L184">		backButton.setFont(new Font(&quot;Arial&quot;, Font.BOLD, 18)); // Font più piccolo per il pulsante &quot;Back&quot;</span>
+<span class="nc" id="L185">		gbc.gridy = 9; // Quarta riga</span>
+<span class="nc" id="L186">		add(backButton, gbc);</span>
+<span class="nc" id="L187">	}</span>
+
+	private void buttonSalvaModifiche(GridBagConstraints gbc) {
+		// Pulsante Salva Modifiche
+<span class="nc" id="L191">			salvaButton = BackgroundPanel.createFlatButton(&quot;Salva Modifiche&quot;, e -&gt; salvaModifiche(),</span>
+					new Dimension(200, 50));
+<span class="nc" id="L193">			gbc.gridx = 0;</span>
+<span class="nc" id="L194">			gbc.gridy = 8;</span>
+<span class="nc" id="L195">			gbc.gridwidth = 2;</span>
+<span class="nc" id="L196">			gbc.anchor = GridBagConstraints.EAST;</span>
+<span class="nc" id="L197">			salvaButton.setBackground(new Color(0, 128, 128));</span>
+<span class="nc" id="L198">			salvaButton.setForeground(Color.WHITE);</span>
+<span class="nc" id="L199">			add(salvaButton, gbc);</span>
+<span class="nc" id="L200">	}</span>
+
+	@Override
+	protected void paintComponent(Graphics g) {
+<span class="nc" id="L204">		super.paintComponent(g);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">		if (clearImage != null) {</span>
+<span class="nc" id="L206">			g.drawImage(clearImage, 0, 0, getWidth(), getHeight(), this);</span>
+		}
+<span class="nc" id="L208">	}</span>
+
+	private void caricaCentriGestiti() {
+	    // Controlla se l'utente è loggato
+<span class="nc" id="L212">	    utenteId = Sessione.getId();</span>
+<span class="nc bnc" id="L213" title="All 4 branches missed.">	    if (utenteId != null &amp;&amp; utenteId &gt; 0) {</span>
+<span class="nc" id="L214">	        centriGestiti = dataBase.getCentriSportiviGestiti(utenteId); // Ottieni centri gestiti</span>
+<span class="nc" id="L215">	        centriComboBox.removeAllItems(); // Svuota ComboBox</span>
+
+<span class="nc bnc" id="L217" title="All 4 branches missed.">	        if (centriGestiti != null &amp;&amp; !centriGestiti.isEmpty()) {</span>
+	            // Ordina i nomi dei centri in ordine alfabetico
+<span class="nc" id="L219">	            List&lt;String&gt; nomiCentri = new ArrayList&lt;&gt;(centriGestiti.keySet());</span>
+<span class="nc" id="L220">	            nomiCentri.sort(String::compareToIgnoreCase);</span>
+
+	            // Aggiungi i nomi ordinati alla ComboBox
+<span class="nc bnc" id="L223" title="All 2 branches missed.">	            for (String nomeCentro : nomiCentri) {</span>
+<span class="nc" id="L224">	                centriComboBox.addItem(nomeCentro);</span>
+<span class="nc" id="L225">	            }</span>
+<span class="nc" id="L226">	            aggiornaDettagliCentro(); // Aggiorna dettagli del primo centro</span>
+	        }
+
+	    }
+<span class="nc" id="L230">	}</span>
+
+
+	private void aggiornaDettagliCentro() {
+		// Aggiorna i dettagli del centro selezionato
+<span class="nc" id="L235">		String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L236" title="All 4 branches missed.">		if (centroSelezionato != null &amp;&amp; centriGestiti != null) {</span>
+<span class="nc" id="L237">			CentroSportivo centro = centriGestiti.get(centroSelezionato);</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">			if (centro != null) {</span>
+<span class="nc" id="L239">				nomeField.setText(centro.getNome());</span>
+<span class="nc" id="L240">				provinciaComboBox.setSelectedItem(centro.getProvincia());</span>
+<span class="nc" id="L241">                comuneComboBox.setSelectedItem(centro.getComune());</span>
+			}
+		}
+<span class="nc" id="L244">	}</span>
+
+	private void salvaModifiche() {
+<span class="nc" id="L247">		String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L248" title="All 4 branches missed.">		if (centroSelezionato != null &amp;&amp; centriGestiti != null) {</span>
+<span class="nc" id="L249">			CentroSportivo centro = centriGestiti.get(centroSelezionato);</span>
+
+<span class="nc" id="L251">			String nuovoNome = nomeField.getText(); // Questo è corretto, poiché il nome è un JTextField</span>
+<span class="nc" id="L252">			String nuovaProvincia = (String) provinciaComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox</span>
+<span class="nc" id="L253">			String nuovoComune = (String) comuneComboBox.getSelectedItem(); // Ottieni l'elemento selezionato dalla JComboBox</span>
+
+<span class="nc" id="L255">			boolean success = DataBase.updateCentroSportivo(centro.getID(), nuovoNome, nuovaProvincia, nuovoComune);</span>
+			
+			// aggiungi anche i campi al DB (se ci sono)
+			
+<span class="nc" id="L259">			ArrayList&lt;Campo&gt; campiSelezionati = AggiungiCampoDialog.getCampi();</span>
+<span class="nc bnc" id="L260" title="All 2 branches missed.">			for (Campo c : campiSelezionati) {</span>
+<span class="nc" id="L261">				DataBase.insert(c.getTipologiaCampo(), c.getCostoOraNotturna(), c.costoOraDiurna, c.lunghezza,</span>
+<span class="nc" id="L262">						c.larghezza, c.isCoperto(), centro.getID());</span>
+<span class="nc" id="L263">			}</span>
+			
+<span class="nc bnc" id="L265" title="All 2 branches missed.">			if (success) {</span>
+<span class="nc" id="L266">				CustomMessage.show(&quot;Modifiche salvate con successo!&quot;, &quot;Successo&quot;, true);</span>
+<span class="nc" id="L267">				BackgroundPanel.showPanel(&quot;createGestore&quot;); // Torna al pannello di login</span>
+<span class="nc" id="L268">				nuovoNome = centro.getNome();</span>
+<span class="nc" id="L269">				nuovaProvincia = centro.getProvincia();</span>
+<span class="nc" id="L270">				nuovoComune = centro.getComune();</span>
+<span class="nc" id="L271">				aggiornaDettagliCentro();</span>
+<span class="nc" id="L272">				caricaCentriGestiti();</span>
+<span class="nc" id="L273">				resetForm(riepilogoPanel); // Resetta i campi e il pannello riepilogo</span>
+<span class="nc" id="L274">				BackgroundPanel.showPanel(&quot;createGestore&quot;);</span>
+			} else {
+<span class="nc" id="L276">				String Moderror = &quot;Errore nel salvataggio delle modifiche.&quot;;</span>
+<span class="nc" id="L277">				String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L278">				CustomMessage.show( Moderror, er, false);</span>
+			}
+		}
+<span class="nc" id="L281">	}</span>
+
+	private void modificaCampi() {
+<span class="nc" id="L284">	    String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+<span class="nc bnc" id="L285" title="All 4 branches missed.">	    if (centroSelezionato != null &amp;&amp; centriGestiti != null) {</span>
+<span class="nc" id="L286">	        CentroSportivo centro = centriGestiti.get(centroSelezionato);</span>
+
+	        // Verifica se il centro ha campi associati
+<span class="nc" id="L289">	        List&lt;Campo&gt; campi = DataBase.getCampiById(centro.getID());</span>
+<span class="nc bnc" id="L290" title="All 4 branches missed.">	        if (campi == null || campi.isEmpty()) {</span>
+	            // Mostra messaggio di errore e resta sul pannello corrente
+<span class="nc" id="L292">	            String er = &quot;Errore&quot;;</span>
+<span class="nc" id="L293">				CustomMessage.show(&quot;Nessun campo disponibile per il centro selezionato.&quot;, er, false);</span>
+<span class="nc" id="L294">	            BackgroundPanel.showPanel(&quot;modificaCentro&quot;);</span>
+<span class="nc" id="L295">	            return;</span>
+	        }
+
+	        // Carica il pannello di modifica campi
+<span class="nc" id="L299">	        ModificaCampoPanel modificaCampoPanel = new ModificaCampoPanel(centro.getID());</span>
+<span class="nc" id="L300">	        BackgroundPanel.cardPanel.add(modificaCampoPanel, &quot;modificaCampi&quot;);</span>
+<span class="nc" id="L301">	        BackgroundPanel.showPanel(&quot;modificaCampi&quot;);</span>
+<span class="nc" id="L302">	    } else {</span>
+	        // Torna al pannello di modifica centro
+<span class="nc" id="L304">	        BackgroundPanel.showPanel(&quot;modificaCentro&quot;);</span>
+	    }
+<span class="nc" id="L306">	}</span>
+	private void eliminaCentro() {
+	    // Recupera il nome del centro selezionato dalla ComboBox
+<span class="nc" id="L309">	    String centroSelezionato = (String) centriComboBox.getSelectedItem();</span>
+
+<span class="nc" id="L311">	    String er = &quot;Errore&quot;;</span>
+<span class="nc bnc" id="L312" title="All 4 branches missed.">		if (centroSelezionato != null &amp;&amp; centriGestiti.containsKey(centroSelezionato)) {</span>
+<span class="nc" id="L313">	        CentroSportivo centro = centriGestiti.get(centroSelezionato);</span>
+
+	        // Chiedi conferma all'utente
+<span class="nc" id="L316">	        boolean conferma = CustomMessageWithChoice.show(</span>
+                    &quot;Sei sicuro di voler eliminare il centro?&quot;,
+                    &quot;Conferma Cancellazione&quot;,
+                    false // Utilizza il colore rosso per il messaggio di errore
+                );
+<span class="nc bnc" id="L321" title="All 2 branches missed.">	        if (conferma) {</span>
+	            // Elimina il centro dal database
+<span class="nc" id="L323">	            boolean success = DataBase.eliminaCentro(centro.getID());</span>
+
+<span class="nc bnc" id="L325" title="All 2 branches missed.">	            if (success) {</span>
+<span class="nc" id="L326">	                CustomMessage.show(&quot;Centro eliminato con successo!&quot;, &quot;Successo&quot;, true);</span>
+<span class="nc" id="L327">	                nomeField.setText(&quot;&quot;);</span>
+	                // Rimuovi il centro dalla mappa e aggiorna la ComboBox
+<span class="nc" id="L329">	                centriGestiti.remove(centroSelezionato);</span>
+<span class="nc" id="L330">	                centriComboBox.removeItem(centroSelezionato);</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">	                if (centriGestiti.isEmpty()) {</span>
+<span class="nc" id="L332">	                	CustomMessage.show(&quot;Nessun centro trovato.&quot;, &quot;Informazione&quot;, false);</span>
+<span class="nc" id="L333">	        			BackgroundPanel.showPanel(&quot;createGestore&quot;);</span>
+<span class="nc" id="L334">	        			return; // Interrompi il caricamento se non ci sono campi</span>
+	                }
+	                // Eventuali ulteriori aggiornamenti dell'interfaccia
+	                
+	            } else {
+<span class="nc" id="L339">	                CustomMessage.show(&quot;Errore durante l'eliminazione del centro.&quot;, er, false);</span>
+	            }
+<span class="nc" id="L341">	        }</span>
+	        else {
+<span class="nc" id="L343">	        	CustomMessage.show(&quot;Cancellazione annullata&quot;, &quot;Attenzione&quot;, false);</span>
+	        }
+<span class="nc" id="L345">	    } else {</span>
+<span class="nc" id="L346">	        CustomMessage.show(&quot;Nessun centro selezionato.&quot;, er, false);</span>
+	    }
+<span class="nc" id="L348">	}</span>
+	    private Map&lt;String, List&lt;String&gt;&gt; caricaProvinceEComuni(String filePath) {
+<span class="nc" id="L350">	        Map&lt;String, List&lt;String&gt;&gt; provinceComuni = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L351">	        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {</span>
+	            String line;
+<span class="nc bnc" id="L353" title="All 2 branches missed.">	            while ((line = br.readLine()) != null) {</span>
+<span class="nc" id="L354">	                String[] parts = line.split(&quot;;&quot;);</span>
+<span class="nc bnc" id="L355" title="All 2 branches missed.">	                if (parts.length &gt;= 2) {</span>
+<span class="nc" id="L356">	                    String provincia = parts[0].trim();</span>
+<span class="nc" id="L357">	                    String comune = parts[1].trim();</span>
+<span class="nc" id="L358">	                    provinceComuni.putIfAbsent(provincia, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L359">	                    provinceComuni.get(provincia).add(comune);</span>
+	                }
+<span class="nc" id="L361">	            }</span>
+<span class="nc" id="L362">	        } catch (IOException e) {</span>
+<span class="nc" id="L363">	            e.printStackTrace();</span>
+<span class="nc" id="L364">	        }</span>
+<span class="nc" id="L365">	        return provinceComuni;</span>
+	    }
+
+	    private void aggiornaComuni() {
+<span class="nc bnc" id="L369" title="All 2 branches missed.">	        if (provinceComuni == null) {</span>
+<span class="nc" id="L370">	            System.err.println(&quot;La mappa provinceComuni è null.&quot;);</span>
+<span class="nc" id="L371">	            return; // Prevenire eccezioni</span>
+	        }
+
+<span class="nc" id="L374">	        String provinciaSelezionata = (String) provinciaComboBox.getSelectedItem();</span>
+<span class="nc" id="L375">	        comuneComboBox.removeAllItems();</span>
+
+<span class="nc bnc" id="L377" title="All 4 branches missed.">	        if (provinciaSelezionata != null &amp;&amp; provinceComuni.containsKey(provinciaSelezionata)) {</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">	            for (String comune : provinceComuni.get(provinciaSelezionata)) {</span>
+<span class="nc" id="L379">	                comuneComboBox.addItem(comune);</span>
+<span class="nc" id="L380">	            }</span>
+	        }
+<span class="nc" id="L382">	    }</span>
+
+	
+	private void resetForm(JPanel riepilogoPanel) {
+	    // Svuota i campi di input
+<span class="nc" id="L387">	    aggiornaDettagliCentro();</span>
+
+	    // Rimuovi tutti i componenti dal riepilogoPanel
+<span class="nc" id="L390">	    riepilogoPanel.removeAll();</span>
+<span class="nc" id="L391">	    riepilogoPanel.revalidate();</span>
+<span class="nc" id="L392">	    riepilogoPanel.repaint();</span>
+
+	    // Resetta i campi aggiunti tramite AggiungiCampoDialog
+<span class="nc" id="L395">	    AggiungiCampoDialog.getCampi().clear();</span>
+<span class="nc" id="L396">	}</span>
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
